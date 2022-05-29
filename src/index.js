@@ -4,10 +4,21 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+const Pokedex = require("pokeapi-js-wrapper")
+const customOptions = {
+  protocol: "https",
+  hostName: "localhost:3000",
+  versionPath: "/api/v2/",
+  cache: true,
+  timeout: 5 * 1000, // 5s
+  cacheImages: true
+}
+const P = new Pokedex.Pokedex(customOptions)
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <App P={P} />
   </React.StrictMode>
 );
 
