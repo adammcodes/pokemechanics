@@ -1,7 +1,11 @@
-import Head from 'next/head';
-import styles from '../styles/Home.module.css';
+import Head from "next/head";
+import styles from "../styles/Home.module.css";
 
 export default function Home() {
+  function myFunc(pars: string) {
+    console.log(pars);
+  }
+
   return (
     <div className={styles.container}>
       <Head>
@@ -10,9 +14,7 @@ export default function Home() {
       </Head>
 
       <main>
-        <h1 className={styles.title}>
-          Welcome to Pokémechanics
-        </h1>
+        <h1 className={styles.title}>Welcome to Pokémechanics</h1>
 
         <p className={styles.description}>
           Get started by editing <code>pages/index.js</code>
@@ -55,7 +57,7 @@ export default function Home() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Powered by{' '}
+          Powered by{" "}
           <img src="/vercel.svg" alt="Vercel" className={styles.logo} />
         </a>
       </footer>
@@ -111,5 +113,5 @@ export default function Home() {
         }
       `}</style>
     </div>
-  )
+  );
 }
