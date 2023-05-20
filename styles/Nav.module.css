@@ -1,0 +1,9 @@
+.menu {
+  width: 100%;
+}
+
+.nav__list {
+  list-style-type: none;
+  display: flex;
+  justify-content: space-around;
+}

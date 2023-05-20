@@ -1,20 +1,38 @@
 import Head from "next/head";
+import Image from "next/image";
 import styles from "../styles/Home.module.css";
+import Nav from "../components/Nav";
 
 export default function Home() {
+  const logoSize: number = 80;
   return (
     <div className={styles.container}>
       <Head>
         <title>Pokémechanics</title>
         <link rel="icon" href="/favicon.ico" />
+        <link
+          rel="preload"
+          href="/fonts/RBYGSC.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
       </Head>
 
-      <main>
-        <h1 className={styles.title}>Welcome to Pokémechanics</h1>
+      <header className={styles.head}>
+        <Image
+          src="/dudelax.png"
+          width={logoSize}
+          height={logoSize}
+          alt="Munchlax"
+        />
+        <h1 className={styles.title}>Pokémechanics</h1>
 
-        <p className={styles.description}>
-          Get started by editing <code>pages/index.js</code>
-        </p>
+        <Nav />
+      </header>
+
+      <main>
+        <p className={styles.description}>Which game are you playing?</p>
 
         <div className={styles.grid}>
           <a href="https://nextjs.org/docs" className={styles.card}>

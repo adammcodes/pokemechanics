@@ -1,3 +1,9 @@
+/* Fonts */
+@font-face {
+  font-family: 'RBYGSC';
+  src: url('/fonts/RBYGSC.woff2') format('woff2');
+}
+
 .container {
   min-height: 100vh;
   padding: 0 0.5rem;
@@ -7,21 +13,18 @@
   align-items: center;
 }
 
-.title a {
-  color: #0070f3;
-  text-decoration: none;
-}
-
-.title a:hover,
-.title a:focus,
-.title a:active {
-  text-decoration: underline;
+.head {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  font-family: 'RBYGSC';
 }
 
 .title {
-  margin: 0 0 1rem;
+  margin: 0;
   line-height: 1.15;
-  font-size: 3.6rem;
+  font-size: 1.5rem;
 }
 
 .title {
