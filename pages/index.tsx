@@ -38,13 +38,8 @@ export default function Home() {
       fontIndex = 1;
     }
     // Gens: 3 and 4 (RSE FR/LG)
-    if (version.id >= 8 && version.id < 11) {
+    if (version.id >= 8) {
       fontIndex = 2;
-      fontAdjust = 1.3;
-    }
-    // Gens: 5 and 6 (DPP BW)
-    if (version.id >= 11) {
-      fontIndex = 3;
       fontAdjust = 1.3;
     }
   }
@@ -94,6 +89,7 @@ export default function Home() {
       <style jsx>{`
         * {
           font-size: ${fontAdjust}em;
+          line-height: 1em;
         }
         main {
           padding: 5rem 0;

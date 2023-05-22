@@ -42,3 +42,32 @@ button {
   padding: 0.5rem 1rem;
   font-weight: bold;
 }
+
+.rby-dialogue-box {
+  width: 340px;
+  border-radius: 2px;
+  padding: 10px;
+  background: white;
+  border: 1px solid white;
+  box-shadow: 0 1px 0 1px black, inset 0 1px 0 1px black, 0 0 0 1px black,
+    inset 0 0 0 1px black;
+}
+
+/* Hides the <select> down arrow */
+.hide-select-arrow {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.dialogue-box-arrow {
+  pointer-events: none;
+  position: absolute;
+  left: 92%;
+  top: 40%;
+  width: 0;
+  height: 0;
+  border: 8px solid transparent;
+  border-top-color: black;
+  float: right;
+}

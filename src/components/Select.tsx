@@ -20,16 +20,19 @@ export default function Select(props: Props) {
   };
 
   return (
-    <select
-      className="border border-gray-300 py-1 px-1"
-      value={selectedValue}
-      onChange={handleSelectChange}
-    >
-      {props.options.map((option, index) => (
-        <option key={index} value={option.value}>
-          {option.label}
-        </option>
-      ))}
-    </select>
+    <div className="relative">
+      <select
+        className="rby-dialogue-box hide-select-arrow"
+        value={selectedValue}
+        onChange={handleSelectChange}
+      >
+        {props.options.map((option, index) => (
+          <option key={index} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+      <i className="dialogue-box-arrow"></i>
+    </div>
   );
 }
