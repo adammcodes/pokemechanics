@@ -21,16 +21,6 @@
   text-align: center;
 }
 
-.description {
-  text-align: center;
-}
-
-
-.description {
-  line-height: 1.5;
-  font-size: 1.5rem;
-}
-
 .grid {
   display: flex;
   align-items: center;

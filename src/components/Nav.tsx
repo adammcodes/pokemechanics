@@ -4,10 +4,10 @@ export default function Nav() {
   return (
     <nav className={styles.menu}>
       <ul className={styles.nav__list}>
-        <li>item</li>
-        <li>item</li>
-        <li>item</li>
-        <li>item</li>
+        <li>Pokédex</li>
+        <li>Moves</li>
+        <li>Items</li>
+        <li>Locations</li>
       </ul>
     </nav>
   );

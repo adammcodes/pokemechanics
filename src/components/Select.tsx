@@ -20,7 +20,11 @@ export default function Select(props: Props) {
   };
 
   return (
-    <select value={selectedValue} onChange={handleSelectChange}>
+    <select
+      className="border border-gray-300 py-1 px-1"
+      value={selectedValue}
+      onChange={handleSelectChange}
+    >
       {props.options.map((option, index) => (
         <option key={index} value={option.value}>
           {option.label}

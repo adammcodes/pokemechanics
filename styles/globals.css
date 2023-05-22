@@ -1,17 +1,16 @@
-/* Fonts */
-/* @font-face {
-  font-family: 'RBYGSC';
-  src: url('/fonts/RBYGSC.woff2') format('woff2');
-} */
+@import "tailwindcss/tailwind.css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 html,
 body {
   padding: 0;
   margin: 0;
-  font-family: 'RBYGSC', Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
-    Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  font-family: "RBYGSC", Inter, -apple-system, BlinkMacSystemFont, Segoe UI,
+    Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
+    sans-serif;
 }
-
 
 a {
   color: inherit;
