@@ -1,8 +1,14 @@
+/* Fonts */
+/* @font-face {
+  font-family: 'RBYGSC';
+  src: url('/fonts/RBYGSC.woff2') format('woff2');
+} */
+
 html,
 body {
   padding: 0;
   margin: 0;
-  font-family: Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
+  font-family: 'RBYGSC', Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
     Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
 

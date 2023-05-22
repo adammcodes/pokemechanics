@@ -1,73 +1,88 @@
+// React
+import { useContext } from "react";
+// Next
 import Head from "next/head";
 import Image from "next/image";
+// Media
 import styles from "../styles/Home.module.css";
-import Nav from "../components/Nav";
+import { fonts } from "../src/fonts";
+// Components
+import Nav from "../src/components/Nav";
+import GenSelector from "../src/components/GenSelector";
+// Hooks
+import useVersionGroups from "../src/hooks/useVersionGroups";
+import useGameVersion from "../src/hooks/useGameVersion";
+// Context
+import GameContext from "../src/context/GameContextProvider";
+
+const logoSize: number = 80;
 
 export default function Home() {
-  const logoSize: number = 80;
+  // Get list of game generations from poke-api
+  const gens = useVersionGroups();
+  // Get currently selected game for it's version url
+  const { game } = useContext(GameContext);
+  // Get versionGroup data for the game
+  const versionGroup = useGameVersion(game);
+  // Get theme for selected version
+
+  // the default font used will be based on version selected
+  let fontIndex: number = 0;
+
+  // Change the font based on version selected
+  if (versionGroup.data) {
+    const version = versionGroup.data;
+    if (version.id > 4 && version.id < 8) {
+      fontIndex = 1;
+    }
+    if (version.id >= 8 && version.id < 11) {
+      fontIndex = 2;
+    }
+    if (version.id >= 11) {
+      fontIndex = 3;
+    }
+  }
+
   return (
-    <div className={styles.container}>
+    <div className={`${styles.container} ${fonts[fontIndex].className}`}>
       <Head>
         <title>Pokémechanics</title>
         <link rel="icon" href="/favicon.ico" />
-        <link
-          rel="preload"
-          href="/fonts/RBYGSC.woff2"
-          as="font"
-          type="font/woff2"
-          crossOrigin="anonymous"
-        />
       </Head>
 
       <header className={styles.head}>
         <Image
-          src="/dudelax.png"
+          src="/images/dudelax.png"
           width={logoSize}
           height={logoSize}
           alt="Munchlax"
+          priority={true}
         />
-        <h1 className={styles.title}>Pokémechanics</h1>
-
-        <Nav />
+        {versionGroup.isLoading && null}
+        {versionGroup.data && (
+          <>
+            <h1>POKEMECHANICS</h1>
+            <Nav />
+          </>
+        )}
       </header>
 
       <main>
-        <p className={styles.description}>Which game are you playing?</p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
+        {versionGroup.isLoading && null}
+        {versionGroup.data && (
+          <p className={styles.description}>WHICH GAME ARE YOU PLAYING?</p>
+        )}
+        {gens.data && <GenSelector gens={gens.data} />}
       </main>
 
       <footer>
-        Pokémon and All Respective Names are Trademark and © of Nintendo
-        1996-2023
+        {versionGroup.isLoading && null}
+        {versionGroup.data && (
+          <>
+            POKEMON AND ALL RESPECTIVE NAMES ARE TRADEMARK AND © OF NINTENDO
+            1996-2023
+          </>
+        )}
       </footer>
 
       <style jsx>{`
