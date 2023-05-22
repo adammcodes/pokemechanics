@@ -30,7 +30,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
     // Gens: 3 and 4 (RSE FR/LG)
     if (version.id >= 8) {
       fontIndex = 2;
-      fontAdjust = 1.3;
+      fontAdjust = 1.5;
     }
   }
 

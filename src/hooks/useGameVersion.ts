@@ -18,7 +18,11 @@ export default function useGameVersion(gameUrl: string) {
   // Get selected game version by id
   const version = useQuery(
     ['version', versionId],
-    () => fetchGameVersion(versionId)
+    () => fetchGameVersion(versionId),
+    {
+      refetchOnWindowFocus: false,
+      enabled: Boolean(versionId)
+    }
   );
 
   return version;

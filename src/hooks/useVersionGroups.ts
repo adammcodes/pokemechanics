@@ -16,7 +16,10 @@ export default function useVersionGroups() {
   // Get list of version groups from poke-api
   const gens = useQuery(
     'gens',
-    () => fetchGenerations()
+    () => fetchGenerations(),
+    {
+      refetchOnWindowFocus: false,
+    }
   );
 
   return gens;
