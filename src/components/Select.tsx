@@ -8,10 +8,13 @@ type Option = {
 type Props = {
   options: Option[];
   onSelect: (selectedValue: string | number) => void;
+  defaultValue: string;
 };
 
 export default function Select(props: Props) {
-  const [selectedValue, setSelectedValue] = useState<string | number>("");
+  const [selectedValue, setSelectedValue] = useState<string | number>(
+    props.defaultValue
+  );
 
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const value = event.target.value;

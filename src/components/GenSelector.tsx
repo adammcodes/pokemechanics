@@ -23,7 +23,7 @@ type GenSelectorProps = {
 
 // Component for selecting a Version Group: e.g. "Red/Blue", "Yellow", "Silver/Gold", etc
 const GenSelector: React.FC<GenSelectorProps> = function GenSelector({ gens }) {
-  const { setGame } = useContext(GameContext);
+  const { setGame, game } = useContext(GameContext);
 
   const genOptions: Option[] = gens.map((gen) => {
     return {
@@ -35,7 +35,7 @@ const GenSelector: React.FC<GenSelectorProps> = function GenSelector({ gens }) {
 
   return (
     <>
-      <Select options={genOptions} onSelect={setGame} />
+      <Select options={genOptions} onSelect={setGame} defaultValue={game} />
     </>
   );
 };
