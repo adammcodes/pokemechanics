@@ -1,4 +1,3 @@
-// import { useState } from "react";
 import { GameContext } from "./_context";
 import useLocalStorageState from "../hooks/useLocalStorageState";
 
@@ -10,11 +9,12 @@ export const GameContextProvider: React.FC<GameContextProps> = ({
   children,
 }) => {
   // default selected version group is Red Blue
-  // const [game, setGame] = useState<string>("red-blue");
   const [game, setGame] = useLocalStorageState<string>("game", "red-blue");
+  // default font index is 0 (RBY font)
+  const [font, setFont] = useLocalStorageState<number>("font", 0);
 
   return (
-    <GameContext.Provider value={{ game, setGame }}>
+    <GameContext.Provider value={{ game, setGame, font, setFont }}>
       {children}
     </GameContext.Provider>
   );

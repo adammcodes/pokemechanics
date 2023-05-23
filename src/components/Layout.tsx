@@ -1,6 +1,5 @@
-import { useContext } from "react";
-import { GameContext } from "../context/_context";
-import useGameVersion from "../hooks/useGameVersion";
+// import { useContext, useEffect } from "react";
+// import { GameContext } from "../context/_context";
 import Header from "./Header";
 import Footer from "./Footer";
 import styles from "../../styles/Home.module.css";
@@ -12,38 +11,33 @@ type LayoutProps = {
 
 export const Layout: React.FC<LayoutProps> = ({ children }) => {
   // Get currently selected game for it's version url
-  const { game } = useContext(GameContext);
-  // Get versionGroup data for the game
-  const versionGroup = useGameVersion(game);
+  // const { font, setFont } = useContext(GameContext);
 
-  // the default font used will be based on version selected
-  let fontIndex: number = 0;
-  let fontAdjust: number = 1;
+  // let fontIndex = font;
+  let fontIndex = 2;
 
-  // Change the font based on version selected
-  if (versionGroup.data) {
-    const version = versionGroup.data;
-    // Gens: 1 and 2 (RBY, GSC)
-    if (version.id > 4 && version.id < 8) {
-      fontIndex = 1;
-    }
-    // Gens: 3 and 4 (RSE FR/LG)
-    if (version.id >= 8) {
-      fontIndex = 2;
-      fontAdjust = 1.5;
-    }
-  }
+  // useEffect(() => {
+  //   const storedFont = localStorage.getItem("font");
+  //   if (storedFont) {
+  //     const font = JSON.parse(storedFont);
+  //     setFont(font);
+  //     fontIndex = font;
+  //   }
+  // }, []);
 
   return (
-    <div className={`${styles.container} ${fonts[fontIndex].className}`}>
+    <div className={`${styles.container}`}>
       <Header />
       {children}
       <Footer />
       <style jsx>
         {`
           * {
-            font-size: ${fontAdjust}em;
+            font-size: ${fontIndex >= 2 ? 1.5 : 1}em;
             line-height: 1em;
+            font-family: ${fonts[fontIndex]
+              ? fonts[fontIndex].style.fontFamily
+              : fonts[0].style.fontFamily};
           }
         `}
       </style>

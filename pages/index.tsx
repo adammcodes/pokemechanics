@@ -26,10 +26,7 @@ export default function Home() {
       </Head>
 
       <main>
-        {versionGroup.isLoading && null}
-        {versionGroup.data && (
-          <p className="mb-4">WHICH GAME ARE YOU PLAYING?</p>
-        )}
+        <p className="mb-4">WHICH GAME ARE YOU PLAYING?</p>
         {gens.data && <GenSelector gens={gens.data} />}
       </main>
 
