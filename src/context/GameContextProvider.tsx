@@ -9,9 +9,7 @@ export const GameContextProvider: React.FC<GameContextProps> = ({
   children,
 }) => {
   // default selected version group is Red Blue
-  const [game, setGame] = useState<string>(
-    "https://pokeapi.co/api/v2/version-group/1/"
-  );
+  const [game, setGame] = useState<string>("red-blue");
 
   return (
     <GameContext.Provider value={{ game, setGame }}>

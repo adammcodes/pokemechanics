@@ -29,7 +29,7 @@ const GenSelector: React.FC<GenSelectorProps> = function GenSelector({ gens }) {
     return {
       label: convertKebabCaseToTitleCase(gen.name),
       name: gen.name,
-      value: gen.url,
+      value: gen.name,
     };
   });
 

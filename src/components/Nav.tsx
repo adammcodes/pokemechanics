@@ -10,11 +10,7 @@ export default function Nav() {
           <i></i>
         </li>
         <li>
-          <Link href="/moves">Moves</Link>
-          <i></i>
-        </li>
-        <li>
-          <Link href="/items">Items</Link>
+          <Link href="/bag">Bag</Link>
           <i></i>
         </li>
         <li>

@@ -32,7 +32,7 @@ export default function Pokedex() {
     : [];
 
   return (
-    <main>
+    <main className="flex-col w-full justify-start items-start px-5">
       {versionGroup.isLoading && "Loading..."}
       {pokedexes.length > 0 && mappedDexes}
     </main>
