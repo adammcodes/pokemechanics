@@ -63,6 +63,54 @@ main {
     inset 0 0 0 1px black;
 }
 
+.pokeball-box {
+  position: relative;
+  border: 5px double #000;
+  padding: 10px;
+}
+
+.pokeball {
+  height: 8px;
+  border: 2px solid #000;
+  border-radius: 50%;
+  background-color: #fafafa;
+}
+
+.pokeball,
+.pokeball-upper {
+  position: absolute;
+  width: 8px;
+}
+
+.pokeball-upper {
+  left: -2px;
+  bottom: 2px;
+  height: 4px;
+  border-radius: 8px 8px 0 0;
+  background-color: #000;
+}
+
+.top-left {
+  top: -6px;
+  left: -6px;
+}
+.top-right {
+  top: -6px;
+  right: -6px;
+}
+.bottom-left {
+  bottom: -6px;
+  left: -6px;
+}
+.bottom-right {
+  bottom: -6px;
+  right: -6px;
+}
+
+.dotted-border {
+  border: 1px solid #000;
+}
+
 /* Hides the <select> down arrow */
 .hide-select-arrow {
   appearance: none;

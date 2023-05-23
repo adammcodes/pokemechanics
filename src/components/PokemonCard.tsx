@@ -1,11 +1,19 @@
 import styles from "../../styles/PokemonCard.module.css";
 import DynamicImage from "./DynamicImage";
+import {
+  Genus,
+  PokemonAbility,
+  PokemonPastType,
+  PokemonHeldItem,
+  FlavorText,
+} from "pokenode-ts";
+import { useContext } from "react";
+import { GameContext } from "../context/_context";
+// utils
 import convertKebabCaseToTitleCase from "../utils/convertKebabCaseToTitleCase";
 import convertHeightToCmOrM from "../utils/convertHeightToCmOrM";
 import convertWeightToGramsOrKg from "../utils/convertWeightToGramsOrKg";
-import { Genus, Language, PokemonAbility, Version } from "pokenode-ts";
-import { useContext } from "react";
-import { GameContext } from "../context/_context";
+import splitKebabCase from "../utils/splitKebabCase";
 
 type Form = {
   name: string;
@@ -20,21 +28,6 @@ type MoveLearnMethod = {
 type VersionGroup = {
   name: string;
   url: string;
-};
-
-type VersionDetails = {
-  rarity: number;
-  version: Version;
-};
-
-type Item = {
-  name: string;
-  url: string;
-};
-
-type ItemDetails = {
-  item: Item;
-  version_details: VersionDetails;
 };
 
 type VersionGroupDetails = {
@@ -85,12 +78,6 @@ type TypeDetails = {
   slot: number;
 };
 
-type flavorTextForPokemon = {
-  flavor_text: string;
-  language: Language;
-  version: Version;
-};
-
 type PokemonCardProps = {
   id: number;
   name: string;
@@ -104,16 +91,17 @@ type PokemonCardProps = {
   sprites: Sprite;
   stats: StatDetails[];
   types: TypeDetails[];
-  past_types: TypeDetails[];
-  held_items: ItemDetails[];
+  past_types: PokemonPastType[];
+  held_items: PokemonHeldItem[];
   genera: Genus[];
-  flavor_text_entries: flavorTextForPokemon[];
+  flavor_text_entries: FlavorText[];
 };
 
 export const PokemonCard: React.FC<PokemonCardProps> = (props) => {
   const { game } = useContext(GameContext);
   const spriteSize: number = 150;
   const name: string = convertKebabCaseToTitleCase(props.name);
+  const versions = splitKebabCase(game);
 
   const pokemonGenus: string | undefined = props.genera
     ? props.genera.find((g: Genus) => {
@@ -121,23 +109,20 @@ export const PokemonCard: React.FC<PokemonCardProps> = (props) => {
       })?.genus
     : "";
 
-  console.log(game);
-  // filter callback for getting flavour text from game versions that are included in the selected game version(s)
-  //const filterByVersions =
-
   const flavorTextEntries = props.flavor_text_entries;
   const flavorTextForLanguage = flavorTextEntries.filter((entry) => {
     return entry.language.name === "en";
   });
   // If the currently selected version group is a single game then flavorTextForVersion will be defined
-  const flavorTextForVersion = flavorTextForLanguage.find((text) => {
+  const flavorTextForVersion = flavorTextForLanguage.find((text: any) => {
     return text.version.name === game;
   });
   // If the currently selected version group is a more than one game then flavorTextForVer
-  const flavorTextForVersions = !flavorTextForVersion ? "" : [];
-
-  console.log(flavorTextForVersion);
-  console.log(flavorTextForVersions);
+  const flavorTextForVersions = !flavorTextForVersion
+    ? flavorTextForLanguage.filter((entry: any) => {
+        return versions.includes(entry.version.name);
+      })
+    : null;
 
   return (
     <div className={`${styles.card}`}>
@@ -154,7 +139,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = (props) => {
                   priority={true}
                 />
               </div>
-              <div className="text-center text-sm">
+              <div className="text-center">
                 No.
                 <span>&nbsp;&nbsp;</span>
                 {props.id}
@@ -162,27 +147,60 @@ export const PokemonCard: React.FC<PokemonCardProps> = (props) => {
             </td>
             <td className="w-1/2 flex-col justify-center items-center">
               <div className="mb-5">{name}</div>
-              <div className="mb-5 text-sm">{pokemonGenus}</div>
+              <div className="mb-5">{pokemonGenus}</div>
               <table className="w-full">
                 <tbody>
                   <tr>
-                    <td className="text-sm">HT</td>
-                    <td className="text-sm">
-                      {convertHeightToCmOrM(props.height)}
-                    </td>
+                    <td>HT</td>
+                    <td>{convertHeightToCmOrM(props.height)}</td>
                   </tr>
                   <tr>
-                    <td className="text-sm">WT</td>
-                    <td className="text-sm">
-                      {convertWeightToGramsOrKg(props.weight)}
-                    </td>
+                    <td>WT</td>
+                    <td>{convertWeightToGramsOrKg(props.weight)}</td>
                   </tr>
                 </tbody>
               </table>
             </td>
           </tr>
           <tr>
-            <td></td>
+            <td colSpan={2}>&nbsp;</td>
+          </tr>
+          <tr>
+            <td colSpan={2} className="p-3">
+              <div className="pokeball-box w-full">
+                {flavorTextForVersion && (
+                  <div>
+                    <p className="leading-5">
+                      {flavorTextForVersion.flavor_text}
+                    </p>
+                  </div>
+                )}
+                {flavorTextForVersions &&
+                  flavorTextForVersions.map((text: any, i) => {
+                    let desc: string = text.flavor_text;
+                    return (
+                      <div key={i}>
+                        <p className={`${i !== 0 ? "mt-5" : ""} mb-5`}>
+                          {text.version.name.toUpperCase()}
+                        </p>
+                        <p className="leading-5">{desc}</p>
+                      </div>
+                    );
+                  })}
+                <span className="pokeball top-left">
+                  <span className="pokeball-upper"></span>
+                </span>
+                <span className="pokeball top-right">
+                  <span className="pokeball-upper"></span>
+                </span>
+                <span className="pokeball bottom-left">
+                  <span className="pokeball-upper"></span>
+                </span>
+                <span className="pokeball bottom-right">
+                  <span className="pokeball-upper"></span>
+                </span>
+              </div>
+            </td>
           </tr>
         </tbody>
       </table>

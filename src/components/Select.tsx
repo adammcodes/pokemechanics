@@ -2,16 +2,16 @@ import { useState } from "react";
 
 type Option = {
   label: string;
-  value: string;
+  value: string | number;
 };
 
 type Props = {
   options: Option[];
-  onSelect: (selectedValue: string) => void;
+  onSelect: (selectedValue: string | number) => void;
 };
 
 export default function Select(props: Props) {
-  const [selectedValue, setSelectedValue] = useState<string>("");
+  const [selectedValue, setSelectedValue] = useState<string | number>("");
 
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const value = event.target.value;

@@ -6,43 +6,47 @@ import { PokemonCard } from "../../src/components/PokemonCard";
 export default function Pokemon() {
   const router = useRouter();
   // Access the dynamic route parameter value, which is the pokemon name
-  const { slug } = router.query as { slug: string };
+  const { id } = router.query as { id: number | string };
 
-  const pokemonName: string = slug;
+  const pokemonId: number | string = Number(id);
 
-  const fetchPokemonByName = (name: string) => {
+  const fetchPokemonById = (id: number) => {
     const api = usePokemonClient();
     return api
-      .getPokemonByName(name)
+      .getPokemonById(id)
       .then((data) => data)
-      .catch((err) => err);
+      .catch((err) => {
+        throw err;
+      });
   };
 
   const pokemonQuery = useQuery(
-    ["pokemon", slug],
-    () => fetchPokemonByName(pokemonName),
+    ["pokemon", pokemonId],
+    () => fetchPokemonById(pokemonId),
     {
       refetchOnWindowFocus: false,
       refetchOnMount: false,
-      enabled: Boolean(pokemonName),
+      enabled: Boolean(pokemonId),
     }
   );
 
-  const fetchPokemonSpeciesByName = (name: string) => {
+  const fetchPokemonSpeciesById = (id: number) => {
     const api = usePokemonClient();
     return api
-      .getPokemonSpeciesByName(name)
+      .getPokemonSpeciesById(id)
       .then((data) => data)
-      .catch((err) => err);
+      .catch((err) => {
+        throw err;
+      });
   };
 
   const pokemonSpeciesQuery = useQuery(
-    ["pokemonSpecies", slug],
-    () => fetchPokemonSpeciesByName(pokemonName),
+    ["pokemonSpecies", pokemonId],
+    () => fetchPokemonSpeciesById(pokemonId),
     {
       refetchOnWindowFocus: false,
       refetchOnMount: false,
-      enabled: Boolean(pokemonName),
+      enabled: Boolean(pokemonId),
     }
   );
 
