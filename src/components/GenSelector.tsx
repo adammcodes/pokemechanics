@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import { useContext } from "react";
 import { GameOption } from "../types";
 // Components
@@ -19,6 +20,7 @@ type GenSelectorProps = {
 // Component for selecting a Version Group: e.g. "Red/Blue", "Yellow", "Silver/Gold", etc
 const GenSelector: React.FC<GenSelectorProps> = function GenSelector({ gens }) {
   const { setGame, game } = useContext(GameContext);
+  const router = useRouter();
 
   const genOptions: GameOption[] = gens.map((gen, index) => {
     return {
@@ -31,6 +33,7 @@ const GenSelector: React.FC<GenSelectorProps> = function GenSelector({ gens }) {
 
   const handleSelect = (value: string | number) => {
     setGame(value);
+    router.push("/pokedex");
   };
 
   return (
