@@ -42,6 +42,7 @@ const GenSelector: React.FC<GenSelectorProps> = function GenSelector({ gens }) {
         options={genOptions}
         onSelect={handleSelect}
         defaultValue={convertKebabCaseToTitleCase(game)}
+        isPokemonOption={false}
       />
     </>
   );

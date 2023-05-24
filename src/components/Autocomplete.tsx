@@ -1,16 +1,19 @@
 import { useState, KeyboardEvent, useEffect } from "react";
 import { GameOption, PokemonOption } from "../types";
+import addPrecedingZeros from "../utils/addPrecedingZeros";
 
 interface AutocompleteProps {
   options: GameOption[] | PokemonOption[];
   defaultValue: string;
   onSelect: (selectedValue: string | number) => void;
+  isPokemonOption: boolean;
 }
 
 const Autocomplete: React.FC<AutocompleteProps> = ({
   options,
   defaultValue,
   onSelect,
+  isPokemonOption,
 }) => {
   const [inputValue, setInputValue] = useState(defaultValue);
   const [filteredOptions, setFilteredOptions] = useState<
@@ -91,7 +94,11 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
         className={`dialogue-box-arrow ${showList ? "up" : ""}`}
         onClick={() => setShowList(!showList)}
       ></i>
-      <ul className={`${!showList ? "invisible" : "visible"}`}>
+      <ul
+        className={`absolute overflow-y-auto max-h-80 w-full ${
+          !showList ? "invisible" : "visible"
+        }`}
+      >
         {filteredOptions.map((option, i) => (
           <li
             className={`autocomplete-li-option ${
@@ -105,7 +112,13 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
               className="p-1 m-0 w-full text-left"
               onClick={handleOptionClick}
             >
-              {option.label}
+              {option.number && isPokemonOption && (
+                <>
+                  <span>(#{addPrecedingZeros(option.number, 3)})</span>
+                  <span>&nbsp;</span>
+                </>
+              )}
+              {option.label}{" "}
             </button>
           </li>
         ))}

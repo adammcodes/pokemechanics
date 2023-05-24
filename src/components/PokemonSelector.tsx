@@ -3,7 +3,8 @@ import { useRouter } from "next/router";
 // Types
 import { PokemonOption } from "../types";
 // Components
-import Select from "./Select";
+// import Select from "./Select";
+import Autocomplete from "./Autocomplete";
 // Utils
 import convertKebabCaseToTitleCase from "../utils/convertKebabCaseToTitleCase";
 
@@ -27,7 +28,7 @@ const PokemonSelector: React.FC<PokemonSelectorProps> =
     const router = useRouter();
 
     const onPokemonSelect = (pokemonId: number | string) => {
-      // Programmatically navigate to the pokemon page
+      // Navigate to the pokemon page
       router.push(`/pokemon/${pokemonId}`);
     };
 
@@ -43,10 +44,11 @@ const PokemonSelector: React.FC<PokemonSelectorProps> =
 
     return (
       <>
-        <Select
+        <Autocomplete
           options={pokemonOptions}
           onSelect={onPokemonSelect}
-          defaultValue={0}
+          defaultValue={""}
+          isPokemonOption={true}
         />
       </>
     );
