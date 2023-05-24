@@ -9,7 +9,7 @@ export const GameContextProvider: React.FC<GameContextProps> = ({
   children,
 }) => {
   // default selected version group is Red Blue
-  const [game, setGame] = useLocalStorageState<string>("game", "red-blue");
+  const [game, setGame] = useLocalStorageState<string>("game", "");
   // default font index is 0 (RBY font)
   const [font, setFont] = useLocalStorageState<number>("font", 0);
 
