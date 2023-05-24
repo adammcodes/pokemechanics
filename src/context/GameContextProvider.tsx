@@ -10,11 +10,9 @@ export const GameContextProvider: React.FC<GameContextProps> = ({
 }) => {
   // default selected version group is Red Blue
   const [game, setGame] = useLocalStorageState<string>("game", "");
-  // default font index is 0 (RBY font)
-  const [font, setFont] = useLocalStorageState<number>("font", 0);
 
   return (
-    <GameContext.Provider value={{ game, setGame, font, setFont }}>
+    <GameContext.Provider value={{ game, setGame }}>
       {children}
     </GameContext.Provider>
   );
