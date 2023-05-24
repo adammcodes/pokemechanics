@@ -1,14 +1,8 @@
 import { useState, KeyboardEvent, useEffect } from "react";
-
-type Option = {
-  label: string;
-  name: string;
-  value: string;
-  number: number;
-};
+import { GameOption, PokemonOption } from "../types";
 
 interface AutocompleteProps {
-  options: Option[];
+  options: GameOption[] | PokemonOption[];
   defaultValue: string;
   onSelect: (selectedValue: string | number) => void;
 }
@@ -19,7 +13,9 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
   onSelect,
 }) => {
   const [inputValue, setInputValue] = useState(defaultValue);
-  const [filteredOptions, setFilteredOptions] = useState<Option[]>([]);
+  const [filteredOptions, setFilteredOptions] = useState<
+    GameOption[] | PokemonOption[]
+  >([]);
   // Toggle for showing options list
   const [showList, setShowList] = useState<Boolean>(false);
   const [activeIndex, setActiveIndex] = useState(-1);
@@ -105,7 +101,7 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
           >
             <button
               id={`${option.name}-${option.number}`}
-              name={option.value}
+              name={option.value?.toString()}
               className="p-1 m-0 w-full text-left"
               onClick={handleOptionClick}
             >

@@ -1,16 +1,10 @@
 import { useState } from "react";
-
-type Option = {
-  label: string;
-  name: string;
-  value: string | number;
-  number: number;
-};
+import { GameOption, PokemonOption } from "../types";
 
 type Props = {
-  options: Option[];
+  options: GameOption[] | PokemonOption[];
   onSelect: (selectedValue: string | number, number: number) => void;
-  defaultValue: string;
+  defaultValue: string | number;
 };
 
 export default function Select(props: Props) {

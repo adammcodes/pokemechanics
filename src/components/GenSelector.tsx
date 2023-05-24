@@ -1,22 +1,15 @@
 import { useContext } from "react";
+import { GameOption } from "../types";
 // Components
-// import Select from "./Select";
+import Autocomplete from "./Autocomplete";
 // Utils
 import convertKebabCaseToTitleCase from "../utils/convertKebabCaseToTitleCase";
 // Context
 import GameContext from "../context/GameContextProvider";
-import Autocomplete from "./Autocomplete";
 
 type VersionGroup = {
   name: string;
   url: string;
-};
-
-type Option = {
-  label: string;
-  name: string;
-  value: string;
-  number: number;
 };
 
 type GenSelectorProps = {
@@ -27,7 +20,7 @@ type GenSelectorProps = {
 const GenSelector: React.FC<GenSelectorProps> = function GenSelector({ gens }) {
   const { setGame, game } = useContext(GameContext);
 
-  const genOptions: Option[] = gens.map((gen, index) => {
+  const genOptions: GameOption[] = gens.map((gen, index) => {
     return {
       label: convertKebabCaseToTitleCase(gen.name),
       name: gen.name,
@@ -42,11 +35,6 @@ const GenSelector: React.FC<GenSelectorProps> = function GenSelector({ gens }) {
 
   return (
     <>
-      {/* <Select
-        options={genOptions}
-        onSelect={handleSelect}
-        defaultValue={game}
-      /> */}
       <Autocomplete
         options={genOptions}
         onSelect={handleSelect}

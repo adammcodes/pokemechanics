@@ -1,5 +1,7 @@
 // Next
 import { useRouter } from "next/router";
+// Types
+import { PokemonOption } from "../types";
 // Components
 import Select from "./Select";
 // Utils
@@ -13,11 +15,6 @@ type PokemonSpecies = {
 type PokemonEntries = {
   entry_number: number;
   pokemon_species: PokemonSpecies;
-};
-
-type Option = {
-  label: string;
-  value: number;
 };
 
 type PokemonSelectorProps = {
@@ -34,16 +31,23 @@ const PokemonSelector: React.FC<PokemonSelectorProps> =
       router.push(`/pokemon/${pokemonId}`);
     };
 
-    const pokemonOptions: Option[] = pokemon_entries.map((entry) => {
+    const pokemonOptions: PokemonOption[] = pokemon_entries.map((entry) => {
+      const dexNumber = Number(entry.pokemon_species.url.split("/").at(-2));
       return {
         label: convertKebabCaseToTitleCase(entry.pokemon_species.name),
-        value: Number(entry.pokemon_species.url.split("/").at(-2)),
+        name: entry.pokemon_species.name,
+        value: dexNumber,
+        number: dexNumber,
       };
     });
 
     return (
       <>
-        <Select options={pokemonOptions} onSelect={onPokemonSelect} />
+        <Select
+          options={pokemonOptions}
+          onSelect={onPokemonSelect}
+          defaultValue={0}
+        />
       </>
     );
   };
