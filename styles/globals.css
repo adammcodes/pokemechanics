@@ -52,6 +52,48 @@ main {
   align-items: center;
 }
 
+.autocomplete > i.dialogue-box-arrow {
+  left: 92%;
+  top: 18px;
+  pointer-events: revert;
+}
+.autocomplete > i.dialogue-box-arrow:hover {
+  cursor: pointer;
+}
+.autocomplete > i.dialogue-box-arrow.up {
+  border-top-color: #fff;
+  border-bottom-color: black;
+  top: 10px;
+}
+
+.dialogue-box-arrow {
+  pointer-events: none;
+  position: absolute;
+  left: 92%;
+  top: 40%;
+  width: 0;
+  height: 0;
+  border: 8px solid transparent;
+  border-top-color: black;
+  float: right;
+}
+
+.autocomplete-li-option {
+  border-left: 1px solid silver;
+  border-right: 1px solid silver;
+  box-shadow: 0px 10px 30px 0px rgba(0, 0, 0, 0.1);
+}
+.autocomplete-li-option:last-child {
+  border-bottom: 1px solid silver;
+  box-shadow: 0px 10px 30px 0px rgba(0, 0, 0, 0.1);
+}
+.autocomplete-li-option:hover,
+.autocomplete-li-option.active {
+  background-color: #5b8098;
+  color: #fff;
+  cursor: pointer;
+}
+
 .rby-dialogue-box {
   min-width: 340px;
   width: 100%;
@@ -61,6 +103,10 @@ main {
   border: 1px solid white;
   box-shadow: 0 1px 0 1px black, inset 0 1px 0 1px black, 0 0 0 1px black,
     inset 0 0 0 1px black;
+}
+
+.rby-dialogue-box:focus {
+  outline: 20px;
 }
 
 .pokeball-box {
@@ -116,16 +162,4 @@ main {
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
-}
-
-.dialogue-box-arrow {
-  pointer-events: none;
-  position: absolute;
-  left: 92%;
-  top: 40%;
-  width: 0;
-  height: 0;
-  border: 8px solid transparent;
-  border-top-color: black;
-  float: right;
 }

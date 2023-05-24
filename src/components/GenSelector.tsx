@@ -1,10 +1,11 @@
 import { useContext } from "react";
 // Components
-import Select from "./Select";
+// import Select from "./Select";
 // Utils
 import convertKebabCaseToTitleCase from "../utils/convertKebabCaseToTitleCase";
 // Context
 import GameContext from "../context/GameContextProvider";
+import Autocomplete from "./Autocomplete";
 
 type VersionGroup = {
   name: string;
@@ -24,7 +25,7 @@ type GenSelectorProps = {
 
 // Component for selecting a Version Group: e.g. "Red/Blue", "Yellow", "Silver/Gold", etc
 const GenSelector: React.FC<GenSelectorProps> = function GenSelector({ gens }) {
-  const { setGame, game, setFont } = useContext(GameContext);
+  const { setGame, game } = useContext(GameContext);
 
   const genOptions: Option[] = gens.map((gen, index) => {
     return {
@@ -35,25 +36,21 @@ const GenSelector: React.FC<GenSelectorProps> = function GenSelector({ gens }) {
     };
   });
 
-  const handleSelect = (value: string | number, number: number) => {
+  const handleSelect = (value: string | number) => {
     setGame(value);
-    if (number <= 4) {
-      setFont(0);
-    }
-    if (number > 4 && number < 8) {
-      setFont(1);
-    }
-    if (number >= 8) {
-      setFont(2);
-    }
   };
 
   return (
     <>
-      <Select
+      {/* <Select
         options={genOptions}
         onSelect={handleSelect}
         defaultValue={game}
+      /> */}
+      <Autocomplete
+        options={genOptions}
+        onSelect={handleSelect}
+        defaultValue={convertKebabCaseToTitleCase(game)}
       />
     </>
   );
