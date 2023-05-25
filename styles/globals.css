@@ -163,3 +163,7 @@ main {
   -webkit-appearance: none;
   -moz-appearance: none;
 }
+
+.background-color-fairy {
+  background-color: #f7b5f7;
+}

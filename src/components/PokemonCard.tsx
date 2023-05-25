@@ -10,6 +10,7 @@ import {
   PokemonAbility,
   PokemonSprites,
   NamedAPIResource,
+  PokemonType,
 } from "pokenode-ts";
 // utils
 import convertKebabCaseToTitleCase from "../utils/convertKebabCaseToTitleCase";
@@ -23,6 +24,7 @@ import { FlavorTextForVersion } from "../types";
 import { FlavorText } from "./FlavorText";
 import { DualFlavorText } from "./DualFlavorText";
 import PokeballSpans from "./PokeballSpans";
+import { PokemonTypes } from "./PokemonTypes";
 
 type PokemonCardProps = {
   is_variant: boolean; // required
@@ -36,6 +38,7 @@ type PokemonCardProps = {
   abilities?: PokemonAbility[];
   forms?: NamedAPIResource[];
   sprites?: PokemonSprites;
+  types?: PokemonType[];
 };
 
 export const PokemonCard: React.FC<PokemonCardProps> = (props) => {
@@ -43,6 +46,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = (props) => {
   // p from PokemonContext has all the other generic species data
   const p = useContext(PokemonContext);
   const { game } = useContext(GameContext);
+  console.log(p);
   let formatName = convertKebabCaseToTitleCase;
   const pokemonName = formatName(p.name);
   const regionName: string = props.is_variant
@@ -62,6 +66,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = (props) => {
         return g.language.name === "en";
       })?.genus
     : "";
+  const types = props.is_variant ? props.types : p.types;
 
   const flavorTextEntries = p.flavor_text_entries;
   const flavorTextForLanguage = flavorTextEntries.filter((entry: any) => {
@@ -119,6 +124,9 @@ export const PokemonCard: React.FC<PokemonCardProps> = (props) => {
                       priority={true}
                     />
                   )}
+                </div>
+                <div className="w-full flex flex-row justify-center items-center">
+                  <PokemonTypes types={types} />
                 </div>
               </td>
               <td className="w-1/2 flex-col justify-center items-center pl-5">
