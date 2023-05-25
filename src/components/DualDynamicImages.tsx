@@ -27,7 +27,7 @@ const DualDynamicImages: React.FC<Props> = ({
     <table className="w-full">
       <tbody>
         <tr>
-          <td>
+          <td className="pr-1">
             <div className="flex justify-center items-center">
               {srcLeft && (
                 <Image
@@ -41,7 +41,7 @@ const DualDynamicImages: React.FC<Props> = ({
               {!srcLeft && "Sprite not available"}
             </div>
           </td>
-          <td>
+          <td className="pl-1">
             <div className="flex justify-center items-center">
               {srcRight && (
                 <Image
@@ -57,8 +57,8 @@ const DualDynamicImages: React.FC<Props> = ({
           </td>
         </tr>
         <tr>
-          <td className="text-center">{labelLeft}</td>
-          <td className="text-center">{labelRight}</td>
+          <td className="text-center pr-1">{labelLeft}</td>
+          <td className="text-center pl-1">{labelRight}</td>
         </tr>
       </tbody>
     </table>

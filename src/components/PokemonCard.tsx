@@ -56,7 +56,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = (props) => {
   const sprites = props.is_variant ? props.sprites : p.sprites;
   const pokemonH = props.is_variant ? props.height : p.height;
   const pokemonW = props.is_variant ? props.weight : p.weight;
-  const spriteSize: number = regionName === "kanto" ? 80 : 130;
+  const spriteSize: number = game === "red-blue" ? 80 : 150;
   const pokemonGenus: string | undefined = p.genera
     ? p.genera.find((g: Genus) => {
         return g.language.name === "en";

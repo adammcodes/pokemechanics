@@ -17,6 +17,10 @@ export default function Nav() {
           <Link href="/locations">Locations</Link>
           <i></i>
         </li>
+        <li>
+          <Link href="/">Switch Game</Link>
+          <i></i>
+        </li>
       </ul>
     </nav>
   );

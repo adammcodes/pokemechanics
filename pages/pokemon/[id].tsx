@@ -1,9 +1,12 @@
+// hooks
 import { useRouter } from "next/router";
 import { useQuery } from "react-query";
 import usePokemonClient from "../../src/hooks/usePokemonClient";
 import { useContext } from "react";
 import { GameContext } from "../../src/context/_context";
 import useGameVersion from "../../src/hooks/useGameVersion";
+// Components
+import Pokedexes from "../../src/components/Pokedexes";
 import { PokemonVariety } from "../../src/components/PokemonVariety";
 import { PokemonContextProvider } from "../../src/context/PokemonContextProvider";
 
@@ -67,6 +70,7 @@ export default function Pokemon() {
 
   return (
     <main className="w-full">
+      <Pokedexes />
       {error && "An error occurred..."}
       {loading && "Loading species..."}
       {pokemonQuery.data && pokemonSpeciesQuery.data && version.data && (
