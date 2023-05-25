@@ -1,3 +1,5 @@
+import { Language, Version } from "pokenode-ts";
+
 // Option types are used for Autocomplete and Select components
 export type GameOption = {
   label: string;
@@ -11,4 +13,10 @@ export type PokemonOption = {
   name: string;
   value: number | string;
   number: number;
+}
+
+export type FlavorTextForVersion = {
+  flavor_text: string;
+  language: Language;
+  version: Version;
 }

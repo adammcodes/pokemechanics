@@ -3,7 +3,6 @@ import { useQuery } from "react-query";
 import { PokemonContext } from "../context/_context";
 import { Region, PokemonSpeciesVariety } from "pokenode-ts";
 import usePokemonClient from "../hooks/usePokemonClient";
-import { PokemonCardVariant } from "./PokemonCardVariant";
 import { PokemonCard } from "./PokemonCard";
 
 type PokemonVarietyProps = {
@@ -47,16 +46,13 @@ export const PokemonVariety: React.FC<PokemonVarietyProps> = ({
     }
   );
 
-  console.log(p);
-  console.log(pokemonVarietyForRegionQuery.data);
-  console.log(varieties);
   return (
-    <main className="w-full">
+    <>
       {pokemonVarietyForRegionQuery.isLoading && "Loading variant..."}
       {pokemonVarietyForRegionQuery.data && (
-        <PokemonCardVariant {...pokemonVarietyForRegionQuery.data} />
+        <PokemonCard {...pokemonVarietyForRegionQuery.data} is_variant={true} />
       )}
-      {!Boolean(pokemonVarietyId) && <PokemonCard />}
-    </main>
+      {!Boolean(pokemonVarietyId) && <PokemonCard is_variant={false} />}
+    </>
   );
 };

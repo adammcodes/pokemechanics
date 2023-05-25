@@ -116,7 +116,7 @@ main {
 }
 
 .pokeball {
-  height: 8px;
+  height: 12px;
   border: 2px solid #000;
   border-radius: 50%;
   background-color: #fafafa;
@@ -125,32 +125,32 @@ main {
 .pokeball,
 .pokeball-upper {
   position: absolute;
-  width: 8px;
+  width: 12px;
 }
 
 .pokeball-upper {
   left: -2px;
-  bottom: 2px;
-  height: 4px;
+  bottom: 4px;
+  height: 6px;
   border-radius: 8px 8px 0 0;
   background-color: #000;
 }
 
 .top-left {
-  top: -6px;
-  left: -6px;
+  top: -8px;
+  left: -8px;
 }
 .top-right {
-  top: -6px;
-  right: -6px;
+  top: -8px;
+  right: -8px;
 }
 .bottom-left {
-  bottom: -6px;
-  left: -6px;
+  bottom: -8px;
+  left: -8px;
 }
 .bottom-right {
-  bottom: -6px;
-  right: -6px;
+  bottom: -8px;
+  right: -8px;
 }
 
 .dotted-border {
