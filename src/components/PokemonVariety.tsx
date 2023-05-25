@@ -50,9 +50,15 @@ export const PokemonVariety: React.FC<PokemonVarietyProps> = ({
     <>
       {pokemonVarietyForRegionQuery.isLoading && "Loading variant..."}
       {pokemonVarietyForRegionQuery.data && (
-        <PokemonCard {...pokemonVarietyForRegionQuery.data} is_variant={true} />
+        <PokemonCard
+          {...pokemonVarietyForRegionQuery.data}
+          is_variant={true}
+          name={pokemonVarietyForRegionQuery.data.name}
+        />
       )}
-      {!Boolean(pokemonVarietyId) && <PokemonCard is_variant={false} />}
+      {!Boolean(pokemonVarietyId) && (
+        <PokemonCard is_variant={false} name={p.name} />
+      )}
     </>
   );
 };

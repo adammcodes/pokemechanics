@@ -25,9 +25,9 @@ import { DualFlavorText } from "./DualFlavorText";
 import PokeballSpans from "./PokeballSpans";
 
 type PokemonCardProps = {
-  is_variant: boolean; // only required prop
-  id?: number;
-  name?: string;
+  is_variant: boolean; // required
+  name: string; // required
+  id?: number; // the rest are optional
   base_experience?: number;
   height?: number;
   is_default?: boolean;
@@ -44,9 +44,10 @@ export const PokemonCard: React.FC<PokemonCardProps> = (props) => {
   const p = useContext(PokemonContext);
   const { game } = useContext(GameContext);
   let formatName = convertKebabCaseToTitleCase;
-  const spriteSize: number = 130;
   const pokemonName = formatName(p.name);
-  const regionName: string | null = formatName(props.name?.split("-")[1]);
+  const regionName: string = props.is_variant
+    ? formatName(props.name.split("-")[1])
+    : p.regions[0].name;
   const name =
     props.is_variant && regionName
       ? `${pokemonName} (${regionName})`
@@ -55,7 +56,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = (props) => {
   const sprites = props.is_variant ? props.sprites : p.sprites;
   const pokemonH = props.is_variant ? props.height : p.height;
   const pokemonW = props.is_variant ? props.weight : p.weight;
-
+  const spriteSize: number = regionName === "kanto" ? 80 : 130;
   const pokemonGenus: string | undefined = p.genera
     ? p.genera.find((g: Genus) => {
         return g.language.name === "en";
