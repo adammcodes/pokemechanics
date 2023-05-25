@@ -13,7 +13,7 @@ export const PokemonTypes: React.FC<PokemonTypesProps> = ({ types }) => {
         <DynamicImage
           width={32}
           height={12}
-          src={`/images/types/${typeName}.gif`}
+          src={`/images/types/${typeName}.png`}
           alt={`${typeName} type`}
           priority={true}
         />
