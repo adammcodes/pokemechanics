@@ -24,7 +24,7 @@ const GenSelector: React.FC<GenSelectorProps> = function GenSelector({ gens }) {
 
   const genOptions: GameOption[] = gens.map((gen, index) => {
     return {
-      label: convertKebabCaseToTitleCase(gen.name),
+      label: convertKebabCaseToTitleCase(gen.name) || "N/A",
       name: gen.name,
       value: gen.name,
       number: index + 1,
@@ -41,7 +41,7 @@ const GenSelector: React.FC<GenSelectorProps> = function GenSelector({ gens }) {
       <Autocomplete
         options={genOptions}
         onSelect={handleSelect}
-        defaultValue={convertKebabCaseToTitleCase(game)}
+        defaultValue={convertKebabCaseToTitleCase(game) || ""}
         isPokemonOption={false}
       />
     </>
