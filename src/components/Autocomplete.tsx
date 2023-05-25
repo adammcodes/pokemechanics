@@ -1,19 +1,17 @@
 import { useState, KeyboardEvent, useEffect } from "react";
 import { GameOption, PokemonOption } from "../types";
-import addPrecedingZeros from "../utils/addPrecedingZeros";
 
 interface AutocompleteProps {
   options: GameOption[] | PokemonOption[];
   defaultValue: string;
   onSelect: (selectedValue: string | number) => void;
-  isPokemonOption: boolean;
+  isPokemonOption?: boolean;
 }
 
 const Autocomplete: React.FC<AutocompleteProps> = ({
   options,
   defaultValue,
   onSelect,
-  isPokemonOption,
 }) => {
   const [inputValue, setInputValue] = useState(defaultValue);
   const [filteredOptions, setFilteredOptions] = useState<
@@ -30,14 +28,19 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
   };
 
   const filterOptions = (inputValue: string) => {
-    const filteredOptions = options.filter((option) =>
-      option.label.toLowerCase().includes(inputValue.toLowerCase())
-    );
+    if (!inputValue) {
+      setFilteredOptions(options);
+      return;
+    }
+    const filteredOptions = options.filter((option) => {
+      if (!inputValue) return true;
+      return option.label.toLowerCase().includes(inputValue.toLowerCase());
+    });
     setFilteredOptions(filteredOptions);
   };
 
   const handleOptionClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    const selectedValue = event.currentTarget.name;
+    const selectedValue = event.currentTarget.name; // dex number
     const selectedLabel = event.currentTarget.innerHTML;
     onSelect(selectedValue);
     setInputValue(selectedLabel);
@@ -95,7 +98,7 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
         onClick={() => setShowList(!showList)}
       ></i>
       <ul
-        className={`absolute overflow-y-auto max-h-80 w-full ${
+        className={`absolute overflow-y-auto max-h-80 w-full z-10 ${
           !showList ? "invisible" : "visible"
         }`}
       >
@@ -112,12 +115,6 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
               className="p-1 m-0 w-full text-left"
               onClick={handleOptionClick}
             >
-              {option.number && isPokemonOption && (
-                <>
-                  <span>(#{addPrecedingZeros(option.number, 3)})</span>
-                  <span>&nbsp;</span>
-                </>
-              )}
               {option.label}{" "}
             </button>
           </li>
