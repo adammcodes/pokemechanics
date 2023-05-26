@@ -3,7 +3,9 @@ import { GameContext } from "../context/_context";
 import useGameVersion from "../hooks/useGameVersion";
 import { PokedexContextProvider } from "../context/PokedexContextProvider";
 import Dex from "../components/Dex";
+import { DexNational } from "./DexNational";
 import styles from "../../styles/Pokedexes.module.css";
+import { numOfPokemonByGen } from "../../constants/numOfPokemonByGen";
 
 type Pokedex = {
   name: string;
@@ -15,6 +17,9 @@ export default function Pokedexes() {
   const { game } = useContext(GameContext);
   // Get versionGroup data for the game
   const versionGroup = useGameVersion(game);
+  const gen: string = versionGroup.data
+    ? versionGroup.data.generation.name
+    : "generation-ix";
   // The version group may have more than one pokedex
   const pokedexes: Pokedex[] = versionGroup.data
     ? versionGroup.data.pokedexes
@@ -40,7 +45,10 @@ export default function Pokedexes() {
         key="https://pokeapi.co/api/v2/pokedex/1/"
         dexName="national"
       >
-        <Dex />
+        <DexNational
+          versionGroupName={game}
+          upperLimitNumber={numOfPokemonByGen[gen]}
+        />
       </PokedexContextProvider>
       {pokedexes.length > 0 && mappedDexes}
     </div>

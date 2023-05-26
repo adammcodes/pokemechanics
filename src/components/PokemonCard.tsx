@@ -46,7 +46,6 @@ export const PokemonCard: React.FC<PokemonCardProps> = (props) => {
   // p from PokemonContext has all the other generic species data
   const p = useContext(PokemonContext);
   console.log(p);
-  console.log(props);
   const { game } = useContext(GameContext);
   let formatName = convertKebabCaseToTitleCase;
   const pokemonName = formatName(p.name);

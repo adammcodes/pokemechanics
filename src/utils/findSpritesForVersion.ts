@@ -9,6 +9,13 @@ function findSpritesForVersion(sprites: PokemonSprites, version: string): Pokemo
     return genVersions.includes(version) || genVersions.includes(splitVersionOne) || genVersions.includes(splitVersionTwo);
   });
 
+  // There is a possibility that the pokemon will not have any sprites for the selected version
+  // e.g. version: firered-leafgreen, pokemon: latias = { front_default: null }
+  if (spritesForVersion && !spritesForVersion[version].front_default) {
+    // Return the default sprites
+    return sprites;
+  }
+
   return spritesForVersion ? spritesForVersion[version] : sprites;
 };
 export default findSpritesForVersion;
