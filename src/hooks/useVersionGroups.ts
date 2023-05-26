@@ -8,8 +8,10 @@ export default function useVersionGroups() {
 
   const fetchGenerations = async () => {
     return await api
-      .listVersionGroups()
-      .then((data: any) => data.results)
+      .listVersionGroups(0, 30)
+      .then((data: any) => {
+        return data.results
+      })
       .catch((error: any) => error);
   };
 

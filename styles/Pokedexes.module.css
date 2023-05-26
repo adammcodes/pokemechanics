@@ -1,0 +1,9 @@
+/* 48em = 768px */
+@media (max-width: 65em) {
+  .pokedexes {
+    flex-direction: column;
+    padding-left: unset;
+    padding-right: unset;
+    width: 90%;
+  }
+}

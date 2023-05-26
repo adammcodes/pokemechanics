@@ -8,3 +8,19 @@
     inset 0 0 0 1px black;
   display: flex;
 }
+
+/* 48em = 768px */
+@media (max-width: 48em) {
+  .card,
+  .box {
+    width: 90%;
+  }
+  .card__container {
+    flex-direction: column;
+    align-items: center;
+  }
+  .box {
+    margin-top: 1em;
+    margin-left: 0;
+  }
+}

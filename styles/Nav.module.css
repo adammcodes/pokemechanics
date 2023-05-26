@@ -15,7 +15,7 @@
   align-items: center;
 }
 
-.nav__list > li:hover > i {
+.menu > li:hover > i {
   pointer-events: none;
   position: absolute;
   right: 100%;
@@ -25,3 +25,9 @@
   border-left-color: black;
   float: right;
 }
+
+/* @media all and (max-width: 600px) {
+  .nav__list {
+    flex-direction: column;
+  }
+} */

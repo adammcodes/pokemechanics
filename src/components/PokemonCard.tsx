@@ -45,8 +45,9 @@ export const PokemonCard: React.FC<PokemonCardProps> = (props) => {
   // props has all the variant specific data
   // p from PokemonContext has all the other generic species data
   const p = useContext(PokemonContext);
-  const { game } = useContext(GameContext);
   console.log(p);
+  console.log(props);
+  const { game } = useContext(GameContext);
   let formatName = convertKebabCaseToTitleCase;
   const pokemonName = formatName(p.name);
   const regionName: string = props.is_variant
@@ -89,7 +90,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = (props) => {
   const pokemonSpritesGoldSilver = findSpritesForGoldSilver(sprites, game);
 
   return (
-    <div className="w-full flex justify-center">
+    <div className={`${styles.card__container} w-full flex justify-center`}>
       <div className={`${styles.card}`}>
         <table className="w-full">
           <tbody>
@@ -154,7 +155,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = (props) => {
           </tbody>
         </table>
       </div>
-      <div className="pokeball-box w-1/5 ml-5">
+      <div className={`pokeball-box w-1/5 ml-5 ${styles.box}`}>
         {flavorTextForVersion && (
           <FlavorText flavorTextForVersion={flavorTextForVersion} />
         )}

@@ -3,6 +3,7 @@ import { GameContext } from "../context/_context";
 import useGameVersion from "../hooks/useGameVersion";
 import { PokedexContextProvider } from "../context/PokedexContextProvider";
 import Dex from "../components/Dex";
+import styles from "../../styles/Pokedexes.module.css";
 
 type Pokedex = {
   name: string;
@@ -31,8 +32,16 @@ export default function Pokedexes() {
     : [];
 
   return (
-    <div className="flex flex-row w-full justify-around items-start px-5">
+    <div
+      className={`${styles.pokedexes} flex flex-row w-full justify-around items-start px-5`}
+    >
       {versionGroup.isLoading && "Loading..."}
+      <PokedexContextProvider
+        key="https://pokeapi.co/api/v2/pokedex/1/"
+        dexName="national"
+      >
+        <Dex />
+      </PokedexContextProvider>
       {pokedexes.length > 0 && mappedDexes}
     </div>
   );

@@ -3,8 +3,8 @@ import Link from "next/link";
 
 export default function Nav() {
   return (
-    <nav className={styles.menu}>
-      <ul className={styles.nav__list}>
+    <nav>
+      <ul className="menu">
         <li>
           <Link href="/pokedex">Pokédex</Link>
           <i></i>

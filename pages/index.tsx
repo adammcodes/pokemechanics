@@ -6,7 +6,6 @@ import Head from "next/head";
 import GenSelector from "../src/components/GenSelector";
 // Hooks
 import useVersionGroups from "../src/hooks/useVersionGroups";
-import useGameVersion from "../src/hooks/useGameVersion";
 // Context
 import GameContext from "../src/context/GameContextProvider";
 
@@ -15,8 +14,6 @@ export default function Home() {
   const gens = useVersionGroups();
   // Get currently selected game for it's version url
   const { game } = useContext(GameContext);
-  // Get versionGroup data for the game
-  const versionGroup = useGameVersion(game);
 
   return (
     <>
