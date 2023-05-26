@@ -218,6 +218,7 @@ main {
   border: 1px solid white;
   box-shadow: 0 1px 0 1px black, inset 0 1px 0 1px black, 0 0 0 1px black,
     inset 0 0 0 1px black;
+  -webkit-appearance: none; /* Fix box-shadow for iOS */
 }
 
 .rby-dialogue-box:focus {
