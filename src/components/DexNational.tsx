@@ -1,19 +1,22 @@
 import { useContext } from "react";
 import { PokedexContext } from "../context/_context";
 import PokemonSelector from "./PokemonSelector";
-import convertKebabCaseToTitleCase from "../utils/convertKebabCaseToTitleCase";
 
 type DexNationalProps = {
-  versionGroupName: string;
+  generation: string; // e.g. generation-i
   upperLimitNumber: number;
 };
 
 export const DexNational: React.FC<DexNationalProps> = ({
-  versionGroupName,
+  generation,
   upperLimitNumber,
 }) => {
   const { dexQuery } = useContext(PokedexContext);
-  const formatName = convertKebabCaseToTitleCase;
+  const formatName = (name: string) => {
+    const splitName = name.split("-");
+    const genNumerals = splitName[1].toUpperCase();
+    return `Gen ${genNumerals}`;
+  };
 
   return (
     <section className="mb-10">
@@ -23,7 +26,7 @@ export const DexNational: React.FC<DexNationalProps> = ({
           <header className="mb-5">
             National Dex -{" "}
             <span>
-              {formatName(versionGroupName)} (#001 - {upperLimitNumber})
+              {formatName(generation)} (#001 - {upperLimitNumber})
             </span>
           </header>
           <div className="max-w-sm">

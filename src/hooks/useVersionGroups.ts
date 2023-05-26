@@ -8,7 +8,7 @@ export default function useVersionGroups() {
 
   const fetchGenerations = async () => {
     return await api
-      .listVersionGroups(0, 30)
+      .listVersionGroups(0, 25) // right now supporting up to scarlet-violet
       .then((data: any) => {
         return data.results
       })

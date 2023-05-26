@@ -41,15 +41,17 @@ export default function Pokedexes() {
       className={`${styles.pokedexes} flex flex-row w-full justify-around items-start px-5`}
     >
       {versionGroup.isLoading && "Loading..."}
-      <PokedexContextProvider
-        key="https://pokeapi.co/api/v2/pokedex/1/"
-        dexName="national"
-      >
-        <DexNational
-          versionGroupName={game}
-          upperLimitNumber={numOfPokemonByGen[gen]}
-        />
-      </PokedexContextProvider>
+      {versionGroup.data && (
+        <PokedexContextProvider
+          key="https://pokeapi.co/api/v2/pokedex/1/"
+          dexName="national"
+        >
+          <DexNational
+            generation={gen}
+            upperLimitNumber={numOfPokemonByGen[gen]}
+          />
+        </PokedexContextProvider>
+      )}
       {pokedexes.length > 0 && mappedDexes}
     </div>
   );

@@ -25,6 +25,7 @@ import { FlavorText } from "./FlavorText";
 import { DualFlavorText } from "./DualFlavorText";
 import PokeballSpans from "./PokeballSpans";
 import { PokemonTypes } from "./PokemonTypes";
+import { spriteSizesByVersion } from "../../constants/spriteSizesByVersion";
 
 type PokemonCardProps = {
   is_variant: boolean; // required
@@ -60,7 +61,8 @@ export const PokemonCard: React.FC<PokemonCardProps> = (props) => {
   const sprites = props.is_variant ? props.sprites : p.sprites;
   const pokemonH = props.is_variant ? props.height : p.height;
   const pokemonW = props.is_variant ? props.weight : p.weight;
-  const spriteSize: number = game === "red-blue" ? 80 : 150;
+  console.log(game);
+  const spriteSize: number = spriteSizesByVersion[game];
   const pokemonGenus: string | undefined = p.genera
     ? p.genera.find((g: Genus) => {
         return g.language.name === "en";
@@ -87,7 +89,8 @@ export const PokemonCard: React.FC<PokemonCardProps> = (props) => {
 
   const pokemonSprites = findSpritesForVersion(sprites, game);
   const pokemonSpritesGoldSilver = findSpritesForGoldSilver(sprites, game);
-
+  console.log(flavorTextForVersion);
+  console.log(flavorTextForVersions);
   return (
     <div className={`${styles.card__container} w-full flex justify-center`}>
       <div className={`${styles.card}`}>
@@ -160,6 +163,14 @@ export const PokemonCard: React.FC<PokemonCardProps> = (props) => {
         )}
         {flavorTextForVersions && (
           <DualFlavorText flavorTextForVersions={flavorTextForVersions} />
+        )}
+        {!flavorTextForVersion && !flavorTextForVersions.length && (
+          <div>
+            <p className="leading-5">
+              There is no flavour text on {name} for{" "}
+              {convertKebabCaseToTitleCase(game)}.
+            </p>
+          </div>
         )}
         <PokeballSpans />
       </div>

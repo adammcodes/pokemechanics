@@ -16,7 +16,7 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
   const [inputValue, setInputValue] = useState(defaultValue);
   const [filteredOptions, setFilteredOptions] = useState<
     GameOption[] | PokemonOption[]
-  >([]);
+  >(options);
   // Toggle for showing options list
   const [showList, setShowList] = useState<Boolean>(false);
   const [activeIndex, setActiveIndex] = useState(-1);
