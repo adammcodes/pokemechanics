@@ -28,8 +28,9 @@ export default function Pokedexes() {
   // Map each pokedex to it's own data request and context provider
   const mappedDexes: JSX.Element[] = pokedexes.length
     ? pokedexes.map((dex: Pokedex) => {
+        const id: number | undefined = Number(dex.url.split("/").at(-2));
         return (
-          <PokedexContextProvider key={dex.url} dexName={dex.name}>
+          <PokedexContextProvider key={dex.url} dexId={id}>
             <Dex />
           </PokedexContextProvider>
         );
@@ -44,7 +45,7 @@ export default function Pokedexes() {
       {versionGroup.data && (
         <PokedexContextProvider
           key="https://pokeapi.co/api/v2/pokedex/1/"
-          dexName="national"
+          dexId={1}
         >
           <DexNational
             generation={gen}

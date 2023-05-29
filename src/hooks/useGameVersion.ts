@@ -11,7 +11,6 @@ export default function useGameVersion(versionGroupName: string) {
   const fetchGameVersion = async (versionGroupName: string) => {
     return await api
       .getVersionGroupByName(versionGroupName)
-      // .getVersionGroupById(id)
       .then((data: any) => data)
       .catch((error: any) => error);
   };

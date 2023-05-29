@@ -4,25 +4,26 @@ import useGameClient from "../hooks/useGameClient";
 
 type PokedexContextProps = {
   children: React.ReactNode;
-  dexName: string;
+  dexId: number;
 };
 
 export const PokedexContextProvider: React.FC<PokedexContextProps> = ({
   children,
-  dexName,
+  dexId,
 }) => {
-  const fetchPokedex = (dexName: string) => {
+  const fetchPokedex = (dexId: number) => {
     const api = useGameClient();
 
     return api
-      .getPokedexByName(dexName)
+      .getPokedexById(dexId)
       .then((data) => data)
       .catch((error) => error);
   };
 
-  const dexQuery = useQuery(["pokedex", dexName], () => fetchPokedex(dexName), {
+  const dexQuery = useQuery(["pokedex", dexId], () => fetchPokedex(dexId), {
     refetchOnWindowFocus: false,
-    enabled: Boolean(dexName),
+    refetchOnMount: false,
+    enabled: Boolean(dexId),
   });
 
   return (

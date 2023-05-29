@@ -7,6 +7,8 @@ import { PokemonOption } from "../types";
 import Autocomplete from "./Autocomplete";
 // Utils
 import convertKebabCaseToTitleCase from "../utils/convertKebabCaseToTitleCase";
+import { useContext } from "react";
+import { PokedexContext } from "../context/_context";
 
 type PokemonSpecies = {
   name: string;
@@ -26,10 +28,12 @@ type PokemonSelectorProps = {
 const PokemonSelector: React.FC<PokemonSelectorProps> =
   function PokemonSelector({ pokemon_entries }) {
     const router = useRouter();
+    const d = useContext(PokedexContext);
+    const dexId = d.dexQuery.data.id;
 
     const onPokemonSelect = (pokemonId: number | string) => {
       // Navigate to the pokemon page
-      router.push(`/pokemon/${pokemonId}`);
+      router.push(`/pokemon/${pokemonId}?dexId=${dexId}`);
     };
 
     const pokemonOptions: PokemonOption[] = pokemon_entries.map((entry) => {
