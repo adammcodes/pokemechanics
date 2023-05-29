@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Sprite } from "./Sprite";
 import { useContext } from "react";
 import {
   GameContext,
@@ -57,14 +58,14 @@ export default function ForwardBack() {
     <div className="flex flex-row justify-between w-full px-5 py-5">
       {currentEntryNum !== prevEntryNum && (
         <Link href={`/pokemon/${prevPokemonId}?dexId=${dex.id}`}>
-          &larr; #{prevRegionalDexNum}{" "}
+          &larr; #{prevRegionalDexNum} <Sprite id={prevPokemonId} size={50} />
           {formatName(prevPokemonEntry.pokemon_species.name)}
         </Link>
       )}
       {currentEntryNum === prevEntryNum && <div>&nbsp;</div>}
       {currentEntryNum !== nextEntryNum && (
         <Link href={`/pokemon/${nextPokemonId}?dexId=${dex.id}`}>
-          #{nextRegionalDexNum}{" "}
+          #{nextRegionalDexNum} <Sprite id={nextPokemonId} size={50} />
           {formatName(nextPokemonEntry.pokemon_species.name)} &rarr;
         </Link>
       )}
