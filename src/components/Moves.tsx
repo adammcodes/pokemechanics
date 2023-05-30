@@ -1,0 +1,71 @@
+import { useContext } from "react";
+import { Move } from "./Move";
+import { GameContext, PokemonContext } from "../context/_context";
+import filterMovesForGen from "../utils/filterMovesForGen";
+import mapMoves from "../utils/mapMoves";
+import convertKebabCaseToTitleCase from "../utils/convertKebabCaseToTitleCase";
+import { PokemonMoveByMethod } from "../types";
+import styles from "../../styles/Moves.module.css";
+
+const filterMovesByMethod = (moves: PokemonMoveByMethod[], method: string) => {
+  return moves.filter((m: PokemonMoveByMethod) => {
+    return m.move_learn_method === method;
+  });
+};
+
+const getLearnMethods = (moves: PokemonMoveByMethod[]) => {
+  return moves
+    .map((m) => m.move_learn_method)
+    .filter((el, i, arr) => arr.indexOf(el) === i);
+};
+
+export default function Moves() {
+  const formatName = convertKebabCaseToTitleCase;
+  const { game } = useContext(GameContext);
+  const p = useContext(PokemonContext);
+
+  // Filter out moves that do not exist in the game
+  const movesForGen = filterMovesForGen(p.moves, game);
+  // Map only moves for the game into custom type PokemonMoveByMethod[]
+  const allMoves: PokemonMoveByMethod[] = mapMoves(movesForGen, game).sort(
+    (a, b) => a.level_learned_at - b.level_learned_at
+  );
+  // Create an array of unique move_learn_methods for this gen
+  const moveLearnMethods = getLearnMethods(allMoves).sort();
+
+  console.log(p.moves);
+
+  return (
+    <div className={`mt-10 w-full ${styles.container}`}>
+      {moveLearnMethods.map((method, i) => {
+        return (
+          <div key={i} className="w-full">
+            <header className={`py-1 w-full text-center ${styles.header}`}>
+              {formatName(method)}
+            </header>
+            <figure className={styles.wrapper}>
+              <table className="overflow-x-scroll w-full border-separate border-spacing-1">
+                <thead>
+                  <tr>
+                    <th className="px-2 py-2 text-left">Level</th>
+                    <th className="px-2 py-2 text-left">Attack Name</th>
+                    <th className="px-2 py-2">Type</th>
+                    <th className="px-2 py-2">Power</th>
+                    <th className="px-2 py-2">Accuracy</th>
+                    <th className="px-2 py-2">PP</th>
+                    <th className="px-2 py-2">Effect %</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filterMovesByMethod(allMoves, method).map((m, index) => {
+                    return <Move key={index} m={m} />;
+                  })}
+                </tbody>
+              </table>
+            </figure>
+          </div>
+        );
+      })}
+    </div>
+  );
+}

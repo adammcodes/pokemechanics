@@ -1,10 +1,9 @@
-import styles from "../../styles/Nav.module.css";
 import Link from "next/link";
 
 export default function Nav() {
   return (
     <nav>
-      <ul className="menu">
+      <ul className={`menu`}>
         <li>
           <Link href="/pokedex">Pokédex</Link>
           <i></i>

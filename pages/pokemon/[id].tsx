@@ -11,6 +11,7 @@ import { PokemonVariety } from "../../src/components/PokemonVariety";
 import { PokemonContextProvider } from "../../src/context/PokemonContextProvider";
 import ForwardBack from "../../src/components/ForwardBack";
 import { PokedexContextProvider } from "../../src/context/PokedexContextProvider";
+import Moves from "../../src/components/Moves";
 
 export default function Pokemon() {
   const router = useRouter();
@@ -91,6 +92,7 @@ export default function Pokemon() {
                 varieties={pokemonSpeciesQuery.data.varieties}
               />
               <ForwardBack />
+              <Moves />
             </PokemonContextProvider>
           </PokedexContextProvider>
         )}

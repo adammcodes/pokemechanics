@@ -1,0 +1,26 @@
+.container {
+  background-color: #e0ebeb;
+}
+
+.header {
+  background-color: #24527a;
+  color: white;
+}
+
+.wrapper {
+  display: flex;
+  overscroll-behavior-x: contain;
+  overflow-x: auto;
+  margin-inline: calc(var(--page-gutter) * -1);
+  padding-inline: var(--page-gutter);
+  padding-block: 1rem;
+}
+
+.wrapper > table tbody tr > td {
+  border-radius: 2px;
+  background: #a7bcb9;
+  border: 1px solid #a7bcb9;
+  border-radius: 3px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+}

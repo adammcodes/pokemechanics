@@ -20,3 +20,14 @@ export type FlavorTextForVersion = {
   language: Language;
   version: Version;
 }
+
+export type PokemonMove = {
+  name: string;
+  url: string;
+};
+
+export type PokemonMoveByMethod = {
+  move: PokemonMove;
+  move_learn_method: string;
+  level_learned_at: number;
+};
