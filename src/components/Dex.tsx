@@ -34,8 +34,6 @@ export default function Dex() {
       }).description
     : [];
 
-  console.log(dexQuery.data);
-
   return (
     <section className="mb-10">
       {dexQuery.isLoading && "Loading..."}

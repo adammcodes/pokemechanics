@@ -33,8 +33,6 @@ export default function Moves() {
   // Create an array of unique move_learn_methods for this gen
   const moveLearnMethods = getLearnMethods(allMoves).sort();
 
-  console.log(p.moves);
-
   return (
     <div className={`mt-10 w-full ${styles.container}`}>
       {moveLearnMethods.map((method, i) => {
@@ -47,7 +45,10 @@ export default function Moves() {
               <table className="overflow-x-scroll w-full border-separate border-spacing-1">
                 <thead>
                   <tr>
-                    <th className="px-2 py-2 text-left">Level</th>
+                    <th className="px-2 py-2 text-left">
+                      {method === "machine" && <>Machine</>}
+                      {method !== "machine" && <>Level</>}
+                    </th>
                     <th className="px-2 py-2 text-left">Attack Name</th>
                     <th className="px-2 py-2">Type</th>
                     <th className="px-2 py-2">Power</th>
@@ -58,7 +59,7 @@ export default function Moves() {
                 </thead>
                 <tbody>
                   {filterMovesByMethod(allMoves, method).map((m, index) => {
-                    return <Move key={index} m={m} />;
+                    return <Move key={index} m={m} method={method} />;
                   })}
                 </tbody>
               </table>

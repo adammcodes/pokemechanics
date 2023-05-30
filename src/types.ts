@@ -31,3 +31,17 @@ export type PokemonMoveByMethod = {
   move_learn_method: string;
   level_learned_at: number;
 };
+
+export type Machine = {
+  url: string;
+}
+
+export type VersionGroup = {
+  name: string;
+  url: string;
+}
+
+export type MachineVersion = {
+  machine: Machine;
+  version_group: VersionGroup
+};

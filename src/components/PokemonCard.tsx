@@ -95,7 +95,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = (props) => {
         <table className="w-full">
           <tbody>
             <tr>
-              <td className="w-1/2 flex-col justify-center items-center">
+              <td className="w-1/2">
                 <div className="w-full flex justify-center p-2">
                   {game === "gold-silver" && (
                     <DualDynamicImages
@@ -126,7 +126,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = (props) => {
                     />
                   )}
                 </div>
-                <div className="w-full flex flex-row justify-center items-center">
+                <div className="mx-auto w-24 flex flex-row justify-around items-center">
                   <PokemonTypes types={types} />
                 </div>
               </td>

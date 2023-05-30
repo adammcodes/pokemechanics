@@ -9,7 +9,7 @@ export const PokemonTypes: React.FC<PokemonTypesProps> = ({ types }) => {
   const mappedTypes = types.map((t, i, arr) => {
     let typeName = t.type.name;
     return (
-      <div key={i} className={`${i === 0 && arr.length > 1 ? "mr-2" : ""}`}>
+      <div key={i}>
         <DynamicImage
           width={32}
           height={12}

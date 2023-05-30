@@ -6,16 +6,21 @@ import convertKebabCaseToTitleCase from "../utils/convertKebabCaseToTitleCase";
 import DynamicImage from "./DynamicImage";
 import { GameContext } from "../context/_context";
 import replaceNewlinesAndFeeds from "../utils/replaceNewlinesAndFeeds";
+import { MoveMachine } from "./MoveMachine";
 
 type MoveProps = {
   m: PokemonMoveByMethod;
+  method: string;
 };
 
-export const Move: React.FC<MoveProps> = ({ m }) => {
+export const Move: React.FC<MoveProps> = ({ m, method }) => {
   const api = useMoveClient();
   const { game } = useContext(GameContext);
   const formatName = convertKebabCaseToTitleCase;
-  const level = m.level_learned_at === 1 ? "--" : m.level_learned_at;
+  const level =
+    m.level_learned_at === 1 || m.level_learned_at === 0
+      ? "--"
+      : m.level_learned_at;
   const moveId = Number(m.move.url.split("/").at(-2));
   const fetchMove = (id: number) => {
     return api
@@ -36,7 +41,6 @@ export const Move: React.FC<MoveProps> = ({ m }) => {
     }
   );
 
-  // console.log(moveQ.data);
   const moveTextForGame = moveQ.data?.flavor_text_entries.find((entry: any) => {
     return entry.version_group.name === game && entry.language.name === "en";
   })?.flavor_text;
@@ -53,12 +57,15 @@ export const Move: React.FC<MoveProps> = ({ m }) => {
         <>
           <tr>
             <td className="px-4 py-2" rowSpan={2}>
-              {level}
+              {method === "machine" && (
+                <MoveMachine machines={moveQ.data.machines} game={game} />
+              )}
+              {method !== "machine" && <>{level}</>}
             </td>
             <td className="px-2 py-2" rowSpan={2}>
               {formatName(m.move.name)}
             </td>
-            <td className="px-4 py-2">
+            <td>
               <div className="w-full flex flex-row justify-center">
                 <DynamicImage
                   width={32}
