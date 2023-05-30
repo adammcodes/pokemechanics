@@ -1,20 +1,4 @@
-import { VersionGroup, MoveLearnMethod } from "pokenode-ts";
-
-type PokemonMove = {
-  name: string;
-  url: string;
-}
-
-type VersionGroupDetails = {
-  level_learned_at: number;
-  move_learn_method: MoveLearnMethod;
-  version_group: VersionGroup;
-}
-
-type PokemonMoveVersion = {
-  move: PokemonMove;
-  version_group_details: VersionGroupDetails[]
-};
+import { PokemonMoveVersion, VersionGroupDetails } from "../types";
 
 export default function mapMoves(moves: PokemonMoveVersion[], gen: string) {
   return moves.map((m: PokemonMoveVersion) => {

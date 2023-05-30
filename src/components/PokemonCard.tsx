@@ -20,12 +20,14 @@ import splitKebabCase from "../utils/splitKebabCase";
 import findSpritesForVersion from "../utils/findSpritesForVersion";
 import DualDynamicImages from "./DualDynamicImages";
 import findSpritesForGoldSilver from "../utils/findSpritesForGoldSilver";
-import { FlavorTextForVersion } from "../types";
+import { FlavorTextForVersion, PokemonMoveVersion } from "../types";
 import { FlavorText } from "./FlavorText";
 import { DualFlavorText } from "./DualFlavorText";
 import PokeballSpans from "./PokeballSpans";
 import { PokemonTypes } from "./PokemonTypes";
 import { spriteSizesByVersion } from "../../constants/spriteSizesByVersion";
+import { Moves } from "./Moves";
+import ForwardBack from "./ForwardBack";
 
 type PokemonCardProps = {
   is_variant: boolean; // required
@@ -40,6 +42,7 @@ type PokemonCardProps = {
   forms?: NamedAPIResource[];
   sprites?: PokemonSprites;
   types?: PokemonType[];
+  moves?: PokemonMoveVersion[];
 };
 
 export const PokemonCard: React.FC<PokemonCardProps> = (props) => {
@@ -60,6 +63,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = (props) => {
   const sprites = props.is_variant ? props.sprites : p.sprites;
   const pokemonH = props.is_variant ? props.height : p.height;
   const pokemonW = props.is_variant ? props.weight : p.weight;
+  const pokemonMoves = props.is_variant ? props.moves : p.moves;
 
   const spriteSize: number = spriteSizesByVersion[game];
   const pokemonGenus: string | undefined = p.genera
@@ -90,7 +94,9 @@ export const PokemonCard: React.FC<PokemonCardProps> = (props) => {
   const pokemonSpritesGoldSilver = findSpritesForGoldSilver(sprites, game);
 
   return (
-    <div className={`${styles.card__container} w-full flex justify-center`}>
+    <div
+      className={`${styles.card__container} w-full flex flex-col items-center justify-center`}
+    >
       <div className={`${styles.card}`}>
         <table className="w-full">
           <tbody>
@@ -155,7 +161,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = (props) => {
           </tbody>
         </table>
       </div>
-      <div className={`pokeball-box w-1/5 ml-5 ${styles.box}`}>
+      <div className={`pokeball-box w-1/4 ${styles.box}`}>
         {flavorTextForVersion && (
           <FlavorText flavorTextForVersion={flavorTextForVersion} />
         )}
@@ -172,6 +178,8 @@ export const PokemonCard: React.FC<PokemonCardProps> = (props) => {
         )}
         <PokeballSpans />
       </div>
+      <ForwardBack />
+      <Moves moves={pokemonMoves} />
     </div>
   );
 };

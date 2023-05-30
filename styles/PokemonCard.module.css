@@ -9,6 +9,11 @@
   display: flex;
 }
 
+.box {
+  width: 400px;
+  margin-top: 1rem;
+}
+
 /* 48em = 768px */
 @media (max-width: 48em) {
   .card,
@@ -21,6 +26,6 @@
   }
   .box {
     margin-top: 1em;
-    margin-left: 0;
+    /* margin-left: 0; */
   }
 }
