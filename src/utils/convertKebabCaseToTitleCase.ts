@@ -1,4 +1,5 @@
 function convertKebabCaseToTitleCase(kebabCaseName: string) {
+  if (!kebabCaseName) return "";
   const words = kebabCaseName.split("-");
   const capitalizedWords = words.map(
     (word) => word.charAt(0).toUpperCase() + word.slice(1)

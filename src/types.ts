@@ -56,3 +56,8 @@ export type PokemonMoveVersion = {
   move: PokemonMove;
   version_group_details: VersionGroupDetails[]
 };
+
+export type Gen = {
+  name: string;
+  url: string;
+};

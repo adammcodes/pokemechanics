@@ -41,7 +41,7 @@ const GenSelector: React.FC<GenSelectorProps> = function GenSelector({ gens }) {
       <Autocomplete
         options={genOptions}
         onSelect={handleSelect}
-        defaultValue={convertKebabCaseToTitleCase(game)}
+        defaultValue={convertKebabCaseToTitleCase(game) || "red-blue"}
         isPokemonOption={false}
       />
     </>

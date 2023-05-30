@@ -1,30 +1,38 @@
-// React
-import { useContext } from "react";
 // Next
 import Head from "next/head";
+import type { InferGetStaticPropsType, GetStaticProps } from "next";
+import { Gen } from "../src/types";
+import { GameClient } from "pokenode-ts"; // import the GameClient that is auto-cached
 // Components
 import GenSelector from "../src/components/GenSelector";
-// Hooks
-import useVersionGroups from "../src/hooks/useVersionGroups";
-// Context
-import GameContext from "../src/context/GameContextProvider";
 
-export default function Home() {
-  // Get list of game generations from poke-api
-  const gens = useVersionGroups();
-  // Get currently selected game for it's version url
-  const { game } = useContext(GameContext);
+export const getStaticProps: GetStaticProps<{
+  gens: Gen[];
+}> = async () => {
+  const api = new GameClient();
+  return await api
+    .listVersionGroups(0, 25) // right now supporting up to scarlet-violet
+    .then((data: any) => {
+      return { props: { gens: data.results } };
+    })
+    .catch((error: any) => error);
+};
 
+export default function Home({
+  gens,
+}: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <>
       <Head>
-        <title>Pokémechanics</title>
+        <title>
+          Pokémechanics - A complete Pokémon resource for the video game series
+        </title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main>
         <p className="mb-4">WHICH GAME ARE YOU PLAYING?</p>
-        {gens.data && <GenSelector gens={gens.data} />}
+        {gens && <GenSelector gens={gens} />}
       </main>
 
       <style jsx>{`

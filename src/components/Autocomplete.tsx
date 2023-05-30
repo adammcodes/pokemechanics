@@ -115,7 +115,7 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
               className="p-1 m-0 w-full text-left"
               onClick={handleOptionClick}
             >
-              {option.label}{" "}
+              {option.label}
             </button>
           </li>
         ))}

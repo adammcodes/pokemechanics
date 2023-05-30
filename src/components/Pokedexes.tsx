@@ -16,10 +16,10 @@ export default function Pokedexes() {
   // Get currently selected game for it's version url
   const { game } = useContext(GameContext);
   // Get versionGroup data for the game
-  const versionGroup = useGameVersion(game);
+  const versionGroup = useGameVersion(game || "gold-silver");
   const gen: string = versionGroup.data
     ? versionGroup.data.generation.name
-    : "generation-ix";
+    : "generation-ii";
   // The version group may have more than one pokedex
   const pokedexes: Pokedex[] = versionGroup.data
     ? versionGroup.data.pokedexes
