@@ -42,7 +42,7 @@ type PokemonCardProps = {
   forms?: NamedAPIResource[];
   sprites?: PokemonSprites;
   types?: PokemonType[];
-  moves?: PokemonMoveVersion[];
+  moves?: any;
 };
 
 export const PokemonCard: React.FC<PokemonCardProps> = (props) => {
