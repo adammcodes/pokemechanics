@@ -39,7 +39,7 @@ export default function Pokedexes() {
 
   return (
     <div
-      className={`${styles.pokedexes} flex flex-row w-full justify-around items-start px-5`}
+      className={`${styles.pokedexes} flex flex-wrap w-full justify-around items-start px-5`}
     >
       {versionGroup.isLoading && "Loading..."}
       {versionGroup.data && (
@@ -53,7 +53,11 @@ export default function Pokedexes() {
           />
         </PokedexContextProvider>
       )}
-      {pokedexes.length > 0 && mappedDexes}
+      <div
+        className={`${styles.pokedexes} flex flex-wrap w-full justify-around items-start px-5`}
+      >
+        {pokedexes.length > 0 && mappedDexes}
+      </div>
     </div>
   );
 }
