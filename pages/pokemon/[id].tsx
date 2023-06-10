@@ -13,7 +13,7 @@ import { PokedexContextProvider } from "../../src/context/PokedexContextProvider
 
 export default function Pokemon() {
   const router = useRouter();
-  // Access the dynamic route parameter value, which is the pokemon name
+  // Access the dynamic route parameter value, which is the pokemon id and dexId
   const { id, dexId } = router.query as { id: string; dexId: string };
   // Check the game the user has selected
   const { game } = useContext(GameContext);

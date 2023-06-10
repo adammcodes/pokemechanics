@@ -1,8 +1,11 @@
 import styles from "../../styles/PokemonCard.module.css";
 // hooks
 import { useContext } from "react";
-import { GameContext } from "../context/_context";
-import { PokemonContext } from "../context/_context";
+import {
+  GameContext,
+  PokedexContext,
+  PokemonContext,
+} from "../context/_context";
 // components
 import DynamicImage from "./DynamicImage";
 import {
@@ -20,7 +23,7 @@ import splitKebabCase from "../utils/splitKebabCase";
 import findSpritesForVersion from "../utils/findSpritesForVersion";
 import DualDynamicImages from "./DualDynamicImages";
 import findSpritesForGoldSilver from "../utils/findSpritesForGoldSilver";
-import { FlavorTextForVersion, PokemonMoveVersion } from "../types";
+import { FlavorTextForVersion } from "../types";
 import { FlavorText } from "./FlavorText";
 import { DualFlavorText } from "./DualFlavorText";
 import PokeballSpans from "./PokeballSpans";
@@ -50,6 +53,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = (props) => {
   // p from PokemonContext has all the other generic species data
   const p = useContext(PokemonContext);
   const { game } = useContext(GameContext);
+  const dex = useContext(PokedexContext);
   let formatName = convertKebabCaseToTitleCase;
   const pokemonName = formatName(p.name);
   const regionName: string = props.is_variant
@@ -178,7 +182,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = (props) => {
         )}
         <PokeballSpans />
       </div>
-      <ForwardBack />
+      {dex.dexQuery.data ? <ForwardBack /> : <p>Loading dex data...</p>}
       <Moves moves={pokemonMoves} />
     </div>
   );
