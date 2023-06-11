@@ -61,19 +61,9 @@ export default function Pokemon() {
     }
   );
 
-  const loading: boolean =
-    pokemonSpeciesQuery.isLoading ||
-    pokemonQuery.isLoading ||
-    version.isLoading;
-
-  const error: boolean =
-    pokemonSpeciesQuery.isError || pokemonQuery.isError || version.isError;
-
   return (
     <main className="w-full">
       <Pokedexes />
-      {error && !dexId && "An error occurred..."}
-      {loading && "Loading species..."}
       {pokemonQuery.data &&
         pokemonSpeciesQuery.data &&
         version.data &&

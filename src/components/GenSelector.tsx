@@ -33,7 +33,7 @@ const GenSelector: React.FC<GenSelectorProps> = function GenSelector({ gens }) {
 
   const handleSelect = (value: string | number) => {
     setGame(value);
-    router.push("/pokedex");
+    router.push(`/pokedex/${value}`);
   };
 
   return (
@@ -41,7 +41,7 @@ const GenSelector: React.FC<GenSelectorProps> = function GenSelector({ gens }) {
       <Autocomplete
         options={genOptions}
         onSelect={handleSelect}
-        defaultValue={convertKebabCaseToTitleCase(game) || "red-blue"}
+        defaultValue={convertKebabCaseToTitleCase(game || "red-blue")}
         isPokemonOption={false}
       />
     </>

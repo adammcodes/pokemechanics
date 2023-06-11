@@ -12,14 +12,16 @@ type Pokedex = {
   url: string;
 };
 
+// Pokedexes is a component that renders all the pokedexes for a given generation
+// This component is rendered in pages/pokedex/index.tsx when there is no gen string in the path
 export default function Pokedexes() {
   // Get currently selected game for it's version url
   const { game } = useContext(GameContext);
   // Get versionGroup data for the game
-  const versionGroup = useGameVersion(game || "gold-silver");
+  const versionGroup = useGameVersion(game || "red-blue");
   const gen: string = versionGroup.data
     ? versionGroup.data.generation.name
-    : "generation-ii";
+    : "generation-i";
   // The version group may have more than one pokedex
   const pokedexes: Pokedex[] = versionGroup.data
     ? versionGroup.data.pokedexes
@@ -41,7 +43,6 @@ export default function Pokedexes() {
     <div
       className={`${styles.pokedexes} flex flex-wrap w-full justify-around items-start px-5`}
     >
-      {versionGroup.isLoading && "Loading..."}
       {versionGroup.data && (
         <PokedexContextProvider
           key="https://pokeapi.co/api/v2/pokedex/1/"
