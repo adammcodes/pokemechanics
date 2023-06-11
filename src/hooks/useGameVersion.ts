@@ -5,8 +5,6 @@ import useGameClient from './useGameClient';
 export default function useGameVersion(versionGroupName: string) {
   // reuse instance of GameClient from PokeApi
   const api: any = useGameClient();
-  
-  // const versionId: number = Number(gameUrl.split("/").at(-2));
 
   const fetchGameVersion = async (versionGroupName: string) => {
     return await api

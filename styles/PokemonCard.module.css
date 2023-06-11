@@ -20,7 +20,8 @@
   .box {
     width: 90%;
   }
-  .card__container {
+  .card__container,
+  .evolutions {
     flex-direction: column;
     align-items: center;
   }

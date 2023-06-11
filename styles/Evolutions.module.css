@@ -1,0 +1,16 @@
+.evolutions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 450px) {
+  .evolutions > p {
+    display: none;
+  }
+  .evolutions > div {
+    flex-direction: column;
+    flex-wrap: wrap;
+  }
+}

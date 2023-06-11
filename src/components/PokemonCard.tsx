@@ -31,6 +31,8 @@ import { PokemonTypes } from "./PokemonTypes";
 import { spriteSizesByVersion } from "../../constants/spriteSizesByVersion";
 import { Moves } from "./Moves";
 import ForwardBack from "./ForwardBack";
+import Evolutions from "./Evolutions";
+import EvolutionContextProvider from "../context/EvolutionContextProvider";
 
 type PokemonCardProps = {
   is_variant: boolean; // required
@@ -68,6 +70,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = (props) => {
   const pokemonH = props.is_variant ? props.height : p.height;
   const pokemonW = props.is_variant ? props.weight : p.weight;
   const pokemonMoves = props.is_variant ? props.moves : p.moves;
+  const pokemonEvolveChainUrl: string = p.evolution_chain.url;
 
   const spriteSize: number = spriteSizesByVersion[game];
   const pokemonGenus: string | undefined = p.genera
@@ -182,6 +185,9 @@ export const PokemonCard: React.FC<PokemonCardProps> = (props) => {
         )}
         <PokeballSpans />
       </div>
+      <EvolutionContextProvider url={pokemonEvolveChainUrl}>
+        <Evolutions />
+      </EvolutionContextProvider>
       {dex.dexQuery.data ? <ForwardBack /> : <p>Loading dex data...</p>}
       <Moves moves={pokemonMoves} />
     </div>

@@ -1,6 +1,6 @@
 export const spriteSizesByVersion: any = {
-  "red-blue": 80,
-  "yellow": 80,
+  "red-blue": 96,
+  "yellow": 96,
   "gold-silver": 150,
   "crystal": 150,
   "ruby-sapphire": 150,
