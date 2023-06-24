@@ -9,8 +9,7 @@
   .evolutions > p {
     display: none;
   }
-  .evolutions > div {
+  .evolutions > div:last-child > div {
     flex-direction: column;
-    flex-wrap: wrap;
   }
 }

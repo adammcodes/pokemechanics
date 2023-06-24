@@ -24,7 +24,7 @@
     "**/*.ts",
     "**/*.tsx",
     "pages/pokemon/[id].tsx"
-  ],
+, "src/components/PokemonEvolutionChain.js"  ],
   "exclude": [
     "node_modules"
   ]

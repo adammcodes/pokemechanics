@@ -1,4 +1,4 @@
-import { Language, Version, MoveLearnMethod } from "pokenode-ts";
+import { Language, Version, MoveLearnMethod, NamedAPIResource, EvolutionDetail } from "pokenode-ts";
 
 // Option types are used for Autocomplete and Select components
 export type GameOption = {
@@ -60,4 +60,11 @@ export type PokemonMoveVersion = {
 export type Gen = {
   name: string;
   url: string;
+};
+
+export type Chain = {
+  is_baby: boolean;
+  species: NamedAPIResource;
+  evolves_to: Chain[];
+  evolution_details: EvolutionDetail[];
 };

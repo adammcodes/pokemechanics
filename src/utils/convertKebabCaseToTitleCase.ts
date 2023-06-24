@@ -1,4 +1,6 @@
 function convertKebabCaseToTitleCase(kebabCaseName: string) {
+  if (typeof kebabCaseName !== "string") throw new Error("Invalid Input. convertKebabCaseToTitleCase expects a string.")
+
   if (!kebabCaseName) return "";
   const words = kebabCaseName.split("-");
   const capitalizedWords = words.map(
