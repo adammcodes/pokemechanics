@@ -27,6 +27,15 @@ const PokemonSpriteForGen = ({
       });
   };
 
+  const fetchPokemonSpecies = (pokemonId: string) => {
+    return api
+      .getPokemonSpeciesById(Number(pokemonId))
+      .then((data) => data)
+      .catch((err) => {
+        throw err;
+      });
+  };
+
   // Use react-query to fetch the pokemon data
   const pokemonQuery = useQuery(
     ["pokemonEvolutionSprite", pokemonId],
@@ -38,11 +47,28 @@ const PokemonSpriteForGen = ({
     }
   );
 
-  if (pokemonQuery.isLoading) return <div>Loading sprite...</div>;
+  // Use react-query to fetch the pokemon species data
+  const pokemonSpeciesQuery = useQuery(
+    ["pokemonSpeciesEvolutionSprite", pokemonId],
+    () => fetchPokemonSpecies(pokemonId),
+    {
+      enabled: Boolean(pokemonId),
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+    }
+  );
 
-  if (pokemonQuery.isError) return <div>Error loading sprite</div>;
+  // If the pokemon/species data is loading, return a loading message
+  if (pokemonQuery.isLoading || pokemonSpeciesQuery.isLoading)
+    return <div>Loading sprite...</div>;
+  // If there is an error, return an error message
+  if (pokemonQuery.isError || pokemonSpeciesQuery.isError)
+    return <div>Error loading sprite</div>;
 
-  if (pokemonQuery.data) {
+  if (pokemonQuery.data && pokemonSpeciesQuery.data) {
+    // Figure out which version of the sprite to use based on the game region
+    console.log(pokemonSpeciesQuery.data);
+
     // Render the pokemon sprite for the current generation
     const allSprites = pokemonQuery.data.sprites;
     // Use the sprite for the generation if it exists, otherwise use the default official artwork sprite
