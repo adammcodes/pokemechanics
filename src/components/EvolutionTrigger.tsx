@@ -128,6 +128,18 @@ const EvolutionTrigger = ({ details }: any) => {
           battle
         </small>
       )}
+      {trigger === "agile-style-move" && (
+        <small>
+          Used the agile-style move {formatName(knownMove.name)} 20 times in
+          battle
+        </small>
+      )}
+      {trigger === "recoil-damage" && (
+        <small>
+          Received
+          <br /> recoil damage
+        </small>
+      )}
       <span>⇒</span>
     </div>
   );

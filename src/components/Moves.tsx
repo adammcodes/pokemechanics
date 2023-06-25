@@ -26,9 +26,11 @@ type MovesProps = {
 export const Moves: React.FC<MovesProps> = ({ moves }) => {
   const formatName = convertKebabCaseToTitleCase;
   const { game } = useContext(GameContext);
+  console.log(moves);
 
   // Filter out moves that do not exist in the game
   const movesForGen = filterMovesForGen(moves, game);
+  console.log(movesForGen);
   // Map only moves for the game into custom type PokemonMoveByMethod[]
   const allMoves: PokemonMoveByMethod[] = mapMoves(movesForGen, game).sort(
     (a, b) => a.level_learned_at - b.level_learned_at
