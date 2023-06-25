@@ -4,6 +4,7 @@ import { PokemonContext } from "../context/_context";
 import { Region, PokemonSpeciesVariety } from "pokenode-ts";
 import usePokemonClient from "../hooks/usePokemonClient";
 import { PokemonCard } from "./PokemonCard";
+import findVarietyForRegion from "../utils/findVarietyForRegion";
 
 type PokemonVarietyProps = {
   name: string;
@@ -16,13 +17,11 @@ export const PokemonVariety: React.FC<PokemonVarietyProps> = ({
 }) => {
   const api = usePokemonClient();
   const p = useContext(PokemonContext);
+
   // If the pokemon's non-default variety matches the name of the region for this game
   // Then we will fetch that pokemon variety by id
-  const pokemonVarietyForRegion: PokemonSpeciesVariety | undefined = varieties
-    .filter((variety) => !variety.is_default)
-    .find((variety) => {
-      return variety.pokemon.name.includes(regions[0].name);
-    });
+  const pokemonVarietyForRegion: PokemonSpeciesVariety | undefined =
+    findVarietyForRegion(varieties, regions);
 
   const pokemonVarietyId: number | undefined = Number(
     pokemonVarietyForRegion?.pokemon.url.split("/").at(-2)

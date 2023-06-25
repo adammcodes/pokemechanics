@@ -1,6 +1,10 @@
 import usePokemonClient from "../hooks/usePokemonClient";
 import { useQuery } from "react-query";
+import useGameVersion from "../hooks/useGameVersion";
 import findSpritesForVersion from "../utils/findSpritesForVersion";
+import findVarietyForRegion from "../utils/findVarietyForRegion";
+import { PokemonSpeciesVariety } from "pokenode-ts";
+import PokemonSpriteById from "./PokemonSpriteById";
 
 // Component that renders the pokemon sprite for the current generation
 const PokemonSpriteForGen = ({
@@ -10,15 +14,29 @@ const PokemonSpriteForGen = ({
   pokemonId: string | undefined;
   game: string;
 }) => {
+  // If there is no pokemonId, return a message
   if (!pokemonId) return <p>Sprite not available</p>;
+  // Set the sprite size, alt text, and style
+  const spriteSize = 80;
+  const spriteAltText = `Pokemon sprite`;
+  const spriteStyle = {
+    width: `${spriteSize}px`,
+  };
+  // Get the current game version
+  const version = useGameVersion(game);
+  // Initialize the pokemonVarietyId
+  let pokemonVarietyId: number | undefined;
+  // Use officialSpriteById to get the official artwork sprite
+  const officialSpriteById = (id: number | string) =>
+    `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`;
 
   // If there is no sprite for the current generation, use the official artwork
-  let sprite = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonId}.png`;
+  let sprite = officialSpriteById(pokemonId);
 
   // Use pokemonId to fetch the pokemon data for the pokemon using the PokemonClient
   // This will give us all the sprites for the pokemon
   const api = usePokemonClient();
-  const fetchPokemon = (pokemonId: string) => {
+  const fetchPokemon = (pokemonId: number) => {
     return api
       .getPokemonById(Number(pokemonId))
       .then((data) => data)
@@ -27,6 +45,7 @@ const PokemonSpriteForGen = ({
       });
   };
 
+  // Get the pokemon species data for the pokemon using the PokemonClient, this will give us all varieties for the pokemon
   const fetchPokemonSpecies = (pokemonId: string) => {
     return api
       .getPokemonSpeciesById(Number(pokemonId))
@@ -39,7 +58,7 @@ const PokemonSpriteForGen = ({
   // Use react-query to fetch the pokemon data
   const pokemonQuery = useQuery(
     ["pokemonEvolutionSprite", pokemonId],
-    () => fetchPokemon(pokemonId),
+    () => fetchPokemon(Number(pokemonId)),
     {
       enabled: Boolean(pokemonId),
       refetchOnMount: false,
@@ -58,6 +77,9 @@ const PokemonSpriteForGen = ({
     }
   );
 
+  const regions = version.data.regions;
+  const varieties = pokemonSpeciesQuery.data?.varieties;
+
   // If the pokemon/species data is loading, return a loading message
   if (pokemonQuery.isLoading || pokemonSpeciesQuery.isLoading)
     return <div>Loading sprite...</div>;
@@ -65,9 +87,19 @@ const PokemonSpriteForGen = ({
   if (pokemonQuery.isError || pokemonSpeciesQuery.isError)
     return <div>Error loading sprite</div>;
 
-  if (pokemonQuery.data && pokemonSpeciesQuery.data) {
+  if (
+    pokemonQuery.data &&
+    pokemonSpeciesQuery.data &&
+    version.data &&
+    varieties
+  ) {
     // Figure out which version of the sprite to use based on the game region
-    console.log(pokemonSpeciesQuery.data);
+    const pokemonVarietyForRegion: PokemonSpeciesVariety | undefined =
+      findVarietyForRegion(varieties, regions);
+    // If there is a matching pokemon variety for this game region, use that pokemon variety's id
+    pokemonVarietyId = Number(
+      pokemonVarietyForRegion?.pokemon.url.split("/").at(-2)
+    );
 
     // Render the pokemon sprite for the current generation
     const allSprites = pokemonQuery.data.sprites;
@@ -75,21 +107,13 @@ const PokemonSpriteForGen = ({
     sprite = findSpritesForVersion(allSprites, game).front_default ?? sprite;
   }
 
-  const spriteSize = 80;
-  const spriteAltText = `Pokemon sprite`;
-  const spriteStyle = {
-    width: `${spriteSize}px`,
-    // height: `${spriteSize}px`,
-  };
+  // If there is a pokemonVarietyId, use the PokemonSpriteById component to render the regional variant sprite
+  if (pokemonVarietyId) {
+    return <PokemonSpriteById pokemonId={pokemonVarietyId} game={game} />;
+  }
 
-  return (
-    <img
-      // className="w-20 h-20"
-      src={sprite}
-      alt={spriteAltText}
-      style={spriteStyle}
-    />
-  );
+  // Otherwise, return the sprite
+  return <img src={sprite} alt={spriteAltText} style={spriteStyle} />;
 };
 
 export default PokemonSpriteForGen;
