@@ -1,12 +1,20 @@
 import Image from "next/image";
 import Link from "next/link";
 import Nav from "./Nav";
-// Media
-import styles from "../../styles/Header.module.css";
+import { useContext } from "react";
+import { GameContext } from "../context/_context";
+import convertKebabCaseToTitleCase from "../utils/convertKebabCaseToTitleCase";
+import useGameVersion from "../hooks/useGameVersion";
 
 const logoSize: number = 80;
 
 export default function Header() {
+  const { game } = useContext(GameContext);
+  const formatName = convertKebabCaseToTitleCase;
+  const versionGroup = useGameVersion(game);
+  const genNumber =
+    versionGroup.data && versionGroup.data.generation.name.split("-")[1];
+
   return (
     <div className="w-full">
       <header className="header">
@@ -23,6 +31,12 @@ export default function Header() {
           <Link href="/">
             <h1>POKEMECHANICS</h1>
           </Link>
+          {game && versionGroup.data && (
+            <section>
+              &nbsp;- {formatName(game)}{" "}
+              {genNumber && <>(Gen {genNumber.toUpperCase()})</>}
+            </section>
+          )}
         </div>
       </header>
       <input className="menu-btn" type="checkbox" id="menu-btn" />

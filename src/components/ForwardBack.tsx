@@ -42,17 +42,19 @@ export default function ForwardBack() {
 
   // Get national dex Ids
   const prevPokemonId = prevPokemonEntry.pokemon_species.url.split("/").at(-2);
-  const nextPokemonId = nextPokemonEntry.pokemon_species.url.split("/").at(-2);
+  const nextPokemonId = nextPokemonEntry?.pokemon_species.url.split("/").at(-2);
 
   // Get regional dex numbers with preceeding zeros
   const prevRegionalDexNum = addPrecedingZeros(
     prevPokemonEntry.entry_number,
     lastDexEntryNum.toString().length
   );
-  const nextRegionalDexNum = addPrecedingZeros(
-    nextPokemonEntry.entry_number,
-    lastDexEntryNum.toString().length
-  );
+  const nextRegionalDexNum = nextPokemonId
+    ? addPrecedingZeros(
+        nextPokemonEntry.entry_number,
+        lastDexEntryNum.toString().length
+      )
+    : 0;
 
   return (
     <div className="flex flex-row justify-between w-full px-5 py-5">
@@ -63,7 +65,7 @@ export default function ForwardBack() {
         </Link>
       )}
       {currentEntryNum === prevEntryNum && <div>&nbsp;</div>}
-      {currentEntryNum !== nextEntryNum && (
+      {currentEntryNum !== nextEntryNum && nextPokemonId && (
         <Link href={`/pokemon/${nextPokemonId}?dexId=${dex.id}`}>
           #{nextRegionalDexNum} <Sprite id={nextPokemonId} size={50} />
           {formatName(nextPokemonEntry.pokemon_species.name)} &rarr;
