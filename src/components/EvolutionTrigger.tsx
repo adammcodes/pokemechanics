@@ -1,28 +1,28 @@
+// import { EvolutionDetail } from "pokenode-ts";
 import convertKebabCaseToTitleCase from "../utils/convertKebabCaseToTitleCase";
 import relativeAttackAndDefense from "../utils/relativeAttackAndDefence";
 
 const EvolutionTrigger = ({ details }: any) => {
-  console.log(details);
   const formatName = convertKebabCaseToTitleCase;
-  const trigger = details[0].trigger.name;
-  const level = details[0].min_level;
-  const item = details[0].item;
-  const heldItem = details[0].held_item;
-  const knownMove = details[0].known_move;
-  const knownMoveType = details[0].known_move_type;
-  const location = details[0].location;
-  const minAffection = details[0].min_affection;
-  const minBeauty = details[0].min_beauty;
-  const minHappiness = details[0].min_happiness;
+  const trigger = details.trigger.name;
+  const level = details.min_level;
+  const item = details.item;
+  const heldItem = details.held_item;
+  const knownMove = details.known_move;
+  const knownMoveType = details.known_move_type;
+  const location = details.location;
+  // const minAffection = details.min_affection;
+  const minBeauty = details.min_beauty;
+  const minHappiness = details.min_happiness;
   // const needsOverworldRain = details[0].needs_overworld_rain;
   // const partySpecies = details[0].party_species;
   // const partyType = details[0].party_type;
-  const relativePhysicalStats = relativeAttackAndDefense(
-    details[0].relative_physical_stats
-  );
-  const timeOfDay = details[0].time_of_day;
+  const relativePhysicalStats =
+    details.relative_physical_stats &&
+    relativeAttackAndDefense(details.relative_physical_stats);
+  const timeOfDay = details.time_of_day;
   // const tradeSpecies = details[0].trade_species;
-  const turnUpsideDown = details[0].turn_upside_down;
+  const turnUpsideDown = details.turn_upside_down;
   const locationName = location?.name;
 
   return (
@@ -32,6 +32,14 @@ const EvolutionTrigger = ({ details }: any) => {
           {level && `Lv. ${level}`}
           <br />
           {formatName(trigger)}
+          {minBeauty && (
+            <>
+              <br />
+              with
+              <br />
+              {`${minBeauty === 171 ? "Max" : minBeauty} Beauty`}
+            </>
+          )}
           {minHappiness && (
             <>
               <br />
@@ -99,7 +107,13 @@ const EvolutionTrigger = ({ details }: any) => {
       )}
       {trigger === "trade" && (
         <small>
-          Trade {heldItem && ` holding ${formatName(heldItem.name)}`}
+          Trade{" "}
+          {heldItem && (
+            <>
+              holding <br />
+              {formatName(heldItem.name)}
+            </>
+          )}
         </small>
       )}
       {trigger === "known-move" && (

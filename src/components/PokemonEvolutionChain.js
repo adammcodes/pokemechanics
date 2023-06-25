@@ -2,6 +2,7 @@ import convertKebabCaseToTitleCase from "../utils/convertKebabCaseToTitleCase";
 import EvolutionTrigger from "./EvolutionTrigger";
 import PokemonSpriteForGen from "./PokemonSpriteForGen";
 import { numOfPokemonByGen } from "../../constants/numOfPokemonByGen";
+import findEvolutionDetailForGame from "../utils/findEvolutionDetailForGame";
 
 // Filters out evolutions that are not in the given generation
 function onlyEvolutionsForGen(evolution, generation) {
@@ -25,7 +26,13 @@ const renderEvolutionNode = (node, gameInfo, prevEvolutionInGen) => {
       {isPokemonInGen && (
         <>
           {evolution_details.length > 0 && prevEvolutionInGen && (
-            <EvolutionTrigger details={evolution_details} />
+            <EvolutionTrigger
+              details={findEvolutionDetailForGame(
+                species.name,
+                evolution_details,
+                generation
+              )}
+            />
           )}
           <figure className="flex flex-col items-center">
             <PokemonSpriteForGen

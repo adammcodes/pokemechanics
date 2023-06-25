@@ -53,12 +53,12 @@ const PokemonSpriteForGen = ({
   const spriteAltText = `Pokemon sprite`;
   const spriteStyle = {
     width: `${spriteSize}px`,
-    height: `${spriteSize}px`,
+    // height: `${spriteSize}px`,
   };
 
   return (
     <img
-      className="w-20 h-20"
+      // className="w-20 h-20"
       src={sprite}
       alt={spriteAltText}
       style={spriteStyle}
