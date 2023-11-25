@@ -13,7 +13,7 @@ export default function Nav() {
           <i></i>
         </li>
         <li>
-          <Link href="/locations">Locations</Link>
+          <Link href="/map">Map</Link>
           <i></i>
         </li>
         <li>
