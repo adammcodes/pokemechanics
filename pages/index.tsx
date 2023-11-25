@@ -8,6 +8,8 @@ import { GameClient } from "pokenode-ts"; // import the GameClient that is auto-
 // Components
 import GenSelector from "../src/components/GenSelector";
 import PokeballLoader from "../src/components/PokeballLoader";
+// Styles
+import styles from "../styles/TypingText.module.css";
 
 export const getStaticProps: GetStaticProps<{
   gens: Gen[];
@@ -44,7 +46,9 @@ export default function Home({
 
       {!loading && (
         <main>
-          <p className="mb-4">WHICH GAME ARE YOU PLAYING?</p>
+          <div className={styles.typing}>
+            WHICH GAME ARE YOU PLAYING?<span className={styles.cursor}>_</span>
+          </div>
           {gens && <GenSelector gens={gens} />}
         </main>
       )}
