@@ -1,6 +1,6 @@
 import { useQuery } from "react-query";
-import DynamicImage from "./DynamicImage";
-import usePokemonClient from "../hooks/usePokemonClient";
+import DynamicImage from "./common/DynamicImage";
+import usePokemonClient from "@/hooks/usePokemonClient";
 
 type SpriteProps = {
   id: number | string;
@@ -11,7 +11,7 @@ export const Sprite: React.FC<SpriteProps> = ({ id, size }) => {
   const api = usePokemonClient();
   const p = useQuery(
     ["pokemonSprite", id],
-    () => {
+    async () => {
       return api
         .getPokemonById(Number(id))
         .then((data) => data)

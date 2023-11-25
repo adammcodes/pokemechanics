@@ -1,11 +1,11 @@
 import { useContext } from "react";
 import { Move } from "./Move";
-import { GameContext } from "../context/_context";
-import filterMovesForGen from "../utils/filterMovesForGen";
-import mapMoves from "../utils/mapMoves";
-import convertKebabCaseToTitleCase from "../utils/convertKebabCaseToTitleCase";
-import { PokemonMoveByMethod, PokemonMoveVersion } from "../types";
-import styles from "../../styles/Moves.module.css";
+import { GameContext } from "@/context/_context";
+import filterMovesForGen from "@/lib/filterMovesForGen";
+import mapMoves from "@/lib/mapMoves";
+import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
+import { PokemonMoveByMethod, PokemonMoveVersion } from "@/types/index";
+import styles from "@/styles/Moves.module.css";
 
 const filterMovesByMethod = (moves: PokemonMoveByMethod[], method: string) => {
   return moves.filter((m: PokemonMoveByMethod) => {
@@ -29,7 +29,7 @@ export const Moves: React.FC<MovesProps> = ({ moves }) => {
 
   // Filter out moves that do not exist in the game
   const movesForGen = filterMovesForGen(moves, game);
-  console.log(movesForGen);
+
   // Map only moves for the game into custom type PokemonMoveByMethod[]
   const allMoves: PokemonMoveByMethod[] = mapMoves(movesForGen, game).sort(
     (a, b) => a.level_learned_at - b.level_learned_at

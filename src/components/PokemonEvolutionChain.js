@@ -1,8 +1,8 @@
-import convertKebabCaseToTitleCase from "../utils/convertKebabCaseToTitleCase";
 import EvolutionTrigger from "./EvolutionTrigger";
 import PokemonSpriteForGen from "./PokemonSpriteForGen";
-import { numOfPokemonByGen } from "../../constants/numOfPokemonByGen";
-import findEvolutionDetailForGame from "../utils/findEvolutionDetailForGame";
+import { numOfPokemonByGen } from "@/constants/numOfPokemonByGen";
+import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
+import findEvolutionDetailForGame from "@/lib/findEvolutionDetailForGame";
 
 // Filters out evolutions that are not in the given generation
 function onlyEvolutionsForGen(evolution, generation) {

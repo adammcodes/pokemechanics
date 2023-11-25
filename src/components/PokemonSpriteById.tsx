@@ -1,6 +1,6 @@
 import usePokemonClient from "../hooks/usePokemonClient";
 import { useQuery } from "react-query";
-import findSpritesForVersion from "../utils/findSpritesForVersion";
+import findSpritesForVersion from "../lib/findSpritesForVersion";
 
 // Component that renders the pokemon sprite for the current generation
 const PokemonSpriteById = ({

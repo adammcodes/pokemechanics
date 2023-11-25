@@ -1,13 +1,13 @@
 import { useContext, useEffect } from "react";
-import GameContext from "../../src/context/GameContextProvider";
 import type { InferGetServerSidePropsType } from "next";
-import useGameClient from "../../src/hooks/useGameClient";
-import { PokedexContextProvider } from "../../src/context/PokedexContextProvider";
-import { DexNational } from "../../src/components/DexNational";
-import Dex from "../../src/components/Dex";
-import { numOfPokemonByGen } from "../../constants/numOfPokemonByGen";
+import useGameClient from "@/hooks/useGameClient";
+import GameContext from "@/context/GameContextProvider";
+import { PokedexContextProvider } from "@/context/PokedexContextProvider";
+import { DexNational } from "@/components/DexNational";
+import Dex from "@/components/Dex";
+import { numOfPokemonByGen } from "@/constants/numOfPokemonByGen";
 import { NamedAPIResource } from "pokenode-ts";
-import styles from "../../styles/Pokedexes.module.css";
+import styles from "@/styles/Pokedexes.module.css";
 
 // use getServerSideProps to fetch the game version for the selected generation
 export async function getServerSideProps(context: any) {

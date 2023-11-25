@@ -1,6 +1,6 @@
 import { useQuery } from "react-query";
-import { MachineVersion } from "../types";
-import useMachineClient from "../hooks/useMachineClient";
+import { MachineVersion } from "@/types/index";
+import useMachineClient from "@/hooks/useMachineClient";
 
 type MoveMachineProps = {
   machines: MachineVersion[];

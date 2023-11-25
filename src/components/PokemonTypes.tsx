@@ -1,5 +1,5 @@
 import { PokemonType } from "pokenode-ts";
-import DynamicImage from "./DynamicImage";
+import DynamicImage from "./common/DynamicImage";
 
 type PokemonTypesProps = {
   types: PokemonType[];

@@ -1,15 +1,15 @@
 // hooks
+import { useContext } from "react";
 import { useRouter } from "next/router";
 import { useQuery } from "react-query";
-import usePokemonClient from "../../src/hooks/usePokemonClient";
-import { useContext } from "react";
-import { GameContext } from "../../src/context/_context";
-import useGameVersion from "../../src/hooks/useGameVersion";
+import usePokemonClient from "@/hooks/usePokemonClient";
+import useGameVersion from "@/hooks/useGameVersion";
 // Components
-import Pokedexes from "../../src/components/Pokedexes";
-import { PokemonVariety } from "../../src/components/PokemonVariety";
-import { PokemonContextProvider } from "../../src/context/PokemonContextProvider";
-import { PokedexContextProvider } from "../../src/context/PokedexContextProvider";
+import Pokedexes from "@/components/Pokedexes";
+import { PokemonVariety } from "@/components/PokemonVariety";
+import { GameContext } from "@/context/_context";
+import { PokemonContextProvider } from "@/context/PokemonContextProvider";
+import { PokedexContextProvider } from "@/context/PokedexContextProvider";
 
 export default function Pokemon() {
   const router = useRouter();

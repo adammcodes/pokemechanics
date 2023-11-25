@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { PokedexContext } from "../context/_context";
+import { PokedexContext } from "@/context/_context";
 import PokemonSelector from "./PokemonSelector";
 
 type DexNationalProps = {

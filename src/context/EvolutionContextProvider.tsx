@@ -1,5 +1,5 @@
 import { EvolutionContext } from "./_context";
-import useEvolutionClient from "../hooks/useEvolutionClient";
+import useEvolutionClient from "@/hooks/useEvolutionClient";
 import { useQuery } from "react-query";
 
 type EvolutionContextProps = {

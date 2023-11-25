@@ -1,4 +1,4 @@
-import PokeballLoader from "../src/components/PokeballLoader";
+import PokeballLoader from "@/components/common/PokeballLoader";
 
 export default function Bag() {
   return (

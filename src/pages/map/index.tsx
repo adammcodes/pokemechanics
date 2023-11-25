@@ -1,6 +1,6 @@
-import PokeballLoader from "../src/components/PokeballLoader";
+import PokeballLoader from "@/components/common/PokeballLoader";
 
-export default function Locations() {
+export default function Map() {
   return (
     <main>
       This page is in development...

@@ -4,7 +4,7 @@ import { PokemonContext } from "../context/_context";
 import { Region, PokemonSpeciesVariety } from "pokenode-ts";
 import usePokemonClient from "../hooks/usePokemonClient";
 import { PokemonCard } from "./PokemonCard";
-import findVarietyForRegion from "../utils/findVarietyForRegion";
+import findVarietyForRegion from "../lib/findVarietyForRegion";
 
 type PokemonVarietyProps = {
   name: string;

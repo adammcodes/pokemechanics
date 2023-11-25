@@ -1,6 +1,6 @@
 import { PokedexContext } from "./_context";
 import { useQuery } from "react-query";
-import useGameClient from "../hooks/useGameClient";
+import useGameClient from "@/hooks/useGameClient";
 
 type PokedexContextProps = {
   children: React.ReactNode;

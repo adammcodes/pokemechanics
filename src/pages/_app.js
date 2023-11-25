@@ -1,7 +1,7 @@
-import '../styles/globals.css';
+import "@/styles/globals.css";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { GameContextProvider } from "../src/context/GameContextProvider";
-import { Layout } from "../src/components/Layout";
+import { GameContextProvider } from "@/context/GameContextProvider";
+import { Layout } from "@/components/common/Layout";
 
 const queryClient = new QueryClient();
 

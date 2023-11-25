@@ -1,15 +1,15 @@
 import { useContext } from "react";
-import GameContext from "../src/context/GameContextProvider";
+import GameContext from "@/context/GameContextProvider";
+import { Gen } from "@/types/index";
 // Next
 import Head from "next/head";
 import type { InferGetStaticPropsType, GetStaticProps } from "next";
-import { Gen } from "../src/types";
 import { GameClient } from "pokenode-ts"; // import the GameClient that is auto-cached
 // Components
-import GenSelector from "../src/components/GenSelector";
-import PokeballLoader from "../src/components/PokeballLoader";
+import GenSelector from "@/components/GenSelector";
+import PokeballLoader from "@/components/common/PokeballLoader";
 // Styles
-import styles from "../styles/TypingText.module.css";
+import styles from "@/styles/TypingText.module.css";
 
 export const getStaticProps: GetStaticProps<{
   gens: Gen[];

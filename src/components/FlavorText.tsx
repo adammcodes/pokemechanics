@@ -1,5 +1,5 @@
-import { FlavorTextForVersion } from "../types";
-import replaceNewlinesAndFeeds from "../utils/replaceNewlinesAndFeeds";
+import { FlavorTextForVersion } from "@/types/index";
+import replaceNewlinesAndFeeds from "@/utils/replaceNewlinesAndFeeds";
 
 type FlavorTextProps = {
   flavorTextForVersion: FlavorTextForVersion;

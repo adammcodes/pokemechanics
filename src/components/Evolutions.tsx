@@ -1,8 +1,8 @@
 import React from "react";
-import { EvolutionContext, GameContext } from "../context/_context";
+import { EvolutionContext, GameContext } from "@/context/_context";
 import { useContext } from "react";
-import styles from "../../styles/Evolutions.module.css";
-import useGameVersion from "../hooks/useGameVersion";
+import styles from "@/styles/Evolutions.module.css";
+import useGameVersion from "@/hooks/useGameVersion";
 import PokemonEvolutionChain from "./PokemonEvolutionChain";
 
 export default function Evolutions() {

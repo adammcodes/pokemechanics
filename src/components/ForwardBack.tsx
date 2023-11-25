@@ -9,7 +9,7 @@ import {
 import { Pokedex } from "pokenode-ts";
 import convertKebabCaseToTitleCase from "../utils/convertKebabCaseToTitleCase";
 import useGameVersion from "../hooks/useGameVersion";
-import { numOfPokemonByGen } from "../../constants/numOfPokemonByGen";
+import { numOfPokemonByGen } from "../constants/numOfPokemonByGen";
 import addPrecedingZeros from "../utils/addPrecedingZeros";
 
 type PokedexEntry = {

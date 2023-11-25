@@ -2,9 +2,9 @@ import Image from "next/image";
 import Link from "next/link";
 import Nav from "./Nav";
 import { useContext } from "react";
-import { GameContext } from "../context/_context";
-import convertKebabCaseToTitleCase from "../utils/convertKebabCaseToTitleCase";
-import useGameVersion from "../hooks/useGameVersion";
+import { GameContext } from "@/context/_context";
+import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
+import useGameVersion from "@/hooks/useGameVersion";
 
 const logoSize: number = 80;
 

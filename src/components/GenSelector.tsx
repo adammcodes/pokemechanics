@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { useContext } from "react";
 import { GameOption } from "../types";
 // Components
-import Autocomplete from "./Autocomplete";
+import Autocomplete from "./common/Autocomplete";
 // Utils
 import convertKebabCaseToTitleCase from "../utils/convertKebabCaseToTitleCase";
 // Context

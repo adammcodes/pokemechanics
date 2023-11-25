@@ -1,6 +1,6 @@
 import { useContext } from "react";
-import useGameVersion from "../hooks/useGameVersion";
-import { GameContext } from "../context/_context";
+import useGameVersion from "@/hooks/useGameVersion";
+import { GameContext } from "@/context/_context";
 
 export default function NationalDex() {
   // Get currently selected game for it's version url

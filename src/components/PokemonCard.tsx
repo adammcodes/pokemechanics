@@ -1,13 +1,14 @@
-import styles from "../../styles/PokemonCard.module.css";
-// hooks
+import styles from "@/styles/PokemonCard.module.css";
+// hooks & context
 import { useContext } from "react";
 import {
   GameContext,
   PokedexContext,
   PokemonContext,
-} from "../context/_context";
-// components
-import DynamicImage from "./DynamicImage";
+} from "@/context/_context";
+import EvolutionContextProvider from "@/context/EvolutionContextProvider";
+
+// types
 import {
   Genus,
   PokemonAbility,
@@ -15,24 +16,26 @@ import {
   NamedAPIResource,
   PokemonType,
 } from "pokenode-ts";
-// utils
-import convertKebabCaseToTitleCase from "../utils/convertKebabCaseToTitleCase";
-import convertHeightToCmOrM from "../utils/convertHeightToCmOrM";
-import convertWeightToGramsOrKg from "../utils/convertWeightToGramsOrKg";
-import splitKebabCase from "../utils/splitKebabCase";
-import findSpritesForVersion from "../utils/findSpritesForVersion";
+import { FlavorTextForVersion } from "@/types/index";
+// utils, lib, constants
+import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
+import convertHeightToCmOrM from "@/utils/convertHeightToCmOrM";
+import convertWeightToGramsOrKg from "@/utils/convertWeightToGramsOrKg";
+import splitKebabCase from "@/utils/splitKebabCase";
+import findSpritesForVersion from "@/lib/findSpritesForVersion";
+import findSpritesForGoldSilver from "@/lib/findSpritesForGoldSilver";
+import { spriteSizesByVersion } from "@/constants/spriteSizesByVersion";
+// shared components
+import DynamicImage from "./common/DynamicImage";
+import PokeballSpans from "./common/PokeballSpans";
+// components
 import DualDynamicImages from "./DualDynamicImages";
-import findSpritesForGoldSilver from "../utils/findSpritesForGoldSilver";
-import { FlavorTextForVersion } from "../types";
 import { FlavorText } from "./FlavorText";
 import { DualFlavorText } from "./DualFlavorText";
-import PokeballSpans from "./PokeballSpans";
 import { PokemonTypes } from "./PokemonTypes";
-import { spriteSizesByVersion } from "../../constants/spriteSizesByVersion";
 import { Moves } from "./Moves";
 import ForwardBack from "./ForwardBack";
 import Evolutions from "./Evolutions";
-import EvolutionContextProvider from "../context/EvolutionContextProvider";
 
 type PokemonCardProps = {
   is_variant: boolean; // required
@@ -60,7 +63,9 @@ export const PokemonCard: React.FC<PokemonCardProps> = (props) => {
   const pokemonName = formatName(p.name);
   const regionName: string = props.is_variant
     ? formatName(props.name.split("-")[1])
-    : p.regions[0].name;
+    : p.regions.length > 0
+    ? p.regions[0].name
+    : "";
   const name =
     props.is_variant && regionName
       ? `${pokemonName} (${regionName})`

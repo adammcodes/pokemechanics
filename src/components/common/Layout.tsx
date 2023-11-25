@@ -1,8 +1,8 @@
 import Head from "next/head";
 import Header from "./Header";
 import Footer from "./Footer";
-import styles from "../../styles/Home.module.css";
-import { fonts } from "../../src/fonts";
+import styles from "@/styles/Home.module.css";
+import { fonts } from "@/constants/fonts";
 
 type LayoutProps = {
   children: React.ReactNode;

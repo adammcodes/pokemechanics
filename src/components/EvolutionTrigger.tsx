@@ -1,6 +1,6 @@
 // import { EvolutionDetail } from "pokenode-ts";
-import convertKebabCaseToTitleCase from "../utils/convertKebabCaseToTitleCase";
-import relativeAttackAndDefense from "../utils/relativeAttackAndDefence";
+import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
+import relativeAttackAndDefense from "@/lib/relativeAttackAndDefence";
 
 const EvolutionTrigger = ({ details }: any) => {
   const formatName = convertKebabCaseToTitleCase;

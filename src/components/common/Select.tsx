@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { GameOption, PokemonOption } from "../types";
+import { GameOption, PokemonOption } from "@/types/index";
 
 type Props = {
   options: GameOption[] | PokemonOption[];

@@ -1,5 +1,5 @@
 import { useState, KeyboardEvent, useEffect } from "react";
-import { GameOption, PokemonOption } from "../types";
+import { GameOption, PokemonOption } from "@/types/index";
 
 interface AutocompleteProps {
   options: GameOption[] | PokemonOption[];
