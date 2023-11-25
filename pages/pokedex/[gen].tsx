@@ -1,3 +1,5 @@
+import { useContext, useEffect } from "react";
+import GameContext from "../../src/context/GameContextProvider";
 import type { InferGetServerSidePropsType } from "next";
 import useGameClient from "../../src/hooks/useGameClient";
 import { PokedexContextProvider } from "../../src/context/PokedexContextProvider";
@@ -50,6 +52,21 @@ export default function Pokedex({
   genNumberString,
   pokedexes,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const { loading, setLoading } = useContext(GameContext);
+
+  // set loading to false once the page loads
+  useEffect(() => {
+    setLoading(false);
+  }, []);
+
+  if (loading) {
+    return (
+      <main className="flex flex-col w-full justify-around items-start px-5">
+        <p className="mb-4">LOADING...</p>
+      </main>
+    );
+  }
+
   return (
     <main className="flex-row w-full justify-around items-start px-5">
       <div className="flex flex-wrap w-full justify-around items-start px-5">

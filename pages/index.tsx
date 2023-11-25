@@ -1,3 +1,5 @@
+import { useContext } from "react";
+import GameContext from "../src/context/GameContextProvider";
 // Next
 import Head from "next/head";
 import type { InferGetStaticPropsType, GetStaticProps } from "next";
@@ -5,6 +7,7 @@ import { Gen } from "../src/types";
 import { GameClient } from "pokenode-ts"; // import the GameClient that is auto-cached
 // Components
 import GenSelector from "../src/components/GenSelector";
+import PokeballLoader from "../src/components/PokeballLoader";
 
 export const getStaticProps: GetStaticProps<{
   gens: Gen[];
@@ -21,6 +24,8 @@ export const getStaticProps: GetStaticProps<{
 export default function Home({
   gens,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
+  const { loading } = useContext(GameContext);
+
   return (
     <>
       <Head>
@@ -30,10 +35,19 @@ export default function Home({
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main>
-        <p className="mb-4">WHICH GAME ARE YOU PLAYING?</p>
-        {gens && <GenSelector gens={gens} />}
-      </main>
+      {loading && (
+        <main>
+          {/* Shaking Pokeball animation */}
+          <PokeballLoader />
+        </main>
+      )}
+
+      {!loading && (
+        <main>
+          <p className="mb-4">WHICH GAME ARE YOU PLAYING?</p>
+          {gens && <GenSelector gens={gens} />}
+        </main>
+      )}
 
       <style jsx>{`
         code {
