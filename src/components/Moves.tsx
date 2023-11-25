@@ -26,7 +26,6 @@ type MovesProps = {
 export const Moves: React.FC<MovesProps> = ({ moves }) => {
   const formatName = convertKebabCaseToTitleCase;
   const { game } = useContext(GameContext);
-  console.log(moves);
 
   // Filter out moves that do not exist in the game
   const movesForGen = filterMovesForGen(moves, game);

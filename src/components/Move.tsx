@@ -17,12 +17,15 @@ export const Move: React.FC<MoveProps> = ({ m, method }) => {
   const api = useMoveClient();
   const { game } = useContext(GameContext);
   const formatName = convertKebabCaseToTitleCase;
+
   const level =
     m.level_learned_at === 1 || m.level_learned_at === 0
       ? "--"
       : m.level_learned_at;
+
   const moveId = Number(m.move.url.split("/").at(-2));
-  const fetchMove = (id: number) => {
+
+  const fetchMove = async (id: number) => {
     return api
       .getMoveById(id)
       .then((data) => data)
