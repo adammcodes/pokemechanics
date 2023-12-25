@@ -26,11 +26,13 @@ export default function ForwardBack() {
   const d = useContext(PokedexContext);
   const p = useContext(PokemonContext);
   const dex = d.dexQuery.data;
+  console.log(dex);
   const currentPokemonEntry: PokedexEntry = p.pokedex_numbers.find(
     (entry: PokedexEntry) => {
       return entry.pokedex.name === dex.name;
     }
   );
+  console.log(p.pokedex_numbers);
   // Get entry numbers of current, 1 before, 1 after
   const currentEntryNum: number = currentPokemonEntry.entry_number;
   const prevEntryNum: number = Math.max(currentEntryNum - 1, 1); // don't go below 1

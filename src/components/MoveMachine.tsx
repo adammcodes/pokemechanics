@@ -15,7 +15,7 @@ export const MoveMachine: React.FC<MoveMachineProps> = ({ machines, game }) => {
   });
   const machineId = Number(machineForVersion?.machine.url.split("/").at(-2));
 
-  const fetchMachine = (machineId: number) => {
+  const fetchMachine = async (machineId: number) => {
     return api
       .getMachineById(machineId)
       .then((data) => data)

@@ -56,6 +56,9 @@ export const Moves: React.FC<MovesProps> = ({ moves }) => {
   // Create an array of unique move_learn_methods for this gen
   const moveLearnMethods = getLearnMethods(allMoves).sort(sortMoveMethods);
 
+  console.log(moveLearnMethods);
+  // console.log(movesForGen);
+
   return (
     <div className={`mt-10 w-full ${styles.container}`}>
       {moveLearnMethods.map((method, i) => {

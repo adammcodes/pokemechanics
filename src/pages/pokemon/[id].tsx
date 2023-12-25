@@ -15,13 +15,14 @@ export default function Pokemon() {
   const router = useRouter();
   // Access the dynamic route parameter value, which is the pokemon id and dexId
   const { id, dexId } = router.query as { id: string; dexId: string };
+
   // Check the game the user has selected
   const { game } = useContext(GameContext);
   const version = useGameVersion(game);
 
   const pokemonId: number = Number(id);
 
-  const fetchPokemonById = (id: number) => {
+  const fetchPokemonById = async (id: number) => {
     const api = usePokemonClient();
     return api
       .getPokemonById(id)
@@ -41,7 +42,7 @@ export default function Pokemon() {
     }
   );
 
-  const fetchPokemonSpeciesById = (id: number) => {
+  const fetchPokemonSpeciesById = async (id: number) => {
     const api = usePokemonClient();
     return api
       .getPokemonSpeciesById(id)
