@@ -3,7 +3,7 @@ import type { InferGetServerSidePropsType } from "next";
 import useGameClient from "@/hooks/useGameClient";
 import GameContext from "@/context/GameContextProvider";
 import { PokedexContextProvider } from "@/context/PokedexContextProvider";
-import { DexNational } from "@/pages/pokedex/DexNational";
+import DexNational from "@/pages/pokedex/DexNational";
 import Dex from "@/pages/pokedex/Dex";
 import { numOfPokemonByGen } from "@/constants/numOfPokemonByGen";
 import { NamedAPIResource } from "pokenode-ts";
