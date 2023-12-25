@@ -11,7 +11,7 @@ type PokemonFlavorTextProps = {
   game: string;
 };
 
-export const PokemonFlavorText: React.FC<PokemonFlavorTextProps> = ({
+const PokemonFlavorText: React.FC<PokemonFlavorTextProps> = ({
   flavorTextForVersion,
   flavorTextForVersions,
   name,
@@ -37,3 +37,5 @@ export const PokemonFlavorText: React.FC<PokemonFlavorTextProps> = ({
     </div>
   );
 };
+
+export default PokemonFlavorText;
