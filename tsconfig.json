@@ -32,7 +32,7 @@
     "**/*.ts",
     "**/*.tsx",
     "src/pages/pokemon/[id].tsx",
-    "src/components/PokemonEvolutionChain.js"
+    "src/components/evolutions/PokemonEvolutionChain.js"
   ],
   "exclude": ["node_modules"]
 }

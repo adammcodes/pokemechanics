@@ -1,11 +1,11 @@
-import useMoveClient from "../hooks/useMoveClient";
+import useMoveClient from "../../hooks/useMoveClient";
 import { useQuery } from "react-query";
 import { useContext } from "react";
-import { PokemonMoveByMethod } from "../types";
-import convertKebabCaseToTitleCase from "../utils/convertKebabCaseToTitleCase";
-import DynamicImage from "./common/DynamicImage";
-import { GameContext } from "../context/_context";
-import replaceNewlinesAndFeeds from "../utils/replaceNewlinesAndFeeds";
+import { PokemonMoveByMethod } from "../../types";
+import convertKebabCaseToTitleCase from "../../utils/convertKebabCaseToTitleCase";
+import DynamicImage from "../common/DynamicImage";
+import { GameContext } from "../../context/_context";
+import replaceNewlinesAndFeeds from "../../utils/replaceNewlinesAndFeeds";
 import { MoveMachine } from "./MoveMachine";
 
 type MoveProps = {

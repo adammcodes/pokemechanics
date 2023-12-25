@@ -1,12 +1,12 @@
 import { useRouter } from "next/router";
 import { useContext } from "react";
-import { GameOption } from "../types";
+import { GameOption } from "../../types";
 // Components
-import Autocomplete from "./common/Autocomplete";
+import Autocomplete from "./Autocomplete";
 // Utils
-import convertKebabCaseToTitleCase from "../utils/convertKebabCaseToTitleCase";
+import convertKebabCaseToTitleCase from "../../utils/convertKebabCaseToTitleCase";
 // Context
-import GameContext from "../context/GameContextProvider";
+import GameContext from "../../context/GameContextProvider";
 
 type VersionGroup = {
   name: string;

@@ -6,7 +6,7 @@ import Head from "next/head";
 import type { InferGetStaticPropsType, GetStaticProps } from "next";
 import { GameClient } from "pokenode-ts"; // import the GameClient that is auto-cached
 // Components
-import GenSelector from "@/components/GenSelector";
+import GenSelector from "@/components/common/GenSelector";
 import PokeballLoader from "@/components/common/PokeballLoader";
 // Styles
 import styles from "@/styles/TypingText.module.css";

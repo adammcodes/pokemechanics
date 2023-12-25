@@ -1,5 +1,5 @@
 import EvolutionTrigger from "./EvolutionTrigger";
-import PokemonSpriteForGen from "./PokemonSpriteForGen";
+import PokemonSpriteForGen from "../sprites/PokemonSpriteForGen";
 import { numOfPokemonByGen } from "@/constants/numOfPokemonByGen";
 import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
 import findEvolutionDetailForGame from "@/lib/findEvolutionDetailForGame";

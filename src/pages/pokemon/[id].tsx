@@ -5,8 +5,8 @@ import { useQuery } from "react-query";
 import usePokemonClient from "@/hooks/usePokemonClient";
 import useGameVersion from "@/hooks/useGameVersion";
 // Components
-import Pokedexes from "@/components/Pokedexes";
-import { PokemonVariety } from "@/components/PokemonVariety";
+import Pokedexes from "@/pages/pokedex/Pokedexes";
+import { PokemonVariety } from "@/pages/pokemon/PokemonVariety";
 import { GameContext } from "@/context/_context";
 import { PokemonContextProvider } from "@/context/PokemonContextProvider";
 import { PokedexContextProvider } from "@/context/PokedexContextProvider";

@@ -1,10 +1,10 @@
 import { useContext } from "react";
 import { useQuery } from "react-query";
-import { PokemonContext } from "../context/_context";
+import { PokemonContext } from "../../context/_context";
 import { Region, PokemonSpeciesVariety } from "pokenode-ts";
-import usePokemonClient from "../hooks/usePokemonClient";
+import usePokemonClient from "../../hooks/usePokemonClient";
 import { PokemonCard } from "./PokemonCard";
-import findVarietyForRegion from "../lib/findVarietyForRegion";
+import findVarietyForRegion from "../../lib/findVarietyForRegion";
 
 type PokemonVarietyProps = {
   name: string;
@@ -27,7 +27,7 @@ export const PokemonVariety: React.FC<PokemonVarietyProps> = ({
     pokemonVarietyForRegion?.pokemon.url.split("/").at(-2)
   );
 
-  const fetchVarietyForRegion = (id: number) => {
+  const fetchVarietyForRegion = async (id: number) => {
     return api
       .getPokemonById(id)
       .then((data) => data)

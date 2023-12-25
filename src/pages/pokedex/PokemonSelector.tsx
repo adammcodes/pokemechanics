@@ -1,14 +1,14 @@
 // Next
 import { useRouter } from "next/router";
 // Types
-import { PokemonOption } from "../types";
+import { PokemonOption } from "../../types";
 // Components
 // import Select from "./Select";
-import Autocomplete from "./common/Autocomplete";
+import Autocomplete from "../../components/common/Autocomplete";
 // Utils
-import convertKebabCaseToTitleCase from "../utils/convertKebabCaseToTitleCase";
+import convertKebabCaseToTitleCase from "../../utils/convertKebabCaseToTitleCase";
 import { useContext } from "react";
-import { PokedexContext } from "../context/_context";
+import { PokedexContext } from "../../context/_context";
 
 type PokemonSpecies = {
   name: string;

@@ -1,8 +1,8 @@
-import usePokemonClient from "../hooks/usePokemonClient";
+import usePokemonClient from "../../hooks/usePokemonClient";
 import { useQuery } from "react-query";
-import useGameVersion from "../hooks/useGameVersion";
-import findSpritesForVersion from "../lib/findSpritesForVersion";
-import findVarietyForRegion from "../lib/findVarietyForRegion";
+import useGameVersion from "../../hooks/useGameVersion";
+import findSpritesForVersion from "../../lib/findSpritesForVersion";
+import findVarietyForRegion from "../../lib/findVarietyForRegion";
 import { PokemonSpeciesVariety } from "pokenode-ts";
 import PokemonSpriteById from "./PokemonSpriteById";
 

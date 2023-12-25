@@ -1,16 +1,16 @@
 import Link from "next/link";
-import { Sprite } from "./Sprite";
+import { Sprite } from "../../components/sprites/Sprite";
 import { useContext } from "react";
 import {
   GameContext,
   PokedexContext,
   PokemonContext,
-} from "../context/_context";
+} from "../../context/_context";
 import { Pokedex } from "pokenode-ts";
-import convertKebabCaseToTitleCase from "../utils/convertKebabCaseToTitleCase";
-import useGameVersion from "../hooks/useGameVersion";
-import { numOfPokemonByGen } from "../constants/numOfPokemonByGen";
-import addPrecedingZeros from "../utils/addPrecedingZeros";
+import convertKebabCaseToTitleCase from "../../utils/convertKebabCaseToTitleCase";
+import useGameVersion from "../../hooks/useGameVersion";
+import { numOfPokemonByGen } from "../../constants/numOfPokemonByGen";
+import addPrecedingZeros from "../../utils/addPrecedingZeros";
 
 type PokedexEntry = {
   entry_number: number;
@@ -26,13 +26,11 @@ export default function ForwardBack() {
   const d = useContext(PokedexContext);
   const p = useContext(PokemonContext);
   const dex = d.dexQuery.data;
-  console.log(dex);
   const currentPokemonEntry: PokedexEntry = p.pokedex_numbers.find(
     (entry: PokedexEntry) => {
       return entry.pokedex.name === dex.name;
     }
   );
-  console.log(p.pokedex_numbers);
   // Get entry numbers of current, 1 before, 1 after
   const currentEntryNum: number = currentPokemonEntry.entry_number;
   const prevEntryNum: number = Math.max(currentEntryNum - 1, 1); // don't go below 1

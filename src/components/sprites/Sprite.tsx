@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import DynamicImage from "./common/DynamicImage";
+import DynamicImage from "../common/DynamicImage";
 import usePokemonClient from "@/hooks/usePokemonClient";
 
 type SpriteProps = {
