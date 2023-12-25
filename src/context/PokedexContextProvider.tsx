@@ -11,7 +11,8 @@ export const PokedexContextProvider: React.FC<PokedexContextProps> = ({
   children,
   dexId,
 }) => {
-  const fetchPokedex = async (dexId: number) => {
+  // don't use async
+  const fetchPokedex = (dexId: number) => {
     const api = useGameClient();
 
     return api
