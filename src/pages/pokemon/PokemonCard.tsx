@@ -21,7 +21,7 @@ import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
 import splitKebabCase from "@/utils/splitKebabCase";
 
 // components
-import { PokemonCardBox } from "./PokemonCardBox";
+import PokemonCardBox from "./PokemonCardBox";
 import { PokemonFlavorText } from "@/pages/pokemon/PokemonFlavorText";
 import Evolutions from "@/components/evolutions/Evolutions";
 import ForwardBack from "@/pages/pokemon/ForwardBack";
@@ -43,7 +43,7 @@ type PokemonCardProps = {
   moves?: any;
 };
 
-export const PokemonCard: React.FC<PokemonCardProps> = (props) => {
+const PokemonCard: React.FC<PokemonCardProps> = (props) => {
   // props has all the variant specific data
   // p from PokemonContext has all the other generic species data
   const p = useContext(PokemonContext);
@@ -117,3 +117,5 @@ export const PokemonCard: React.FC<PokemonCardProps> = (props) => {
     </div>
   );
 };
+
+export default PokemonCard;

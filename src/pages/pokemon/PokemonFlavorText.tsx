@@ -1,6 +1,6 @@
 import styles from "@/styles/PokemonCard.module.css";
 import { FlavorTextForVersion } from "@/types/index";
-import { FlavorText, DualFlavorText } from "./FlavorText";
+import FlavorText, { DualFlavorText } from "./FlavorText";
 import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
 import PokeballSpans from "@/components/common/PokeballSpans";
 

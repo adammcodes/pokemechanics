@@ -11,7 +11,7 @@ import { spriteSizesByVersion } from "@/constants/spriteSizesByVersion";
 
 import DynamicImage from "@/components/common/DynamicImage";
 import DualDynamicImages from "./DualDynamicImages";
-import { PokemonTypes } from "@/pages/pokemon/PokemonTypes";
+import PokemonTypes from "@/pages/pokemon/PokemonTypes";
 
 // types
 import { Genus, PokemonSprites, PokemonType } from "pokenode-ts";
@@ -28,7 +28,7 @@ type PokemonCardBoxProps = {
   weight: number;
 };
 
-export const PokemonCardBox: React.FC<PokemonCardBoxProps> = (props) => {
+const PokemonCardBox: React.FC<PokemonCardBoxProps> = (props) => {
   const p = useContext(PokemonContext);
   const { game } = useContext(GameContext);
 
@@ -114,3 +114,5 @@ export const PokemonCardBox: React.FC<PokemonCardBoxProps> = (props) => {
     </div>
   );
 };
+
+export default PokemonCardBox;

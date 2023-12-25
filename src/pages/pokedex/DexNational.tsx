@@ -7,7 +7,7 @@ type DexNationalProps = {
   upperLimitNumber: number;
 };
 
-export const DexNational: React.FC<DexNationalProps> = ({
+const DexNational: React.FC<DexNationalProps> = ({
   generation,
   upperLimitNumber,
 }) => {
@@ -42,3 +42,5 @@ export const DexNational: React.FC<DexNationalProps> = ({
     </section>
   );
 };
+
+export default DexNational;

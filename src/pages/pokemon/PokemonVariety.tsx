@@ -3,7 +3,7 @@ import { useQuery } from "react-query";
 import { PokemonContext } from "../../context/_context";
 import { Region, PokemonSpeciesVariety } from "pokenode-ts";
 import usePokemonClient from "../../hooks/usePokemonClient";
-import { PokemonCard } from "./PokemonCard";
+import PokemonCard from "./PokemonCard";
 import findVarietyForRegion from "../../lib/findVarietyForRegion";
 
 type PokemonVarietyProps = {
@@ -11,7 +11,8 @@ type PokemonVarietyProps = {
   regions: Region[];
   varieties: PokemonSpeciesVariety[];
 };
-export const PokemonVariety: React.FC<PokemonVarietyProps> = ({
+
+const PokemonVariety: React.FC<PokemonVarietyProps> = ({
   varieties,
   regions,
 }) => {
@@ -61,3 +62,5 @@ export const PokemonVariety: React.FC<PokemonVarietyProps> = ({
     </>
   );
 };
+
+export default PokemonVariety;

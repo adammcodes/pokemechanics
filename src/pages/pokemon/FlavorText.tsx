@@ -5,9 +5,7 @@ type FlavorTextProps = {
   flavorTextForVersion: FlavorTextForVersion;
 };
 
-export const FlavorText: React.FC<FlavorTextProps> = ({
-  flavorTextForVersion,
-}) => {
+const FlavorText: React.FC<FlavorTextProps> = ({ flavorTextForVersion }) => {
   return (
     <>
       {flavorTextForVersion && (
@@ -44,3 +42,5 @@ export const DualFlavorText: React.FC<DualFlavorTextProps> = ({
     </>
   );
 };
+
+export default FlavorText;

@@ -5,7 +5,7 @@ type PokemonTypesProps = {
   types: PokemonType[];
 };
 
-export const PokemonTypes: React.FC<PokemonTypesProps> = ({ types }) => {
+const PokemonTypes: React.FC<PokemonTypesProps> = ({ types }) => {
   const mappedTypes = types.map((t, i, arr) => {
     let typeName = t.type.name;
     return (
@@ -23,3 +23,5 @@ export const PokemonTypes: React.FC<PokemonTypesProps> = ({ types }) => {
 
   return <>{mappedTypes}</>;
 };
+
+export default PokemonTypes;
