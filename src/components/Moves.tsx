@@ -13,10 +13,29 @@ const filterMovesByMethod = (moves: PokemonMoveByMethod[], method: string) => {
   });
 };
 
+// Create an array of unique move_learn_methods for this gen
 const getLearnMethods = (moves: PokemonMoveByMethod[]) => {
   return moves
     .map((m) => m.move_learn_method)
     .filter((el, i, arr) => arr.indexOf(el) === i);
+};
+
+// sort callback for move_learn_methods
+const sortMoveMethods = (a: string, b: string) => {
+  const movesOrder = [
+    "level-up",
+    "machine",
+    "tutor",
+    "egg",
+    "stadium-surfing-pikachu",
+    "n/a",
+  ];
+  const aIndex = movesOrder.indexOf(a);
+  const bIndex = movesOrder.indexOf(b);
+  if (aIndex < bIndex) {
+    return -1;
+  }
+  return 0;
 };
 
 type MovesProps = {
@@ -35,7 +54,9 @@ export const Moves: React.FC<MovesProps> = ({ moves }) => {
     (a, b) => a.level_learned_at - b.level_learned_at
   );
   // Create an array of unique move_learn_methods for this gen
-  const moveLearnMethods = getLearnMethods(allMoves).sort();
+  const moveLearnMethods = getLearnMethods(allMoves).sort(sortMoveMethods);
+
+  console.log(moveLearnMethods);
 
   return (
     <div className={`mt-10 w-full ${styles.container}`}>
