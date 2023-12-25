@@ -3,7 +3,6 @@ import PokemonSpriteForGen from "../sprites/PokemonSpriteForGen";
 import { numOfPokemonByGen } from "@/constants/numOfPokemonByGen";
 import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
 import findEvolutionDetailForGame from "@/lib/findEvolutionDetailForGame";
-import { useRouter } from "next/router";
 
 // Filters out evolutions that are not in the given generation
 function onlyEvolutionsForGen(evolution, generation) {
@@ -17,9 +16,7 @@ const renderEvolutionNode = (node, gameInfo, prevEvolutionInGen) => {
   const formatName = convertKebabCaseToTitleCase;
   const isPokemonInGen = onlyEvolutionsForGen(node, generation);
   const pokemonDexNumber = Number(species.url.split("/").at(-2));
-  const router = useRouter();
-  // Access the dynamic route parameter value, which is the pokemon id and dexId
-  const { dexId } = router.query;
+  const dexId = gameInfo.dexId;
 
   return (
     <section
@@ -66,6 +63,13 @@ const renderEvolutionNode = (node, gameInfo, prevEvolutionInGen) => {
   );
 };
 
+/* 
+  gameInfo {
+    game: string,
+    generation: number,
+    dexId: number
+  }
+*/
 const PokemonEvolutionChain = (chain, gameInfo) => {
   return (
     <div className="flex justify-center">
