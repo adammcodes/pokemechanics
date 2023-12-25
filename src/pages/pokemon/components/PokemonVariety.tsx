@@ -1,10 +1,10 @@
 import { useContext } from "react";
 import { useQuery } from "react-query";
-import { PokemonContext } from "../../context/_context";
 import { Region, PokemonSpeciesVariety } from "pokenode-ts";
-import usePokemonClient from "../../hooks/usePokemonClient";
 import PokemonCard from "./PokemonCard";
-import findVarietyForRegion from "../../lib/findVarietyForRegion";
+import { PokemonContext } from "@/context/_context";
+import findVarietyForRegion from "@/lib/findVarietyForRegion";
+import usePokemonClient from "@/hooks/usePokemonClient";
 
 type PokemonVarietyProps = {
   name: string;
