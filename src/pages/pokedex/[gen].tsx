@@ -3,11 +3,12 @@ import type { InferGetServerSidePropsType } from "next";
 import useGameClient from "@/hooks/useGameClient";
 import GameContext from "@/context/GameContextProvider";
 import { PokedexContextProvider } from "@/context/PokedexContextProvider";
-import DexNational from "@/pages/pokedex/components/DexNational";
-import Dex from "@/pages/pokedex/components/Dex";
 import { numOfPokemonByGen } from "@/constants/numOfPokemonByGen";
 import { NamedAPIResource } from "pokenode-ts";
 import styles from "@/styles/Pokedexes.module.css";
+// components
+import DexNational from "./_components/DexNational";
+import Dex from "./_components/Dex";
 
 // use getServerSideProps to fetch the game version for the selected generation
 export async function getServerSideProps(context: any) {
