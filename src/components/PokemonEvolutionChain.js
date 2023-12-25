@@ -3,11 +3,12 @@ import PokemonSpriteForGen from "./PokemonSpriteForGen";
 import { numOfPokemonByGen } from "@/constants/numOfPokemonByGen";
 import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
 import findEvolutionDetailForGame from "@/lib/findEvolutionDetailForGame";
+import { convertNumeralToNumber } from "@/utils/convertNumeralToNumber";
 
 // Filters out evolutions that are not in the given generation
 function onlyEvolutionsForGen(evolution, generation) {
-  const pokemonId = Number(evolution.species.url.split("/").at(-2));
-  return pokemonId < numOfPokemonByGen[generation];
+  const pokemonDexNumber = Number(evolution.species.url.split("/").at(-2));
+  return pokemonDexNumber < numOfPokemonByGen[generation];
 }
 
 const renderEvolutionNode = (node, gameInfo, prevEvolutionInGen) => {
@@ -15,6 +16,8 @@ const renderEvolutionNode = (node, gameInfo, prevEvolutionInGen) => {
   const { game, generation } = gameInfo;
   const formatName = convertKebabCaseToTitleCase;
   const isPokemonInGen = onlyEvolutionsForGen(node, generation);
+  const pokemonDexNumber = Number(species.url.split("/").at(-2));
+  const genNumber = convertNumeralToNumber(generation.split("-")[1]);
 
   return (
     <section
@@ -35,10 +38,9 @@ const renderEvolutionNode = (node, gameInfo, prevEvolutionInGen) => {
             />
           )}
           <figure className="flex flex-col items-center">
-            <PokemonSpriteForGen
-              pokemonId={species.url.split("/").at(-2)}
-              game={game}
-            />
+            <a href={`/pokemon/${pokemonDexNumber}?dexId=${genNumber}`}>
+              <PokemonSpriteForGen pokemonId={pokemonDexNumber} game={game} />
+            </a>
             <label>{formatName(species.name)}</label>
           </figure>
         </>
