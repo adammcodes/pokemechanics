@@ -3,8 +3,8 @@ import { numOfPokemonByGen } from "@/constants/numOfPokemonByGen";
 import { GameContext } from "@/context/_context";
 import { PokedexContextProvider } from "@/context/PokedexContextProvider";
 import useGameVersion from "@/hooks/useGameVersion";
-import Dex from "@/pages/pokedex/_components/Dex";
-import DexNational from "@/pages/pokedex/_components/DexNational";
+import Dex from "./Dex";
+import DexNational from "./DexNational";
 import styles from "@/styles/Pokedexes.module.css";
 
 type Pokedex = {

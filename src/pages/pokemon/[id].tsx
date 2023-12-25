@@ -8,8 +8,8 @@ import { GameContext } from "@/context/_context";
 import { PokemonContextProvider } from "@/context/PokemonContextProvider";
 import { PokedexContextProvider } from "@/context/PokedexContextProvider";
 // Components
-import Pokedexes from "@/pages/pokedex/_components/Pokedexes";
-import PokemonVariety from "@/pages/pokemon/_components/PokemonVariety";
+import Pokedexes from "@/components/pages/pokedex/Pokedexes";
+import PokemonVariety from "@/components/pages/pokemon/PokemonVariety";
 
 export default function Pokemon() {
   const router = useRouter();

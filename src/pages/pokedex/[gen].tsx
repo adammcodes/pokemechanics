@@ -7,8 +7,8 @@ import { numOfPokemonByGen } from "@/constants/numOfPokemonByGen";
 import { NamedAPIResource } from "pokenode-ts";
 import styles from "@/styles/Pokedexes.module.css";
 // components
-import DexNational from "./_components/DexNational";
-import Dex from "./_components/Dex";
+import DexNational from "@/components/pages/pokedex/DexNational";
+import Dex from "@/components/pages/pokedex/Dex";
 
 // use getServerSideProps to fetch the game version for the selected generation
 export async function getServerSideProps(context: any) {

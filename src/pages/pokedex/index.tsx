@@ -1,4 +1,4 @@
-import Pokedexes from "./_components/Pokedexes";
+import Pokedexes from "@/components/pages/pokedex/Pokedexes";
 
 export default function Pokedex() {
   return (

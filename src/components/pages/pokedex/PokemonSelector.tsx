@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { PokemonOption } from "../../../types";
 // Components
 // import Select from "./Select";
-import Autocomplete from "../../../components/common/Autocomplete";
+import Autocomplete from "../../common/Autocomplete";
 // Utils
 import convertKebabCaseToTitleCase from "../../../utils/convertKebabCaseToTitleCase";
 import { useContext } from "react";

@@ -22,9 +22,9 @@ import splitKebabCase from "@/utils/splitKebabCase";
 
 // components
 import PokemonCardBox from "./PokemonCardBox";
-import PokemonFlavorText from "@/pages/pokemon/_components/PokemonFlavorText";
+import PokemonFlavorText from "@/components/pages/pokemon/PokemonFlavorText";
 import Evolutions from "@/components/evolutions/Evolutions";
-import ForwardBack from "@/pages/pokemon/_components/ForwardBack";
+import ForwardBack from "@/components/pages/pokemon/ForwardBack";
 import { Moves } from "@/components/moves/Moves";
 
 type PokemonCardProps = {

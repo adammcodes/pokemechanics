@@ -11,7 +11,7 @@ import { spriteSizesByVersion } from "@/constants/spriteSizesByVersion";
 
 import DynamicImage from "@/components/common/DynamicImage";
 import DualDynamicImages from "./DualDynamicImages";
-import PokemonTypes from "@/pages/pokemon/_components/PokemonTypes";
+import PokemonTypes from "@/components/pages/pokemon/PokemonTypes";
 
 // types
 import { Genus, PokemonSprites, PokemonType } from "pokenode-ts";

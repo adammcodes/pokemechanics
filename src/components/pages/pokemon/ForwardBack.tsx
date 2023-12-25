@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Sprite } from "../../../components/sprites/Sprite";
+import { Sprite } from "../../sprites/Sprite";
 import { useContext } from "react";
 import {
   GameContext,
