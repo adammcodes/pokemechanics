@@ -3,7 +3,6 @@ import styles from "@/styles/PokemonCard.module.css";
 
 import convertHeightToCmOrM from "@/utils/convertHeightToCmOrM";
 import convertWeightToGramsOrKg from "@/utils/convertWeightToGramsOrKg";
-import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
 
 import findSpritesForVersion from "@/lib/findSpritesForVersion";
 import findSpritesForGoldSilver from "@/lib/findSpritesForGoldSilver";

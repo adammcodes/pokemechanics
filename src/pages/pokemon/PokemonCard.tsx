@@ -18,21 +18,14 @@ import {
 import { FlavorTextForVersion } from "@/types/index";
 // utils, lib, constants
 import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
-
 import splitKebabCase from "@/utils/splitKebabCase";
 
-// import { spriteSizesByVersion } from "@/constants/spriteSizesByVersion";
-// shared components
-
-import PokeballSpans from "@/components/common/PokeballSpans";
 // components
 import { PokemonCardBox } from "./PokemonCardBox";
-import { FlavorText } from "./FlavorText";
-import { DualFlavorText } from "./DualFlavorText";
-
-import { Moves } from "@/components/moves/Moves";
-import ForwardBack from "@/pages/pokemon/ForwardBack";
+import { PokemonFlavorText } from "@/pages/pokemon/PokemonFlavorText";
 import Evolutions from "@/components/evolutions/Evolutions";
+import ForwardBack from "@/pages/pokemon/ForwardBack";
+import { Moves } from "@/components/moves/Moves";
 
 type PokemonCardProps = {
   is_variant: boolean; // required
@@ -106,27 +99,20 @@ export const PokemonCard: React.FC<PokemonCardProps> = (props) => {
         height={pokemonHeight}
         weight={pokemonWeight}
       />
-      <div className={`pokeball-box w-1/4 ${styles.box}`}>
-        {flavorTextForVersion && (
-          <FlavorText flavorTextForVersion={flavorTextForVersion} />
-        )}
-        {flavorTextForVersions && (
-          <DualFlavorText flavorTextForVersions={flavorTextForVersions} />
-        )}
-        {!flavorTextForVersion && !flavorTextForVersions.length && (
-          <div>
-            <p className="leading-5">
-              There is no flavour text on {name} for{" "}
-              {convertKebabCaseToTitleCase(game)}.
-            </p>
-          </div>
-        )}
-        <PokeballSpans />
-      </div>
+      {/* Flavor Text */}
+      <PokemonFlavorText
+        name={name}
+        game={game}
+        flavorTextForVersion={flavorTextForVersion}
+        flavorTextForVersions={flavorTextForVersions}
+      />
+      {/* Evolutions */}
       <EvolutionContextProvider url={pokemonEvolveChainUrl}>
         <Evolutions />
       </EvolutionContextProvider>
+      {/* ForwardBack navigation for the pokedex */}
       {dex.dexQuery.data ? <ForwardBack /> : <p>Loading dex data...</p>}
+      {/* Moves */}
       <Moves moves={pokemonMoves} />
     </div>
   );
