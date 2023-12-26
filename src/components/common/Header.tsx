@@ -28,15 +28,17 @@ export default function Header() {
               priority={true}
             />
           </Link>
-          <Link href="/">
-            <h1>POKEMECHANICS</h1>
-          </Link>
-          {game && versionGroup.data && (
-            <section>
-              &nbsp;- {formatName(game)}{" "}
-              {genNumber && <>(Gen {genNumber.toUpperCase()})</>}
-            </section>
-          )}
+          <div>
+            <Link href="/">
+              <h1>POKEMECHANICS</h1>
+            </Link>
+            {game && versionGroup.data && (
+              <span className="text-[0.9em] lg:text-[1em]">
+                &nbsp;- {formatName(game)}{" "}
+                {genNumber && <>(Gen {genNumber.toUpperCase()})</>}
+              </span>
+            )}
+          </div>
         </div>
       </header>
       <input className="menu-btn" type="checkbox" id="menu-btn" />

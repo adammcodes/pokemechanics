@@ -7,6 +7,7 @@ import {
   PokemonContext,
 } from "@/context/_context";
 import EvolutionContextProvider from "@/context/EvolutionContextProvider";
+import useGameVersion from "@/hooks/useGameVersion";
 
 // types
 import {
@@ -50,6 +51,10 @@ const PokemonCard: React.FC<PokemonCardProps> = (props) => {
   const p = useContext(PokemonContext);
   const { game } = useContext(GameContext);
   const dex = useContext(PokedexContext);
+  const versionGroup = useGameVersion(game);
+  const genNumber =
+    versionGroup.data && versionGroup.data.generation.name.split("-")[1];
+  const isGenOneOrTwo = genNumber === "i" || genNumber === "ii";
   let formatName = convertKebabCaseToTitleCase;
   const variantName = props.is_variant ? props.name : p.name;
   const pokemonName = formatName(p.name);
@@ -89,9 +94,7 @@ const PokemonCard: React.FC<PokemonCardProps> = (props) => {
     : null;
 
   return (
-    <div
-      className={`${styles.card__container} w-full flex flex-col items-center justify-center`}
-    >
+    <div className={`w-full flex flex-col items-center justify-center`}>
       <section className="flex flex-col justify-center lg:flex-row gap-6">
         {/* Card Box with meta info - Name, Sprites, Types, Height, Weight, etc */}
         <PokemonCardBox
@@ -103,7 +106,7 @@ const PokemonCard: React.FC<PokemonCardProps> = (props) => {
           weight={pokemonWeight}
         />
         {/* Abilities */}
-        <Abilities pokemonName={variantName} />
+        {!isGenOneOrTwo && <Abilities pokemonName={variantName} />}
         {/* Flavor Text */}
         <PokemonFlavorText
           name={name}

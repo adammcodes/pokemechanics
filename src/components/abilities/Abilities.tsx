@@ -97,7 +97,7 @@ const Abilities: React.FC<AbilitiesProps> = ({ pokemonName }) => {
 
   return (
     <section
-      className={`${styles.card__border} w-[400px] p-[1em] flex flex-col justify-between`}
+      className={`${styles.card__border} w-[400px] p-[1em] flex flex-col gap-y-3`}
     >
       <h2 className="text-3xl">Abilities:</h2>
       {abilities.map((ability) => (
