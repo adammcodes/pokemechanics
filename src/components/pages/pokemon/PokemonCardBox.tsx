@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import styles from "@/styles/PokemonCard.module.css";
+import PokeballSpans from "@/components/common/PokeballSpans";
 
 import convertHeightToCmOrM from "@/utils/convertHeightToCmOrM";
 import convertWeightToGramsOrKg from "@/utils/convertWeightToGramsOrKg";
@@ -48,7 +48,9 @@ const PokemonCardBox: React.FC<PokemonCardBoxProps> = (props) => {
   const pokemonName = props.name;
 
   return (
-    <div className={`${styles.card}`}>
+    <div
+      className={`pokeball-box w-[400px] lg:w-1/4 p-[1em] flex flex-col justify-center items-center`}
+    >
       <table className="w-full">
         <tbody>
           <tr>
@@ -88,7 +90,7 @@ const PokemonCardBox: React.FC<PokemonCardBoxProps> = (props) => {
               </div>
             </td>
             <td className="w-1/2 flex-col justify-center items-center pl-5">
-              <div className="mb-5">{pokemonName}</div>
+              <div className="text-3xl mb-5">{pokemonName}</div>
               <div className="mb-5">{pokemonGenus}</div>
               <div className="mb-5">
                 No.
@@ -111,6 +113,7 @@ const PokemonCardBox: React.FC<PokemonCardBoxProps> = (props) => {
           </tr>
         </tbody>
       </table>
+      <PokeballSpans />
     </div>
   );
 };

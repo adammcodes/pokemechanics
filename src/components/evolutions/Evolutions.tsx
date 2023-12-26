@@ -19,7 +19,7 @@ export default function Evolutions() {
 
   return (
     <div className={`${styles.evolutions}`}>
-      <p className="py-5">Evolution Chain</p>
+      <p className="py-5 text-3xl">Evolution Chain</p>
       {e.data && generation && (
         <div className="flex justify-center">
           {PokemonEvolutionChain(e.data.chain, { game, generation, dexId })}

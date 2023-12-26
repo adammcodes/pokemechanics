@@ -1,8 +1,7 @@
-import styles from "@/styles/PokemonCard.module.css";
 import { FlavorTextForVersion } from "@/types/index";
 import FlavorText, { DualFlavorText } from "./FlavorText";
 import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
-import PokeballSpans from "@/components/common/PokeballSpans";
+import styles from "@/styles/PokemonCard.module.css";
 
 type PokemonFlavorTextProps = {
   flavorTextForVersion: FlavorTextForVersion;
@@ -18,7 +17,10 @@ const PokemonFlavorText: React.FC<PokemonFlavorTextProps> = ({
   game,
 }) => {
   return (
-    <div className={`pokeball-box w-1/4 ${styles.box}`}>
+    <div
+      className={`bg-white p-[1em] w-[400px] lg:w-1/4 ${styles.card__border}`}
+    >
+      <h2 className="text-3xl">Flavor Text:</h2>
       {flavorTextForVersion && (
         <FlavorText flavorTextForVersion={flavorTextForVersion} />
       )}
@@ -33,7 +35,6 @@ const PokemonFlavorText: React.FC<PokemonFlavorTextProps> = ({
           </p>
         </div>
       )}
-      <PokeballSpans />
     </div>
   );
 };

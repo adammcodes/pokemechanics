@@ -6,8 +6,10 @@
     "start": "next start"
   },
   "dependencies": {
+    "@apollo/client": "^3.8.8",
     "axios": "^1.4.0",
     "axios-cache-interceptor": "^1.0.1",
+    "graphql": "^16.8.1",
     "next": "latest",
     "pokenode-ts": "^1.18.3",
     "react": "18.2.0",

@@ -26,6 +26,7 @@ import PokemonFlavorText from "@/components/pages/pokemon/PokemonFlavorText";
 import Evolutions from "@/components/evolutions/Evolutions";
 import ForwardBack from "@/components/pages/pokemon/ForwardBack";
 import { Moves } from "@/components/moves/Moves";
+import Abilities from "@/components/abilities/Abilities";
 
 type PokemonCardProps = {
   is_variant: boolean; // required
@@ -50,6 +51,7 @@ const PokemonCard: React.FC<PokemonCardProps> = (props) => {
   const { game } = useContext(GameContext);
   const dex = useContext(PokedexContext);
   let formatName = convertKebabCaseToTitleCase;
+  const variantName = props.is_variant ? props.name : p.name;
   const pokemonName = formatName(p.name);
   const regionName: string = props.is_variant
     ? formatName(props.name.split("-")[1])
@@ -90,22 +92,26 @@ const PokemonCard: React.FC<PokemonCardProps> = (props) => {
     <div
       className={`${styles.card__container} w-full flex flex-col items-center justify-center`}
     >
-      {/* Card Box with meta info - Name, Sprites, Types, Height, Weight, etc */}
-      <PokemonCardBox
-        name={name}
-        is_variant={props.is_variant}
-        types={types}
-        sprites={sprites}
-        height={pokemonHeight}
-        weight={pokemonWeight}
-      />
-      {/* Flavor Text */}
-      <PokemonFlavorText
-        name={name}
-        game={game}
-        flavorTextForVersion={flavorTextForVersion}
-        flavorTextForVersions={flavorTextForVersions}
-      />
+      <section className="flex flex-col justify-center lg:flex-row gap-6">
+        {/* Card Box with meta info - Name, Sprites, Types, Height, Weight, etc */}
+        <PokemonCardBox
+          name={name}
+          is_variant={props.is_variant}
+          types={types}
+          sprites={sprites}
+          height={pokemonHeight}
+          weight={pokemonWeight}
+        />
+        {/* Abilities */}
+        <Abilities pokemonName={variantName} />
+        {/* Flavor Text */}
+        <PokemonFlavorText
+          name={name}
+          game={game}
+          flavorTextForVersion={flavorTextForVersion}
+          flavorTextForVersions={flavorTextForVersions}
+        />
+      </section>
       {/* Evolutions */}
       <EvolutionContextProvider url={pokemonEvolveChainUrl}>
         <Evolutions />

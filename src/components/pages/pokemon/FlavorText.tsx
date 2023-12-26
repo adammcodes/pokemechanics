@@ -32,10 +32,10 @@ export const DualFlavorText: React.FC<DualFlavorTextProps> = ({
         let desc: string = replaceNewlinesAndFeeds(text.flavor_text);
         return (
           <div key={i}>
-            <p className={`${i !== 0 ? "mt-5" : ""} mb-5`}>
+            <h3 className="text-2xl border-b-2">
               {text.version.name.toUpperCase()}
-            </p>
-            <p className="leading-5">{desc}</p>
+            </h3>
+            <p className="text-xl leading-[1em]">{desc}</p>
           </div>
         );
       })}
