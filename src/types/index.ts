@@ -1,4 +1,10 @@
-import { Language, Version, MoveLearnMethod, NamedAPIResource, EvolutionDetail } from "pokenode-ts";
+import {
+  Language,
+  Version,
+  MoveLearnMethod,
+  NamedAPIResource,
+  EvolutionDetail,
+} from "pokenode-ts";
 
 // Option types are used for Autocomplete and Select components
 export type GameOption = {
@@ -6,20 +12,21 @@ export type GameOption = {
   name: string;
   value: string;
   number: number;
-}
+  variantId?: number;
+};
 
-export type PokemonOption = {
-  label: string;
-  name: string;
-  value: number | string;
-  number: number;
-}
+// export type PokemonOption = {
+//   label: string;
+//   name: string;
+//   value: number | string;
+//   number: number;
+// }
 
 export type FlavorTextForVersion = {
   flavor_text: string;
   language: Language;
   version: Version;
-}
+};
 
 export type PokemonMove = {
   name: string;
@@ -34,27 +41,27 @@ export type PokemonMoveByMethod = {
 
 export type Machine = {
   url: string;
-}
+};
 
 export type VersionGroup = {
   name: string;
   url: string;
-}
+};
 
 export type MachineVersion = {
   machine: Machine;
-  version_group: VersionGroup
+  version_group: VersionGroup;
 };
 
 export type VersionGroupDetails = {
   level_learned_at: number;
   move_learn_method: MoveLearnMethod;
   version_group: VersionGroup;
-}
+};
 
 export type PokemonMoveVersion = {
   move: PokemonMove;
-  version_group_details: VersionGroupDetails[]
+  version_group_details: VersionGroupDetails[];
 };
 
 export type Gen = {

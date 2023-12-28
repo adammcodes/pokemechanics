@@ -28,6 +28,7 @@ import Evolutions from "@/components/evolutions/Evolutions";
 import ForwardBack from "@/components/pages/pokemon/ForwardBack";
 import { Moves } from "@/components/moves/Moves";
 import Abilities from "@/components/abilities/Abilities";
+import Stats from "@/components/stats/Stats";
 
 type PokemonCardProps = {
   is_variant: boolean; // required
@@ -107,6 +108,8 @@ const PokemonCard: React.FC<PokemonCardProps> = (props) => {
         />
         {/* Abilities */}
         {!isGenOneOrTwo && <Abilities pokemonName={variantName} />}
+        {/* Stats */}
+        <Stats pokemonName={variantName} />
         {/* Flavor Text */}
         <PokemonFlavorText
           name={name}

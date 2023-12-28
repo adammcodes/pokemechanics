@@ -71,7 +71,14 @@ const Abilities: React.FC<AbilitiesProps> = ({ pokemonName }) => {
     variables: { pokemonName: pokemonName.toLowerCase() },
   });
 
-  if (loading) return <p>Loading abilities...</p>;
+  if (loading)
+    return (
+      <section
+        className={`${styles.card__border} w-[400px] p-[1em] flex flex-col gap-y-3`}
+      >
+        Loading abilities...
+      </section>
+    );
   if (error) console.log(error);
   if (error) return <p>Abilities Error:</p>;
 

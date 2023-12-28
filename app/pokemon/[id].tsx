@@ -8,7 +8,7 @@ import { GameContext } from "@/context/_context";
 import { PokemonContextProvider } from "@/context/PokemonContextProvider";
 import { PokedexContextProvider } from "@/context/PokedexContextProvider";
 // Components
-import Pokedexes from "@/components/pages/pokedex/Pokedexes";
+import Pokedexes from "app/pokedex/Pokedexes";
 import PokemonVariety from "@/components/pages/pokemon/PokemonVariety";
 
 export default function Pokemon() {

@@ -7,5 +7,5 @@ export const numOfPokemonByGen: any = {
   "generation-vi": 721,
   "generation-vii": 809,
   "generation-viii": 905,
-  "generation-ix": 1010,
-}
+  "generation-ix": 1017,
+};

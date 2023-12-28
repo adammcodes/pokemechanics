@@ -1,12 +1,13 @@
-import { useRouter } from "next/router";
+"use client";
+import { useRouter } from "next/navigation";
 import { useContext } from "react";
-import { GameOption } from "../../types";
+import { GameOption } from "../src/types";
 // Components
-import Autocomplete from "./Autocomplete";
+import AutocompleteBase from "@/components/common/AutocompleteBase";
 // Utils
-import convertKebabCaseToTitleCase from "../../utils/convertKebabCaseToTitleCase";
+import convertKebabCaseToTitleCase from "../src/utils/convertKebabCaseToTitleCase";
 // Context
-import GameContext from "../../context/GameContextProvider";
+import GameContext from "../src/context/GameContextProvider";
 
 type VersionGroup = {
   name: string;
@@ -39,11 +40,11 @@ const GenSelector: React.FC<GenSelectorProps> = function GenSelector({ gens }) {
 
   return (
     <>
-      <Autocomplete
+      <AutocompleteBase
         options={genOptions}
         onSelect={handleSelect}
         defaultValue={convertKebabCaseToTitleCase(game || "red-blue")}
-        isPokemonOption={false}
+        hasImageOptions={false}
       />
     </>
   );

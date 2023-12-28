@@ -13,7 +13,7 @@ export default function Header() {
   const formatName = convertKebabCaseToTitleCase;
   const versionGroup = useGameVersion(game);
   const genNumber =
-    versionGroup.data && versionGroup.data.generation.name.split("-")[1];
+    versionGroup.data && versionGroup.data.generation?.name.split("-")[1];
 
   return (
     <div className="w-full">

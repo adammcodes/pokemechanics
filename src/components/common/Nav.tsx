@@ -17,7 +17,7 @@ export default function Nav() {
           <i></i>
         </li>
         <li>
-          <Link href="/">Switch Game</Link>
+          <Link href="/">Select Version</Link>
           <i></i>
         </li>
       </ul>

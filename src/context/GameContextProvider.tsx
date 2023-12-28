@@ -1,3 +1,4 @@
+"use client";
 import { GameContext } from "./_context";
 import useLocalStorageState from "@/hooks/useLocalStorageState";
 import { useState } from "react";

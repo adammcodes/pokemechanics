@@ -16,23 +16,30 @@
     "incremental": true,
     "baseUrl": ".", // This must be specified if "paths" is set.
     "paths": {
+      "@/apollo/*": ["apollo/*"],
       "@/components/*": ["src/components/*"],
       "@/constants/*": ["src/constants/*"],
       "@/context/*": ["src/context/*"],
       "@/hooks/*": ["src/hooks/*"],
       "@/lib/*": ["src/lib/*"],
-      "@/pages/*": ["src/pages/*"],
       "@/styles/*": ["src/styles/*"],
       "@/utils/*": ["src/utils/*"],
       "@/types/*": ["src/types/*"]
-    }
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "src/pages/pokemon/[id].tsx",
-    "src/components/evolutions/PokemonEvolutionChain.js"
+    "app/pokemon/[id].tsx",
+    "src/components/evolutions/PokemonEvolutionChain.js",
+    ".next/types/**/*.ts",
+    "app/pokedex/[gen]"
   ],
   "exclude": ["node_modules"]
 }
