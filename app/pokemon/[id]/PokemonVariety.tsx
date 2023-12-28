@@ -1,3 +1,4 @@
+"use client";
 import { useContext } from "react";
 import { useQuery } from "react-query";
 import { Region, PokemonSpeciesVariety } from "pokenode-ts";

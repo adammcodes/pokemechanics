@@ -1,4 +1,4 @@
-import styles from "@/styles/PokemonCard.module.css";
+"use client";
 // hooks & context
 import { useContext } from "react";
 import {
@@ -23,9 +23,9 @@ import splitKebabCase from "@/utils/splitKebabCase";
 
 // components
 import PokemonCardBox from "./PokemonCardBox";
-import PokemonFlavorText from "@/components/pages/pokemon/PokemonFlavorText";
+import PokemonFlavorText from "app/pokemon/[id]/PokemonFlavorText";
 import Evolutions from "@/components/evolutions/Evolutions";
-import ForwardBack from "@/components/pages/pokemon/ForwardBack";
+import ForwardBack from "app/pokemon/[id]/ForwardBack";
 import { Moves } from "@/components/moves/Moves";
 import Abilities from "@/components/abilities/Abilities";
 import Stats from "@/components/stats/Stats";

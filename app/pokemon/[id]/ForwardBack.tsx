@@ -1,16 +1,17 @@
+"use client";
 import Link from "next/link";
-import { Sprite } from "../../sprites/Sprite";
+import { Sprite } from "../../../src/components/sprites/Sprite";
 import { useContext } from "react";
 import {
   GameContext,
   PokedexContext,
   PokemonContext,
-} from "../../../context/_context";
+} from "../../../src/context/_context";
 import { Pokedex } from "pokenode-ts";
-import convertKebabCaseToTitleCase from "../../../utils/convertKebabCaseToTitleCase";
-import useGameVersion from "../../../hooks/useGameVersion";
-import { numOfPokemonByGen } from "../../../constants/numOfPokemonByGen";
-import addPrecedingZeros from "../../../utils/addPrecedingZeros";
+import convertKebabCaseToTitleCase from "../../../src/utils/convertKebabCaseToTitleCase";
+import useGameVersion from "../../../src/hooks/useGameVersion";
+import { numOfPokemonByGen } from "../../../src/constants/numOfPokemonByGen";
+import addPrecedingZeros from "../../../src/utils/addPrecedingZeros";
 
 type PokedexEntry = {
   entry_number: number;

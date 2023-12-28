@@ -1,6 +1,7 @@
+"use client";
 // hooks
 import { useContext } from "react";
-import { useRouter } from "next/router";
+import { useSearchParams } from "next/navigation";
 import { useQuery } from "react-query";
 import usePokemonClient from "@/hooks/usePokemonClient";
 import useGameVersion from "@/hooks/useGameVersion";
@@ -8,13 +9,18 @@ import { GameContext } from "@/context/_context";
 import { PokemonContextProvider } from "@/context/PokemonContextProvider";
 import { PokedexContextProvider } from "@/context/PokedexContextProvider";
 // Components
-import Pokedexes from "app/pokedex/Pokedexes";
-import PokemonVariety from "@/components/pages/pokemon/PokemonVariety";
+// import Pokedexes from "app/pokedex/Pokedexes";
+import PokemonVariety from "app/pokemon/[id]/PokemonVariety";
+// types
+import { PageProps } from ".next/types/app/layout";
 
-export default function Pokemon() {
-  const router = useRouter();
+export default function Pokemon({ params }: { params: PageProps }) {
   // Access the dynamic route parameter value, which is the pokemon id and dexId
-  const { id, dexId } = router.query as { id: string; dexId: string };
+  // const { id, dexId } = router.query as { id: string; dexId: string };
+  const { id } = params as { id: string };
+  const searchParams = useSearchParams();
+  // Get the 'dexId' query parameter
+  const dexId = searchParams.get("dexId");
 
   // Check the game the user has selected
   const { game } = useContext(GameContext);
@@ -64,7 +70,7 @@ export default function Pokemon() {
 
   return (
     <main className="w-full">
-      <Pokedexes />
+      {/* <Pokedexes /> */}
       {pokemonQuery.data &&
         pokemonSpeciesQuery.data &&
         version.data &&

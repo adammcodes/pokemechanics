@@ -1,3 +1,4 @@
+"use client";
 import { useContext } from "react";
 import PokeballSpans from "@/components/common/PokeballSpans";
 
@@ -11,7 +12,7 @@ import { spriteSizesByVersion } from "@/constants/spriteSizesByVersion";
 
 import DynamicImage from "@/components/common/DynamicImage";
 import DualDynamicImages from "./DualDynamicImages";
-import PokemonTypes from "@/components/pages/pokemon/PokemonTypes";
+import PokemonTypes from "app/pokemon/[id]/PokemonTypes";
 
 // types
 import { Genus, PokemonSprites, PokemonType } from "pokenode-ts";

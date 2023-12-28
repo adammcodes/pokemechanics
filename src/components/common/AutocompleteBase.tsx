@@ -39,7 +39,17 @@ const AutocompleteBase: React.FC<AutocompleteProps> = ({
 
   const handleOptionClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     const selectedValue = event.currentTarget.name;
-    const selectedLabel = event.currentTarget.innerHTML;
+    // select DOM element with id of label
+    const selectedLabel =
+      event.currentTarget.querySelector("#label")?.textContent;
+
+    if (!selectedValue || !selectedLabel) {
+      console.error("No value or label found in selected option");
+      console.log("selectedValue", selectedValue);
+      console.log("selectedLabel", selectedLabel);
+      return;
+    }
+
     onSelect(selectedValue);
     setInputValue(selectedLabel);
     setShowList(false);
@@ -72,7 +82,9 @@ const AutocompleteBase: React.FC<AutocompleteProps> = ({
               className={`autocomplete-li-option p-1 m-0 w-full text-left flex justify-between items-center`}
               onClick={handleOptionClick}
             >
-              {option.label}
+              <span id="label">
+                {hasImageOptions ? `(#${option.value})` : ``} {option.label}
+              </span>
               {hasImageOptions && (
                 <img
                   src={getSpriteUrl({
