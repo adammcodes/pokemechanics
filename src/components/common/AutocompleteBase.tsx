@@ -14,7 +14,7 @@ const AutocompleteBase: React.FC<AutocompleteProps> = ({
   onSelect,
   hasImageOptions = false,
 }) => {
-  const [inputValue, setInputValue] = useState(defaultValue);
+  const [inputValue, setInputValue] = useState(defaultValue || "");
   const [filteredOptions, setFilteredOptions] = useState(options);
   // Toggle for showing options list
   const [showList, setShowList] = useState<Boolean>(false);

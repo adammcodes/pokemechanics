@@ -50,7 +50,7 @@ const PokemonCardBox: React.FC<PokemonCardBoxProps> = (props) => {
 
   return (
     <div
-      className={`pokeball-box w-full lg:max-w-[400px] p-[1em] flex flex-col justify-center items-center`}
+      className={`pokeball-box w-full lg:max-w-[400px] lg:max-h-[300px] p-[1em] flex flex-col justify-center items-center`}
     >
       <table className="w-full">
         <tbody>

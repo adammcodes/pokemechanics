@@ -256,7 +256,6 @@ main {
 .pokeball-box {
   position: relative;
   border: 5px double #000;
-  padding: 10px;
 }
 
 .pokeball {

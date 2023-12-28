@@ -71,6 +71,9 @@ const PokemonCard: React.FC<PokemonCardProps> = (props) => {
   const versions = splitKebabCase(game);
 
   const types = props.is_variant ? props.types : p.types;
+  console.log(props.is_variant);
+  console.log(props.sprites);
+  console.log(p.sprites);
   const sprites = props.is_variant ? props.sprites : p.sprites;
   const pokemonHeight = props.is_variant ? props.height : p.height;
   const pokemonWeight = props.is_variant ? props.weight : p.weight;
@@ -95,9 +98,10 @@ const PokemonCard: React.FC<PokemonCardProps> = (props) => {
     : null;
 
   return (
-    <div className={`w-full flex flex-col items-center justify-center`}>
-      <section className="flex flex-col justify-center lg:flex-row gap-6 px-[0.5em] lg:px-[1em]">
-        {/* Card Box with meta info - Name, Sprites, Types, Height, Weight, etc */}
+    <div className={`w-full flex flex-col items-center justify-center gap-y-6`}>
+      {/* Card Box with meta info - Name, Sprites, Types, Height, Weight, etc */}
+
+      <div className="px-0 lg:px-0">
         <PokemonCardBox
           name={name}
           is_variant={props.is_variant}
@@ -106,6 +110,9 @@ const PokemonCard: React.FC<PokemonCardProps> = (props) => {
           height={pokemonHeight}
           weight={pokemonWeight}
         />
+      </div>
+
+      <section className="flex flex-col justify-center lg:flex-row gap-6 px-[0.5em] lg:px-[1em]">
         {/* Abilities */}
         {!isGenOneOrTwo && <Abilities pokemonName={variantName} />}
         {/* Stats */}
