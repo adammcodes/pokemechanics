@@ -24,8 +24,8 @@
   font-style: normal;
 }
 
+/* CSS custom properties / CSS variables */
 :root {
-  /* CSS custom properties / CSS variables */
   --font-size: 1.3rem;
 }
 

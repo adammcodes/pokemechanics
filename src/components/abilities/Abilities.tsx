@@ -74,7 +74,7 @@ const Abilities: React.FC<AbilitiesProps> = ({ pokemonName }) => {
   if (loading)
     return (
       <section
-        className={`${styles.card__border} w-[400px] p-[1em] flex flex-col gap-y-3`}
+        className={`${styles.card__border} w-full lg:w-[400px] p-[1em] flex flex-col gap-y-3`}
       >
         Loading abilities...
       </section>
@@ -84,16 +84,23 @@ const Abilities: React.FC<AbilitiesProps> = ({ pokemonName }) => {
 
   const abilitiesData: AbilitiesData =
     data?.abilities.length > 0 ? data.abilities[0] : undefined;
-  // console.log(abilitiesData);
+
+  if (!abilitiesData) {
+    return (
+      <section
+        className={`${styles.card__border} w-full lg:w-[400px] p-[1em] flex flex-col gap-y-3`}
+      >
+        Could not find abilities.
+      </section>
+    );
+  }
 
   const { pokemon_v2_pokemonabilities } = abilitiesData;
 
   const abilities = pokemon_v2_pokemonabilities.map((ability) => {
     const { is_hidden, pokemon_v2_ability } = ability;
-    const { name, pokemon_v2_abilityeffecttexts, pokemon_v2_generation } =
-      pokemon_v2_ability;
+    const { name, pokemon_v2_abilityeffecttexts } = pokemon_v2_ability;
     const { effect, short_effect } = pokemon_v2_abilityeffecttexts[0];
-    // const { name: generationName } = pokemon_v2_generation;
     return {
       name,
       is_hidden,
@@ -104,7 +111,7 @@ const Abilities: React.FC<AbilitiesProps> = ({ pokemonName }) => {
 
   return (
     <section
-      className={`${styles.card__border} w-[400px] p-[1em] flex flex-col gap-y-3`}
+      className={`${styles.card__border} w-full lg:w-[400px] p-[1em] flex flex-col gap-y-3`}
     >
       <h2 className="text-3xl">Abilities:</h2>
       {abilities.map((ability) => (

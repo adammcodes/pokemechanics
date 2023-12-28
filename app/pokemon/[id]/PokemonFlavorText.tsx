@@ -18,7 +18,7 @@ const PokemonFlavorText: React.FC<PokemonFlavorTextProps> = ({
 }) => {
   return (
     <div
-      className={`bg-white p-[1em] w-[400px] lg:w-1/4 ${styles.card__border}`}
+      className={`bg-white p-[1em] w-full lg:w-[400px] ${styles.card__border}`}
     >
       <h2 className="text-3xl">Flavor Text:</h2>
       {flavorTextForVersion && (

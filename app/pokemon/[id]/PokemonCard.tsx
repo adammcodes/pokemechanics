@@ -96,7 +96,7 @@ const PokemonCard: React.FC<PokemonCardProps> = (props) => {
 
   return (
     <div className={`w-full flex flex-col items-center justify-center`}>
-      <section className="flex flex-col justify-center lg:flex-row gap-6">
+      <section className="flex flex-col justify-center lg:flex-row gap-6 px-[0.5em] lg:px-[1em]">
         {/* Card Box with meta info - Name, Sprites, Types, Height, Weight, etc */}
         <PokemonCardBox
           name={name}

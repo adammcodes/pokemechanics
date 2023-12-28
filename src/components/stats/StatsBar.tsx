@@ -10,11 +10,23 @@ type StatsBarProps = {
   effort: number; // this is not used yet
 };
 
+const calculateStatColor = (baseStatPercentage: number): string => {
+  let hue;
+  if (baseStatPercentage < 50) {
+    // Interpolate from red (0) to yellow (60)
+    hue = (baseStatPercentage / 50) * 60;
+  } else {
+    // Interpolate from yellow-ish (80) to green (120)
+    hue = 80 + ((baseStatPercentage - 50) / 50) * 60;
+  }
+  return `hsl(${hue}, 100%, 50%)`;
+};
+
 // This component is for a single stat bar
 const StatsBar: React.FC<StatsBarProps> = ({ name, base_stat }) => {
   const formatName = convertKebabCaseToTitleCase;
   const baseStatPercentage = Math.round((base_stat / 255) * 100);
-  const statColor = `hsl(${baseStatPercentage}, 100%, 50%)`;
+  const statColor = calculateStatColor(baseStatPercentage);
   const statName = name === "hp" ? name.toUpperCase() : formatName(name);
   return (
     <div className="flex flex-col gap-y-1">
@@ -23,7 +35,7 @@ const StatsBar: React.FC<StatsBarProps> = ({ name, base_stat }) => {
           {statName}: {base_stat}
         </p>
       </div>
-      <div className="relative h-2 w-full bg-gray-300 rounded">
+      <div className="relative h-3 w-full rounded">
         <div
           className="absolute top-0 left-0 h-2 rounded"
           style={{
@@ -64,8 +76,8 @@ const StatBars: React.FC<StatBarsProps> = ({ stats }) => {
       {stats.map((stat) => (
         <StatsBar key={stat.name} {...stat} />
       ))}
-      <div className="flex flex-col gap-1 xl:flex-row">
-        <span>Effort Values:</span>{" "}
+      <div>
+        <span>Effort Values:</span> <br />
         {EVs.map((ev, i, arr) => (
           <span key={ev.stat}>
             +{ev.value} {formatName(ev.stat)}
