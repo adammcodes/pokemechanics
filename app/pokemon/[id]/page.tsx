@@ -11,10 +11,8 @@ import { PokedexContextProvider } from "@/context/PokedexContextProvider";
 // Components
 // import Pokedexes from "app/pokedex/Pokedexes";
 import PokemonVariety from "app/pokemon/[id]/PokemonVariety";
-// types
-import { PageProps } from ".next/types/app/layout";
 
-export default function Pokemon({ params }: { params: PageProps }) {
+export default function Pokemon({ params }: { params: any }) {
   // Access the dynamic route parameter value, which is the pokemon id and dexId
   // const { id, dexId } = router.query as { id: string; dexId: string };
   const { id } = params as { id: string };
