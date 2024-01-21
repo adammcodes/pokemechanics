@@ -1,28 +1,28 @@
-// import { EvolutionDetail } from "pokenode-ts";
+import { EvolutionDetail } from "pokenode-ts";
 import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
 import relativeAttackAndDefense from "@/lib/relativeAttackAndDefence";
 
-const EvolutionTrigger = ({ details }: any) => {
+const EvolutionTrigger = ({ details }: { details: EvolutionDetail }) => {
   const formatName = convertKebabCaseToTitleCase;
-  const trigger = details.trigger.name;
-  const level = details.min_level;
-  const item = details.item;
-  const heldItem = details.held_item;
-  const knownMove = details.known_move;
-  const knownMoveType = details.known_move_type;
-  const location = details.location;
+  const trigger = details?.trigger.name;
+  const level = details?.min_level;
+  const item = details?.item;
+  const heldItem = details?.held_item;
+  const knownMove = details?.known_move;
+  const knownMoveType = details?.known_move_type;
+  const location = details?.location;
   // const minAffection = details.min_affection;
-  const minBeauty = details.min_beauty;
-  const minHappiness = details.min_happiness;
+  const minBeauty = details?.min_beauty;
+  const minHappiness = details?.min_happiness;
   // const needsOverworldRain = details[0].needs_overworld_rain;
   // const partySpecies = details[0].party_species;
   // const partyType = details[0].party_type;
   const relativePhysicalStats =
-    details.relative_physical_stats &&
+    details?.relative_physical_stats &&
     relativeAttackAndDefense(details.relative_physical_stats);
-  const timeOfDay = details.time_of_day;
+  const timeOfDay = details?.time_of_day;
   // const tradeSpecies = details[0].trade_species;
-  const turnUpsideDown = details.turn_upside_down;
+  const turnUpsideDown = details?.turn_upside_down;
   const locationName = location?.name;
 
   return (
@@ -94,7 +94,7 @@ const EvolutionTrigger = ({ details }: any) => {
           )}
         </small>
       )}
-      {trigger === "use-item" && (
+      {trigger === "use-item" && item && (
         <small>
           Use {formatName(item.name)}
           {timeOfDay && (
@@ -116,19 +116,19 @@ const EvolutionTrigger = ({ details }: any) => {
           )}
         </small>
       )}
-      {trigger === "known-move" && (
+      {trigger === "known-move" && knownMove && (
         <small>
           Knows {formatName(knownMove.name)}{" "}
           {knownMoveType && ` of type ${formatName(knownMoveType.name)}`}
         </small>
       )}
-      {trigger === "strong-style-move" && (
+      {trigger === "strong-style-move" && knownMove && (
         <small>
           Used the strong-style move {formatName(knownMove.name)} 20 times in
           battle
         </small>
       )}
-      {trigger === "agile-style-move" && (
+      {trigger === "agile-style-move" && knownMove && (
         <small>
           Used the agile-style move {formatName(knownMove.name)} 20 times in
           battle
@@ -140,7 +140,9 @@ const EvolutionTrigger = ({ details }: any) => {
           <br /> recoil damage
         </small>
       )}
-      <span>⇒</span>
+      {trigger && <span>⇒</span>}
+      {!trigger && <small>{`No evolution trigger in this game`}</small>}
+      {!trigger && <span className="font-bold">&times;</span>}
     </div>
   );
 };

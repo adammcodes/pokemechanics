@@ -71,9 +71,9 @@ const PokemonCard: React.FC<PokemonCardProps> = (props) => {
   const versions = splitKebabCase(game);
 
   const types = props.is_variant ? props.types : p.types;
-  console.log(props.is_variant);
-  console.log(props.sprites);
-  console.log(p.sprites);
+  // console.log(props.is_variant);
+  // console.log(props.sprites);
+  // console.log(p.sprites);
   const sprites = props.is_variant ? props.sprites : p.sprites;
   const pokemonHeight = props.is_variant ? props.height : p.height;
   const pokemonWeight = props.is_variant ? props.weight : p.weight;

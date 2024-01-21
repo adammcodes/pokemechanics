@@ -100,7 +100,9 @@ const Abilities: React.FC<AbilitiesProps> = ({ pokemonName }) => {
   const abilities = pokemon_v2_pokemonabilities.map((ability) => {
     const { is_hidden, pokemon_v2_ability } = ability;
     const { name, pokemon_v2_abilityeffecttexts } = pokemon_v2_ability;
-    const { effect, short_effect } = pokemon_v2_abilityeffecttexts[0];
+    const { effect, short_effect } = pokemon_v2_abilityeffecttexts.length
+      ? pokemon_v2_abilityeffecttexts[0]
+      : { effect: "", short_effect: "" };
     return {
       name,
       is_hidden,

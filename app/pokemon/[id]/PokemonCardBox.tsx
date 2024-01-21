@@ -50,7 +50,7 @@ const PokemonCardBox: React.FC<PokemonCardBoxProps> = (props) => {
 
   return (
     <div
-      className={`pokeball-box w-full lg:max-w-[400px] lg:max-h-[300px] p-[1em] flex flex-col justify-center items-center`}
+      className={`pokeball-box w-full lg:max-w-[400px] p-[1em] flex flex-col justify-center items-center`}
     >
       <table className="w-full">
         <tbody>
@@ -91,7 +91,15 @@ const PokemonCardBox: React.FC<PokemonCardBoxProps> = (props) => {
               </div>
             </td>
             <td className="w-1/2 flex-col justify-center items-center pl-5">
-              <div className="text-3xl mb-5">{pokemonName}</div>
+              <div className="text-2xl leading-[24px] mb-5">
+                {pokemonName.split(" ")[0]}
+                {pokemonName.split(" ")[1] && (
+                  <span className="text-xl mb-5 leading-[24px]">
+                    <br />
+                    {pokemonName.split(" ")[1]}
+                  </span>
+                )}
+              </div>
               <div className="mb-5">{pokemonGenus}</div>
               <div className="mb-5">
                 No.
