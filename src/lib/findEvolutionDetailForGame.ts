@@ -12,8 +12,6 @@ export default function findEvolutionDetailForGame(
   // console.log(speciesName);
   // console.log(evolution_details);
 
-  console.log(evolution_details);
-
   // If there is only one evolution detail, return it
   if (evolution_details.length === 1) return evolution_details[0];
 

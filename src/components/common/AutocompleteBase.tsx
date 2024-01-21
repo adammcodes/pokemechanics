@@ -75,11 +75,11 @@ const AutocompleteBase: React.FC<AutocompleteProps> = ({
         }`}
       >
         {filteredOptions.map((option, i) => (
-          <li key={option.value}>
+          <li key={option.value} className="autocomplete__li">
             <button
               id={`${option.name}-${option.value}`}
               name={option.value?.toString()}
-              className={`autocomplete-li-option p-1 m-0 w-full text-left flex justify-between items-center`}
+              className={`autocomplete__li__btn p-1 m-0 w-full text-left flex justify-between items-center`}
               onClick={handleOptionClick}
             >
               <span id="label">

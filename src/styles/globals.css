@@ -224,18 +224,21 @@ main {
   float: right;
 }
 
-.autocomplete-li-option {
+.autocomplete__li__btn {
   background-color: #fff;
   border-left: 2px solid silver;
   border-right: 2px solid silver;
-  box-shadow: 0px 10px 30px 0px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 10px 30px 0px rgba(0, 0, 0, 0.2);
 }
-.autocomplete-li-option:hover,
-.autocomplete-li-option:focus {
+.autocomplete__li__btn:hover,
+.autocomplete__li__btn:focus {
   background-color: #5b8098;
   outline: none;
   color: #fff;
   cursor: pointer;
+}
+.autocomplete__li:last-child {
+  border-bottom: 2px solid silver;
 }
 
 .rby-dialogue-box {
