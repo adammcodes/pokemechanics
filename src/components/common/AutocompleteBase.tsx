@@ -70,16 +70,16 @@ const AutocompleteBase: React.FC<AutocompleteProps> = ({
         onClick={() => setShowList(!showList)}
       ></i>
       <ul
-        className={`absolute overflow-y-auto max-h-screen w-full z-10 ${
-          !showList ? "invisible" : "visible"
+        className={`overflow-y-auto max-h-[50vh] w-full z-10 ${
+          !showList ? "hidden" : "absolute"
         }`}
       >
         {filteredOptions.map((option, i) => (
-          <li key={option.value}>
+          <li key={option.value} className="autocomplete__li">
             <button
               id={`${option.name}-${option.value}`}
               name={option.value?.toString()}
-              className={`autocomplete-li-option p-1 m-0 w-full text-left flex justify-between items-center`}
+              className={`autocomplete__li__btn p-1 m-0 w-full text-left flex justify-between items-center`}
               onClick={handleOptionClick}
             >
               <span id="label">

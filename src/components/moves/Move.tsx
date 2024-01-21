@@ -3,10 +3,10 @@ import { useQuery } from "react-query";
 import { useContext } from "react";
 import { PokemonMoveByMethod } from "../../types";
 import convertKebabCaseToTitleCase from "../../utils/convertKebabCaseToTitleCase";
-import DynamicImage from "../common/DynamicImage";
 import { GameContext } from "../../context/_context";
 import replaceNewlinesAndFeeds from "../../utils/replaceNewlinesAndFeeds";
 import { MoveMachine } from "./MoveMachine";
+import PokemonTypeChip from "../common/PokemonTypeChip";
 
 type MoveProps = {
   m: PokemonMoveByMethod;
@@ -59,43 +59,60 @@ export const Move: React.FC<MoveProps> = ({ m, method }) => {
       {moveQ.data && (
         <>
           <tr>
-            <td className="px-4 py-2" rowSpan={2}>
-              {method === "machine" && (
-                <MoveMachine machines={moveQ.data.machines} game={game} />
-              )}
-              {method !== "machine" && <>{level}</>}
-            </td>
-            <td className="px-2 py-2" rowSpan={2}>
-              {formatName(m.move.name)}
-            </td>
-            <td>
-              <div className="w-full flex flex-row justify-center">
-                <DynamicImage
-                  width={32}
-                  height={12}
-                  src={`/images/types/${moveQ.data.type.name}.png`}
-                  alt={`${moveQ.data.type.name}`}
-                  priority={false}
-                />
+            <td rowSpan={2}>
+              <div className="px-2 py-2 flex items-center">
+                {method === "machine" && (
+                  <MoveMachine machines={moveQ.data.machines} game={game} />
+                )}
+                {method !== "machine" && <>{level}</>}
               </div>
             </td>
-            <td className="text-center px-4 py-2">
-              {moveQ.data.power ? moveQ.data.power : "--"}
+            <td rowSpan={2}>
+              <div className="px-2 py-2 flex items-center">
+                {formatName(m.move.name)}
+              </div>
             </td>
-            <td className="text-center px-4 py-2">
-              {moveQ.data.accuracy ? moveQ.data.accuracy : "--"}
+            <td>
+              <div className="flex flex-row justify-center px-2 py-[13.4px] rounded-md bg-[#a7bcb9]">
+                <PokemonTypeChip typeName={moveQ.data.type.name} />
+              </div>
             </td>
-            <td className="text-center px-4 py-2">
-              {moveQ.data.pp ? moveQ.data.pp : "--"}
+            <td>
+              <div className="flex flex-row justify-center px-2 py-2 rounded-md bg-[#a7bcb9]">
+                {moveQ.data.damage_class && (
+                  <>{formatName(moveQ.data.damage_class.name)}</>
+                )}
+              </div>
             </td>
-            <td className="text-center px-4 py-2">
-              {moveQ.data.effect_chance ? moveQ.data.effect_chance : "--"}
+            <td className="text-center">
+              <div className="px-2 py-2 rounded-md bg-[#a7bcb9]">
+                {moveQ.data.power ? moveQ.data.power : "--"}
+              </div>
+            </td>
+            <td className="text-center">
+              <div className="px-2 py-2 rounded-md bg-[#a7bcb9]">
+                {moveQ.data.accuracy ? moveQ.data.accuracy : "--"}
+              </div>
+            </td>
+            <td className="text-center">
+              <div className="px-2 py-2 rounded-md bg-[#a7bcb9]">
+                {moveQ.data.pp ? moveQ.data.pp : "--"}
+              </div>
+            </td>
+            <td className="text-center">
+              <div className="px-2 py-2 rounded-md bg-[#a7bcb9]">
+                {moveQ.data.effect_chance ? moveQ.data.effect_chance : "--"}
+              </div>
             </td>
           </tr>
           <tr>
-            <td colSpan={8} className="px-2">
-              {typeof moveText === "string" &&
-                replaceNewlinesAndFeeds(moveText)}
+            <td colSpan={7}>
+              {moveText && (
+                <div className="px-2 py-1 rounded-md bg-[#a7bcb9]">
+                  {typeof moveText === "string" &&
+                    replaceNewlinesAndFeeds(moveText)}
+                </div>
+              )}
             </td>
           </tr>
         </>

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import styles from "./DualDynamicImages.module.css"; // Assuming you have a CSS module
 
 interface Props {
   labelLeft: string;
@@ -24,44 +25,36 @@ const DualDynamicImages: React.FC<Props> = ({
   priority = false,
 }) => {
   return (
-    <table className="w-full">
-      <tbody>
-        <tr>
-          <td className="pr-1">
-            <div className="flex justify-center items-center">
-              {srcLeft && (
-                <Image
-                  src={srcLeft}
-                  alt={altLeft}
-                  width={width}
-                  height={height}
-                  priority={priority}
-                />
-              )}
-              {!srcLeft && "Sprite not available"}
-            </div>
-          </td>
-          <td className="pl-1">
-            <div className="flex justify-center items-center">
-              {srcRight && (
-                <Image
-                  src={srcRight}
-                  alt={altRight}
-                  width={width}
-                  height={height}
-                  priority={priority}
-                />
-              )}
-              {!srcRight && "Sprite not available"}
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td className="text-center pr-1">{labelLeft}</td>
-          <td className="text-center pl-1">{labelRight}</td>
-        </tr>
-      </tbody>
-    </table>
+    <div className={styles.gridContainer}>
+      <div className={styles.imageContainer}>
+        {srcLeft ? (
+          <Image
+            src={srcLeft}
+            alt={altLeft}
+            width={width}
+            height={height}
+            priority={priority}
+          />
+        ) : (
+          "Sprite not available"
+        )}
+        <p className={styles.label}>{labelLeft}</p>
+      </div>
+      <div className={styles.imageContainer}>
+        {srcRight ? (
+          <Image
+            src={srcRight}
+            alt={altRight}
+            width={width}
+            height={height}
+            priority={priority}
+          />
+        ) : (
+          "Sprite not available"
+        )}
+        <p className={styles.label}>{labelRight}</p>
+      </div>
+    </div>
   );
 };
 

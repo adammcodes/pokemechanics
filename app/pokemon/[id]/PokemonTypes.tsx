@@ -1,5 +1,5 @@
+import PokemonTypeChip from "@/components/common/PokemonTypeChip";
 import { PokemonType } from "pokenode-ts";
-import DynamicImage from "../../../src/components/common/DynamicImage";
 
 type PokemonTypesProps = {
   types: PokemonType[];
@@ -8,20 +8,13 @@ type PokemonTypesProps = {
 const PokemonTypes: React.FC<PokemonTypesProps> = ({ types }) => {
   const mappedTypes = types.map((t, i, arr) => {
     let typeName = t.type.name;
-    return (
-      <div key={i}>
-        <DynamicImage
-          width={32}
-          height={12}
-          src={`/images/types/${typeName}.png`}
-          alt={`${typeName} type`}
-          priority={true}
-        />
-      </div>
-    );
+
+    return <PokemonTypeChip key={typeName} typeName={typeName} />;
   });
 
-  return <>{mappedTypes}</>;
+  return (
+    <div className="flex mt-2 flex-col lg:flex-row gap-2">{mappedTypes}</div>
+  );
 };
 
 export default PokemonTypes;

@@ -11,13 +11,13 @@ type StatsBarProps = {
 };
 
 const calculateStatColor = (baseStatPercentage: number): string => {
-  let hue;
+  let hue = 30;
   if (baseStatPercentage < 50) {
     // Interpolate from red (0) to yellow (60)
-    hue = (baseStatPercentage / 50) * 60;
+    hue += (baseStatPercentage / 50) * 60;
   } else {
     // Interpolate from yellow-ish (80) to green (120)
-    hue = 80 + ((baseStatPercentage - 50) / 50) * 60;
+    hue += 80 + ((baseStatPercentage - 50) / 50) * 60;
   }
   return `hsl(${hue}, 100%, 50%)`;
 };

@@ -61,38 +61,64 @@ export const Moves: React.FC<MovesProps> = ({ moves }) => {
 
   return (
     <div className={`mt-10 w-full ${styles.container}`}>
-      {moveLearnMethods.map((method, i) => {
-        return (
-          <div key={i} className="w-full">
-            <header className={`py-1 w-full text-center ${styles.header}`}>
-              {formatName(method)}
-            </header>
-            <figure className={styles.wrapper}>
-              <table className="overflow-x-scroll w-full border-separate border-spacing-1">
-                <thead>
-                  <tr>
-                    <th className="px-2 py-2 text-left">
-                      {method === "machine" && <>Machine</>}
-                      {method !== "machine" && <>Level</>}
-                    </th>
-                    <th className="px-2 py-2 text-left">Attack Name</th>
-                    <th className="px-2 py-2">Type</th>
-                    <th className="px-2 py-2">Power</th>
-                    <th className="px-2 py-2">Accuracy</th>
-                    <th className="px-2 py-2">PP</th>
-                    <th className="px-2 py-2">Effect %</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filterMovesByMethod(allMoves, method).map((m, index) => {
-                    return <Move key={index} m={m} method={method} />;
-                  })}
-                </tbody>
-              </table>
-            </figure>
-          </div>
-        );
-      })}
+      {moveLearnMethods
+        .filter((method) => method !== "n/a")
+        .map((method, i) => {
+          return (
+            <div key={i} className="w-full">
+              <figure className={styles.wrapper}>
+                <table className="w-full">
+                  <thead>
+                    <tr>
+                      <th
+                        className="sticky top-0 bg-[#e0ebeb] z-10"
+                        colSpan={10}
+                      >
+                        <header
+                          className={`py-1 w-full text-left px-2 lg:text-center ${styles.header}`}
+                        >
+                          {formatName(method)}
+                        </header>
+                      </th>
+                    </tr>
+                    <tr>
+                      <th className="sticky top-7 bg-[#e0ebeb] z-10 px-2 py-2 text-left">
+                        {method === "machine" && <>Machine</>}
+                        {method !== "machine" && <>Level</>}
+                      </th>
+                      <th className="sticky top-7 bg-[#e0ebeb] z-10 px-2 py-2 text-left">
+                        Attack Name
+                      </th>
+                      <th className="sticky top-7 bg-[#e0ebeb] z-10 px-2 py-2">
+                        Type
+                      </th>
+                      <th className="sticky top-7 bg-[#e0ebeb] z-10 px-2 py-2">
+                        Class
+                      </th>
+                      <th className="sticky top-7 bg-[#e0ebeb] z-10 px-2 py-2">
+                        Power
+                      </th>
+                      <th className="sticky top-7 bg-[#e0ebeb] z-10 px-2 py-2">
+                        Accuracy
+                      </th>
+                      <th className="sticky top-7 bg-[#e0ebeb] z-10 px-2 py-2">
+                        PP
+                      </th>
+                      <th className="sticky top-7 bg-[#e0ebeb] z-10 px-2 py-2">
+                        Effect %
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filterMovesByMethod(allMoves, method).map((m, index) => {
+                      return <Move key={index} m={m} method={method} />;
+                    })}
+                  </tbody>
+                </table>
+              </figure>
+            </div>
+          );
+        })}
     </div>
   );
 };

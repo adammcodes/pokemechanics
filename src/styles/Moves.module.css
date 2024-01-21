@@ -9,18 +9,21 @@
 
 .wrapper {
   display: flex;
-  overscroll-behavior-x: contain;
-  overflow-x: auto;
+  flex-direction: column;
   margin-inline: calc(var(--page-gutter) * -1);
   padding-inline: var(--page-gutter);
-  padding-block: 1rem;
+  color: black;
 }
 
 .wrapper > table tbody tr > td {
-  border-radius: 2px;
-  background: #a7bcb9;
-  border: 1px solid #a7bcb9;
-  border-radius: 3px;
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
+  border-width: 2px;
+  vertical-align: top;
+}
+
+/* In mobile the table wrapper should be scrollable */
+@media (max-width: 1280px) {
+  .wrapper {
+    overflow-x: auto;
+    max-height: 100vh;
+  }
 }

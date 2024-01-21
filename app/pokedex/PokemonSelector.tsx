@@ -5,7 +5,7 @@ import { PokedexPokemon } from "./PokedexById";
 // Components
 import AutocompleteBase from "@/components/common/AutocompleteBase";
 // Utils
-import convertKebabCaseToTitleCase from "../../src/utils/convertKebabCaseToTitleCase";
+import toTitleCase from "@/utils/toTitleCase";
 
 export type PokemonOption = {
   label: string;
@@ -54,7 +54,7 @@ const PokemonSelector: React.FC<PokemonSelectorProps> =
       const pokemonId: number = p.pokedex_number; // this is the regional dex number
       const pokemonName: string = p.pokemon_v2_pokemonspecy.name;
       return {
-        label: convertKebabCaseToTitleCase(pokemonName),
+        label: toTitleCase(pokemonName),
         name: pokemonName,
         value: dexNumber, // the value property we use as [id] in pokemon page dynamic routes
         pokemonId: pokemonId, // this is the regional dex number

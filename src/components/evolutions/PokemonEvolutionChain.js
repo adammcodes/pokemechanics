@@ -18,6 +18,12 @@ const renderEvolutionNode = (node, gameInfo, prevEvolutionInGen) => {
   const pokemonDexNumber = Number(species.url.split("/").at(-2));
   const dexId = gameInfo.dexId;
 
+  const evolutionDetails = findEvolutionDetailForGame(
+    species.name,
+    evolution_details,
+    generation
+  );
+
   return (
     <section
       key={species.name}
@@ -28,13 +34,7 @@ const renderEvolutionNode = (node, gameInfo, prevEvolutionInGen) => {
       {isPokemonInGen && (
         <>
           {evolution_details.length > 0 && prevEvolutionInGen && (
-            <EvolutionTrigger
-              details={findEvolutionDetailForGame(
-                species.name,
-                evolution_details,
-                generation
-              )}
-            />
+            <EvolutionTrigger details={evolutionDetails} />
           )}
           <figure className="flex flex-col items-center">
             <a href={`/pokemon/${pokemonDexNumber}?dexId=${dexId}`}>

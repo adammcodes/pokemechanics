@@ -1,16 +1,17 @@
 .typing {
   width: 27ch;
   animation: typing 2s steps(27);
+  animation-delay: 500ms;
   white-space: nowrap;
   overflow: hidden;
-  /* font-family: monospace; */
+  font-family: "BWB2W2";
   font-size: var(--font-size);
   margin-bottom: 0.5em;
 }
 
 @keyframes typing {
   from {
-    width: 0;
+    width: 0ch;
   }
 }
 
