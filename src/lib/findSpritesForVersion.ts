@@ -18,7 +18,7 @@ function findSpritesForVersion(
 
   // There is a possibility that the pokemon will not have any sprites for the selected version
   // e.g. version: firered-leafgreen, pokemon: latias = { front_default: null }
-  if (spritesForVersion && !spritesForVersion[version].front_default) {
+  if (spritesForVersion && !spritesForVersion[version]?.front_default) {
     // Return the default sprites
     return sprites;
   }
