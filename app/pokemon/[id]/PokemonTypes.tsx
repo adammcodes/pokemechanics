@@ -12,7 +12,9 @@ const PokemonTypes: React.FC<PokemonTypesProps> = ({ types }) => {
     return <PokemonTypeChip key={typeName} typeName={typeName} />;
   });
 
-  return <div className="flex gap-x-2">{mappedTypes}</div>;
+  return (
+    <div className="flex mt-2 flex-col lg:flex-row gap-2">{mappedTypes}</div>
+  );
 };
 
 export default PokemonTypes;

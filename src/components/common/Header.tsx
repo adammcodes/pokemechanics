@@ -34,7 +34,11 @@ export default function Header() {
             </Link>
             {game && versionGroup.data && (
               <span className="text-[0.9em] lg:text-[1em]">
-                &nbsp;- {formatName(game)}{" "}
+                <span className="hidden lg:inline">&nbsp;-</span>{" "}
+                {formatName(game)}{" "}
+                <span className="inline lg:hidden">
+                  <br />
+                </span>
                 {genNumber && <>(Gen {genNumber.toUpperCase()})</>}
               </span>
             )}

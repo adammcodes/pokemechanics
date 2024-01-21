@@ -67,7 +67,7 @@ export const Moves: React.FC<MovesProps> = ({ moves }) => {
           return (
             <div key={i} className="w-full">
               <figure className={styles.wrapper}>
-                <table className="overflow-x-scroll w-full">
+                <table className="w-full">
                   <thead>
                     <tr>
                       <th
@@ -75,7 +75,7 @@ export const Moves: React.FC<MovesProps> = ({ moves }) => {
                         colSpan={10}
                       >
                         <header
-                          className={`py-1 w-full text-center ${styles.header}`}
+                          className={`py-1 w-full text-left px-2 lg:text-center ${styles.header}`}
                         >
                           {formatName(method)}
                         </header>

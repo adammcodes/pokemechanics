@@ -1,10 +1,10 @@
-import usePokemonClient from "../../hooks/usePokemonClient";
 import { useQuery } from "react-query";
-import useGameVersion from "../../hooks/useGameVersion";
-import findSpritesForVersion from "../../lib/findSpritesForVersion";
-import findVarietyForRegion from "../../lib/findVarietyForRegion";
+import usePokemonClient from "@/hooks/usePokemonClient";
+import useGameVersion from "@/hooks/useGameVersion";
+import findVarietyForRegion from "@/lib/findVarietyForRegion";
 import { PokemonSpeciesVariety } from "pokenode-ts";
 import PokemonSpriteById from "./PokemonSpriteById";
+import getSpriteUrl from "@/constants/spriteUrlTemplates";
 
 // Component that renders the pokemon sprite for the current generation
 const PokemonSpriteForGen = ({
@@ -101,10 +101,11 @@ const PokemonSpriteForGen = ({
       pokemonVarietyForRegion?.pokemon.url.split("/").at(-2)
     );
 
-    // Render the pokemon sprite for the current generation
-    const allSprites = pokemonQuery.data.sprites;
-    // Use the sprite for the generation if it exists, otherwise use the default official artwork sprite
-    sprite = findSpritesForVersion(allSprites, game).front_default ?? sprite;
+    sprite = getSpriteUrl({
+      versionGroup: game,
+      pokemonId: pokemonVarietyId || pokemonId,
+      generation: version.data.generation.name.split("-")[1],
+    });
   }
 
   // If there is a pokemonVarietyId, use the PokemonSpriteById component to render the regional variant sprite
@@ -113,7 +114,15 @@ const PokemonSpriteForGen = ({
   }
 
   // Otherwise, return the sprite
-  return <img src={sprite} alt={spriteAltText} style={spriteStyle} />;
+  return (
+    <img
+      src={sprite}
+      height={150}
+      width={150}
+      alt={spriteAltText}
+      style={spriteStyle}
+    />
+  );
 };
 
 export default PokemonSpriteForGen;

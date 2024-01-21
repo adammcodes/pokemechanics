@@ -4,7 +4,7 @@ type TypeColours = {
 };
 export const typeColours: TypeColours = {
   bug: "#98c24a",
-  dark: "#211d1d",
+  dark: "#3b3434",
   dragon: "#53a4cf",
   electric: "#eed535",
   fairy: "#c93a9f",

@@ -70,8 +70,8 @@ const AutocompleteBase: React.FC<AutocompleteProps> = ({
         onClick={() => setShowList(!showList)}
       ></i>
       <ul
-        className={`absolute overflow-y-auto max-h-screen w-full z-10 ${
-          !showList ? "invisible" : "visible"
+        className={`overflow-y-auto max-h-[50vh] w-full z-10 ${
+          !showList ? "hidden" : "absolute"
         }`}
       >
         {filteredOptions.map((option, i) => (

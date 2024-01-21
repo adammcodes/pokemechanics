@@ -1,14 +1,13 @@
 "use client";
 import { useContext } from "react";
-import PokeballSpans from "@/components/common/PokeballSpans";
+// import PokeballSpans from "@/components/common/PokeballSpans";
+import styles from "@/styles/PokemonCard.module.css";
 
 import convertHeightToCmOrM from "@/utils/convertHeightToCmOrM";
 import convertWeightToGramsOrKg from "@/utils/convertWeightToGramsOrKg";
 
-import findSpritesForVersion from "@/lib/findSpritesForVersion";
-import findSpritesForGoldSilver from "@/lib/findSpritesForGoldSilver";
-
 import { spriteSizesByVersion } from "@/constants/spriteSizesByVersion";
+import getSpriteUrl from "@/constants/spriteUrlTemplates";
 
 import DynamicImage from "@/components/common/DynamicImage";
 import DualDynamicImages from "./DualDynamicImages";
@@ -22,11 +21,13 @@ import { GameContext, PokemonContext } from "@/context/_context";
 
 type PokemonCardBoxProps = {
   name: string; // required
+  pokemonId: number;
   is_variant: boolean;
   types: PokemonType[];
   sprites: PokemonSprites;
   height: number;
   weight: number;
+  genNumber: string;
 };
 
 const PokemonCardBox: React.FC<PokemonCardBoxProps> = (props) => {
@@ -40,17 +41,11 @@ const PokemonCardBox: React.FC<PokemonCardBoxProps> = (props) => {
       })?.genus
     : "";
 
-  const pokemonSprites = findSpritesForVersion(props.sprites, game);
-  const pokemonSpritesGoldSilver = findSpritesForGoldSilver(
-    props.sprites,
-    game
-  );
-
   const pokemonName = props.name;
 
   return (
     <div
-      className={`pokeball-box w-full lg:max-w-[400px] p-[1em] flex flex-col justify-center items-center`}
+      className={`${styles.card__border} w-full mx-auto lg:max-w-[825px] p-[1em] flex flex-col justify-center items-center`}
     >
       <table className="w-full">
         <tbody>
@@ -61,24 +56,32 @@ const PokemonCardBox: React.FC<PokemonCardBoxProps> = (props) => {
                   <DualDynamicImages
                     labelLeft={"Gold"}
                     labelRight={"Silver"}
-                    srcLeft={
-                      pokemonSpritesGoldSilver?.gold.front_default ||
-                      pokemonSprites.front_default
-                    }
-                    srcRight={
-                      pokemonSpritesGoldSilver?.silver.front_default ||
-                      pokemonSprites.front_default
-                    }
+                    srcLeft={getSpriteUrl({
+                      versionGroup: game,
+                      pokemonId: props.pokemonId,
+                      generation: props.genNumber,
+                      version: "gold",
+                    })}
+                    srcRight={getSpriteUrl({
+                      versionGroup: game,
+                      pokemonId: props.pokemonId,
+                      generation: props.genNumber,
+                      version: "silver",
+                    })}
                     altLeft={`${pokemonName}-gold`}
                     altRight={`${pokemonName}-silver`}
-                    width={100}
-                    height={100}
+                    width={150}
+                    height={150}
                     priority={true}
                   />
                 )}
                 {game !== "gold-silver" && (
                   <DynamicImage
-                    src={pokemonSprites.front_default}
+                    src={getSpriteUrl({
+                      versionGroup: game,
+                      pokemonId: props.pokemonId,
+                      generation: props.genNumber,
+                    })}
                     width={spriteSize}
                     height={spriteSize}
                     alt={pokemonName || "Pokemon sprite"}
@@ -86,7 +89,7 @@ const PokemonCardBox: React.FC<PokemonCardBoxProps> = (props) => {
                   />
                 )}
               </div>
-              <div className="mx-auto w-24 flex flex-row justify-around items-center">
+              <div className="mx-auto w-24 flex justify-around items-center">
                 <PokemonTypes types={props.types} />
               </div>
             </td>
@@ -106,7 +109,7 @@ const PokemonCardBox: React.FC<PokemonCardBoxProps> = (props) => {
                 <span>&nbsp;&nbsp;</span>
                 {p.id}
               </div>
-              <table className="w-full">
+              <table className="w-1/2">
                 <tbody>
                   <tr>
                     <td>HT</td>
@@ -122,7 +125,7 @@ const PokemonCardBox: React.FC<PokemonCardBoxProps> = (props) => {
           </tr>
         </tbody>
       </table>
-      <PokeballSpans />
+      {/* <PokeballSpans /> */}
     </div>
   );
 };

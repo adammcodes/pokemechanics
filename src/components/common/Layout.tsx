@@ -11,7 +11,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
     <>
       <div className={`${styles.container}`}>
         <Header />
-        {children}
+        <main>{children}</main>
         <Footer />
       </div>
     </>

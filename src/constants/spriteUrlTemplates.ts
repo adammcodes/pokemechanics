@@ -3,12 +3,14 @@ interface SpriteUrlTemplate {
   versionGroup: string; // e.g. "red-blue", "gold-silver", "ruby-sapphire", "diamond-pearl", "black-white", "x-y", "omega-ruby-alpha-sapphire", "sun-moon", "sword-shield"
   generation: string; // e.g. "i", "ii", "iii", "iv", "v", "vi", "vii", "viii"
   pokemonId: number | string; // 1 or "1"
+  version?: string;
 }
 
 export default function getSpriteUrl({
   versionGroup,
   generation,
   pokemonId,
+  version,
 }: SpriteUrlTemplate): string {
   // after sun-moon the sprite url template changes
   if (Number(pokemonId) >= 722)
@@ -24,7 +26,9 @@ export default function getSpriteUrl({
       spriteUrlTemplate += `${generation}/${versionGroup}/transparent/${pokemonId}.png`;
       break;
     case "gold-silver":
-      spriteUrlTemplate += `${generation}/silver/transparent/${pokemonId}.png`;
+      spriteUrlTemplate += `${generation}/${
+        version || "silver"
+      }/transparent/${pokemonId}.png`;
       break;
     case "crystal":
       spriteUrlTemplate += `${generation}/${versionGroup}/transparent/${pokemonId}.png`;

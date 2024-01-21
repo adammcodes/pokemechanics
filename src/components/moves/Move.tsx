@@ -60,7 +60,7 @@ export const Move: React.FC<MoveProps> = ({ m, method }) => {
         <>
           <tr>
             <td rowSpan={2}>
-              <div className="px-2 py-6 rounded-md bg-[#a7bcb9]">
+              <div className="px-2 py-[10.4px] rounded-md bg-[#a7bcb9]">
                 {method === "machine" && (
                   <MoveMachine machines={moveQ.data.machines} game={game} />
                 )}
@@ -68,7 +68,7 @@ export const Move: React.FC<MoveProps> = ({ m, method }) => {
               </div>
             </td>
             <td rowSpan={2}>
-              <div className="px-2 py-6 rounded-md bg-[#a7bcb9]">
+              <div className="px-2 py-[10.4px] rounded-md bg-[#a7bcb9]">
                 {formatName(m.move.name)}
               </div>
             </td>

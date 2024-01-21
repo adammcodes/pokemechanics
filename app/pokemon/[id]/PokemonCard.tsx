@@ -19,6 +19,7 @@ import {
 import { FlavorTextForVersion } from "@/types/index";
 // utils, lib, constants
 import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
+import toTitleCase from "@/utils/toTitleCase";
 import splitKebabCase from "@/utils/splitKebabCase";
 
 // components
@@ -58,7 +59,8 @@ const PokemonCard: React.FC<PokemonCardProps> = (props) => {
   const isGenOneOrTwo = genNumber === "i" || genNumber === "ii";
   let formatName = convertKebabCaseToTitleCase;
   const variantName = props.is_variant ? props.name : p.name;
-  const pokemonName = formatName(p.name);
+  const pokemonName = toTitleCase(p.name);
+  const pokemonId = props.is_variant ? props.id : p.id;
   const regionName: string = props.is_variant
     ? formatName(props.name.split("-")[1])
     : p.regions.length > 0
@@ -101,14 +103,16 @@ const PokemonCard: React.FC<PokemonCardProps> = (props) => {
     <div className={`w-full flex flex-col items-center justify-center gap-y-6`}>
       {/* Card Box with meta info - Name, Sprites, Types, Height, Weight, etc */}
 
-      <div className="px-0 lg:px-0">
+      <div className="px-3 w-full mx-auto">
         <PokemonCardBox
           name={name}
+          pokemonId={pokemonId}
           is_variant={props.is_variant}
           types={types}
           sprites={sprites}
           height={pokemonHeight}
           weight={pokemonWeight}
+          genNumber={genNumber}
         />
       </div>
 
