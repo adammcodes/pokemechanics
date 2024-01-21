@@ -1,17 +1,17 @@
 "use client";
 import Link from "next/link";
-import { Sprite } from "../../../src/components/sprites/Sprite";
+import { Sprite } from "@/components/sprites/Sprite";
 import { useContext } from "react";
 import {
   GameContext,
   PokedexContext,
   PokemonContext,
-} from "../../../src/context/_context";
+} from "@/context/_context";
 import { Pokedex } from "pokenode-ts";
-import convertKebabCaseToTitleCase from "../../../src/utils/convertKebabCaseToTitleCase";
-import useGameVersion from "../../../src/hooks/useGameVersion";
-import { numOfPokemonByGen } from "../../../src/constants/numOfPokemonByGen";
-import addPrecedingZeros from "../../../src/utils/addPrecedingZeros";
+import toTitleCase from "@/utils/toTitleCase";
+import useGameVersion from "@/hooks/useGameVersion";
+import { numOfPokemonByGen } from "@/constants/numOfPokemonByGen";
+import addPrecedingZeros from "@/utils/addPrecedingZeros";
 
 type PokedexEntry = {
   entry_number: number;
@@ -19,7 +19,6 @@ type PokedexEntry = {
 };
 
 export default function ForwardBack() {
-  const formatName = convertKebabCaseToTitleCase;
   const { game } = useContext(GameContext);
   const version = useGameVersion(game);
   const gen = version.data.generation.name;
@@ -61,15 +60,17 @@ export default function ForwardBack() {
     <div className="flex flex-row justify-between w-full px-5 py-5">
       {currentEntryNum !== prevEntryNum && (
         <Link href={`/pokemon/${prevPokemonId}?dexId=${dex.id}`}>
-          &larr; #{prevRegionalDexNum} <Sprite id={prevPokemonId} size={50} />
-          {formatName(prevPokemonEntry.pokemon_species.name)}
+          &larr; #{prevRegionalDexNum}{" "}
+          <Sprite versionGroup={game} gen={gen} id={prevPokemonId} size={50} />
+          {toTitleCase(prevPokemonEntry.pokemon_species.name)}
         </Link>
       )}
       {currentEntryNum === prevEntryNum && <div>&nbsp;</div>}
       {currentEntryNum !== nextEntryNum && nextPokemonId && (
         <Link href={`/pokemon/${nextPokemonId}?dexId=${dex.id}`}>
-          #{nextRegionalDexNum} <Sprite id={nextPokemonId} size={50} />
-          {formatName(nextPokemonEntry.pokemon_species.name)} &rarr;
+          #{nextRegionalDexNum}{" "}
+          <Sprite versionGroup={game} gen={gen} id={nextPokemonId} size={50} />
+          {toTitleCase(nextPokemonEntry.pokemon_species.name)} &rarr;
         </Link>
       )}
       {currentEntryNum === nextEntryNum && <div>&nbsp;</div>}
