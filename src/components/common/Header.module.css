@@ -1,0 +1,171 @@
+.head {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.head > h1 {
+  margin: 0;
+  line-height: 1.15;
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+/* Header */
+
+.header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 1px 1px 4px 0 rgba(0, 0, 0, 0.1);
+  z-index: 3;
+  padding-bottom: 0.25rem;
+}
+
+.header ~ nav > ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow: hidden;
+}
+
+.header ~ nav > ul > li a {
+  display: block;
+  padding: 20px 20px;
+  text-decoration: none;
+}
+
+.menu > li {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.menu > li:hover > i,
+.menu a:focus + i {
+  pointer-events: none;
+  position: absolute;
+  width: 0;
+  left: 3px;
+  height: 0;
+  border: 10px solid transparent;
+  border-left-color: black;
+  float: right;
+}
+
+.menu a:focus {
+  outline: 0;
+}
+
+/* menu */
+
+.header ~ nav > .menu {
+  max-height: 0;
+  box-shadow: 1px 1px 4px 0 rgba(0, 0, 0, 0.1);
+  transition: max-height 0.2s ease-out;
+}
+
+/* menu icon */
+
+.menuIcon {
+  cursor: pointer;
+  float: right;
+  padding: 28px 20px;
+  position: absolute;
+  top: 10px;
+  right: 0;
+  user-select: none;
+}
+
+.menuIcon .navicon {
+  background: #333;
+  display: block;
+  height: 2px;
+  position: relative;
+  transition: background 0.2s ease-out;
+  width: 18px;
+}
+
+.menuIcon .navicon:before,
+.menuIcon .navicon:after {
+  background: #333;
+  content: "";
+  display: block;
+  height: 100%;
+  position: absolute;
+  transition: all 0.2s ease-out;
+  width: 100%;
+}
+
+.menuIcon .navicon:before {
+  top: 5px;
+}
+
+.menuIcon .navicon:after {
+  top: -5px;
+}
+
+/* menu btn */
+
+.menuBtn {
+  display: none;
+}
+
+.menuBtn:checked ~ nav > .menu {
+  max-height: 300px;
+}
+
+.menuBtn:checked ~ .menuIcon .navicon {
+  background: transparent;
+}
+
+.menuBtn:checked ~ .menuIcon .navicon:before {
+  transform: rotate(-45deg);
+}
+
+.menuBtn:checked ~ .menuIcon .navicon:after {
+  transform: rotate(45deg);
+}
+
+.menuBtn:checked ~ .menuIcon:not(.steps) .navicon:before,
+.menuBtn:checked ~ .menuIcon:not(.steps) .navicon:after {
+  top: 0;
+}
+
+/* Dark mode styles */
+@media (prefers-color-scheme: dark) {
+  /* Additional dark mode styling */
+  .header {
+    background-color: #0a192f;
+    border-bottom: 1px solid #333;
+  }
+  .menu > li:hover > i,
+  .menu a:focus + i {
+    border-left-color: #caf0f8;
+  }
+
+  /* Continue with other elements that need dark mode styling */
+}
+
+/* 48em = 768px */
+@media (min-width: 48em) {
+  .header ~ nav li {
+    float: left;
+  }
+  .header ~ nav li a {
+    padding: 20px 30px;
+  }
+  .header ~ nav > .menu {
+    position: absolute;
+    top: 0.3em;
+    right: 0;
+    box-shadow: unset;
+    float: right;
+    max-height: none;
+  }
+  .header ~ .menuIcon {
+    display: none;
+  }
+}

@@ -1,12 +1,37 @@
 import Image from "next/image";
 import Link from "next/link";
-import Nav from "./Nav";
 import { useContext } from "react";
 import { GameContext } from "@/context/_context";
 import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
 import useGameVersion from "@/hooks/useGameVersion";
+import styles from "./Header.module.css";
 
 const logoSize: number = 80;
+
+const Nav = () => {
+  return (
+    <nav>
+      <ul className={styles.menu}>
+        <li>
+          <Link href="/pokedex">Pokédex</Link>
+          <i></i>
+        </li>
+        <li>
+          <Link href="/bag">Bag</Link>
+          <i></i>
+        </li>
+        <li>
+          <Link href="/map">Map</Link>
+          <i></i>
+        </li>
+        <li>
+          <Link href="/">Select Version</Link>
+          <i></i>
+        </li>
+      </ul>
+    </nav>
+  );
+};
 
 export default function Header() {
   const { game } = useContext(GameContext);
@@ -17,7 +42,7 @@ export default function Header() {
 
   return (
     <div className="w-full">
-      <header className="header">
+      <header className={styles.header}>
         <div className="flex flex-row justify-center items-center">
           <Link href="/">
             <Image
@@ -45,8 +70,8 @@ export default function Header() {
           </div>
         </div>
       </header>
-      <input className="menu-btn" type="checkbox" id="menu-btn" />
-      <label className="menu-icon" htmlFor="menu-btn">
+      <input className={styles.menuBtn} type="checkbox" id="menu-btn" />
+      <label className={styles.menuIcon} htmlFor="menu-btn">
         <span className="navicon"></span>
       </label>
       <Nav />
