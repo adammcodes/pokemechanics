@@ -59,6 +59,10 @@
   .rbyDialogueBox,
   .autocomplete__li__btn {
     border-color: #5b8098;
+    --shadow-colour: silver;
+    box-shadow: 0 1px 0 1px var(--shadow-colour),
+      inset 0 1px 0 1px var(--shadow-colour), 0 0 0 1px var(--shadow-colour),
+      inset 0 0 0 1px var(--shadow-colour);
     background-color: #0a192f;
   }
   .autocomplete__li__btn:hover,

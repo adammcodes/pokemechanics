@@ -75,7 +75,7 @@ const AutocompleteBase: React.FC<AutocompleteProps> = ({
         onClick={() => setShowList(!showList)}
       ></i>
       <ul
-        className={`overflow-y-auto max-h-[50vh] w-full z-10 ${
+        className={`overflow-y-auto max-h-[48vh] w-full z-10 ${
           !showList ? "hidden" : "absolute"
         }`}
       >

@@ -135,7 +135,9 @@ main {
 /* Dark mode styles */
 @media (prefers-color-scheme: dark) {
   body,
-  main {
+  main,
+  footer,
+  html {
     background-color: #0a192f;
     color: #caf0f8;
     /* ... other dark mode specific styles ... */
@@ -145,26 +147,5 @@ main {
     color: #caf0f8;
     /* ... */
   }
-
-  .autocomplete > i.dialogue-box-arrow.up {
-    border-top-color: #000;
-    border-bottom-color: #caf0f8;
-  }
-
-  .dialogue-box-arrow {
-    border-top-color: #caf0f8;
-  }
-
-  .rby-dialogue-box,
-  .autocomplete__li__btn {
-    border-color: #5b8098;
-    background-color: #0a192f;
-  }
-  .autocomplete__li__btn:hover,
-  .autocomplete__li__btn:focus {
-    background-color: #5b8098;
-    color: #fff;
-  }
-
   /* Continue with other elements that need dark mode styling */
 }
