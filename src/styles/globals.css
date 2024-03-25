@@ -27,6 +27,7 @@
 /* CSS custom properties / CSS variables */
 :root {
   --font-size: 1.3rem;
+  --background-colour: #f0f0f0;
 }
 
 html,
@@ -37,6 +38,7 @@ body {
   font-family: "BWB2W2", Inter, -apple-system, BlinkMacSystemFont, Segoe UI,
     Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
     sans-serif;
+  background-color: var(--background-colour);
 }
 
 a {
@@ -80,7 +82,6 @@ button {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: #fff;
   box-shadow: 1px 1px 4px 0 rgba(0, 0, 0, 0.1);
   z-index: 3;
   padding-bottom: 0.25rem;
@@ -105,7 +106,8 @@ button {
   align-items: center;
 }
 
-.menu > li:hover > i {
+.menu > li:hover > i,
+.menu a:focus + i {
   pointer-events: none;
   position: absolute;
   width: 0;
@@ -114,6 +116,10 @@ button {
   border: 10px solid transparent;
   border-left-color: black;
   float: right;
+}
+
+.menu a:focus {
+  outline: 0;
 }
 
 /* menu */
@@ -314,7 +320,8 @@ main {
 
 /* Dark mode styles */
 @media (prefers-color-scheme: dark) {
-  body {
+  body,
+  main {
     background-color: #0a192f;
     color: #caf0f8;
     /* ... other dark mode specific styles ... */
@@ -332,7 +339,8 @@ main {
     /* ... */
   }
 
-  .menu > li:hover > i {
+  .menu > li:hover > i,
+  .menu a:focus + i {
     border-left-color: #caf0f8;
   }
 
