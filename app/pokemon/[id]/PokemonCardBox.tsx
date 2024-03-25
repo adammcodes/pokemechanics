@@ -11,13 +11,14 @@ import getSpriteUrl from "@/constants/spriteUrlTemplates";
 
 import DynamicImage from "@/components/common/DynamicImage";
 import DualDynamicImages from "./DualDynamicImages";
-import PokemonTypes from "app/pokemon/[id]/PokemonTypes";
+import Types from "@/components/types/Types";
 
 // types
 import { Genus, PokemonSprites, PokemonType } from "pokenode-ts";
 
 // context
 import { GameContext, PokemonContext } from "@/context/_context";
+import useGameVersion from "@/hooks/useGameVersion";
 
 type PokemonCardBoxProps = {
   name: string; // required
@@ -33,6 +34,10 @@ type PokemonCardBoxProps = {
 const PokemonCardBox: React.FC<PokemonCardBoxProps> = (props) => {
   const p = useContext(PokemonContext);
   const { game } = useContext(GameContext);
+  const versionGroup = useGameVersion(game);
+  const generationIdString: string | undefined =
+    versionGroup.data?.generation.url.split("/")[6]; // e.g. url = "https://pokeapi.co/api/v2/generation/1/", generationId = 1
+  const generationId: number = parseInt(generationIdString || "1");
 
   const spriteSize: number = spriteSizesByVersion[game];
   const pokemonGenus: string | undefined = p.genera
@@ -89,8 +94,11 @@ const PokemonCardBox: React.FC<PokemonCardBoxProps> = (props) => {
                   />
                 )}
               </div>
-              <div className="mx-auto w-24 flex justify-around items-center">
-                <PokemonTypes types={props.types} />
+              <div className="mx-auto flex justify-around items-center">
+                <Types
+                  generationId={generationId}
+                  pokemonId={props.pokemonId}
+                />
               </div>
             </td>
             <td className="w-1/2 flex-col justify-center items-center pl-5">
