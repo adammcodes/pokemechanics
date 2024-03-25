@@ -13,7 +13,6 @@
 }
 
 /* Header */
-
 .header {
   width: 100%;
   display: flex;
@@ -31,7 +30,8 @@
   overflow: hidden;
 }
 
-.header ~ nav > ul > li a {
+.header ~ nav > ul > li a,
+.header ~ nav > ul > li label {
   display: block;
   padding: 20px 20px;
   text-decoration: none;
@@ -68,7 +68,6 @@
 }
 
 /* menu icon */
-
 .menuIcon {
   cursor: pointer;
   float: right;

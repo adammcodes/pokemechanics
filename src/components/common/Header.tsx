@@ -5,8 +5,18 @@ import { GameContext } from "@/context/_context";
 import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
 import useGameVersion from "@/hooks/useGameVersion";
 import styles from "./Header.module.css";
+import "@/styles/slider.css";
 
 const logoSize: number = 80;
+
+const DarkModeToggle = () => {
+  return (
+    <label className="toggle">
+      <input className="toggle-checkbox" type="checkbox" />
+      <div className="toggle-switch"></div>
+    </label>
+  );
+};
 
 const Nav = () => {
   return (
@@ -27,6 +37,9 @@ const Nav = () => {
         <li>
           <Link href="/">Select Version</Link>
           <i></i>
+        </li>
+        <li>
+          <DarkModeToggle />
         </li>
       </ul>
     </nav>

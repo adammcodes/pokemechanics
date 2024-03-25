@@ -2,8 +2,9 @@
 @media (max-width: 65em) {
   .pokedexes {
     flex-direction: column;
+    align-items: center;
     padding-left: unset;
     padding-right: unset;
-    width: 90%;
+    /* width: 95%; */
   }
 }
