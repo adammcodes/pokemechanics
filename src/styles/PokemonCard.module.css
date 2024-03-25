@@ -1,14 +1,20 @@
 .card__border {
-  border: 1px solid white;
-  border-radius: 0.5em;
+  /* Change border colour here */
+  --border-colour: white;
+  /* Chage border thickness here */
+  --border-thickness: 2px;
+  border: var(--border-thickness) solid var(--border-colour);
+  border-radius: 0.2em;
   box-shadow: 0 1px 0 1px black, inset 0 1px 0 1px black, 0 0 0 1px black,
     inset 0 0 0 1px black;
 }
 
 @media (prefers-color-scheme: dark) {
   .card__border {
-    border: 1px solid black;
-    box-shadow: 0 1px 0 1px white, inset 0 1px 0 1px white, 0 0 0 1px white,
-      inset 0 0 0 1px white;
+    --border-colour: grey;
+    border: var(--border-thickness) solid black;
+    box-shadow: 0 1px 0 1px var(--border-colour),
+      inset 0 1px 0 1px var(--border-colour), 0 0 0 1px var(--border-colour),
+      inset 0 0 0 1px var(--border-colour);
   }
 }

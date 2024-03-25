@@ -5,7 +5,7 @@ export const spriteSizesByVersion: any = {
   yellow: DEFAULT_SIZE,
   "gold-silver": DEFAULT_SIZE,
   crystal: DEFAULT_SIZE,
-  "ruby-sapphire": DEFAULT_SIZE,
+  "ruby-sapphire": 100,
   emerald: DEFAULT_SIZE,
   "firered-leafgreen": DEFAULT_SIZE,
   "diamond-pearl": DEFAULT_SIZE,
