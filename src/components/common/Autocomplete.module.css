@@ -6,11 +6,6 @@
 .autocomplete > i.dialogueBoxArrow:hover {
   cursor: pointer;
 }
-.autocomplete > i.dialogueBoxArrow.up {
-  border-top-color: #fff;
-  border-bottom-color: black;
-  top: 10px;
-}
 
 .dialogueBoxArrow {
   pointer-events: none;
@@ -48,7 +43,7 @@
   border: 1px solid white;
   box-shadow: 0 1px 0 1px black, inset 0 1px 0 1px black, 0 0 0 1px black,
     inset 0 0 0 1px black;
-  -webkit-appearance: none; /* Fix box-shadow for iOS */
+  appearance: none; /* Fix box-shadow for iOS */
 }
 
 .rbyDialogueBox:focus {
@@ -57,11 +52,6 @@
 
 /* Dark mode styles */
 @media (prefers-color-scheme: dark) {
-  .autocomplete > i.dialogueBoxArrow.up {
-    border-top-color: #000;
-    border-bottom-color: #caf0f8;
-  }
-
   .dialogueBoxArrow {
     border-top-color: #caf0f8;
   }

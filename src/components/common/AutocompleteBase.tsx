@@ -67,7 +67,11 @@ const AutocompleteBase: React.FC<AutocompleteProps> = ({
         onFocus={() => setShowList(true)}
       />
       <i
-        className={`${styles.dialogueBoxArrow} ${showList ? "up" : ""}`}
+        className={styles.dialogueBoxArrow}
+        style={{
+          transform: showList ? "rotate(180deg)" : "rotate(0deg)",
+          top: showList ? "10px" : "20px",
+        }}
         onClick={() => setShowList(!showList)}
       ></i>
       <ul
