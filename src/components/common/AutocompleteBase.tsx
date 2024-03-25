@@ -1,5 +1,6 @@
 import { useState } from "react";
 import getSpriteUrl from "@/constants/spriteUrlTemplates";
+import styles from "./Autocomplete.module.css";
 
 interface AutocompleteProps {
   options: any[]; // this autocomplete doesn't care what the options are
@@ -56,9 +57,9 @@ const AutocompleteBase: React.FC<AutocompleteProps> = ({
   };
 
   return (
-    <div className="relative autocomplete">
+    <div className={`${styles.autocomplete} relative`}>
       <input
-        className="rby-dialogue-box"
+        className={styles.rbyDialogueBox}
         type="text"
         value={inputValue}
         onChange={handleInputChange}
@@ -66,7 +67,7 @@ const AutocompleteBase: React.FC<AutocompleteProps> = ({
         onFocus={() => setShowList(true)}
       />
       <i
-        className={`dialogue-box-arrow ${showList ? "up" : ""}`}
+        className={`${styles.dialogueBoxArrow} ${showList ? "up" : ""}`}
         onClick={() => setShowList(!showList)}
       ></i>
       <ul
@@ -75,11 +76,11 @@ const AutocompleteBase: React.FC<AutocompleteProps> = ({
         }`}
       >
         {filteredOptions.map((option, i) => (
-          <li key={option.value} className="autocomplete__li">
+          <li key={option.value} className={styles.autocomplete__li}>
             <button
               id={`${option.name}-${option.value}`}
               name={option.value?.toString()}
-              className={`autocomplete__li__btn p-1 m-0 w-full text-left flex justify-between items-center`}
+              className={`${styles.autocomplete__li__btn} p-1 m-0 w-full text-left flex justify-between items-center`}
               onClick={handleOptionClick}
             >
               <span id="label">

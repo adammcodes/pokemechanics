@@ -85,81 +85,22 @@ main {
   align-items: center;
 }
 
-.autocomplete > i.dialogue-box-arrow {
-  right: 10px;
-  top: 20px;
-  pointer-events: revert;
-}
-.autocomplete > i.dialogue-box-arrow:hover {
-  cursor: pointer;
-}
-.autocomplete > i.dialogue-box-arrow.up {
-  border-top-color: #fff;
-  border-bottom-color: black;
-  top: 10px;
-}
-
-.dialogue-box-arrow {
-  pointer-events: none;
-  position: absolute;
-  width: 0;
-  height: 0;
-  border: 8px solid transparent;
-  border-top-color: black;
-  float: right;
-}
-
-.autocomplete__li__btn {
-  background-color: #fff;
-  border-left: 2px solid silver;
-  border-right: 2px solid silver;
-  box-shadow: 0px 10px 30px 0px rgba(0, 0, 0, 0.2);
-}
-
-.autocomplete__li__btn:hover,
-.autocomplete__li__btn:focus {
-  background-color: #5b8098;
-  outline: none;
-  color: #fff;
-  cursor: pointer;
-}
-.autocomplete__li:last-child {
-  border-bottom: 2px solid silver;
-}
-
-.rby-dialogue-box {
-  width: 100%;
-  border-radius: 2px;
-  padding: 10px;
-  background: white;
-  border: 1px solid white;
-  box-shadow: 0 1px 0 1px black, inset 0 1px 0 1px black, 0 0 0 1px black,
-    inset 0 0 0 1px black;
-  -webkit-appearance: none; /* Fix box-shadow for iOS */
-}
-
-.rby-dialogue-box:focus {
-  outline: 20px;
-}
-
+/* Box border with Pokeballs in corners */
 .pokeball-box {
   position: relative;
   border: 5px double #000;
 }
-
 .pokeball {
   height: 12px;
   border: 2px solid #000;
   border-radius: 50%;
   background-color: #fafafa;
 }
-
 .pokeball,
 .pokeball-upper {
   position: absolute;
   width: 12px;
 }
-
 .pokeball-upper {
   left: -2px;
   bottom: 4px;
@@ -167,7 +108,6 @@ main {
   border-radius: 8px 8px 0 0;
   background-color: #000;
 }
-
 .top-left {
   top: -8px;
   left: -8px;
@@ -183,10 +123,6 @@ main {
 .bottom-right {
   bottom: -8px;
   right: -8px;
-}
-
-.dotted-border {
-  border: 1px solid #000;
 }
 
 /* Hides the <select> down arrow */
@@ -231,11 +167,4 @@ main {
   }
 
   /* Continue with other elements that need dark mode styling */
-}
-
-/* 48em = 768px */
-@media (min-width: 48em) {
-  .rby-dialogue-box {
-    min-width: 340px;
-  }
 }
