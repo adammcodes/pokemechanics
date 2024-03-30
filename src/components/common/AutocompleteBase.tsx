@@ -76,7 +76,7 @@ const AutocompleteBase: React.FC<AutocompleteProps> = ({
       ></i>
       <ul
         className={`overflow-y-auto max-h-[48vh] w-full z-10 ${
-          !showList ? "hidden" : "absolute"
+          !showList ? "hidden" : "absolute top-[1.75em]"
         }`}
       >
         {filteredOptions.map((option, i) => (

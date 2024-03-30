@@ -4,8 +4,9 @@
 }
 .toggle-switch {
   display: inline-block;
-  background: tan; /* Lunatone's colour */
+  background: chocolate; /* Solrock's colour */
   border-radius: 16px;
+  transform: scale(1.5);
   width: 1.5rem;
   height: 0.5rem;
   position: relative;
@@ -17,7 +18,7 @@
   }
   &:before {
     /* display: block; */
-    background-image: url("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-vii/icons/337.png");
+    background-image: url("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-vii/icons/338.png");
     width: 1.5rem;
     height: 1.5rem;
     position: absolute;
@@ -30,9 +31,9 @@
     /* box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5); */
   }
   .toggle-checkbox:checked + & {
-    background: chocolate; /* Solrock's colour */
+    background: tan; /* Lunatone's colour */
     &:before {
-      background-image: url("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-vii/icons/338.png");
+      background-image: url("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-vii/icons/337.png");
       left: 10px;
     }
   }

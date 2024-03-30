@@ -24,10 +24,18 @@
   font-style: normal;
 }
 
-/* CSS custom properties / CSS variables */
+/* CSS custom properties / CSS variables = default light mode */
 :root {
   --font-size: 1.3rem;
-  --background-colour: #f0f0f0;
+  --background-colour: oklch(95.51% 0 0);
+  --text-colour: oklch(32.11% 0 0);
+  --hover-bg-colour: oklch(57.74% 0.046 237.8);
+  --hover-text-colour: oklch(100% 0 0); /* White */
+  --input-bg-colour: oklch(100% 0 0);
+  --input-border-colour: oklch(100% 0 0);
+  --button-border-colour: oklch(57.74% 0.046 237.8);
+  --box-arrow-colour: oklch(0% 0 0); /* Black */
+  --shadow-colour: oklch(0% 0 0);
 }
 
 html,
@@ -39,6 +47,7 @@ body {
     Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
     sans-serif;
   background-color: var(--background-colour);
+  color: var(--text-colour);
 }
 
 a {
@@ -132,20 +141,14 @@ main {
   -moz-appearance: none;
 }
 
-/* Dark mode styles */
-@media (prefers-color-scheme: dark) {
-  body,
-  main,
-  footer,
-  html {
-    background-color: #0a192f;
-    color: #caf0f8;
-    /* ... other dark mode specific styles ... */
-  }
-
-  a {
-    color: #caf0f8;
-    /* ... */
-  }
-  /* Continue with other elements that need dark mode styling */
+/* Dark mode */
+[data-theme="dark"] {
+  --background-colour: oklch(21.36% 0.048 257.95);
+  --text-colour: oklch(93.06% 0.041 211.84);
+  --hover-bg-colour: oklch(58.14% 0.056 237.42);
+  --hover-text-colour: oklch(100% 0 0);
+  --input-bg-colour: oklch(30.36% 0.048 257.95);
+  --input-border-colour: oklch(58.14% 0.056 237.42);
+  --box-arrow-colour: oklch(93.06% 0.041 211.84);
+  --shadow-colour: oklch(93.06% 0.041 211.84);
 }

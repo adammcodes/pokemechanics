@@ -13,65 +13,48 @@
   width: 0;
   height: 0;
   border: 8px solid transparent;
-  border-top-color: black;
+  border-top-color: var(--box-arrow-colour);
   float: right;
 }
 
+.rbyDialogueBox,
 .autocomplete__li__btn {
-  background-color: #fff;
-  border-left: 2px solid silver;
-  border-right: 2px solid silver;
+  background-color: var(--input-bg-colour);
+}
+
+.autocomplete__li__btn {
+  border-left: 2px solid var(--button-border-colour);
+  border-right: 2px solid var(--button-border-colour);
   box-shadow: 0px 10px 30px 0px rgba(0, 0, 0, 0.2);
 }
 
 .autocomplete__li__btn:hover,
 .autocomplete__li__btn:focus {
-  background-color: #5b8098;
+  background-color: var(--hover-bg-colour);
+  color: var(--hover-text-colour);
   outline: none;
-  color: #fff;
   cursor: pointer;
 }
+.autocomplete__li:first-child {
+  border-top: 2px solid var(--button-border-colour);
+}
 .autocomplete__li:last-child {
-  border-bottom: 2px solid silver;
+  border-bottom: 2px solid var(--button-border-colour);
 }
 
 .rbyDialogueBox {
   width: 100%;
   border-radius: 2px;
   padding: 10px;
-  background: white;
-  border: 1px solid white;
-  box-shadow: 0 1px 0 1px black, inset 0 1px 0 1px black, 0 0 0 1px black,
-    inset 0 0 0 1px black;
+  border: 1px solid var(--input-border-colour);
+  box-shadow: 0 1px 0 1px var(--shadow-colour),
+    inset 0 1px 0 1px var(--shadow-colour), 0 0 0 1px var(--shadow-colour),
+    inset 0 0 0 1px var(--shadow-colour);
   appearance: none; /* Fix box-shadow for iOS */
 }
 
 .rbyDialogueBox:focus {
   outline: 20px;
-}
-
-/* Dark mode styles */
-@media (prefers-color-scheme: dark) {
-  .dialogueBoxArrow {
-    border-top-color: #caf0f8;
-  }
-
-  .rbyDialogueBox,
-  .autocomplete__li__btn {
-    border-color: #5b8098;
-    --shadow-colour: silver;
-    box-shadow: 0 1px 0 1px var(--shadow-colour),
-      inset 0 1px 0 1px var(--shadow-colour), 0 0 0 1px var(--shadow-colour),
-      inset 0 0 0 1px var(--shadow-colour);
-    background-color: #0a192f;
-  }
-  .autocomplete__li__btn:hover,
-  .autocomplete__li__btn:focus {
-    background-color: #5b8098;
-    color: #fff;
-  }
-
-  /* Continue with other elements that need dark mode styling */
 }
 
 /* 48em = 768px */

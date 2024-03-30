@@ -137,7 +137,7 @@
 @media (prefers-color-scheme: dark) {
   /* Additional dark mode styling */
   .header {
-    background-color: #0a192f;
+    /* background-color: #0a192f; */
     border-bottom: 1px solid #333;
   }
   .menu > li:hover > i,
@@ -159,7 +159,7 @@
   .header ~ nav > .menu {
     position: absolute;
     top: 0.3em;
-    right: 0;
+    right: 0.3em;
     box-shadow: unset;
     float: right;
     max-height: none;

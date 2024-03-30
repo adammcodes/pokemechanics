@@ -19,6 +19,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <script src="/set-theme.js" defer />
+      </head>
       <body>
         <Client>{children}</Client>
       </body>
