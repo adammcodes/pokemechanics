@@ -1,7 +1,7 @@
 import { FlavorTextForVersion } from "@/types/index";
 import FlavorText, { DualFlavorText } from "./FlavorText";
 import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
-import styles from "@/styles/PokemonCard.module.css";
+import styles from "./PokemonCard.module.css";
 
 type PokemonFlavorTextProps = {
   flavorTextForVersion: FlavorTextForVersion;

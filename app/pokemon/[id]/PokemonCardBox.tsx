@@ -1,7 +1,5 @@
 "use client";
 import { useContext } from "react";
-// import PokeballSpans from "@/components/common/PokeballSpans";
-import styles from "@/styles/PokemonCard.module.css";
 
 import convertHeightToCmOrM from "@/utils/convertHeightToCmOrM";
 import convertWeightToGramsOrKg from "@/utils/convertWeightToGramsOrKg";
@@ -19,6 +17,10 @@ import { Genus, PokemonSprites, PokemonType } from "pokenode-ts";
 // context
 import { GameContext, PokemonContext } from "@/context/_context";
 import useGameVersion from "@/hooks/useGameVersion";
+
+// styles
+// import PokeballSpans from "@/components/common/PokeballSpans";
+import styles from "./PokemonCard.module.css";
 
 type PokemonCardBoxProps = {
   name: string; // required

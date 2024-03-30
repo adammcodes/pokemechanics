@@ -1,5 +1,5 @@
 import { useQuery, gql } from "@apollo/client";
-import styles from "@/styles/PokemonCard.module.css";
+import styles from "@/app/pokemon/[id]/PokemonCard.module.css";
 import StatBars from "./StatsBar";
 
 const GetPokemonStats = gql`

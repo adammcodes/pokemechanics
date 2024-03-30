@@ -1,6 +1,6 @@
 import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
 import { useQuery, gql } from "@apollo/client";
-import styles from "@/styles/PokemonCard.module.css";
+import styles from "@/app/pokemon/[id]/PokemonCard.module.css";
 
 const GetAbilitiesByPokemon = gql`
   query GetAbilitiesByPokemonName($pokemonName: String!) {
