@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import PokemonSelector from "./PokemonSelector";
 // type imports
 import { PokedexPokemon } from "./PokedexById";
-import PokeballLoader from "@/components/common/PokeballLoader";
+// import PokeballLoader from "@/components/common/PokeballLoader";
 
 type NationalDexProps = {
   limit: number;

@@ -24,15 +24,15 @@
   border-bottom: 2px solid var(--header-border);
 }
 
-.header ~ nav > ul {
+.nav > ul {
   margin: 0;
   padding: 0;
   list-style: none;
   overflow: hidden;
 }
 
-.header ~ nav > ul > li a,
-.header ~ nav > ul > li label {
+.nav > ul > li a,
+.nav > ul > li label {
   display: block;
   padding: 20px 20px;
   text-decoration: none;
@@ -60,12 +60,6 @@
 
 .menu a:focus {
   outline: 0;
-}
-
-.header ~ nav > .menu {
-  max-height: 0;
-  box-shadow: 1px 1px 4px 0 var(--header-shadow);
-  transition: max-height 0.2s ease-out;
 }
 
 /* Dark mode toggle */
@@ -119,6 +113,12 @@
 }
 
 /* Unchecked */
+.menu {
+  max-height: 0;
+  box-shadow: 1px 1px 4px 0 var(--header-shadow);
+  transition: max-height 0.2s ease-out;
+}
+
 /* The hamburger icon when the menu is closed = input unchecked => show the middle line */
 .menuInput ~ .menuIcon .navicon {
   background: var(--text-colour);
@@ -148,21 +148,18 @@
 
 /* 48em = 768px */
 @media (min-width: 48em) {
-  .header ~ nav li {
+  .nav li {
     float: left;
   }
-  .header ~ nav li a {
+  .nav li a {
     padding: 20px 30px;
   }
-  .header ~ nav > .menu {
-    position: absolute;
-    top: 0.3em;
-    right: 0.3em;
+  .nav > .menu {
     box-shadow: unset;
     float: right;
     max-height: none;
   }
-  .header ~ .menuIcon {
+  .menuIcon {
     display: none;
   }
   .menu > li {

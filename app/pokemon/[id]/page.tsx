@@ -9,7 +9,6 @@ import { GameContext } from "@/context/_context";
 import { PokemonContextProvider } from "@/context/PokemonContextProvider";
 import { PokedexContextProvider } from "@/context/PokedexContextProvider";
 // Components
-// import Pokedexes from "app/pokedex/Pokedexes";
 import PokemonVariety from "app/pokemon/[id]/PokemonVariety";
 
 export default function Pokemon({ params }: { params: any }) {
@@ -68,7 +67,6 @@ export default function Pokemon({ params }: { params: any }) {
 
   return (
     <main className="w-full">
-      {/* <Pokedexes /> */}
       {pokemonQuery.data &&
         pokemonSpeciesQuery.data &&
         version.data &&
