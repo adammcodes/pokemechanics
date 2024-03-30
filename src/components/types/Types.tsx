@@ -92,9 +92,11 @@ const Types: React.FC<TypesProps> = ({ generationId, pokemonId }) => {
     variables: { generationId, pokemonId },
   });
 
-  if (loading) return <span>Loading types...</span>;
-  if (error) console.log(error);
-  if (error) return <p>{error.message}</p>;
+  if (loading) return null;
+  if (error) {
+    console.error(error);
+    return null;
+  }
 
   const typesData = data as TypesData;
 

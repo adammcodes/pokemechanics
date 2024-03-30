@@ -3,6 +3,7 @@ import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
 import { getPokedexById } from "./PokedexByIdQuery";
 import { useEffect, useState } from "react";
 import PokemonSelector from "./PokemonSelector";
+import PokeballLoader from "@/components/common/PokeballLoader";
 
 export type PokedexPokemon = {
   pokedex_number: number;
@@ -76,14 +77,12 @@ export default function PokedexById({
     fetchPokedexData();
   }, [dexId]);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return null;
 
-  if (error)
-    return (
-      <div>
-        An error occurred fetching Pokédex data. Please try again later.
-      </div>
-    );
+  if (error) {
+    console.log(error);
+    return null;
+  }
 
   const regionName =
     dex.pokemon_v2_pokedexversiongroups[0].pokemon_v2_versiongroup

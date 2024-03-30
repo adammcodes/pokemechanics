@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import PokemonSelector from "./PokemonSelector";
 // type imports
 import { PokedexPokemon } from "./PokedexById";
+import PokeballLoader from "@/components/common/PokeballLoader";
 
 type NationalDexProps = {
   limit: number;
@@ -52,21 +53,19 @@ export default function NationalDex({
     fetchPokedexData();
   }, [limit]);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return null;
 
-  if (error)
-    return (
-      <div>
-        An error occurred fetching Pokédex data. Please try again later.
-      </div>
-    );
+  if (error) {
+    console.log(error);
+    return <p>The PokeAPI returned an error. Please try again later.</p>;
+  }
 
   const firstPokemonSpecies = dex.pokemon_v2_pokemondexnumbers[0];
   const lastPokemonSpecies = dex.pokemon_v2_pokemondexnumbers.slice(-1)[0];
   const pokedexIdRange = `${firstPokemonSpecies.pokemon_species_id} - ${lastPokemonSpecies.pokemon_species_id}`;
 
   return (
-    <section className="mb-10 text-center">
+    <section className="mb-10 h-[150px] text-center">
       <header className="mb-2">
         <span>National Dex ({pokedexIdRange})</span>
         <br />

@@ -61,7 +61,7 @@ export default async function Page({ params }: PageProps) {
   const pokedexes: NamedAPIResource[] = versionGroup.pokedexes;
 
   return (
-    <main className="flex-row w-full h-full justify-around items-center px-2 lg:px-5">
+    <section className="flex-row w-full h-full px-2 lg:px-5">
       <div className="flex flex-wrap w-full justify-around items-start px-2 lg:px-5">
         {/* render the national dex for the game/generation */}
         <NationalDex
@@ -87,6 +87,6 @@ export default async function Page({ params }: PageProps) {
             })}
         </div>
       </div>
-    </main>
+    </section>
   );
 }

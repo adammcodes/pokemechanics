@@ -39,16 +39,11 @@ const Stats: React.FC<StatsProps> = ({ pokemonName }) => {
     variables: { pokemonName: pokemonName.toLowerCase() },
   });
 
-  if (loading)
-    return (
-      <section
-        className={`${styles.card__border} w-full lg:w-[400px] p-[1em] flex flex-col gap-y-3`}
-      >
-        Loading stats...
-      </section>
-    );
-  if (error) console.log(error);
-  if (error) return <p>Abilities Error:</p>;
+  if (loading) return null;
+  if (error) {
+    console.error(error);
+    return null;
+  }
 
   const statsData: PokemonStats | undefined =
     data?.stats?.length > 0 ? data.stats[0] : undefined;
