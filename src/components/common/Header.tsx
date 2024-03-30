@@ -10,6 +10,8 @@ import useGameVersion from "@/hooks/useGameVersion";
 import styles from "./Header.module.css";
 import "@/styles/slider.css";
 import PokedexById from "@/app/pokedex/PokedexById";
+import NationalDex from "@/app/pokedex/NationalDex";
+import { numOfPokemonByGen } from "@/constants/numOfPokemonByGen";
 
 const logoSize: number = 80;
 
@@ -125,8 +127,8 @@ export default function Header() {
     };
   }, []);
 
-  // Is pokemon page
   const isPokemonPage = dexId && pokemonId && generationString;
+  const isNationalDex = dexId === "1";
 
   return (
     <div className="w-full flex">
@@ -158,13 +160,22 @@ export default function Header() {
           </div>
         </div>
 
-        {isPokemonPage && (
+        {isPokemonPage && !isNationalDex && (
           <PokedexById
             generationString={generationString}
             versionGroup={game}
             dexId={parseInt(dexId)}
             pokemonId={parseInt(pokemonId)}
             includeHeader={false}
+          />
+        )}
+
+        {isPokemonPage && isNationalDex && (
+          <NationalDex
+            includeHeader={false}
+            generationString={generationString}
+            versionGroup={game}
+            limit={numOfPokemonByGen[generationString]}
           />
         )}
 

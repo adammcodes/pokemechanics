@@ -15,12 +15,14 @@ export default function Pokemon({ params }: { params: any }) {
   // Access the dynamic route parameter value, which is the pokemon id and dexId
   // const { id, dexId } = router.query as { id: string; dexId: string };
   const { id } = params as { id: string };
+
   const searchParams = useSearchParams();
   // Get the 'dexId' query parameter
   const dexId = searchParams.get("dexId");
 
   // Check the game the user has selected
   const { game } = useContext(GameContext);
+
   const version = useGameVersion(game);
 
   const pokemonId: number = Number(id);
