@@ -2,6 +2,7 @@
 import { useContext, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { GameContext } from "@/context/_context";
+import PokeballLoader from "@/components/common/PokeballLoader";
 
 export default function Pokedex() {
   // Get currently selected version group
@@ -20,11 +21,5 @@ export default function Pokedex() {
   }, [game, router]);
 
   // Return jsx for Loading page
-  return (
-    <main className="flex-row w-full justify-around items-start px-5">
-      <div className="flex flex-wrap w-full justify-around items-start px-5">
-        <p className="mb-4">LOADING...</p>
-      </div>
-    </main>
-  );
+  return <PokeballLoader />;
 }

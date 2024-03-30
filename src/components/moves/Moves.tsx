@@ -5,7 +5,7 @@ import filterMovesForGen from "@/lib/filterMovesForGen";
 import mapMoves from "@/lib/mapMoves";
 import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
 import { PokemonMoveByMethod, PokemonMoveVersion } from "@/types/index";
-import styles from "@/styles/Moves.module.css";
+import styles from "./Moves.module.css";
 
 const filterMovesByMethod = (moves: PokemonMoveByMethod[], method: string) => {
   return moves.filter((m: PokemonMoveByMethod) => {

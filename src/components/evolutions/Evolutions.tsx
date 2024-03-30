@@ -3,7 +3,7 @@ import React from "react";
 import { EvolutionContext, GameContext } from "@/context/_context";
 import { useContext } from "react";
 import { useSearchParams } from "next/navigation";
-import styles from "@/styles/Evolutions.module.css";
+import styles from "./Evolutions.module.css";
 import useGameVersion from "@/hooks/useGameVersion";
 import PokemonEvolutionChain from "./PokemonEvolutionChain";
 

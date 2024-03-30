@@ -1,7 +1,7 @@
 import useGameClient from "@/hooks/useGameClient";
 import { numOfPokemonByGen } from "@/constants/numOfPokemonByGen";
 import { NamedAPIResource } from "pokenode-ts";
-import styles from "@/styles/Pokedexes.module.css";
+import styles from "../Pokedexes.module.css";
 // components
 import { PageProps } from ".next/types/app/layout";
 import PokedexById from "../PokedexById";
@@ -61,8 +61,8 @@ export default async function Page({ params }: PageProps) {
   const pokedexes: NamedAPIResource[] = versionGroup.pokedexes;
 
   return (
-    <main className="flex-row w-full h-full justify-around items-center px-5">
-      <div className="flex flex-wrap w-full justify-around items-start px-5">
+    <section className="flex-row w-full h-full px-2 lg:px-5">
+      <div className="flex flex-wrap w-full justify-around items-start px-2 lg:px-5">
         {/* render the national dex for the game/generation */}
         <NationalDex
           limit={numOfPokemonByGen[generationString]}
@@ -87,6 +87,6 @@ export default async function Page({ params }: PageProps) {
             })}
         </div>
       </div>
-    </main>
+    </section>
   );
 }

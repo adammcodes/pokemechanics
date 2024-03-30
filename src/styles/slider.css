@@ -1,0 +1,45 @@
+.toggle {
+  cursor: pointer;
+  display: inline-block;
+}
+.toggle-switch {
+  display: inline-block;
+  background: chocolate; /* Solrock's colour */
+  border-radius: 16px;
+  transform: scale(1.5);
+  width: 1.5rem;
+  height: 0.5rem;
+  position: relative;
+  vertical-align: middle;
+  transition: background 0.25s;
+  &:before,
+  &:after {
+    content: "";
+  }
+  &:before {
+    /* display: block; */
+    background-image: url("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-vii/icons/338.png");
+    width: 1.5rem;
+    height: 1.5rem;
+    position: absolute;
+    bottom: -0.35rem;
+    left: -1rem;
+    transition: left 0.25s;
+  }
+  .toggle:hover &:before {
+    /* background: linear-gradient(to bottom, #fff 0%, #fff 100%); */
+    /* box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5); */
+  }
+  .toggle-checkbox:checked + & {
+    background: tan; /* Lunatone's colour */
+    &:before {
+      background-image: url("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-vii/icons/337.png");
+      left: 10px;
+    }
+  }
+}
+
+.toggle-checkbox {
+  position: absolute;
+  visibility: hidden;
+}
