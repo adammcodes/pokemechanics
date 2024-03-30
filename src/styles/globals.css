@@ -36,6 +36,8 @@
   --button-border-colour: oklch(57.74% 0.046 237.8);
   --box-arrow-colour: oklch(0% 0 0); /* Black */
   --shadow-colour: oklch(0% 0 0);
+  --header-shadow: oklch(0% 0 0 / 10%);
+  --header-border: oklch(0% 0 0 / 10%);
 }
 
 html,
@@ -151,4 +153,6 @@ main {
   --input-border-colour: oklch(58.14% 0.056 237.42);
   --box-arrow-colour: oklch(93.06% 0.041 211.84);
   --shadow-colour: oklch(93.06% 0.041 211.84);
+  --header-shadow: oklch(100% 0 0 / 20%);
+  --header-border: oklch(58.14% 0.056 237.42 / 50%);
 }

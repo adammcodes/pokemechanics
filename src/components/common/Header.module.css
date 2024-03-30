@@ -18,9 +18,10 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  box-shadow: 1px 1px 4px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: 1px 1px 4px 0 var(--header-shadow);
   z-index: 3;
   padding-bottom: 0.25rem;
+  border-bottom: 2px solid var(--header-border);
 }
 
 .header ~ nav > ul {
@@ -41,8 +42,10 @@
   position: relative;
   display: flex;
   align-items: center;
+  margin-left: 1em;
 }
 
+/* Right-Arrow Pointer: game-boy color style */
 .menu > li:hover > i,
 .menu a:focus + i {
   pointer-events: none;
@@ -51,7 +54,7 @@
   left: 3px;
   height: 0;
   border: 10px solid transparent;
-  border-left-color: black;
+  border-left-color: var(--box-arrow-colour);
   float: right;
 }
 
@@ -59,27 +62,31 @@
   outline: 0;
 }
 
-/* menu */
-
 .header ~ nav > .menu {
   max-height: 0;
-  box-shadow: 1px 1px 4px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: 1px 1px 4px 0 var(--header-shadow);
   transition: max-height 0.2s ease-out;
 }
 
-/* menu icon */
+/* Dark mode toggle */
+.menu > li:last-child {
+  display: flex;
+  justify-content: center;
+}
+
+/* hamburger menu for mobile */
 .menuIcon {
   cursor: pointer;
   float: right;
   padding: 28px 20px;
   position: absolute;
   top: 10px;
-  right: 0;
+  right: 0px;
   user-select: none;
 }
 
-.menuIcon .navicon {
-  background: #333;
+/* The span element that make the lines of the hamburger with its pseudoelements */
+.navicon {
   display: block;
   height: 2px;
   position: relative;
@@ -87,65 +94,56 @@
   width: 18px;
 }
 
-.menuIcon .navicon:before,
-.menuIcon .navicon:after {
-  background: #333;
+.navicon:before,
+.navicon:after {
   content: "";
   display: block;
   height: 100%;
+  width: 100%;
   position: absolute;
   transition: all 0.2s ease-out;
-  width: 100%;
+  background: var(--text-colour);
 }
 
-.menuIcon .navicon:before {
+.navicon:before {
   top: 5px;
 }
 
-.menuIcon .navicon:after {
+.navicon:after {
   top: -5px;
 }
 
-/* menu btn */
-
-.menuBtn {
+/* The input element itself we always hide */
+.menuInput {
   display: none;
 }
 
-.menuBtn:checked ~ nav > .menu {
-  max-height: 300px;
+/* Unchecked */
+/* The hamburger icon when the menu is closed = input unchecked => show the middle line */
+.menuInput ~ .menuIcon .navicon {
+  background: var(--text-colour);
 }
 
-.menuBtn:checked ~ .menuIcon .navicon {
+/* Checked => open the menu */
+.menuInput:checked ~ nav > .menu {
+  max-height: 350px;
+}
+/* The hamburger turns to an X when the menu is open => hide the middle line */
+.menuInput:checked ~ .menuIcon .navicon {
   background: transparent;
 }
-
-.menuBtn:checked ~ .menuIcon .navicon:before {
+/* Rotate the top line down */
+.menuInput:checked ~ .menuIcon .navicon:before {
   transform: rotate(-45deg);
 }
-
-.menuBtn:checked ~ .menuIcon .navicon:after {
+/* Rotate the bottom line up */
+.menuInput:checked ~ .menuIcon .navicon:after {
   transform: rotate(45deg);
 }
 
-.menuBtn:checked ~ .menuIcon:not(.steps) .navicon:before,
-.menuBtn:checked ~ .menuIcon:not(.steps) .navicon:after {
+.menuInput:checked ~ .menuIcon:not(.steps) .navicon:before,
+.menuInput:checked ~ .menuIcon:not(.steps) .navicon:after {
   top: 0;
-}
-
-/* Dark mode styles */
-@media (prefers-color-scheme: dark) {
-  /* Additional dark mode styling */
-  .header {
-    /* background-color: #0a192f; */
-    border-bottom: 1px solid #333;
-  }
-  .menu > li:hover > i,
-  .menu a:focus + i {
-    border-left-color: #caf0f8;
-  }
-
-  /* Continue with other elements that need dark mode styling */
 }
 
 /* 48em = 768px */
@@ -166,5 +164,8 @@
   }
   .header ~ .menuIcon {
     display: none;
+  }
+  .menu > li {
+    margin-left: unset;
   }
 }

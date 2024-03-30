@@ -146,9 +146,10 @@ export default function Header() {
           </div>
         </div>
       </header>
-      <input className={styles.menuBtn} type="checkbox" id="menu-btn" />
+      {/* Mobile Nav Menu */}
+      <input className={styles.menuInput} type="checkbox" id="menu-btn" />
       <label className={styles.menuIcon} htmlFor="menu-btn">
-        <span className="navicon"></span>
+        <span className={styles.navicon}></span>
       </label>
       <Nav darkMode={darkMode} onDarkModeChange={onDarkModeChange} />
     </div>

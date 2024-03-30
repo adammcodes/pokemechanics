@@ -3,7 +3,7 @@ import Client from "app/Client";
 
 export const metadata = {
   title: "Pokémechanics",
-  description: "A complete Pokémon resource for the video game series",
+  description: "A Pokémon resource for the video game series",
   favicon: "/favicon.ico",
   formatDetection: {
     email: false,
