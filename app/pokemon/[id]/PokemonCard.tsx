@@ -30,6 +30,7 @@ import ForwardBack from "app/pokemon/[id]/ForwardBack";
 import { Moves } from "@/components/moves/Moves";
 import Abilities from "@/components/abilities/Abilities";
 import Stats from "@/components/stats/Stats";
+import LocationsForVersionGroup from "@/components/encounters/LocationsForVersionGroup";
 
 type PokemonCardProps = {
   is_variant: boolean; // required
@@ -127,6 +128,13 @@ const PokemonCard: React.FC<PokemonCardProps> = (props) => {
           game={game}
           flavorTextForVersion={flavorTextForVersion}
           flavorTextForVersions={flavorTextForVersions}
+        />
+
+        <LocationsForVersionGroup
+          pokemonSpeciesId={pokemonId}
+          versions={versionGroup.data.versions.map(
+            (v: NamedAPIResource) => v.name
+          )}
         />
       </section>
       {/* Evolutions */}
