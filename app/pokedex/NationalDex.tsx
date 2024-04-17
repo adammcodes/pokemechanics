@@ -5,12 +5,13 @@ import { useEffect, useState } from "react";
 import PokemonSelector from "./PokemonSelector";
 // type imports
 import { PokedexPokemon } from "./PokedexById";
-import PokeballLoader from "@/components/common/PokeballLoader";
+// import PokeballLoader from "@/components/common/PokeballLoader";
 
 type NationalDexProps = {
   limit: number;
   versionGroup: string;
   generationString: string;
+  includeHeader?: boolean;
 };
 
 type Pokedex = {
@@ -29,6 +30,7 @@ export default function NationalDex({
   limit,
   versionGroup,
   generationString,
+  includeHeader = true,
 }: NationalDexProps) {
   // The limit param is to limit the number of Pokémon returned that applies to the National Pokédex for that generation.
   // For example, in Generation 1, the National Pokédex only contains 151 Pokémon. So the limit param would be 151.
@@ -65,12 +67,14 @@ export default function NationalDex({
   const pokedexIdRange = `${firstPokemonSpecies.pokemon_species_id} - ${lastPokemonSpecies.pokemon_species_id}`;
 
   return (
-    <section className="mb-10 h-[150px] text-center">
-      <header className="mb-2">
-        <span>National Dex ({pokedexIdRange})</span>
-        <br />
-        <span>{formatName(versionGroup)}</span>
-      </header>
+    <section className="text-center">
+      {includeHeader && (
+        <header className="mt-10 mb-2">
+          <span>National Dex ({pokedexIdRange})</span>
+          <br />
+          <span>{formatName(versionGroup)}</span>
+        </header>
+      )}
 
       <div className="max-w-sm mx-auto">
         <PokemonSelector

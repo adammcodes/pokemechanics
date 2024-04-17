@@ -18,21 +18,32 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  box-shadow: 1px 1px 4px 0 var(--header-shadow);
   z-index: 3;
-  padding-bottom: 0.25rem;
+  padding: 0.5em;
+  /* height: 80px; */
+  box-shadow: 1px 1px 4px 0 var(--header-shadow);
   border-bottom: 2px solid var(--header-border);
 }
 
-.header ~ nav > ul {
+.nav {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 3;
+}
+
+.nav > ul {
   margin: 0;
   padding: 0;
   list-style: none;
   overflow: hidden;
+  z-index: 3;
+  background-color: var(--input-bg-colour);
+  box-shadow: 1px 1px 4px 0 var(--header-shadow);
 }
 
-.header ~ nav > ul > li a,
-.header ~ nav > ul > li label {
+.nav > ul > li a,
+.nav > ul > li label {
   display: block;
   padding: 20px 20px;
   text-decoration: none;
@@ -62,12 +73,6 @@
   outline: 0;
 }
 
-.header ~ nav > .menu {
-  max-height: 0;
-  box-shadow: 1px 1px 4px 0 var(--header-shadow);
-  transition: max-height 0.2s ease-out;
-}
-
 /* Dark mode toggle */
 .menu > li:last-child {
   display: flex;
@@ -80,7 +85,6 @@
   float: right;
   padding: 28px 20px;
   position: absolute;
-  top: 10px;
   right: 0px;
   user-select: none;
 }
@@ -119,6 +123,12 @@
 }
 
 /* Unchecked */
+.menu {
+  max-height: 0;
+  box-shadow: 1px 1px 4px 0 var(--header-shadow);
+  transition: max-height 0.2s ease-out;
+}
+
 /* The hamburger icon when the menu is closed = input unchecked => show the middle line */
 .menuInput ~ .menuIcon .navicon {
   background: var(--text-colour);
@@ -126,7 +136,7 @@
 
 /* Checked => open the menu */
 .menuInput:checked ~ nav > .menu {
-  max-height: 350px;
+  max-height: 100vh;
 }
 /* The hamburger turns to an X when the menu is open => hide the middle line */
 .menuInput:checked ~ .menuIcon .navicon {
@@ -148,21 +158,24 @@
 
 /* 48em = 768px */
 @media (min-width: 48em) {
-  .header ~ nav li {
+  .nav {
+    position: unset;
+  }
+  .nav > ul {
+    background-color: unset;
+  }
+  .nav li {
     float: left;
   }
-  .header ~ nav li a {
+  .nav li a {
     padding: 20px 30px;
   }
-  .header ~ nav > .menu {
-    position: absolute;
-    top: 0.3em;
-    right: 0.3em;
+  .nav > .menu {
     box-shadow: unset;
     float: right;
     max-height: none;
   }
-  .header ~ .menuIcon {
+  .menuIcon {
     display: none;
   }
   .menu > li {

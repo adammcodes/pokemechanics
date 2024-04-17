@@ -43,21 +43,21 @@ const PokemonVariety: React.FC<PokemonVarietyProps> = ({
     ["pokemonVarietyForRegion", p.name],
     () => fetchVarietyForRegion(pokemonVarietyId),
     {
-      enabled: varieties.length > 1 && Boolean(pokemonVarietyId),
+      enabled: varieties.length > 1 && Boolean(pokemonVarietyForRegion),
     }
   );
 
   return (
     <>
       {pokemonVarietyForRegionQuery.isLoading && "Loading variant..."}
-      {pokemonVarietyForRegionQuery.data && (
+      {pokemonVarietyForRegion && pokemonVarietyForRegionQuery.data && (
         <PokemonCard
           {...pokemonVarietyForRegionQuery.data}
           is_variant={true}
           name={pokemonVarietyForRegionQuery.data.name}
         />
       )}
-      {!Boolean(pokemonVarietyId) && (
+      {!Boolean(pokemonVarietyForRegion) && (
         <PokemonCard is_variant={false} name={p.name} />
       )}
     </>

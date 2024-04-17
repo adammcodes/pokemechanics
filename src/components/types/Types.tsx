@@ -85,8 +85,8 @@ type TypesProps = {
  * @returns Component displaying type chips for a pokemon
  */
 const Types: React.FC<TypesProps> = ({ generationId, pokemonId }) => {
-  console.log("generationId", generationId);
-  console.log("pokemonId", pokemonId);
+  // console.log("generationId", generationId);
+  // console.log("pokemonId", pokemonId); // This is actually the pokemon sprite Id
 
   const { loading, error, data } = useQuery(GetPokemonTypes, {
     variables: { generationId, pokemonId },

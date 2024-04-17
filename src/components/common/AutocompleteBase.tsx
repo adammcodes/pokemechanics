@@ -5,7 +5,7 @@ import styles from "./Autocomplete.module.css";
 interface AutocompleteProps {
   options: any[]; // this autocomplete doesn't care what the options are
   onSelect: (selectedValue: string | number) => void;
-  defaultValue?: string;
+  defaultValue?: string | number;
   hasImageOptions?: boolean;
 }
 
@@ -88,7 +88,10 @@ const AutocompleteBase: React.FC<AutocompleteProps> = ({
               onClick={handleOptionClick}
             >
               <span id="label">
-                {hasImageOptions ? `(#${option.value})` : ``} {option.label}
+                {hasImageOptions
+                  ? `(#${option.pokemonId || option.value})`
+                  : ``}{" "}
+                {option.label}
               </span>
               {hasImageOptions && (
                 <img

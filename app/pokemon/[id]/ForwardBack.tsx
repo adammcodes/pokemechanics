@@ -1,5 +1,4 @@
 "use client";
-import Link from "next/link";
 import { Sprite } from "@/components/sprites/Sprite";
 import { useContext } from "react";
 import {
@@ -59,19 +58,19 @@ export default function ForwardBack() {
   return (
     <div className="flex flex-row justify-between w-full px-5 py-5">
       {currentEntryNum !== prevEntryNum && (
-        <Link href={`/pokemon/${prevPokemonId}?dexId=${dex.id}`}>
+        <a href={`/pokemon/${prevPokemonId}?dexId=${dex.id}`}>
           &larr; #{prevRegionalDexNum}{" "}
           <Sprite versionGroup={game} gen={gen} id={prevPokemonId} size={50} />
           {toTitleCase(prevPokemonEntry.pokemon_species.name)}
-        </Link>
+        </a>
       )}
       {currentEntryNum === prevEntryNum && <div>&nbsp;</div>}
       {currentEntryNum !== nextEntryNum && nextPokemonId && (
-        <Link href={`/pokemon/${nextPokemonId}?dexId=${dex.id}`}>
+        <a href={`/pokemon/${nextPokemonId}?dexId=${dex.id}`}>
           #{nextRegionalDexNum}{" "}
           <Sprite versionGroup={game} gen={gen} id={nextPokemonId} size={50} />
           {toTitleCase(nextPokemonEntry.pokemon_species.name)} &rarr;
-        </Link>
+        </a>
       )}
       {currentEntryNum === nextEntryNum && <div>&nbsp;</div>}
     </div>

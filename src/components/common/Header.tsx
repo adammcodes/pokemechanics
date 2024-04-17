@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useContext } from "react";
 import { useState, useEffect } from "react";
 import { GameContext } from "@/context/_context";
@@ -8,6 +9,9 @@ import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
 import useGameVersion from "@/hooks/useGameVersion";
 import styles from "./Header.module.css";
 import "@/styles/slider.css";
+import PokedexById from "@/app/pokedex/PokedexById";
+import NationalDex from "@/app/pokedex/NationalDex";
+import { numOfPokemonByGen } from "@/constants/numOfPokemonByGen";
 
 const logoSize: number = 80;
 
@@ -39,7 +43,7 @@ const Nav = ({
   onDarkModeChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }) => {
   return (
-    <nav>
+    <nav className={styles.nav} role="navigation">
       <ul className={styles.menu}>
         <li>
           <Link href="/pokedex">Pokédex</Link>
@@ -72,8 +76,15 @@ export default function Header() {
   const { game } = useContext(GameContext);
   const formatName = convertKebabCaseToTitleCase;
   const versionGroup = useGameVersion(game);
+  const generationString = versionGroup.data?.generation.name;
   const genNumber =
     versionGroup.data && versionGroup.data.generation?.name.split("-")[1];
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  // Get pokemon id from the pathname; e.g. http://localhost:3000/pokemon/2?dexId=1
+  const pokemonId: string | undefined = pathname.split("/")[2];
+  // Get the dexId from the search params e.g. http://localhost:3000/pokemon/2?dexId=1
+  const dexId: string | null = searchParams.get("dexId");
 
   const [darkMode, setDarkMode] = useState(true);
 
@@ -116,10 +127,13 @@ export default function Header() {
     };
   }, []);
 
+  const isPokemonPage = dexId && pokemonId && generationString;
+  const isNationalDex = dexId === "1";
+
   return (
-    <div className="w-full">
+    <div className="w-full flex">
       <header className={styles.header}>
-        <div className="flex flex-row justify-center items-center">
+        <div className="hidden lg:flex flex flex-row justify-center items-center">
           <Link href="/">
             <Image
               src="/images/dudelax.png"
@@ -145,13 +159,34 @@ export default function Header() {
             )}
           </div>
         </div>
+
+        {isPokemonPage && !isNationalDex && (
+          <PokedexById
+            generationString={generationString}
+            versionGroup={game}
+            dexId={parseInt(dexId)}
+            pokemonId={parseInt(pokemonId)}
+            includeHeader={false}
+          />
+        )}
+
+        {isPokemonPage && isNationalDex && (
+          <NationalDex
+            includeHeader={false}
+            generationString={generationString}
+            versionGroup={game}
+            limit={numOfPokemonByGen[generationString]}
+          />
+        )}
+
+        {/* Mobile Nav Menu */}
+        <input className={styles.menuInput} type="checkbox" id="menu-btn" />
+        <label className={styles.menuIcon} htmlFor="menu-btn">
+          <span className={styles.navicon}></span>
+        </label>
+
+        <Nav darkMode={darkMode} onDarkModeChange={onDarkModeChange} />
       </header>
-      {/* Mobile Nav Menu */}
-      <input className={styles.menuInput} type="checkbox" id="menu-btn" />
-      <label className={styles.menuIcon} htmlFor="menu-btn">
-        <span className={styles.navicon}></span>
-      </label>
-      <Nav darkMode={darkMode} onDarkModeChange={onDarkModeChange} />
     </div>
   );
 }

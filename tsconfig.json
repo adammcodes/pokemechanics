@@ -17,6 +17,7 @@
     "baseUrl": ".", // This must be specified if "paths" is set.
     "paths": {
       "@/apollo/*": ["apollo/*"],
+      "@/app/*": ["app/*"],
       "@/components/*": ["src/components/*"],
       "@/constants/*": ["src/constants/*"],
       "@/context/*": ["src/context/*"],

@@ -3,7 +3,6 @@ import { numOfPokemonByGen } from "@/constants/numOfPokemonByGen";
 import { NamedAPIResource } from "pokenode-ts";
 import styles from "../Pokedexes.module.css";
 // components
-import { PageProps } from ".next/types/app/layout";
 import PokedexById from "../PokedexById";
 import NationalDex from "../NationalDex";
 
@@ -35,6 +34,15 @@ async function getVersionGroup(gen: string): Promise<VersionGroup> {
     return error;
   }
 }
+
+type PageProps = {
+  params: {
+    gen: string;
+  };
+  searchParams?: {
+    [key: string]: string | string[] | undefined;
+  };
+};
 
 // create a Pokedex page for each generation
 export default async function Page({ params }: PageProps) {

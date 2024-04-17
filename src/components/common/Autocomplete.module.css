@@ -44,6 +44,7 @@
 
 .rbyDialogueBox {
   width: 100%;
+  min-width: 250px;
   border-radius: 2px;
   padding: 10px;
   border: 1px solid var(--input-border-colour);

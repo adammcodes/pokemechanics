@@ -21,6 +21,8 @@ type PokemonSelectorProps = {
   pokemon: PokedexPokemon[];
   versionGroup?: string;
   generationString?: string;
+  defaultPokemonId?: number;
+  defaultPokemonName?: string;
   regionName: string;
 };
 
@@ -31,6 +33,8 @@ const PokemonSelector: React.FC<PokemonSelectorProps> =
     dexId,
     versionGroup,
     generationString,
+    defaultPokemonId, // national dex id number
+    defaultPokemonName,
     regionName,
   }) {
     const router = useRouter();
@@ -70,6 +74,11 @@ const PokemonSelector: React.FC<PokemonSelectorProps> =
           options={pokemonOptions}
           onSelect={onPokemonSelect}
           hasImageOptions={true}
+          defaultValue={
+            defaultPokemonName
+              ? `(#${defaultPokemonId}) ${toTitleCase(defaultPokemonName)}`
+              : ""
+          }
         />
       </>
     );
