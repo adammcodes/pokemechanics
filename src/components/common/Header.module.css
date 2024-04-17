@@ -18,10 +18,18 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  box-shadow: 1px 1px 4px 0 var(--header-shadow);
   z-index: 3;
-  padding-bottom: 0.25rem;
+  padding: 0.5em;
+  /* height: 80px; */
+  box-shadow: 1px 1px 4px 0 var(--header-shadow);
   border-bottom: 2px solid var(--header-border);
+}
+
+.nav {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 3;
 }
 
 .nav > ul {
@@ -29,6 +37,9 @@
   padding: 0;
   list-style: none;
   overflow: hidden;
+  z-index: 3;
+  background-color: var(--input-bg-colour);
+  box-shadow: 1px 1px 4px 0 var(--header-shadow);
 }
 
 .nav > ul > li a,
@@ -74,7 +85,6 @@
   float: right;
   padding: 28px 20px;
   position: absolute;
-  top: 10px;
   right: 0px;
   user-select: none;
 }
@@ -126,7 +136,7 @@
 
 /* Checked => open the menu */
 .menuInput:checked ~ nav > .menu {
-  max-height: 350px;
+  max-height: 100vh;
 }
 /* The hamburger turns to an X when the menu is open => hide the middle line */
 .menuInput:checked ~ .menuIcon .navicon {
@@ -148,6 +158,12 @@
 
 /* 48em = 768px */
 @media (min-width: 48em) {
+  .nav {
+    position: unset;
+  }
+  .nav > ul {
+    background-color: unset;
+  }
   .nav li {
     float: left;
   }

@@ -2,6 +2,7 @@ import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
 import { useQuery, gql } from "@apollo/client";
 import VersionChip from "@/components/common/VersionChip";
 import { groupEncountersByLocation } from "./groupEncountersByLocation";
+import { Tooltip, Stack, Text } from "@chakra-ui/react";
 
 const GetPokemonLocationsForVersion = gql`
   query GetPokemonLocationsForVersion(
@@ -171,13 +172,9 @@ const Encounters: React.FC<EncountersProps> = ({
 
   if (!data) return null;
 
-  console.log(data);
-
   const { pokemon_v2_encounter, pokemon_v2_version } = data as EncountersData;
 
   const locationEncounters = groupEncountersByLocation(pokemon_v2_encounter);
-
-  const versionName = formatName(version);
 
   const versionGroups =
     pokemon_v2_version[0].pokemon_v2_versiongroup.pokemon_v2_generation
@@ -189,7 +186,7 @@ const Encounters: React.FC<EncountersProps> = ({
     })
     .filter((v) => v !== version);
 
-  console.log(otherVersionsInGroups);
+  console.log(data);
 
   return (
     <>
@@ -201,23 +198,31 @@ const Encounters: React.FC<EncountersProps> = ({
         </p>
       )}
 
-      {locationEncounters.length > 0 &&
-        locationEncounters.map((location) => (
-          <div key={location.locationName}>
-            <h3 className="text-2xl border-b-2">
-              {formatName(location.locationName)}:
-            </h3>
-            <p className="text-xl leading-[1em]">
-              Min. Level: {location.minLevel}
-            </p>
-            <p className="text-xl leading-[1em]">
-              Max. Level: {location.maxLevel}
-            </p>
-            <p className="text-xl leading-[1em]">
-              Rate: {location.encounterRate}%
-            </p>
-          </div>
-        ))}
+      <div className="flex flex-wrap">
+        {locationEncounters.length > 0 &&
+          locationEncounters.map((location, i, arr) => (
+            <div
+              className="inline-block cursor-pointer mr-1"
+              style={{ lineHeight: "10px" }}
+              key={location.locationName}
+            >
+              <Tooltip
+                label={
+                  <Stack>
+                    <Text>Min. Level: {location.minLevel}</Text>
+                    <Text>Max. Level: {location.maxLevel}</Text>
+                    <Text>Rate: {location.encounterRate}%</Text>
+                  </Stack>
+                }
+              >
+                <span className="text-sm leading-tight">
+                  {formatName(location.locationName)}
+                  {i === arr.length - 1 ? `.` : `, `}
+                </span>
+              </Tooltip>
+            </div>
+          ))}
+      </div>
     </>
   );
 };

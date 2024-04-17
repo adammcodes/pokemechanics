@@ -48,6 +48,13 @@ body {
   font-family: "BWB2W2", Inter, -apple-system, BlinkMacSystemFont, Segoe UI,
     Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
     sans-serif;
+}
+
+html,
+body,
+main,
+header,
+section {
   background-color: var(--background-colour);
   color: var(--text-colour);
 }

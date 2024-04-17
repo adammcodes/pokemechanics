@@ -133,7 +133,7 @@ export default function Header() {
   return (
     <div className="w-full flex">
       <header className={styles.header}>
-        <div className="flex flex-row justify-center items-center">
+        <div className="hidden lg:flex flex flex-row justify-center items-center">
           <Link href="/">
             <Image
               src="/images/dudelax.png"
