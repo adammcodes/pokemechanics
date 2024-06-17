@@ -2,8 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { useContext, Suspense } from "react";
-import { useState, useEffect } from "react";
+import { useContext, useState, useEffect } from "react";
 import { GameContext } from "@/context/_context";
 import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
 import useGameVersion from "@/hooks/useGameVersion";
@@ -132,64 +131,62 @@ export default function Header() {
   const isNationalDex = dexId === "1";
 
   return (
-    <Suspense fallback={<PokeballLoader />}>
-      <div className="w-full flex">
-        <header className={styles.header}>
-          <div className="hidden lg:flex flex flex-row justify-center items-center">
+    <div className="w-full flex">
+      <header className={styles.header}>
+        <div className="hidden lg:flex flex flex-row justify-center items-center">
+          <Link href="/">
+            <Image
+              src="/images/dudelax.png"
+              width={logoSize}
+              height={logoSize}
+              alt="Munchlax"
+              priority={true}
+            />
+          </Link>
+          <div>
             <Link href="/">
-              <Image
-                src="/images/dudelax.png"
-                width={logoSize}
-                height={logoSize}
-                alt="Munchlax"
-                priority={true}
-              />
+              <h1>POKEMECHANICS</h1>
             </Link>
-            <div>
-              <Link href="/">
-                <h1>POKEMECHANICS</h1>
-              </Link>
-              {game && versionGroup.data && (
-                <span className="text-[0.9em] lg:text-[1em]">
-                  <span className="hidden lg:inline">&nbsp;-</span>{" "}
-                  {formatName(game)}{" "}
-                  <span className="inline lg:hidden">
-                    <br />
-                  </span>
-                  {genNumber && <>(Gen {genNumber.toUpperCase()})</>}
+            {game && versionGroup.data && (
+              <span className="text-[0.9em] lg:text-[1em]">
+                <span className="hidden lg:inline">&nbsp;-</span>{" "}
+                {formatName(game)}{" "}
+                <span className="inline lg:hidden">
+                  <br />
                 </span>
-              )}
-            </div>
+                {genNumber && <>(Gen {genNumber.toUpperCase()})</>}
+              </span>
+            )}
           </div>
+        </div>
 
-          {isPokemonPage && !isNationalDex && (
-            <PokedexById
-              generationString={generationString}
-              versionGroup={game}
-              dexId={parseInt(dexId)}
-              pokemonId={parseInt(pokemonId)}
-              includeHeader={false}
-            />
-          )}
+        {isPokemonPage && !isNationalDex && (
+          <PokedexById
+            generationString={generationString}
+            versionGroup={game}
+            dexId={parseInt(dexId)}
+            pokemonId={parseInt(pokemonId)}
+            includeHeader={false}
+          />
+        )}
 
-          {isPokemonPage && isNationalDex && (
-            <NationalDex
-              includeHeader={false}
-              generationString={generationString}
-              versionGroup={game}
-              limit={numOfPokemonByGen[generationString]}
-            />
-          )}
+        {isPokemonPage && isNationalDex && (
+          <NationalDex
+            includeHeader={false}
+            generationString={generationString}
+            versionGroup={game}
+            limit={numOfPokemonByGen[generationString]}
+          />
+        )}
 
-          {/* Mobile Nav Menu */}
-          <input className={styles.menuInput} type="checkbox" id="menu-btn" />
-          <label className={styles.menuIcon} htmlFor="menu-btn">
-            <span className={styles.navicon}></span>
-          </label>
+        {/* Mobile Nav Menu */}
+        <input className={styles.menuInput} type="checkbox" id="menu-btn" />
+        <label className={styles.menuIcon} htmlFor="menu-btn">
+          <span className={styles.navicon}></span>
+        </label>
 
-          <Nav darkMode={darkMode} onDarkModeChange={onDarkModeChange} />
-        </header>
-      </div>
-    </Suspense>
+        <Nav darkMode={darkMode} onDarkModeChange={onDarkModeChange} />
+      </header>
+    </div>
   );
 }

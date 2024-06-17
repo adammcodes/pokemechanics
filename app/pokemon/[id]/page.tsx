@@ -1,6 +1,6 @@
 "use client";
 // hooks
-import { useContext, Suspense } from "react";
+import { useContext } from "react";
 import { useSearchParams } from "next/navigation";
 import { useQuery } from "react-query";
 import usePokemonClient from "@/hooks/usePokemonClient";
@@ -10,7 +10,6 @@ import { PokemonContextProvider } from "@/context/PokemonContextProvider";
 import { PokedexContextProvider } from "@/context/PokedexContextProvider";
 // Components
 import PokemonVariety from "app/pokemon/[id]/PokemonVariety";
-import PokeballLoader from "@/components/common/PokeballLoader";
 
 export default function Pokemon({ params }: { params: any }) {
   // Access the dynamic route parameter value, which is the pokemon id and dexId
@@ -69,27 +68,26 @@ export default function Pokemon({ params }: { params: any }) {
   );
 
   return (
-    <Suspense fallback={<PokeballLoader />}>
-      <main className="w-full">
-        {pokemonQuery.data &&
-          pokemonSpeciesQuery.data &&
-          version.data &&
-          dexId && (
-            <PokedexContextProvider dexId={Number(dexId)}>
-              <PokemonContextProvider
-                pokemonData={pokemonQuery.data}
-                speciesData={pokemonSpeciesQuery.data}
-                versionData={version.data}
-              >
-                <PokemonVariety
-                  regions={version.data.regions}
-                  name={pokemonSpeciesQuery.data.name}
-                  varieties={pokemonSpeciesQuery.data.varieties}
-                />
-              </PokemonContextProvider>
-            </PokedexContextProvider>
-          )}
-      </main>
-    </Suspense>
+    <main className="w-full">
+      {pokemonQuery.data &&
+        pokemonSpeciesQuery.data &&
+        version.data &&
+        dexId && (
+          <PokedexContextProvider dexId={Number(dexId)}>
+            <PokemonContextProvider
+              pokemonData={pokemonQuery.data}
+              speciesData={pokemonSpeciesQuery.data}
+              versionData={version.data}
+            >
+              <PokemonVariety
+                regions={version.data.regions}
+                name={pokemonSpeciesQuery.data.name}
+                varieties={pokemonSpeciesQuery.data.varieties}
+              />
+            </PokemonContextProvider>
+          </PokedexContextProvider>
+        )}
+    </main>
+  
   );
 }
