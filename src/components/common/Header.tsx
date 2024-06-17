@@ -11,7 +11,6 @@ import "@/styles/slider.css";
 import PokedexById from "@/app/pokedex/PokedexById";
 import NationalDex from "@/app/pokedex/NationalDex";
 import { numOfPokemonByGen } from "@/constants/numOfPokemonByGen";
-import PokeballLoader from "./PokeballLoader";
 
 const logoSize: number = 80;
 
@@ -35,32 +34,42 @@ const DarkModeToggle = ({
   );
 };
 
+const NavLink = ({ href, children, closeNav }: { href: string; children: string, closeNav: () => void; }) => {
+  return (
+    <li>
+      <Link onClick={closeNav} href={href}>{children}</Link>
+      <i></i>
+    </li>
+  );
+}
+
 const Nav = ({
   darkMode,
   onDarkModeChange,
+  setIsNavOpen,
 }: {
   darkMode: boolean;
   onDarkModeChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  setIsNavOpen: (value: boolean) => void;
 }) => {
+
+  const closeNav = () => {
+    setIsNavOpen(false);
+  }
+
+  const navLinks = [
+    { href: "/pokedex", text: "Pokédex" },
+    { href: "/bag", text: "Bag" },
+    { href: "/map", text: "Map" },
+    { href: "/", text: "Select Version" },
+  ];
+
   return (
     <nav className={styles.nav} role="navigation">
       <ul className={styles.menu}>
-        <li>
-          <Link href="/pokedex">Pokédex</Link>
-          <i></i>
-        </li>
-        <li>
-          <Link href="/bag">Bag</Link>
-          <i></i>
-        </li>
-        <li>
-          <Link href="/map">Map</Link>
-          <i></i>
-        </li>
-        <li>
-          <Link href="/">Select Version</Link>
-          <i></i>
-        </li>
+        {navLinks.map((link) => (
+          <NavLink key={link.href} href={link.href} closeNav={closeNav}>{link.text}</NavLink>
+        ))}
         <li>
           <DarkModeToggle
             darkMode={darkMode}
@@ -87,6 +96,7 @@ export default function Header() {
   const dexId: string | null = searchParams.get("dexId");
 
   const [darkMode, setDarkMode] = useState(true);
+  const [isNavOpen, setIsNavOpen] = useState(false);
 
   const onDarkModeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const isDark = e.target.checked;
@@ -180,12 +190,22 @@ export default function Header() {
         )}
 
         {/* Mobile Nav Menu */}
-        <input className={styles.menuInput} type="checkbox" id="menu-btn" />
+        <input 
+          className={styles.menuInput} 
+          type="checkbox" 
+          id="menu-btn"
+          checked={isNavOpen}
+          onChange={() => setIsNavOpen(!isNavOpen)}
+        />
         <label className={styles.menuIcon} htmlFor="menu-btn">
           <span className={styles.navicon}></span>
         </label>
 
-        <Nav darkMode={darkMode} onDarkModeChange={onDarkModeChange} />
+        <Nav 
+          darkMode={darkMode} 
+          onDarkModeChange={onDarkModeChange} 
+          setIsNavOpen={setIsNavOpen}
+        />
       </header>
     </div>
   );

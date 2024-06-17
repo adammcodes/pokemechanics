@@ -19,7 +19,7 @@
   align-items: center;
   justify-content: space-between;
   z-index: 3;
-  padding: 0.5em;
+  padding: 1em 0.5em;
   /* height: 80px; */
   box-shadow: 1px 1px 4px 0 var(--header-shadow);
   border-bottom: 2px solid var(--header-border);
@@ -158,6 +158,9 @@
 
 /* 48em = 768px */
 @media (min-width: 48em) {
+  .header {
+    padding: 0.5em;
+  }
   .nav {
     position: unset;
   }
