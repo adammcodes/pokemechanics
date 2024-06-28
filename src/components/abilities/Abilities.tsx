@@ -1,6 +1,5 @@
 import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
 import { useQuery, gql } from "@apollo/client";
-import styles from "@/app/pokemon/[id]/PokemonCard.module.css";
 
 const GetAbilitiesByPokemon = gql`
   query GetAbilitiesByPokemonName($pokemonName: String!) {
@@ -83,7 +82,7 @@ const Abilities: React.FC<AbilitiesProps> = ({ pokemonName }) => {
   if (!abilitiesData) {
     return (
       <section
-        className={`${styles.card__border} w-full lg:w-[400px] p-[1em] flex flex-col gap-y-3`}
+        className={`card__border w-full lg:w-[400px] p-[1em] flex flex-col gap-y-3`}
       >
         Could not find abilities.
       </section>
@@ -108,7 +107,7 @@ const Abilities: React.FC<AbilitiesProps> = ({ pokemonName }) => {
 
   return (
     <section
-      className={`${styles.card__border} w-full lg:w-[400px] p-[1em] flex flex-col gap-y-3`}
+      className={`card__border w-full lg:w-[400px] p-[1em] flex flex-col gap-y-3`}
     >
       <h2 className="text-3xl">Abilities:</h2>
       {abilities.map((ability) => (

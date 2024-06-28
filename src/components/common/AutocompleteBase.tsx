@@ -59,7 +59,7 @@ const AutocompleteBase: React.FC<AutocompleteProps> = ({
   return (
     <div className={`${styles.autocomplete} relative`}>
       <input
-        className={styles.rbyDialogueBox}
+        className={`${styles.rbyDialogueBox} card__border`}
         type="text"
         value={inputValue}
         onChange={handleInputChange}
@@ -70,7 +70,8 @@ const AutocompleteBase: React.FC<AutocompleteProps> = ({
         className={styles.dialogueBoxArrow}
         style={{
           transform: showList ? "rotate(180deg)" : "rotate(0deg)",
-          top: showList ? "10px" : "20px",
+          top: showList ? "12px" : "25px",
+          scale: "1.1",
         }}
         onClick={() => setShowList(!showList)}
       ></i>

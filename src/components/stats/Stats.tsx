@@ -1,5 +1,4 @@
 import { useQuery, gql } from "@apollo/client";
-import styles from "@/app/pokemon/[id]/PokemonCard.module.css";
 import StatBars from "./StatsBar";
 
 const GetPokemonStats = gql`
@@ -51,7 +50,7 @@ const Stats: React.FC<StatsProps> = ({ pokemonName }) => {
   if (!statsData)
     return (
       <section
-        className={`${styles.card__border} w-full lg:w-[400px] p-[1em] flex flex-col gap-y-3`}
+        className={`card__border w-full lg:w-[400px] p-[1em] flex flex-col gap-y-3`}
       >
         Could not find stats.
       </section>
@@ -71,7 +70,7 @@ const Stats: React.FC<StatsProps> = ({ pokemonName }) => {
 
   return (
     <section
-      className={`${styles.card__border} w-full lg:w-[400px] p-[1em] flex flex-col gap-y-3`}
+      className={`card__border w-full lg:w-[400px] p-[1em] flex flex-col gap-y-3`}
     >
       <h2 className="text-3xl">Base Stats:</h2>
       <StatBars stats={stats} />

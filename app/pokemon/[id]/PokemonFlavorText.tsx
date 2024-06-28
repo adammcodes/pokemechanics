@@ -1,7 +1,6 @@
 import { FlavorTextForVersion } from "@/types/index";
 import FlavorText, { DualFlavorText } from "./FlavorText";
 import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
-import styles from "./PokemonCard.module.css";
 
 type PokemonFlavorTextProps = {
   flavorTextForVersion: FlavorTextForVersion;
@@ -17,7 +16,7 @@ const PokemonFlavorText: React.FC<PokemonFlavorTextProps> = ({
   game,
 }) => {
   return (
-    <div className={`p-[1em] w-full lg:w-[400px] ${styles.card__border}`}>
+    <div className={`p-[1em] w-full lg:w-[400px] card__border`}>
       <h2 className="text-3xl">Flavor Text:</h2>
       {flavorTextForVersion && (
         <FlavorText flavorTextForVersion={flavorTextForVersion} />

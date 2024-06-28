@@ -150,16 +150,39 @@ main {
   -moz-appearance: none;
 }
 
+.card__border {
+  background-color: var(--input-bg-colour);
+  /* Change border colour here */
+  --border-colour: white;
+  /* Chage border thickness here */
+  --border-thickness: 4px;
+  --offset-x: 0px;
+  --offset-y: 1px;
+  --blur-radius: 2px;
+  --spread-radius: 0px;
+  --shadow-colour: black;
+  border: var(--border-thickness) solid var(--border-colour);
+  border-radius: 0.4em;
+  box-shadow: var(--offset-x) var(--offset-y) var(--blur-radius) var(--spread-radius) var(--shadow-colour), 
+  inset var(--offset-x) var(--offset-y) var(--blur-radius) var(--spread-radius) var(--shadow-colour), 
+  var(--offset-x) var(--offset-y) var(--blur-radius) var(--spread-radius) var(--shadow-colour),
+  inset var(--offset-x) var(--offset-y) var(--blur-radius) var(--spread-radius) var(--shadow-colour);
+}
+
 /* Dark mode */
 [data-theme="dark"] {
   --background-colour: oklch(21.36% 0.048 257.95);
   --text-colour: oklch(93.06% 0.041 211.84);
   --hover-bg-colour: oklch(58.14% 0.056 237.42);
   --hover-text-colour: oklch(100% 0 0);
-  --input-bg-colour: oklch(25.36% 0.048 257.95);
-  --input-border-colour: oklch(58.14% 0.056 237.42);
+  --input-bg-colour: oklch(15.36% 0.048 257.95);
+  --input-border-colour: black;
   --box-arrow-colour: oklch(93.06% 0.041 211.84);
   --shadow-colour: oklch(93.06% 0.041 211.84);
   --header-shadow: oklch(100% 0 0 / 20%);
   --header-border: oklch(58.14% 0.056 237.42 / 50%);
+  .card__border {
+    --border-colour: black;
+    --shadow-colour: white;
+  }
 }

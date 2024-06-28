@@ -13,7 +13,7 @@ const LocationsForVersionGroup: React.FC<LocationsForVersionGroupProps> = ({
   // console.log(versions, pokemonSpeciesId);
   return (
     <section
-      className={`${styles.card__border} w-full lg:w-[400px] p-[1em] flex flex-col gap-y-3`}
+      className={`card__border w-full lg:w-[400px] p-[1em] flex flex-col gap-y-3`}
     >
       <h2 className="text-3xl">Encounters:</h2>
       {versions.length &&

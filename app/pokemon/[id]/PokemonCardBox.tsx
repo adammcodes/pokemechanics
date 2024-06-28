@@ -20,7 +20,6 @@ import useGameVersion from "@/hooks/useGameVersion";
 
 // styles
 // import PokeballSpans from "@/components/common/PokeballSpans";
-import styles from "./PokemonCard.module.css";
 
 type PokemonCardBoxProps = {
   name: string; // required
@@ -52,7 +51,7 @@ const PokemonCardBox: React.FC<PokemonCardBoxProps> = (props) => {
 
   return (
     <div
-      className={`${styles.card__border} w-full mx-auto lg:max-w-[400px] p-[0.5em] flex flex-col justify-center items-center`}
+      className={`card__border w-full mx-auto lg:max-w-[400px] p-[0.5em] flex flex-col justify-center items-center`}
     >
       <table className="w-full table-auto">
         <tbody>
