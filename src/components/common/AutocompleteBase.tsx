@@ -101,7 +101,7 @@ const AutocompleteBase: React.FC<AutocompleteProps> = ({
         <div className={`relative p-2 flex items-center`}>
           <input
             type="text"
-            className={`font-bold`}
+            className={`font-bold bg-transparent`}
             value={inputValue}
             onChange={handleInputChange}
             placeholder="Search..."
