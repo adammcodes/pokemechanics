@@ -101,7 +101,9 @@ export default function Header() {
   const onDarkModeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const isDark = e.target.checked;
     setDarkMode(isDark);
-
+    const theme = isDark ? "dark" : "light";
+    document.cookie = `theme=${theme}; path=/; max-age=31536000;`; // 1 year
+    localStorage.setItem("darkMode", theme);
     document.documentElement.setAttribute(
       "data-theme",
       e.target.checked ? "dark" : "light"
@@ -109,29 +111,27 @@ export default function Header() {
   };
 
   useEffect(() => {
-    // On the client-side determine the user's system color scheme
     const systemDarkMode = window.matchMedia("(prefers-color-scheme: dark)");
-    // Set the initial theme state for the toggle switch
-    setDarkMode(systemDarkMode.matches);
-    // Set the page data-theme attribute to the system's color scheme - this actually changes the theme
-    if (systemDarkMode.matches) {
-      document.documentElement.setAttribute("data-theme", "dark");
+    const userTheme = localStorage.getItem("darkMode");
+
+    const setTheme = (theme: string) => {
+      setDarkMode(theme === "dark");
+      document.documentElement.setAttribute("data-theme", theme);
+      document.cookie = `theme=${theme}; path=/; max-age=31536000;`; // 1 year
+    };
+
+    if (userTheme) {
+      setTheme(userTheme);
     } else {
-      document.documentElement.setAttribute("data-theme", "light");
+      setTheme(systemDarkMode.matches ? "dark" : "light");
     }
 
-    // Listen to changes in the system's color scheme and update the website theme accordingly
     const handleSystemThemeChange = (e: MediaQueryListEvent) => {
-      setDarkMode(e.matches);
-      document.documentElement.setAttribute(
-        "data-theme",
-        e.matches ? "dark" : "light"
-      );
+      setTheme(e.matches ? "dark" : "light");
     };
 
     systemDarkMode.addEventListener("change", handleSystemThemeChange);
 
-    // Cleanup function to remove the listener
     return () => {
       systemDarkMode.removeEventListener("change", handleSystemThemeChange);
     };
