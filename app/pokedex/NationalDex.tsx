@@ -69,7 +69,7 @@ export default function NationalDex({
   return (
     <section className="text-center">
       {includeHeader && (
-        <header className="mt-10 mb-2">
+        <header className="my-2">
           <span>National Dex ({pokedexIdRange})</span>
           <br />
           <span>{formatName(versionGroup)}</span>

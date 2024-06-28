@@ -38,15 +38,13 @@ const GenSelector: React.FC<GenSelectorProps> = function GenSelector({ gens }) {
     router.push(`/pokedex/${value}`);
   };
 
-  return (
-    <>
-      <AutocompleteBase
-        options={genOptions}
-        onSelect={handleSelect}
-        defaultValue={convertKebabCaseToTitleCase(game || "red-blue")}
-        hasImageOptions={false}
-      />
-    </>
+  return (    
+    <AutocompleteBase
+      options={genOptions}
+      onSelect={handleSelect}
+      defaultValue={convertKebabCaseToTitleCase(game || "red-blue")}
+      hasImageOptions={false}
+    />
   );
 };
 

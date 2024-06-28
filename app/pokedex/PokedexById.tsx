@@ -104,9 +104,10 @@ export default function PokedexById({
   const lastPokemonSpecies = dex.pokemon_v2_pokemondexnumbers.slice(-1)[0];
   const pokedexIdRange = `${firstPokemonSpecies.pokemon_species_id} - ${lastPokemonSpecies.pokemon_species_id}`;
   return (
-    <section className="max-w-[340px]">
+    <section className="flex flex-col justify-center">
+
       {includeHeader && (
-        <header className="mt-10 mb-2 text-center">
+        <header className="my-2 text-center">
           <h2>
             {formatName(dex.name)} Dex ({pokedexIdRange})
           </h2>

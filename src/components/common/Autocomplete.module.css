@@ -1,8 +1,17 @@
-.autocomplete > i.dialogueBoxArrow {
+.autocomplete {
+  width: 340px;
+  border-radius: 0.2em !important;
+}
+
+.autocomplete:focus {
+  outline: 20px;
+}
+
+i.dialogueBoxArrow {
   right: 15px;
   pointer-events: revert;
 }
-.autocomplete > i.dialogueBoxArrow:hover {
+i.dialogueBoxArrow:hover {
   cursor: pointer;
 }
 
@@ -16,15 +25,8 @@
   float: right;
 }
 
-.rbyDialogueBox,
 .autocomplete__li__btn {
-  background-color: var(--input-bg-colour);
-}
-
-.autocomplete__li__btn {
-  border-left: 2px solid var(--button-border-colour);
-  border-right: 2px solid var(--button-border-colour);
-  box-shadow: 0px 10px 30px 0px rgba(0, 0, 0, 0.2);
+  max-height: 75px;
 }
 
 .autocomplete__li__btn:hover,
@@ -34,27 +36,11 @@
   outline: none;
   cursor: pointer;
 }
-.autocomplete__li:first-child {
-  border-top: 2px solid var(--button-border-colour);
-}
-.autocomplete__li:last-child {
-  border-bottom: 2px solid var(--button-border-colour);
-}
-
-.rbyDialogueBox {
-  width: 100%;
-  min-width: 250px;
-  padding: 10px;
-  border-radius: 0.2em !important;
-}
-
-.rbyDialogueBox:focus {
-  outline: 20px;
-}
 
 /* 48em = 768px */
-@media (min-width: 48em) {
-  .rbyDialogueBox {
-    min-width: 340px;
+@media (max-width: 341px) {
+  .autocomplete {
+    width: 95%;
+    margin: 0 auto;
   }
 }

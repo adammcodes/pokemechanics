@@ -34,7 +34,7 @@ export default async function HomePage() {
   }
 
   return (
-    <main className="w-full h-full flex flex-col justify-center items-center">
+    <main className="w-full h-full flex flex-col justify-start items-center">
       <h2 className={styles.typing}>
         WHICH GAME ARE YOU PLAYING?<span className={styles.cursor}>_</span>
       </h2>

@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import getSpriteUrl from "@/constants/spriteUrlTemplates";
+import { optionSpriteSizesByVersion } from "@/constants/spriteSizesByVersion";
 import styles from "./Autocomplete.module.css";
 
 interface AutocompleteProps {
@@ -56,58 +57,103 @@ const AutocompleteBase: React.FC<AutocompleteProps> = ({
     setShowList(false);
   };
 
+  // Create an event listener that closes the dropdown when the user clicks outside of it
+  // It should be inside a useEffect hook
+  useEffect(() => {
+
+    // callback function for outside click
+    const onOutsideClick = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (!target.closest(`.${styles.autocomplete}`)) {
+        setShowList(false);
+      }
+    }
+
+    // callback for escape key
+    const onEscapeKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setShowList(false);
+      }
+    };
+
+    // Close the dropdown if the user presses the escape key
+    window.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        setShowList(false);
+      }
+    });
+
+    // Close the dropdown if the user presses the escape key
+    window.addEventListener("keydown", onEscapeKey);
+    // Close the dropdown if the user clicks outside of it
+    window.addEventListener("click", onOutsideClick);
+
+    // Remove the event listener when the component is unmounted
+    return () => {
+      window.removeEventListener("click", onOutsideClick);
+      window.removeEventListener("keydown", onEscapeKey);
+    };
+  }, []);
+
   return (
-    <div className={`${styles.autocomplete} relative`}>
-      <input
-        className={`${styles.rbyDialogueBox} card__border`}
-        type="text"
-        value={inputValue}
-        onChange={handleInputChange}
-        placeholder="Search..."
-        onFocus={() => setShowList(true)}
-      />
-      <i
-        className={styles.dialogueBoxArrow}
-        style={{
-          transform: showList ? "rotate(180deg)" : "rotate(0deg)",
-          top: showList ? "12px" : "25px",
-          scale: "1.1",
-        }}
-        onClick={() => setShowList(!showList)}
-      ></i>
-      <ul
-        className={`overflow-y-auto max-h-[48vh] w-full z-10 ${
-          !showList ? "hidden" : "absolute top-[1.75em]"
-        }`}
-      >
-        {filteredOptions.map((option, i) => (
-          <li key={option.value} className={styles.autocomplete__li}>
-            <button
-              id={`${option.name}-${option.value}`}
-              name={option.value?.toString()}
-              className={`${styles.autocomplete__li__btn} p-1 m-0 w-full text-left flex justify-between items-center`}
-              onClick={handleOptionClick}
-            >
-              <span id="label">
-                {hasImageOptions
-                  ? `(#${option.pokemonId || option.value})`
-                  : ``}{" "}
-                {option.label}
-              </span>
-              {hasImageOptions && (
-                <img
-                  src={getSpriteUrl({
-                    versionGroup: option.versionGroup,
-                    pokemonId: option.variantId || option.value,
-                    generation: option.generationString.split("-")[1],
-                  })}
-                  alt="sprite"
-                />
-              )}
-            </button>
-          </li>
-        ))}
-      </ul>
+    <div className="m-auto w-[340px] h-[2em]">
+      <div className={`card__border overflow-hidden ${styles.autocomplete} ${showList ? "max-h-[500px] absolute z-10" : "max-h-[2em]"}`}>
+        <div className={`relative p-2 flex items-center`}>
+          <input
+            type="text"
+            className={`font-bold`}
+            value={inputValue}
+            onChange={handleInputChange}
+            placeholder="Search..."
+            onFocus={() => setShowList(true)}
+          />
+          <i
+            className={styles.dialogueBoxArrow}
+            style={{
+              zIndex: 0,
+              transform: showList ? "rotate(180deg)" : "rotate(0deg)",
+              top: showList ? "12px" : "22px",
+              scale: "1.1",
+            }}
+            onClick={() => setShowList(!showList)}
+          ></i>
+        </div>
+        <ul
+          className={`overflow-scroll ${showList ? "max-h-[450px]" : "hidden"}`}
+        >
+          {filteredOptions.map((option) => (
+            <li key={option.value} className={styles.autocomplete__li}>
+              <button
+                id={`${option.name}-${option.value}`}
+                name={option.value?.toString()}
+                className={`${styles.autocomplete__li__btn} border-0 px-2 py-1 m-0 w-full text-left flex justify-between items-center`}
+                onClick={handleOptionClick}
+              >
+                <span id="label">
+                  {hasImageOptions
+                    ? `(#${option.pokemonId || option.value})`
+                    : ``}{" "}
+                  {option.label}
+                </span>
+                {hasImageOptions && (
+                  <div>
+                    <img
+                      width={optionSpriteSizesByVersion[option.versionGroup] || 50}
+                      src={getSpriteUrl({
+                        versionGroup: option.versionGroup,
+                        pokemonId: option.variantId || option.value,
+                        generation: option.generationString.split("-")[1],
+                      })}
+                      alt="sprite"
+                    />
+                  </div>
+                )}
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+
     </div>
   );
 };
