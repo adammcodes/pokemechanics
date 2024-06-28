@@ -52,13 +52,25 @@ const PokemonCardBox: React.FC<PokemonCardBoxProps> = (props) => {
 
   return (
     <div
-      className={`${styles.card__border} w-full mx-auto lg:max-w-[600px] p-[0.5em] flex flex-col justify-center items-center`}
+      className={`${styles.card__border} w-full mx-auto lg:max-w-[400px] p-[0.5em] flex flex-col justify-center items-center`}
     >
-      <table className="w-full">
+      <table className="w-full table-auto">
         <tbody>
           <tr>
-            <td className="w-1/2">
-              <div className="w-full flex justify-center p-2">
+            <td className="w-full text-center font-bold" colSpan={3}>
+              <div className="text-2xl leading-[24px]">
+                {pokemonName.split(" ")[0]}
+                {pokemonName.split(" ")[1] && (
+                  <span className="text-xl mb-5 leading-[24px]">
+                    &nbsp;{pokemonName.split(" ")[1]}
+                  </span>
+                )}
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td colSpan={3}>
+              <div className="w-full flex justify-center">
                 {game === "gold-silver" && (
                   <DualDynamicImages
                     labelLeft={"Gold"}
@@ -96,30 +108,25 @@ const PokemonCardBox: React.FC<PokemonCardBoxProps> = (props) => {
                   />
                 )}
               </div>
-              <div className="mx-auto flex justify-around items-center">
+              <div className="mx-auto flex justify-around items-center mb-2">
                 <Types
                   generationId={generationId}
                   pokemonId={props.pokemonId}
                 />
               </div>
             </td>
-            <td className="w-1/2 flex-col justify-center items-center pl-5">
-              <div className="text-2xl leading-[24px] mb-5">
-                {pokemonName.split(" ")[0]}
-                {pokemonName.split(" ")[1] && (
-                  <span className="text-xl mb-5 leading-[24px]">
-                    <br />
-                    {pokemonName.split(" ")[1]}
-                  </span>
-                )}
-              </div>
-              <div className="mb-5">{pokemonGenus}</div>
-              <div className="mb-5">
-                No.
-                <span>&nbsp;&nbsp;</span>
-                {p.id}
-              </div>
-              <table className="w-1/2">
+          </tr>
+          <tr className="flex flex-col md:flex-row lg:flex items-center justify-center w-full">
+            <td className="w-full lg:w-1/3 text-center flex justify-center items-center lg:justify-start items-center">
+              <div>{pokemonGenus}</div>
+            </td>
+            <td className="w-full lg:w-1/3 text-center flex justify-center items-center">              
+              No.
+              <span>&nbsp;</span>
+              {p.id}
+            </td>
+            <td className="w-full lg:w-1/3 text-center flex justify-center lg:justify-end items-center">
+              <table className="w-[100px]">
                 <tbody>
                   <tr>
                     <td>HT</td>

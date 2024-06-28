@@ -14,7 +14,7 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-    "baseUrl": ".", // This must be specified if "paths" is set.
+    "baseUrl": ".",
     "paths": {
       "@/apollo/*": ["apollo/*"],
       "@/app/*": ["app/*"],
@@ -37,9 +37,9 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
+    ".next/types/**/*.ts",
     "app/pokemon/[id].tsx",
     "src/components/evolutions/PokemonEvolutionChain.js",
-    ".next/types/**/*.ts",
     "app/pokedex/[gen]"
   ],
   "exclude": ["node_modules"]

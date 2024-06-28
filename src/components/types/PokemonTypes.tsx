@@ -19,7 +19,7 @@ const PokemonTypes: React.FC<PokemonTypesProps> = ({ types }) => {
   });
 
   return (
-    <div className="flex mt-2 flex-col lg:flex-row gap-2">{mappedTypes}</div>
+    <div className="flex mt-2 flex gap-2">{mappedTypes}</div>
   );
 };
 
