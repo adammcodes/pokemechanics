@@ -12,7 +12,7 @@ const FlavorText: React.FC<FlavorTextProps> = ({ flavorTextForVersion }) => {
     <>
       {flavorTextForVersion && (
         <div>
-          <p className="text-base">
+          <p className="text-base leading-none">
             {replaceNewlinesAndFeeds(flavorTextForVersion.flavor_text)}
           </p>
         </div>

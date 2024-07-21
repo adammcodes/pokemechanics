@@ -13,14 +13,37 @@ const GetPokemonLocationsForVersion = gql`
     pokemon_v2_version(where: { name: { _eq: $version } }) {
       name
       pokemon_v2_versiongroup {
+        id
         name
         pokemon_v2_generation {
           id
           name
           pokemon_v2_versiongroups {
             name
+            generation_id
             pokemon_v2_versions {
               name
+              version_group_id
+              pokemon_v2_encounters(
+                where: {
+                  pokemon_v2_pokemon: {
+                    pokemon_species_id: { _eq: $pokemonSpeciesId }
+                  }
+                }
+              ) {
+                pokemon_v2_locationarea {
+                  name
+                  location_id
+                  pokemon_v2_location {
+                    name
+                    id
+                    region_id
+                    pokemon_v2_region {
+                      name
+                    }
+                  }
+                }
+              }
             }
           }
         }
@@ -175,9 +198,14 @@ type Version = {
       name: string;
       pokemon_v2_versiongroups: {
         name: string;
+        generation_id: number;
         pokemon_v2_versions: {
           __typename: string;
           name: string;
+          version_group_id: number;
+          pokemon_v2_encounters: {
+            pokemon_v2_locationarea: PokemonV2LocationArea;
+          }[];
         }[];
       }[];
     };
@@ -218,17 +246,15 @@ const Encounters: React.FC<EncountersProps> = ({
 
   const locationEncounters = groupEncountersByLocation(pokemon_v2_encounter);
 
-  const generationId =
-    pokemon_v2_version[0].pokemon_v2_versiongroup.pokemon_v2_generation.id;
+  // const generationId =
+  //   pokemon_v2_version[0].pokemon_v2_versiongroup.pokemon_v2_generation.id;
 
   const evolutionChainData = data.pokemon_v2_evolutionchain[0];
 
   const thisPokemon: PokemonV2Species =
-    evolutionChainData?.pokemon_v2_pokemonspecies
-      .filter(
-        (species: PokemonV2Species) => species.generation_id === generationId
-      )
-      .find((pokemon: PokemonV2Species) => pokemon.id === pokemonSpeciesId);
+    evolutionChainData?.pokemon_v2_pokemonspecies.find(
+      (pokemon: PokemonV2Species) => pokemon.id === pokemonSpeciesId
+    );
 
   const evolvesFromPokemonSpeciesId = thisPokemon?.evolves_from_species_id;
 
@@ -240,11 +266,16 @@ const Encounters: React.FC<EncountersProps> = ({
     pokemon_v2_version[0].pokemon_v2_versiongroup.pokemon_v2_generation
       .pokemon_v2_versiongroups;
 
-  const otherVersionsInGroups = versionGroups
-    .flatMap((group) => {
-      return group.pokemon_v2_versions.map((version) => version.name);
-    })
-    .filter((v) => v !== version);
+  // Filter the other versions in this generation that have encounters for this pokemon
+  const otherVersionsWithEncounters = versionGroups
+    .flatMap((group) => group.pokemon_v2_versions)
+    .filter((v) => {
+      const isSameVersion = v.name === version;
+      return !isSameVersion && v.pokemon_v2_encounters.length > 0;
+    });
+
+  // We assuming if there are no encounters and no evolutions, the pokemon is obtainable only by an event
+  const isMythical = thisPokemon?.is_mythical;
 
   return (
     <>
@@ -254,9 +285,11 @@ const Encounters: React.FC<EncountersProps> = ({
           {evolvesFromPokemon &&
             `Evolve ${formatName(evolvesFromPokemon.name)}`}
           {!evolvesFromPokemon &&
-            `Trade from ${otherVersionsInGroups
-              .map((v) => formatName(v))
+            !isMythical &&
+            `Trade from ${otherVersionsWithEncounters
+              .map((v) => formatName(v.name))
               .join(", ")}`}
+          {isMythical && `Event Only`}
         </p>
       )}
 
