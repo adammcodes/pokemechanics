@@ -1,5 +1,9 @@
+.container {
+  width: 280px;
+}
+
 .autocomplete {
-  width: 340px;
+  width: 100%;
   border-radius: 0.2em !important;
 }
 
@@ -42,9 +46,15 @@ i.dialogueBoxArrow:hover {
 }
 
 /* 48em = 768px */
-@media (max-width: 341px) {
+@media (min-width: 768px) {
   .autocomplete {
-    width: 95%;
+    width: 340px;
     margin: 0 auto;
+  }
+}
+
+@media (max-width: 341px) {
+  .container {
+    width: 100%;
   }
 }

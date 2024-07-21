@@ -129,8 +129,6 @@ const PokemonCard: React.FC<PokemonCardProps> = (props) => {
             isGenOneOrTwo ? "lg:grid-cols-3" : "lg:grid-cols-4"
           } place-items-center gap-5`}
         >
-          {/* Abilities */}
-          {!isGenOneOrTwo && <Abilities pokemonName={variantName} />}
           {/* Flavor Text */}
           <PokemonFlavorText
             name={name}
@@ -138,6 +136,8 @@ const PokemonCard: React.FC<PokemonCardProps> = (props) => {
             flavorTextForVersion={flavorTextForVersion}
             flavorTextForVersions={flavorTextForVersions}
           />
+          {/* Abilities */}
+          {!isGenOneOrTwo && <Abilities pokemonName={variantName} />}
           {/* Stats */}
           <Stats pokemonName={variantName} />
 

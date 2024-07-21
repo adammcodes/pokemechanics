@@ -34,14 +34,24 @@ const DarkModeToggle = ({
   );
 };
 
-const NavLink = ({ href, children, closeNav }: { href: string; children: string, closeNav: () => void; }) => {
+const NavLink = ({
+  href,
+  children,
+  closeNav,
+}: {
+  href: string;
+  children: string;
+  closeNav: () => void;
+}) => {
   return (
     <li>
-      <Link onClick={closeNav} href={href}>{children}</Link>
+      <Link onClick={closeNav} href={href}>
+        {children}
+      </Link>
       <i></i>
     </li>
   );
-}
+};
 
 const Nav = ({
   darkMode,
@@ -52,10 +62,9 @@ const Nav = ({
   onDarkModeChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   setIsNavOpen: (value: boolean) => void;
 }) => {
-
   const closeNav = () => {
     setIsNavOpen(false);
-  }
+  };
 
   const navLinks = [
     { href: "/pokedex", text: "Pokédex" },
@@ -68,7 +77,9 @@ const Nav = ({
     <nav className={styles.nav} role="navigation">
       <ul className={styles.menu}>
         {navLinks.map((link) => (
-          <NavLink key={link.href} href={link.href} closeNav={closeNav}>{link.text}</NavLink>
+          <NavLink key={link.href} href={link.href} closeNav={closeNav}>
+            {link.text}
+          </NavLink>
         ))}
         <li>
           <DarkModeToggle
@@ -190,9 +201,9 @@ export default function Header() {
         )}
 
         {/* Mobile Nav Menu */}
-        <input 
-          className={styles.menuInput} 
-          type="checkbox" 
+        <input
+          className={styles.menuInput}
+          type="checkbox"
           id="menu-btn"
           checked={isNavOpen}
           onChange={() => setIsNavOpen(!isNavOpen)}
@@ -201,9 +212,9 @@ export default function Header() {
           <span className={styles.navicon}></span>
         </label>
 
-        <Nav 
-          darkMode={darkMode} 
-          onDarkModeChange={onDarkModeChange} 
+        <Nav
+          darkMode={darkMode}
+          onDarkModeChange={onDarkModeChange}
           setIsNavOpen={setIsNavOpen}
         />
       </header>

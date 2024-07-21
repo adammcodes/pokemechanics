@@ -105,7 +105,6 @@ export default function PokedexById({
   const pokedexIdRange = `${firstPokemonSpecies.pokemon_species_id} - ${lastPokemonSpecies.pokemon_species_id}`;
   return (
     <section className="flex flex-col justify-center">
-
       {includeHeader && (
         <header className="my-2 text-center">
           <h2>
@@ -117,7 +116,7 @@ export default function PokedexById({
         </header>
       )}
 
-      <div className="max-w-sm mx-auto">
+      <div className="lg:max-w-sm mx-auto">
         <PokemonSelector
           dexId={dexId}
           defaultPokemonId={defaultRegionalDexId || pokemonId}

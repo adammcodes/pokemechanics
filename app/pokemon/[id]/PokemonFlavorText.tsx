@@ -57,7 +57,7 @@ const PokemonFlavorText: React.FC<PokemonFlavorTextProps> = ({
   game,
 }) => {
   return (
-    <Box headingText="Flavor Text:">
+    <Box headingText={name}>
       {flavorTextForVersion && (
         <FlavorText flavorTextForVersion={flavorTextForVersion} />
       )}

@@ -95,10 +95,10 @@ const AutocompleteBase: React.FC<AutocompleteProps> = ({
   }, []);
 
   return (
-    <div className="m-auto w-[340px] h-[2em]">
+    <div className={`m-auto ${styles.container} lg:w-[340px] h-[2em]`}>
       <div
         className={`card__border overflow-hidden ${styles.autocomplete} ${
-          showList ? "max-h-[500px] absolute z-10" : "max-h-[2em]"
+          showList ? "max-h-[500px] lg:absolute z-10" : "max-h-[2em]"
         }`}
       >
         <div className={`relative p-2 flex items-center`}>
@@ -125,7 +125,7 @@ const AutocompleteBase: React.FC<AutocompleteProps> = ({
           className={`overflow-scroll ${showList ? "max-h-[450px]" : "hidden"}`}
         >
           {filteredOptions.map((option) => (
-            <li key={option.value} className={styles.autocomplete__li}>
+            <li key={option.value}>
               <button
                 id={`${option.name}-${option.value}`}
                 name={option.value?.toString()}
