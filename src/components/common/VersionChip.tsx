@@ -10,10 +10,10 @@ export default function VersionChip({ versionName }: { versionName: string }) {
 
   return (
     <div
-      className={`shadow-lg min-w-[3em] text-center rounded-sm uppercase px-2 flex justify-center items-center`}
+      className={`shadow-lg text-center rounded-sm uppercase px-2 flex justify-center items-center`}
       style={{ background: versionColour }}
     >
-      <span className={`text-lg ${textColour}`}>
+      <span className={`text-lg leading-none ${textColour}`}>
         {versionName.toUpperCase()}
       </span>
     </div>

@@ -1,5 +1,7 @@
 import Encounters from "./Encounters";
-import styles from "@/app/pokemon/[id]/PokemonCard.module.css";
+import { useContext } from "react";
+import { EvolutionContext } from "@/context/_context";
+import Box from "@/components/common/Box";
 
 type LocationsForVersionGroupProps = {
   versions: string[]; // e.g. ["red", "blue"]
@@ -10,21 +12,23 @@ const LocationsForVersionGroup: React.FC<LocationsForVersionGroupProps> = ({
   versions,
   pokemonSpeciesId,
 }) => {
-  // console.log(versions, pokemonSpeciesId);
+  const e = useContext(EvolutionContext);
+
+  if (e.isLoading) return <div className="p-5">Loading...</div>;
+
   return (
-    <section
-      className={`card__border w-full lg:w-[400px] p-[1em] flex flex-col gap-y-3`}
-    >
-      <h2 className="text-3xl">Encounters:</h2>
-      {versions.length &&
+    <Box headingText="Encounters:">
+      {e.data &&
+        versions.length &&
         versions.map((version) => (
           <Encounters
             key={version}
             version={version}
             pokemonSpeciesId={pokemonSpeciesId}
+            evolutionData={e.data}
           />
         ))}
-    </section>
+    </Box>
   );
 };
 

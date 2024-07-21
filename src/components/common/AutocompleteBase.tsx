@@ -60,14 +60,13 @@ const AutocompleteBase: React.FC<AutocompleteProps> = ({
   // Create an event listener that closes the dropdown when the user clicks outside of it
   // It should be inside a useEffect hook
   useEffect(() => {
-
     // callback function for outside click
     const onOutsideClick = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
       if (!target.closest(`.${styles.autocomplete}`)) {
         setShowList(false);
       }
-    }
+    };
 
     // callback for escape key
     const onEscapeKey = (event: KeyboardEvent) => {
@@ -97,11 +96,15 @@ const AutocompleteBase: React.FC<AutocompleteProps> = ({
 
   return (
     <div className="m-auto w-[340px] h-[2em]">
-      <div className={`card__border overflow-hidden ${styles.autocomplete} ${showList ? "max-h-[500px] absolute z-10" : "max-h-[2em]"}`}>
+      <div
+        className={`card__border overflow-hidden ${styles.autocomplete} ${
+          showList ? "max-h-[500px] absolute z-10" : "max-h-[2em]"
+        }`}
+      >
         <div className={`relative p-2 flex items-center`}>
           <input
             type="text"
-            className={`font-bold bg-transparent`}
+            className={`font-bold bg-transparent w-full`}
             value={inputValue}
             onChange={handleInputChange}
             placeholder="Search..."
@@ -138,7 +141,9 @@ const AutocompleteBase: React.FC<AutocompleteProps> = ({
                 {hasImageOptions && (
                   <div>
                     <img
-                      width={optionSpriteSizesByVersion[option.versionGroup] || 50}
+                      width={
+                        optionSpriteSizesByVersion[option.versionGroup] || 50
+                      }
                       src={getSpriteUrl({
                         versionGroup: option.versionGroup,
                         pokemonId: option.variantId || option.value,
@@ -153,7 +158,6 @@ const AutocompleteBase: React.FC<AutocompleteProps> = ({
           ))}
         </ul>
       </div>
-
     </div>
   );
 };

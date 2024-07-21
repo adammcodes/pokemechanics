@@ -1,0 +1,7 @@
+.stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 0.5rem;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(3, 1fr);
+}

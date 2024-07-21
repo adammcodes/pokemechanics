@@ -73,12 +73,6 @@ export default async function Page({ params }: PageProps) {
   return (
     <section className="flex flex-col w-full h-full px-2 lg:px-5">
       <div className="flex flex-wrap gap-y-2 w-full justify-around items-start px-2 lg:px-5">
-        {/* render the national dex for the game/generation */}
-        <NationalDex
-          limit={!isFireRedLeafGreen ? numOfPokemonByGen[generationString] : 151}
-          versionGroup={gen}
-          generationString={generationString}
-        />
         <div
           className={`${styles.pokedexes} flex flex-wrap gap-y-4 w-full justify-around items-start px-5`}
         >
@@ -96,6 +90,14 @@ export default async function Page({ params }: PageProps) {
               );
             })}
         </div>
+        {/* render the national dex for the game/generation */}
+        <NationalDex
+          limit={
+            !isFireRedLeafGreen ? numOfPokemonByGen[generationString] : 151
+          }
+          versionGroup={gen}
+          generationString={generationString}
+        />
       </div>
     </section>
   );

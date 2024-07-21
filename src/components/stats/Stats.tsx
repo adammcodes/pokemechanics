@@ -1,5 +1,6 @@
 import { useQuery, gql } from "@apollo/client";
 import StatBars from "./StatsBar";
+import Box from "../common/Box";
 
 const GetPokemonStats = gql`
   query GetPokemonStats($pokemonName: String!) {
@@ -69,12 +70,9 @@ const Stats: React.FC<StatsProps> = ({ pokemonName }) => {
   });
 
   return (
-    <section
-      className={`card__border w-full lg:w-[400px] p-[1em] flex flex-col gap-y-3`}
-    >
-      <h2 className="text-3xl">Base Stats:</h2>
+    <Box headingText="Base Stats:">
       <StatBars stats={stats} />
-    </section>
+    </Box>
   );
 };
 

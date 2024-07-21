@@ -3,6 +3,10 @@
   border-radius: 0.2em !important;
 }
 
+.autocomplete input:focus {
+  outline: none;
+}
+
 .autocomplete:focus {
   outline: 20px;
 }

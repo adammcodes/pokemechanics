@@ -101,10 +101,14 @@ const PokemonCard: React.FC<PokemonCardProps> = (props) => {
     : null;
 
   return (
-    <div className={`w-full flex flex-col items-center justify-center gap-y-6`}>
-      {/* Card Box with meta info - Name, Sprites, Types, Height, Weight, etc */}
+    <div className={`w-full flex flex-col items-center justify-center px-4`}>
+      <div className="relative w-full">
+        {/* ForwardBack navigation for the pokedex */}
+        {dex.dexQuery.data ? <ForwardBack /> : <p>Loading dex data...</p>}
+      </div>
 
-      <div className="px-3 w-full mx-auto">
+      <div className="flex w-full max-w-[500px] mx-auto px-0">
+        {/* Sprite + Types */}
         <PokemonCardBox
           name={name}
           pokemonId={pokemonId}
@@ -117,32 +121,35 @@ const PokemonCard: React.FC<PokemonCardProps> = (props) => {
         />
       </div>
 
-      <section className="flex flex-col justify-center lg:flex-row gap-6 px-[0.5em] lg:px-[1em]">
-        {/* Abilities */}
-        {!isGenOneOrTwo && <Abilities pokemonName={variantName} />}
-        {/* Stats */}
-        <Stats pokemonName={variantName} />
-        {/* Flavor Text */}
-        <PokemonFlavorText
-          name={name}
-          game={game}
-          flavorTextForVersion={flavorTextForVersion}
-          flavorTextForVersions={flavorTextForVersions}
-        />
-
-        <LocationsForVersionGroup
-          pokemonSpeciesId={pokemonId}
-          versions={versionGroup.data.versions.map(
-            (v: NamedAPIResource) => v.name
-          )}
-        />
-      </section>
-      {/* Evolutions */}
       <EvolutionContextProvider url={pokemonEvolveChainUrl}>
+        {/* Evolutions */}
         <Evolutions />
+        <section
+          className={`grid grid-cols-1 md:grid-cols-2 ${
+            isGenOneOrTwo ? "lg:grid-cols-3" : "lg:grid-cols-4"
+          } place-items-center gap-5`}
+        >
+          {/* Abilities */}
+          {!isGenOneOrTwo && <Abilities pokemonName={variantName} />}
+          {/* Flavor Text */}
+          <PokemonFlavorText
+            name={name}
+            game={game}
+            flavorTextForVersion={flavorTextForVersion}
+            flavorTextForVersions={flavorTextForVersions}
+          />
+          {/* Stats */}
+          <Stats pokemonName={variantName} />
+
+          <LocationsForVersionGroup
+            pokemonSpeciesId={pokemonId}
+            versions={versionGroup.data.versions.map(
+              (v: NamedAPIResource) => v.name
+            )}
+          />
+        </section>
       </EvolutionContextProvider>
-      {/* ForwardBack navigation for the pokedex */}
-      {dex.dexQuery.data ? <ForwardBack /> : <p>Loading dex data...</p>}
+
       {/* Moves */}
       <Moves moves={pokemonMoves} />
     </div>

@@ -1,4 +1,5 @@
-import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
+import styles from "./StatsBar.module.css";
+
 // This component will render a bar chart of the stats for the given pokemon stats
 // The bar chart will run horizontally
 // The bars will be colored based on the base_stat from 0-255 (0-100%) with 0 being red and 255 being green
@@ -8,6 +9,17 @@ type StatsBarProps = {
   name: string;
   base_stat: number;
   effort: number; // this is not used yet
+};
+
+const abbreviateStatName = (name: string): string => {
+  switch (name) {
+    case "special-attack":
+      return "Sp. Atk";
+    case "special-defense":
+      return "Sp. Def";
+    default:
+      return name.slice(0, 3);
+  }
 };
 
 const calculateStatColor = (baseStatPercentage: number): string => {
@@ -24,18 +36,16 @@ const calculateStatColor = (baseStatPercentage: number): string => {
 
 // This component is for a single stat bar
 const StatsBar: React.FC<StatsBarProps> = ({ name, base_stat }) => {
-  const formatName = convertKebabCaseToTitleCase;
   const baseStatPercentage = Math.round((base_stat / 255) * 100);
   const statColor = calculateStatColor(baseStatPercentage);
-  const statName = name === "hp" ? name.toUpperCase() : formatName(name);
+  const statName =
+    name === "hp" ? name.toUpperCase() : abbreviateStatName(name).toUpperCase();
   return (
     <div className="flex flex-col gap-y-1">
-      <div className="flex">
-        <p>
-          {statName}: {base_stat}
-        </p>
-      </div>
-      <div className="relative h-3 w-full rounded">
+      <small>
+        {statName}: {base_stat}
+      </small>
+      <div className="relative h-2 w-full rounded">
         <div
           className="absolute top-0 left-0 h-2 rounded"
           style={{
@@ -59,7 +69,6 @@ type EffortValues = {
 
 // This component is for all the stat bars
 const StatBars: React.FC<StatBarsProps> = ({ stats }) => {
-  const formatName = convertKebabCaseToTitleCase;
   // figure out which stats this pokemon gives effort values (EVs) for
   const EVs: EffortValues[] = stats
     .filter((stat) => stat.effort > 0)
@@ -73,14 +82,16 @@ const StatBars: React.FC<StatBarsProps> = ({ stats }) => {
 
   return (
     <div className="flex flex-col gap-y-1">
-      {stats.map((stat) => (
-        <StatsBar key={stat.name} {...stat} />
-      ))}
-      <div>
-        <span>Effort Values:</span> <br />
+      <div className={styles.stats}>
+        {stats.map((stat) => (
+          <StatsBar key={stat.name} {...stat} />
+        ))}
+      </div>
+      <div className="mt-2">
+        <span className="text-lg leading-none">Effort Values:</span> <br />
         {EVs.map((ev, i, arr) => (
-          <span key={ev.stat}>
-            +{ev.value} {formatName(ev.stat)}
+          <span key={ev.stat} className="text-sm">
+            +{ev.value} {abbreviateStatName(ev.stat).toUpperCase()}
             {i < arr.length - 1 ? ", " : ""}
           </span>
         ))}

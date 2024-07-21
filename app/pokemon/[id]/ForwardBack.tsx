@@ -56,7 +56,7 @@ export default function ForwardBack() {
     : 0;
 
   return (
-    <div className="flex flex-row justify-between w-full px-5 py-5">
+    <div className="lg:absolute flex flex-row justify-between w-full px-5 pb-5 lg:py-0">
       {currentEntryNum !== prevEntryNum && (
         <a href={`/pokemon/${prevPokemonId}?dexId=${dex.id}`}>
           &larr; #{prevRegionalDexNum}{" "}
@@ -64,12 +64,21 @@ export default function ForwardBack() {
           {toTitleCase(prevPokemonEntry.pokemon_species.name)}
         </a>
       )}
+
       {currentEntryNum === prevEntryNum && <div>&nbsp;</div>}
+
       {currentEntryNum !== nextEntryNum && nextPokemonId && (
         <a href={`/pokemon/${nextPokemonId}?dexId=${dex.id}`}>
-          #{nextRegionalDexNum}{" "}
-          <Sprite versionGroup={game} gen={gen} id={nextPokemonId} size={50} />
-          {toTitleCase(nextPokemonEntry.pokemon_species.name)} &rarr;
+          <div>
+            #{nextRegionalDexNum}{" "}
+            <Sprite
+              versionGroup={game}
+              gen={gen}
+              id={nextPokemonId}
+              size={50}
+            />
+            {toTitleCase(nextPokemonEntry.pokemon_species.name)} &rarr;
+          </div>
         </a>
       )}
       {currentEntryNum === nextEntryNum && <div>&nbsp;</div>}

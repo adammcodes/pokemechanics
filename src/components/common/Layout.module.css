@@ -8,8 +8,8 @@
 
 .container > main {
   display: flex;
-  flex-grow: 1; /* Allow the main content to grow and fill the space */
-  width: 100%; /* Ensure full width */
+  width: 100%;
+  /* padding: 0.5rem; */
 }
 
 .grid {

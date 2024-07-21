@@ -1,6 +1,47 @@
-import { FlavorTextForVersion } from "@/types/index";
-import FlavorText, { DualFlavorText } from "./FlavorText";
 import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
+import replaceNewlinesAndFeeds from "@/utils/replaceNewlinesAndFeeds";
+import { FlavorTextForVersion } from "@/types/index";
+import Box from "@/components/common/Box";
+
+type FlavorTextProps = {
+  flavorTextForVersion: FlavorTextForVersion;
+};
+
+const FlavorText: React.FC<FlavorTextProps> = ({ flavorTextForVersion }) => {
+  return (
+    <>
+      {flavorTextForVersion && (
+        <div>
+          <p className="text-base">
+            {replaceNewlinesAndFeeds(flavorTextForVersion.flavor_text)}
+          </p>
+        </div>
+      )}
+    </>
+  );
+};
+
+type DualFlavorTextProps = {
+  flavorTextForVersions: FlavorTextForVersion[];
+};
+
+const DualFlavorText: React.FC<DualFlavorTextProps> = ({
+  flavorTextForVersions,
+}) => {
+  return (
+    <>
+      {flavorTextForVersions.map((text: any, i: any) => {
+        let desc: string = replaceNewlinesAndFeeds(text.flavor_text);
+        return (
+          <div key={i}>
+            <h4 className="border-b-2">{text.version.name.toUpperCase()}</h4>
+            <p className="text-base leading-none">{desc}</p>
+          </div>
+        );
+      })}
+    </>
+  );
+};
 
 type PokemonFlavorTextProps = {
   flavorTextForVersion: FlavorTextForVersion;
@@ -16,8 +57,7 @@ const PokemonFlavorText: React.FC<PokemonFlavorTextProps> = ({
   game,
 }) => {
   return (
-    <div className={`p-[1em] w-full lg:w-[400px] card__border`}>
-      <h2 className="text-3xl">Flavor Text:</h2>
+    <Box headingText="Flavor Text:">
       {flavorTextForVersion && (
         <FlavorText flavorTextForVersion={flavorTextForVersion} />
       )}
@@ -26,13 +66,13 @@ const PokemonFlavorText: React.FC<PokemonFlavorTextProps> = ({
       )}
       {!flavorTextForVersion && !flavorTextForVersions.length && (
         <div>
-          <p className="leading-5">
+          <p className="text-base leading-none">
             There is no flavour text on {name} for{" "}
             {convertKebabCaseToTitleCase(game)}.
           </p>
         </div>
       )}
-    </div>
+    </Box>
   );
 };
 

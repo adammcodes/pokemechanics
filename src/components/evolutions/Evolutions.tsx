@@ -18,8 +18,7 @@ export default function Evolutions() {
   if (e.isLoading) return <div className="p-5">Loading...</div>;
 
   return (
-    <div className={`${styles.evolutions}`}>
-      <p className="py-5 text-3xl">Evolution Chain</p>
+    <div className={`${styles.evolutions} py-5`}>
       {e.data && generation && (
         <div className="flex justify-center">
           {PokemonEvolutionChain(e.data.chain, { game, generation, dexId })}

@@ -51,7 +51,7 @@ const PokemonCardBox: React.FC<PokemonCardBoxProps> = (props) => {
 
   return (
     <div
-      className={`card__border w-full mx-auto lg:max-w-[400px] p-[0.5em] flex flex-col justify-center items-center`}
+      className={`card__border w-full mx-auto p-3 flex flex-col justify-center items-center`}
     >
       <table className="w-full table-auto">
         <tbody>
@@ -69,7 +69,7 @@ const PokemonCardBox: React.FC<PokemonCardBoxProps> = (props) => {
           </tr>
           <tr>
             <td colSpan={3}>
-              <div className="w-full flex justify-center">
+              <div className="w-full flex justify-center p-3">
                 {game === "gold-silver" && (
                   <DualDynamicImages
                     labelLeft={"Gold"}
@@ -119,7 +119,7 @@ const PokemonCardBox: React.FC<PokemonCardBoxProps> = (props) => {
             <td className="w-full lg:w-1/3 text-center flex justify-center items-center lg:justify-start items-center">
               <div>{pokemonGenus}</div>
             </td>
-            <td className="w-full lg:w-1/3 text-center flex justify-center items-center">              
+            <td className="w-full lg:w-1/3 text-center flex justify-center items-center">
               No.
               <span>&nbsp;</span>
               {p.id}

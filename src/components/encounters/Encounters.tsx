@@ -8,12 +8,14 @@ const GetPokemonLocationsForVersion = gql`
   query GetPokemonLocationsForVersion(
     $version: String!
     $pokemonSpeciesId: Int!
+    $evolutionChainId: Int!
   ) {
     pokemon_v2_version(where: { name: { _eq: $version } }) {
       name
       pokemon_v2_versiongroup {
         name
         pokemon_v2_generation {
+          id
           name
           pokemon_v2_versiongroups {
             name
@@ -71,12 +73,46 @@ const GetPokemonLocationsForVersion = gql`
         }
       }
     }
+    pokemon_v2_evolutionchain(where: { id: { _eq: $evolutionChainId } }) {
+      id
+      baby_trigger_item_id
+      pokemon_v2_item {
+        name
+      }
+      pokemon_v2_pokemonspecies {
+        id
+        name
+        evolves_from_species_id
+        generation_id
+        is_baby
+        is_legendary
+        is_mythical
+      }
+    }
   }
 `;
 
 type EncountersProps = {
   version: string; // e.g. "ruby"
   pokemonSpeciesId: number; // national dex number
+  evolutionData: any;
+};
+
+type PokemonV2Species = {
+  evolves_from_species_id: number;
+  generation_id: number;
+  id: number;
+  is_baby: boolean;
+  is_legendary: boolean;
+  is_mythical: boolean;
+  name: string;
+};
+
+type PokemonV2EvolutionChain = {
+  baby_trigger_item_id: number | null;
+  id: number;
+  pokemon_v2_item: any;
+  pokemon_v2_pokemonspecies: PokemonV2Species[];
 };
 
 type PokemonV2LocationArea = {
@@ -135,6 +171,7 @@ type Version = {
   pokemon_v2_versiongroup: {
     name: string;
     pokemon_v2_generation: {
+      id: number;
       name: string;
       pokemon_v2_versiongroups: {
         name: string;
@@ -150,17 +187,20 @@ type Version = {
 type EncountersData = {
   pokemon_v2_version: Version[];
   pokemon_v2_encounter: Encounter[];
+  pokemon_v2_evolutionchain: PokemonV2EvolutionChain[];
 };
 
 const Encounters: React.FC<EncountersProps> = ({
   version,
   pokemonSpeciesId,
+  evolutionData,
 }) => {
   const formatName = convertKebabCaseToTitleCase;
   const { loading, error, data } = useQuery(GetPokemonLocationsForVersion, {
     variables: {
       version: version.toLowerCase(),
       pokemonSpeciesId,
+      evolutionChainId: evolutionData.id,
     },
   });
 
@@ -172,9 +212,29 @@ const Encounters: React.FC<EncountersProps> = ({
 
   if (!data) return null;
 
+  // console.log(data);
+
   const { pokemon_v2_encounter, pokemon_v2_version } = data as EncountersData;
 
   const locationEncounters = groupEncountersByLocation(pokemon_v2_encounter);
+
+  const generationId =
+    pokemon_v2_version[0].pokemon_v2_versiongroup.pokemon_v2_generation.id;
+
+  const evolutionChainData = data.pokemon_v2_evolutionchain[0];
+
+  const thisPokemon: PokemonV2Species =
+    evolutionChainData?.pokemon_v2_pokemonspecies
+      .filter(
+        (species: PokemonV2Species) => species.generation_id === generationId
+      )
+      .find((pokemon: PokemonV2Species) => pokemon.id === pokemonSpeciesId);
+
+  const evolvesFromPokemonSpeciesId = thisPokemon?.evolves_from_species_id;
+
+  const evolvesFromPokemon = evolutionChainData.pokemon_v2_pokemonspecies.find(
+    (p: PokemonV2) => p.id === evolvesFromPokemonSpeciesId
+  );
 
   const versionGroups =
     pokemon_v2_version[0].pokemon_v2_versiongroup.pokemon_v2_generation
@@ -186,15 +246,17 @@ const Encounters: React.FC<EncountersProps> = ({
     })
     .filter((v) => v !== version);
 
-  console.log(data);
-
   return (
     <>
       <VersionChip versionName={version} />
       {locationEncounters.length === 0 && (
-        <p className="text-xl">
-          Trade from{" "}
-          {otherVersionsInGroups.map((v) => formatName(v)).join(", ")}.
+        <p className="text-base leading-none">
+          {evolvesFromPokemon &&
+            `Evolve ${formatName(evolvesFromPokemon.name)}`}
+          {!evolvesFromPokemon &&
+            `Trade from ${otherVersionsInGroups
+              .map((v) => formatName(v))
+              .join(", ")}`}
         </p>
       )}
 
@@ -215,7 +277,7 @@ const Encounters: React.FC<EncountersProps> = ({
                   </Stack>
                 }
               >
-                <span className="text-sm leading-tight">
+                <span className="text-base leading-none">
                   {formatName(location.locationName)}
                   {i === arr.length - 1 ? `.` : `, `}
                 </span>

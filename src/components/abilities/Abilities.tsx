@@ -1,5 +1,6 @@
 import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
 import { useQuery, gql } from "@apollo/client";
+import Box from "@/components/common/Box";
 
 const GetAbilitiesByPokemon = gql`
   query GetAbilitiesByPokemonName($pokemonName: String!) {
@@ -106,19 +107,17 @@ const Abilities: React.FC<AbilitiesProps> = ({ pokemonName }) => {
   });
 
   return (
-    <section
-      className={`card__border w-full lg:w-[400px] p-[1em] flex flex-col gap-y-3`}
-    >
-      <h2 className="text-3xl">Abilities:</h2>
+    <Box headingText="Abilities:">
       {abilities.map((ability) => (
         <div key={ability.name}>
-          <h3 className="text-2xl border-b-2">
-            {formatName(ability.name)} {ability.is_hidden ? "(hidden)" : ""}
+          <h3 className="border-b-2">
+            {formatName(ability.name)}{" "}
+            {ability.is_hidden ? <small>(hidden)</small> : ""}
           </h3>
-          <p className="text-xl leading-[1em]">{ability.short_effect}</p>
+          <p className="text-base leading-none">{ability.short_effect}</p>
         </div>
       ))}
-    </section>
+    </Box>
   );
 };
 
