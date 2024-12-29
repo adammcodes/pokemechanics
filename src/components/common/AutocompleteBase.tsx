@@ -98,7 +98,7 @@ const AutocompleteBase: React.FC<AutocompleteProps> = ({
     <div className={`m-auto ${styles.container} lg:w-[340px] h-[2em]`}>
       <div
         className={`card__border overflow-hidden ${styles.autocomplete} ${
-          showList ? "max-h-[500px] lg:absolute z-10" : "max-h-[2em]"
+          showList ? "max-h-[500px] lg:absolute relative z-40" : "max-h-[2em]"
         }`}
       >
         <div className={`relative p-2 flex items-center`}>
