@@ -45,6 +45,7 @@ export const getPokedexById = async (dexId: number) => {
       query,
       variables: { dexId },
     });
+    // console.log(data);
     return data.pokemon_v2_pokedex_by_pk;
   } catch (error) {
     console.error("Error fetching Pokédex:", error);

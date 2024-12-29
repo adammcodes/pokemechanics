@@ -1,9 +1,6 @@
-"use client";
 import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
 import { getPokedexById } from "./PokedexByIdQuery";
-import { useEffect, useState } from "react";
 import PokemonSelector from "./PokemonSelector";
-// import PokeballLoader from "@/components/common/PokeballLoader";
 
 export type PokedexPokemon = {
   pokedex_number: number;
@@ -53,7 +50,7 @@ type PokedexByIdProps = {
   includeHeader?: boolean;
 };
 
-export default function PokedexById({
+export default async function PokedexById({
   dexId,
   pokemonId,
   versionGroup,
@@ -61,31 +58,18 @@ export default function PokedexById({
   includeHeader = true,
 }: PokedexByIdProps) {
   const formatName = convertKebabCaseToTitleCase;
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<unknown>(null);
-  const [dex, setPokedex] = useState({} as Pokedex);
 
-  useEffect(() => {
-    async function fetchPokedexData() {
-      try {
-        const data = await getPokedexById(dexId);
-        setPokedex(data);
-      } catch (error) {
-        console.error(error);
-        setError(error);
-      } finally {
-        setLoading(false);
-      }
-    }
+  let dex: Pokedex;
 
-    fetchPokedexData();
-  }, [dexId]);
+  try {
+    dex = await getPokedexById(dexId);
+  } catch (error) {
+    console.error(error);
+    return <p>Error loading data</p>;
+  }
 
-  if (loading) return null;
-
-  if (error) {
-    console.log(error);
-    return null;
+  if (!dex) {
+    return <p>Error loading data</p>;
   }
 
   const regionName =
@@ -103,6 +87,7 @@ export default function PokedexById({
   const firstPokemonSpecies = dex.pokemon_v2_pokemondexnumbers[0];
   const lastPokemonSpecies = dex.pokemon_v2_pokemondexnumbers.slice(-1)[0];
   const pokedexIdRange = `${firstPokemonSpecies.pokemon_species_id} - ${lastPokemonSpecies.pokemon_species_id}`;
+
   return (
     <section className="flex flex-col justify-center">
       {includeHeader && (
