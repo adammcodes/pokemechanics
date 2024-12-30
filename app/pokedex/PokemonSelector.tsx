@@ -1,11 +1,12 @@
 "use client";
-import { useRouter } from "next/navigation";
 // Types
 import { PokedexPokemon } from "./PokedexById";
 // Components
 import AutocompleteBase from "@/components/common/AutocompleteBase";
 // Utils
 import toTitleCase from "@/utils/toTitleCase";
+// Hooks
+import { useRouter } from "next/navigation";
 
 export type PokemonOption = {
   label: string;
@@ -17,25 +18,25 @@ export type PokemonOption = {
 };
 
 type PokemonSelectorProps = {
-  dexId: number;
   pokemon: PokedexPokemon[];
-  versionGroup?: string;
-  generationString?: string;
-  defaultPokemonId?: number;
-  defaultPokemonName?: string;
   regionName: string;
+  dexId: number;
+  game: string;
+  generationString: string;
+  defaultPokemonName?: string;
+  defaultPokemonId?: number;
 };
 
 // Component for selecting a Version Group: e.g. "Red/Blue", "Yellow", "Silver/Gold", etc
 const PokemonSelector: React.FC<PokemonSelectorProps> =
   function PokemonSelector({
     pokemon,
-    dexId,
-    versionGroup,
-    generationString,
     defaultPokemonId, // national dex id number
     defaultPokemonName,
     regionName,
+    dexId,
+    game,
+    generationString,
   }) {
     const router = useRouter();
 
@@ -63,7 +64,7 @@ const PokemonSelector: React.FC<PokemonSelectorProps> =
         value: dexNumber, // the value property we use as [id] in pokemon page dynamic routes
         pokemonId: pokemonId, // this is the regional dex number
         variantId: variantId, // for variant forms of pokemon we use this as the [id] in pokemon page dynamic routes
-        versionGroup: versionGroup,
+        versionGroup: game,
         generationString: generationString,
       };
     });

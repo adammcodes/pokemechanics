@@ -1,5 +1,4 @@
 import useGameClient from "@/hooks/useGameClient";
-import { numOfPokemonByGen } from "@/constants/numOfPokemonByGen";
 import { NamedAPIResource } from "pokenode-ts";
 import styles from "../Pokedexes.module.css";
 // components
@@ -68,8 +67,6 @@ export default async function Page({ params }: PageProps) {
   // pokedexes is an array of pokedexes for the selected generation [{ name, url }]
   const pokedexes: NamedAPIResource[] = versionGroup.pokedexes;
 
-  const isFireRedLeafGreen = gen === "firered-leafgreen";
-
   return (
     <section className="flex flex-col w-full h-full px-2 lg:px-5">
       <div className="flex flex-wrap gap-y-2 w-full justify-around items-start px-2 lg:px-5">
@@ -84,20 +81,14 @@ export default async function Page({ params }: PageProps) {
                 <PokedexById
                   key={dex.url}
                   dexId={dexId}
-                  versionGroup={gen}
+                  game={gen}
                   generationString={generationString}
                 />
               );
             })}
         </div>
         {/* render the national dex for the game/generation */}
-        <NationalDex
-          limit={
-            !isFireRedLeafGreen ? numOfPokemonByGen[generationString] : 151
-          }
-          versionGroup={gen}
-          generationString={generationString}
-        />
+        <NationalDex game={gen} generationString={generationString} />
       </div>
     </section>
   );

@@ -1,3 +1,4 @@
+"use client";
 import { useState, useEffect } from "react";
 import getSpriteUrl from "@/constants/spriteUrlTemplates";
 import { optionSpriteSizesByVersion } from "@/constants/spriteSizesByVersion";

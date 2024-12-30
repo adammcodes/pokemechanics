@@ -1,3 +1,5 @@
+"use client";
+import { useEffect, useState } from "react";
 import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
 import { getPokedexById } from "./PokedexByIdQuery";
 import PokemonSelector from "./PokemonSelector";
@@ -43,33 +45,47 @@ type Pokedex = {
 
 type PokedexByIdProps = {
   dexId: number;
+  game: string;
+  generationString: string;
   pokemonId?: number; // optional to set the default selected pokemon
-  generationString?: string; // e.g. "generation-i"
-  versionGroup?: string; // e.g. "red-blue"
   key?: string;
   includeHeader?: boolean;
 };
 
-export default async function PokedexById({
+export default function PokedexById({
   dexId,
-  pokemonId,
-  versionGroup,
+  game,
   generationString,
+  pokemonId,
   includeHeader = true,
 }: PokedexByIdProps) {
   const formatName = convertKebabCaseToTitleCase;
 
-  let dex: Pokedex;
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<unknown>(null);
+  const [dex, setPokedex] = useState({} as Pokedex);
 
-  try {
-    dex = await getPokedexById(dexId);
-  } catch (error) {
-    console.error(error);
-    return <p>Error loading data</p>;
-  }
+  useEffect(() => {
+    async function fetchPokedexData() {
+      try {
+        const data = await getPokedexById(dexId);
+        setPokedex(data);
+      } catch (error) {
+        console.error(error);
+        setError(error);
+      } finally {
+        setLoading(false);
+      }
+    }
 
-  if (!dex) {
-    return <p>Error loading data</p>;
+    fetchPokedexData();
+  }, [dexId]);
+
+  if (loading) return null;
+
+  if (error) {
+    console.log(error);
+    return <p>The PokeAPI returned an error. Please try again later.</p>;
   }
 
   const regionName =
@@ -103,13 +119,13 @@ export default async function PokedexById({
 
       <div className="lg:max-w-sm mx-auto">
         <PokemonSelector
+          pokemon={dex.pokemon_v2_pokemondexnumbers}
+          regionName={regionName}
           dexId={dexId}
+          game={game}
+          generationString={generationString}
           defaultPokemonId={defaultRegionalDexId || pokemonId}
           defaultPokemonName={defaultPokemon?.pokemon_v2_pokemonspecy.name}
-          pokemon={dex.pokemon_v2_pokemondexnumbers}
-          versionGroup={versionGroup}
-          generationString={generationString}
-          regionName={regionName}
         />
       </div>
     </section>

@@ -1,6 +1,7 @@
 "use client";
 import { Sprite } from "@/components/sprites/Sprite";
 import { useContext } from "react";
+import { useRouter } from "next/navigation";
 import {
   GameContext,
   PokedexContext,
@@ -18,6 +19,7 @@ type PokedexEntry = {
 };
 
 export default function ForwardBack() {
+  const router = useRouter();
   const { game } = useContext(GameContext);
   const version = useGameVersion(game);
   const gen = version.data.generation.name;
@@ -55,6 +57,11 @@ export default function ForwardBack() {
       )
     : 0;
 
+  const onPokemonSelect = (path: string) => {
+    // Navigate to the pokemon page
+    router.push(path);
+  };
+
   return (
     <div className="lg:absolute flex flex-row justify-between w-full px-5 pb-5 lg:py-0">
       {currentEntryNum !== prevEntryNum && (
@@ -68,18 +75,16 @@ export default function ForwardBack() {
       {currentEntryNum === prevEntryNum && <div>&nbsp;</div>}
 
       {currentEntryNum !== nextEntryNum && nextPokemonId && (
-        <a href={`/pokemon/${nextPokemonId}?dexId=${dex.id}`}>
-          <div>
-            #{nextRegionalDexNum}{" "}
-            <Sprite
-              versionGroup={game}
-              gen={gen}
-              id={nextPokemonId}
-              size={50}
-            />
-            {toTitleCase(nextPokemonEntry.pokemon_species.name)} &rarr;
-          </div>
-        </a>
+        <div
+          className="hover:underline cursor-pointer"
+          onClick={() =>
+            onPokemonSelect(`/pokemon/${nextPokemonId}?dexId=${dex.id}`)
+          }
+        >
+          #{nextRegionalDexNum}{" "}
+          <Sprite versionGroup={game} gen={gen} id={nextPokemonId} size={50} />
+          {toTitleCase(nextPokemonEntry.pokemon_species.name)} &rarr;
+        </div>
       )}
       {currentEntryNum === nextEntryNum && <div>&nbsp;</div>}
     </div>
