@@ -110,6 +110,10 @@ const AutocompleteBase: React.FC<AutocompleteProps> = ({
             onChange={handleInputChange}
             placeholder="Search..."
             onFocus={() => setShowList(true)}
+            onClick={(e: React.MouseEvent<HTMLInputElement>) => {
+              // select all text in the input
+              (e.target as HTMLInputElement).select();
+            }}
           />
           <i
             className={styles.dialogueBoxArrow}

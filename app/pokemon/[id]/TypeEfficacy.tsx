@@ -187,8 +187,6 @@ export default function TypeEfficacy({ typeIds, genId }: TypeEfficacyProps) {
     return multipliedEfficacies;
   }, [data, typeIds]);
 
-  console.log("pokemonTypeEfficacies", pokemonTypeEfficacies);
-
   if (loading) return null;
   if (error) return null;
   if (!data) return null;

@@ -87,11 +87,12 @@ const StatBars: React.FC<StatBarsProps> = ({ stats }) => {
           <StatsBar key={stat.name} {...stat} />
         ))}
       </div>
-      <div className="mt-2 absolute top-[-70px] right-0">
+      <div className="mt-2 absolute top-[-75px] right-0">
         {/* <span className="text-lg leading-none">Effort Values:</span> <br /> */}
+        <span className="text-xs">EVs: </span>
         {EVs.map((ev, i, arr) => (
-          <span key={ev.stat} className="text-sm">
-            EV: +{ev.value} {abbreviateStatName(ev.stat).toUpperCase()}
+          <span key={ev.stat} className="text-xs">
+            +{ev.value} {abbreviateStatName(ev.stat).toUpperCase()}
             {i < arr.length - 1 ? ", " : ""}
           </span>
         ))}
