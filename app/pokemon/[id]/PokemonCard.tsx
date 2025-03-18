@@ -31,7 +31,7 @@ import { Moves } from "@/components/moves/Moves";
 import Abilities from "@/components/abilities/Abilities";
 import Stats from "@/components/stats/Stats";
 import LocationsForVersionGroup from "@/components/encounters/LocationsForVersionGroup";
-
+import TypeEfficacy from "./TypeEfficacy";
 type PokemonCardProps = {
   is_variant: boolean; // required
   name: string; // required
@@ -55,7 +55,8 @@ const PokemonCard: React.FC<PokemonCardProps> = (props) => {
   const { game } = useContext(GameContext);
   const dex = useContext(PokedexContext);
   const versionGroup = useGameVersion(game);
-  const genNumber =
+  const genId: number = versionGroup.data.id;
+  const genNumber: string =
     versionGroup.data && versionGroup.data.generation.name.split("-")[1];
   const isGenOneOrTwo = genNumber === "i" || genNumber === "ii";
   let formatName = convertKebabCaseToTitleCase;
@@ -73,7 +74,7 @@ const PokemonCard: React.FC<PokemonCardProps> = (props) => {
       : pokemonName;
   const versions = splitKebabCase(game);
 
-  const types = props.is_variant ? props.types : p.types;
+  const types: PokemonType[] = props.is_variant ? props.types : p.types;
   // console.log(props.is_variant);
   // console.log(props.sprites);
   // console.log(p.sprites);
@@ -99,6 +100,10 @@ const PokemonCard: React.FC<PokemonCardProps> = (props) => {
         return versions.includes(entry.version.name);
       })
     : null;
+
+  const typeIds = types?.map((t: PokemonType) =>
+    Number(t.type.url.split("type/")[1].split("/")[0])
+  );
 
   return (
     <div className={`w-full flex flex-col items-center justify-center px-4`}>
@@ -126,7 +131,7 @@ const PokemonCard: React.FC<PokemonCardProps> = (props) => {
         <Evolutions />
         <section
           className={`grid grid-cols-1 md:grid-cols-2 ${
-            isGenOneOrTwo ? "lg:grid-cols-3" : "lg:grid-cols-4"
+            isGenOneOrTwo ? "lg:grid-cols-4" : "lg:grid-cols-5"
           } place-items-center gap-5`}
         >
           {/* Flavor Text */}
@@ -140,13 +145,17 @@ const PokemonCard: React.FC<PokemonCardProps> = (props) => {
           {!isGenOneOrTwo && <Abilities pokemonName={variantName} />}
           {/* Stats */}
           <Stats pokemonName={variantName} />
-
+          {/* Encounters */}
           <LocationsForVersionGroup
             pokemonSpeciesId={pokemonId}
             versions={versionGroup.data.versions.map(
               (v: NamedAPIResource) => v.name
             )}
           />
+          {/* Type Efficacy */}
+          {typeIds && typeIds.length > 0 && (
+            <TypeEfficacy typeIds={typeIds} genId={genId} />
+          )}
         </section>
       </EvolutionContextProvider>
 
