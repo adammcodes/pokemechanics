@@ -1,7 +1,13 @@
-.stats {
+/* .stats {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-gap: 0.5rem;
   grid-auto-flow: column;
   grid-template-rows: repeat(3, 1fr);
+} */
+
+.stats {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
