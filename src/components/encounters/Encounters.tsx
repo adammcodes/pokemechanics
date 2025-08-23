@@ -224,6 +224,9 @@ const Encounters: React.FC<EncountersProps> = ({
   evolutionData,
 }) => {
   const formatName = convertKebabCaseToTitleCase;
+  // console.log(version, "version");
+  // console.log(pokemonSpeciesId, "pokemonSpeciesId");
+  // console.log(evolutionData, "evolutionData");
   const { loading, error, data } = useQuery(GetPokemonLocationsForVersion, {
     variables: {
       version: version.toLowerCase(),
@@ -243,6 +246,9 @@ const Encounters: React.FC<EncountersProps> = ({
   // console.log(data);
 
   const { pokemon_v2_encounter, pokemon_v2_version } = data as EncountersData;
+
+  // console.log(pokemon_v2_encounter, "pokemon_v2_encounter");
+  // console.log(pokemon_v2_version, "pokemon_v2_version");
 
   const locationEncounters = groupEncountersByLocation(pokemon_v2_encounter);
 
