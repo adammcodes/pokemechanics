@@ -1,6 +1,9 @@
-import { GameClient, NamedAPIResourceList } from "pokenode-ts"; // import the GameClient that is auto-cached
+// import { GameClient, NamedAPIResourceList } from "pokenode-ts"; // import the GameClient that is auto-cached
+
 // Components
 import GenSelector from "app/GenSelector";
+// Utils
+import { fetchFromGraphQL } from "@/utils/api";
 // Styles
 import styles from "@/styles/TypingText.module.css";
 
@@ -10,13 +13,38 @@ type Gen = {
 };
 
 async function getVersionGroups(): Promise<Gen[]> {
-  const api = new GameClient();
-  return await api
-    .listVersionGroups(0, 25) // right now supporting up to scarlet-violet
-    .then((data: NamedAPIResourceList) => {
-      return data.results;
-    })
-    .catch((error: any) => error);
+  // const api = new GameClient();
+  // return await api
+  //   .listVersionGroups(0, 25) // right now supporting up to scarlet-violet
+  //   .then((data: NamedAPIResourceList) => {
+  //     return data.results;
+  //   })
+  //   .catch((error: any) => error);
+
+  const query = `
+    query GetVersionGroups {
+      pokemon_v2_versiongroup(limit: 25, order_by: {id: asc}) {
+        id
+        name
+        generation_id
+      }
+    }
+  `;
+
+  try {
+    const data = await fetchFromGraphQL(query);
+
+    // Transform the GraphQL response to match the expected Gen[] format
+    return data.data.pokemon_v2_versiongroup.map((versionGroup: any) => {
+      return {
+        name: versionGroup.name,
+        url: `/pokedex/${versionGroup.generation_id}`,
+      };
+    });
+  } catch (error) {
+    console.error("Error fetching version groups:", error);
+    throw error;
+  }
 }
 
 // This is the "/" route

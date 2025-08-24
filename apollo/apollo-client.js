@@ -1,7 +1,7 @@
 import { ApolloClient, InMemoryCache } from "@apollo/client";
 
 const client = new ApolloClient({
-  uri: "https://beta.pokeapi.co/graphql/v1beta",
+  uri: "/api/graphql", // Use local API route instead of external HTTPS
   cache: new InMemoryCache(),
 });
 
