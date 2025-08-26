@@ -55,9 +55,10 @@ const PokemonCard: React.FC<PokemonCardProps> = (props) => {
   const { game } = useContext(GameContext);
   const dex = useContext(PokedexContext);
   const versionGroup = useGameVersion(game);
-  const genId: number = versionGroup.data.id;
+  const versionGroupData = versionGroup.data;
+  const genId: number = versionGroupData?.id || 1;
   const genNumber: string =
-    versionGroup.data && versionGroup.data.generation.name.split("-")[1];
+    versionGroupData?.generation.name.split("-")[1] || "i";
   const isGenOneOrTwo = genNumber === "i" || genNumber === "ii";
   let formatName = convertKebabCaseToTitleCase;
   const variantName = props.is_variant ? props.name : p.name;
@@ -105,6 +106,10 @@ const PokemonCard: React.FC<PokemonCardProps> = (props) => {
     Number(t.type.url.split("type/")[1].split("/")[0])
   );
 
+  if (versionGroup.isLoading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className={`w-full flex flex-col items-center justify-center px-4`}>
       <div className="relative w-full">
@@ -146,12 +151,12 @@ const PokemonCard: React.FC<PokemonCardProps> = (props) => {
           {/* Stats */}
           <Stats pokemonName={variantName} />
           {/* Encounters */}
-          <LocationsForVersionGroup
-            pokemonSpeciesId={pokemonId}
-            versions={versionGroup.data.versions.map(
-              (v: NamedAPIResource) => v.name
-            )}
-          />
+          {versionGroupData && (
+            <LocationsForVersionGroup
+              pokemonSpeciesId={pokemonId}
+              versions={versionGroupData.versions.map((v) => v.name)}
+            />
+          )}
           {/* Type Efficacy */}
           {typeIds && typeIds.length > 0 && (
             <TypeEfficacy typeIds={typeIds} genId={genId} />

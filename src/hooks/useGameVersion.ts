@@ -1,27 +1,20 @@
-// react-query
-import { useQuery } from 'react-query';
-import useGameClient from './useGameClient';
+import { useQuery } from "react-query";
+import { getVersionGroup } from "@/app/queries/getVersionGroup";
 
 export default function useGameVersion(versionGroupName: string) {
-  // reuse instance of GameClient from PokeApi
-  const api: any = useGameClient();
-
   const fetchGameVersion = async (versionGroupName: string) => {
-    return await api
-      .getVersionGroupByName(versionGroupName)
-      .then((data: any) => data)
-      .catch((error: any) => error);
+    return await getVersionGroup(versionGroupName);
   };
 
-  // Get selected game version by id
+  // Get selected game version by name e.g. "red-blue"
   const version = useQuery(
-    ['version', versionGroupName],
+    ["version", versionGroupName],
     () => fetchGameVersion(versionGroupName),
     {
       refetchOnWindowFocus: false,
-      enabled: Boolean(versionGroupName)
+      enabled: Boolean(versionGroupName),
     }
   );
 
   return version;
-};
+}

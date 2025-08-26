@@ -37,7 +37,7 @@ const PokemonCardBox: React.FC<PokemonCardBoxProps> = (props) => {
   const { game } = useContext(GameContext);
   const versionGroup = useGameVersion(game);
   const generationIdString: string | undefined =
-    versionGroup.data?.generation.url.split("/")[6]; // e.g. url = "https://pokeapi.co/api/v2/generation/1/", generationId = 1
+    versionGroup.data?.generation.name.split("-")[1]; // e.g. generation = "generation-i", generationId = 1
   const generationId: number = parseInt(generationIdString || "1");
 
   const spriteSize: number = spriteSizesByVersion[game];

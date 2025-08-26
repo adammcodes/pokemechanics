@@ -2,9 +2,28 @@ import { useQuery } from "react-query";
 import usePokemonClient from "@/hooks/usePokemonClient";
 import useGameVersion from "@/hooks/useGameVersion";
 import findVarietyForRegion from "@/lib/findVarietyForRegion";
-import { PokemonSpeciesVariety } from "pokenode-ts";
 import PokemonSpriteById from "./PokemonSpriteById";
 import getSpriteUrl from "@/constants/spriteUrlTemplates";
+
+// Define the Pokemon Species type based on the PokeAPI response
+type PokemonSpecies = {
+  id: number;
+  name: string;
+  varieties: Array<{
+    is_default: boolean;
+    pokemon: {
+      name: string;
+      url: string;
+    };
+  }>;
+  // Add other properties as needed
+};
+
+// Transform PokeAPI varieties to match our expected PokemonVariety type
+type TransformedVariety = {
+  is_default: boolean;
+  pokemon: { name: string; id: number };
+};
 
 // Component that renders the pokemon sprite for the current generation
 const PokemonSpriteForGen = ({
@@ -36,23 +55,39 @@ const PokemonSpriteForGen = ({
   // Use pokemonId to fetch the pokemon data for the pokemon using the PokemonClient
   // This will give us all the sprites for the pokemon
   const api = usePokemonClient();
-  const fetchPokemon = (pokemonId: number) => {
-    return api
-      .getPokemonById(Number(pokemonId))
-      .then((data) => data)
-      .catch((err) => {
-        throw err;
-      });
+
+  // Original code using pokenode-ts API (commented out)
+  // const fetchPokemon = (pokemonId: number) => {
+  //   return api
+  //     .getPokemonById(Number(pokemonId))
+  //     .then((data) => data)
+  //     .catch((err) => {
+  //       throw err;
+  //     });
+  // };
+
+  // Refactored to use our custom REST route
+  const fetchPokemon = async (pokemonId: number) => {
+    const response = await fetch(`/api/rest?endpoint=pokemon&id=${pokemonId}`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch Pokemon data: ${response.status}`);
+    }
+    return response.json();
   };
 
-  // Get the pokemon species data for the pokemon using the PokemonClient, this will give us all varieties for the pokemon
-  const fetchPokemonSpecies = (pokemonId: string) => {
-    return api
-      .getPokemonSpeciesById(Number(pokemonId))
-      .then((data) => data)
-      .catch((err) => {
-        throw err;
-      });
+  // Get the pokemon species data using our custom REST route
+  const fetchPokemonSpecies = async (
+    pokemonId: string
+  ): Promise<PokemonSpecies> => {
+    const response = await fetch(
+      `/api/rest?endpoint=pokemon-species&id=${pokemonId}`
+    );
+    if (!response.ok) {
+      throw new Error(
+        `Failed to fetch Pokemon species data: ${response.status}`
+      );
+    }
+    return response.json();
   };
 
   // Use react-query to fetch the pokemon data
@@ -77,7 +112,7 @@ const PokemonSpriteForGen = ({
     }
   );
 
-  const regions = version.data.regions;
+  const regions = version.data?.regions;
   const varieties = pokemonSpeciesQuery.data?.varieties;
 
   // If the pokemon/species data is loading, return a loading message
@@ -88,18 +123,28 @@ const PokemonSpriteForGen = ({
     return <div>Error loading sprite</div>;
 
   if (
+    regions &&
     pokemonQuery.data &&
     pokemonSpeciesQuery.data &&
     version.data &&
     varieties
   ) {
-    // Figure out which version of the sprite to use based on the game region
-    const pokemonVarietyForRegion: PokemonSpeciesVariety | undefined =
-      findVarietyForRegion(varieties, regions);
-    // If there is a matching pokemon variety for this game region, use that pokemon variety's id
-    pokemonVarietyId = Number(
-      pokemonVarietyForRegion?.pokemon.url.split("/").at(-2)
+    // Transform the varieties to match the expected PokemonVariety type
+    const transformedVarieties: TransformedVariety[] = varieties.map(
+      (variety) => ({
+        is_default: variety.is_default,
+        pokemon: {
+          name: variety.pokemon.name,
+          id: parseInt(variety.pokemon.url.split("/").at(-2) || "0"),
+        },
+      })
     );
+
+    // Figure out which version of the sprite to use based on the game region
+    const pokemonVarietyForRegion: TransformedVariety | undefined =
+      findVarietyForRegion(transformedVarieties, regions);
+    // If there is a matching pokemon variety for this game region, use that pokemon variety's id
+    pokemonVarietyId = pokemonVarietyForRegion?.pokemon.id;
 
     sprite = getSpriteUrl({
       versionGroup: game,

@@ -1,66 +1,10 @@
-import { NamedAPIResource } from "pokenode-ts";
 import styles from "../Pokedexes.module.css";
-// utils
-import { fetchFromGraphQL } from "@/utils/api";
 // components
 import PokedexById from "../PokedexById";
 import NationalDex from "../NationalDex";
-
-interface VersionGroup {
-  generation: NamedAPIResource;
-  pokedexes: { name: string; id: number }[];
-  error?: any;
-}
-
-const query = `
-query GetVersionGroup($name: String!) {
-  pokemon_v2_versiongroup(where: {name: {_eq: $name}}) {
-    id
-    name
-    order
-    pokemon_v2_generation {
-      name
-    }
-    pokemon_v2_pokedexversiongroups {
-      pokemon_v2_pokedex {
-        id
-        name
-      }
-    }
-  }
-}
-`;
+import { getVersionGroup } from "@/app/queries/getVersionGroup";
 
 // fetch the game version for the selected generation
-async function getVersionGroup(gen: string): Promise<VersionGroup> {
-  try {
-    const data = await fetchFromGraphQL(query, { name: gen });
-
-    if (!data.data?.pokemon_v2_versiongroup?.[0]) {
-      throw new Error(`Version group '${gen}' not found`);
-    }
-
-    const versionGroup = data.data.pokemon_v2_versiongroup[0];
-
-    // Transform the GraphQL response to match the expected VersionGroup interface
-    return {
-      generation: {
-        name: versionGroup.pokemon_v2_generation.name,
-        url: `/generation/${versionGroup.pokemon_v2_generation.name}`,
-      },
-      pokedexes: versionGroup.pokemon_v2_pokedexversiongroups.map(
-        (pokedexVersionGroup: any) => ({
-          name: pokedexVersionGroup.pokemon_v2_pokedex.name,
-          id: pokedexVersionGroup.pokemon_v2_pokedex.id,
-        })
-      ),
-    };
-  } catch (error: any) {
-    console.error("Error fetching version group:", error);
-    return { error } as VersionGroup;
-  }
-}
-
 type PageProps = {
   params: {
     gen: string;

@@ -13,8 +13,7 @@ export default function HeaderTitle() {
 
   const versionGroup = useGameVersion(game);
   const formatName = convertKebabCaseToTitleCase;
-  const genNumber =
-    versionGroup.data && versionGroup.data.generation?.name.split("-")[1];
+  const genNumber = versionGroup.data?.generation?.name.split("-")[1] || "i";
 
   return (
     <div className="hidden lg:flex flex flex-row justify-center items-center">

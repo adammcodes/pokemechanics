@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
-import { getPokedexById } from "./PokedexByIdQuery";
+import { getPokedexById } from "./getPokedexById";
 import PokemonSelector from "./PokemonSelector";
 
 export type PokedexPokemon = {

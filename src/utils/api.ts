@@ -2,7 +2,10 @@
  * Utility function to make API calls through Next.js API routes
  * Use the GraphQL API
  */
-export async function fetchFromGraphQL(query: string, variables?: any) {
+export async function fetchFromGraphQL(
+  query: string,
+  variables?: any
+): Promise<any> {
   try {
     // Check if we're in a browser environment
     const isBrowser = typeof window !== "undefined";
