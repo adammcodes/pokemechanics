@@ -24,7 +24,7 @@ export default function ForwardBack() {
   const { game } = useContext(GameContext);
   const version = useGameVersion(game);
   // generation name e.g. "generation-i"
-  const gen = version.data?.generation.name ?? "generation-i";
+  const gen = version.data?.generation?.name ?? "generation-i";
   // last dex entry number for the generation
   const lastDexEntryNum = numOfPokemonByGen[gen];
   const d = useContext(PokedexContext);
