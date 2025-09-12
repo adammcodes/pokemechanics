@@ -205,7 +205,7 @@ export default function TypeEfficacy({ typeIds, genId }: TypeEfficacyProps) {
         : "";
     const dfFixed = df === 0 ? 0 : df < 50 ? 2 : 1;
     return (
-      <div className="flex flex-col items-center justify-center">
+      <div key={e.type} className="flex flex-col items-center justify-center">
         <PokemonTypeChip key={e.type} typeName={e.type} />
         <span className={`text-sm font-bold ${fontColor}`}>
           x{(df / 100).toFixed(dfFixed)}

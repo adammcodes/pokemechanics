@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import usePokemonClient from "@/hooks/usePokemonClient";
+// import usePokemonClient from "@/hooks/usePokemonClient";
 import useGameVersion from "@/hooks/useGameVersion";
 import findVarietyForRegion from "@/lib/findVarietyForRegion";
 import PokemonSpriteById from "./PokemonSpriteById";
@@ -54,7 +54,7 @@ const PokemonSpriteForGen = ({
 
   // Use pokemonId to fetch the pokemon data for the pokemon using the PokemonClient
   // This will give us all the sprites for the pokemon
-  const api = usePokemonClient();
+  // const api = usePokemonClient();
 
   // Original code using pokenode-ts API (commented out)
   // const fetchPokemon = (pokemonId: number) => {

@@ -3,6 +3,7 @@
 import { useContext } from "react";
 import { useSearchParams } from "next/navigation";
 import { useQuery } from "react-query";
+import Head from "next/head";
 import usePokemonClient from "@/hooks/usePokemonClient";
 import useGameVersion from "@/hooks/useGameVersion";
 import { GameContext } from "@/context/_context";
@@ -67,27 +68,37 @@ export default function Pokemon({ params }: { params: any }) {
     }
   );
 
+  console.log(pokemonSpeciesQuery.data);
+
+  // Generate canonical URL - use the Pokemon ID without query parameters
+  const canonicalUrl = `https://www.pokemechanics.app/pokemon/${id}`;
+
   return (
-    <main className="w-full">
-      {pokemonQuery.data &&
-        pokemonSpeciesQuery.data &&
-        version.data &&
-        dexId && (
-          <PokedexContextProvider dexId={Number(dexId)}>
-            <PokemonContextProvider
-              pokemonData={pokemonQuery.data}
-              speciesData={pokemonSpeciesQuery.data}
-              versionData={version.data}
-            >
-              <PokemonVariety
-                regions={version.data.regions}
-                name={pokemonSpeciesQuery.data.name}
-                varieties={pokemonSpeciesQuery.data.varieties}
-              />
-            </PokemonContextProvider>
-          </PokedexContextProvider>
-        )}
-    </main>
-  
+    <>
+      <Head>
+        <link rel="canonical" href={canonicalUrl} />
+        <meta name="robots" content="index, follow" />
+      </Head>
+      <main className="w-full">
+        {pokemonQuery.data &&
+          pokemonSpeciesQuery.data &&
+          version.data &&
+          dexId && (
+            <PokedexContextProvider dexId={Number(dexId)}>
+              <PokemonContextProvider
+                pokemonData={pokemonQuery.data}
+                speciesData={pokemonSpeciesQuery.data}
+                versionData={version.data}
+              >
+                <PokemonVariety
+                  regions={version.data.regions}
+                  name={pokemonSpeciesQuery.data.name}
+                  varieties={pokemonSpeciesQuery.data.varieties}
+                />
+              </PokemonContextProvider>
+            </PokedexContextProvider>
+          )}
+      </main>
+    </>
   );
 }

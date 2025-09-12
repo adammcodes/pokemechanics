@@ -3,6 +3,7 @@ import styles from "../Pokedexes.module.css";
 import PokedexById from "../PokedexById";
 import NationalDex from "../NationalDex";
 import { getVersionGroup } from "@/app/queries/getVersionGroup";
+import { Metadata } from "next";
 
 // fetch the game version for the selected generation
 type PageProps = {
@@ -13,6 +14,28 @@ type PageProps = {
     [key: string]: string | string[] | undefined;
   };
 };
+
+// Generate metadata for SEO
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const { gen } = params;
+  const canonicalUrl = `https://www.pokemechanics.app/pokedex/${gen}`;
+
+  return {
+    title: `Pokédex - ${gen
+      .replace("-", " ")
+      .replace(/\b\w/g, (l) => l.toUpperCase())} | Pokémechanics`,
+    description: `Complete Pokédex for ${gen
+      .replace("-", " ")
+      .replace(/\b\w/g, (l) =>
+        l.toUpperCase()
+      )} generation with all Pokémon, stats, and information.`,
+    alternates: {
+      canonical: canonicalUrl,
+    },
+  };
+}
 
 // create a Pokedex page for each generation
 export default async function Page({ params }: PageProps) {
