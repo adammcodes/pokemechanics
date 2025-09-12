@@ -1,7 +1,6 @@
 "use client";
 import { useContext } from "react";
 import { useQuery } from "react-query";
-// import { PokemonSpeciesVariety } from "pokenode-ts";
 import { PokemonSpeciesVariety, SpeciesVariety } from "@/types/index";
 import PokemonCard from "./PokemonCard";
 import { PokemonContext } from "@/context/_context";

@@ -1,4 +1,5 @@
 import { useQuery } from "react-query";
+import { SpeciesVariety } from "@/types/index";
 // import usePokemonClient from "@/hooks/usePokemonClient";
 import useGameVersion from "@/hooks/useGameVersion";
 import findVarietyForRegion from "@/lib/findVarietyForRegion";
@@ -17,12 +18,6 @@ type PokemonSpecies = {
     };
   }>;
   // Add other properties as needed
-};
-
-// Transform PokeAPI varieties to match our expected PokemonVariety type
-type TransformedVariety = {
-  is_default: boolean;
-  pokemon: { name: string; id: number };
 };
 
 // Component that renders the pokemon sprite for the current generation
@@ -129,22 +124,13 @@ const PokemonSpriteForGen = ({
     version.data &&
     varieties
   ) {
-    // Transform the varieties to match the expected PokemonVariety type
-    const transformedVarieties: TransformedVariety[] = varieties.map(
-      (variety) => ({
-        is_default: variety.is_default,
-        pokemon: {
-          name: variety.pokemon.name,
-          id: parseInt(variety.pokemon.url.split("/").at(-2) || "0"),
-        },
-      })
-    );
-
     // Figure out which version of the sprite to use based on the game region
-    const pokemonVarietyForRegion: TransformedVariety | undefined =
-      findVarietyForRegion(transformedVarieties, regions);
+    const pokemonVarietyForRegion: SpeciesVariety | undefined =
+      findVarietyForRegion(varieties, regions);
     // If there is a matching pokemon variety for this game region, use that pokemon variety's id
-    pokemonVarietyId = pokemonVarietyForRegion?.pokemon.id;
+    pokemonVarietyId = Number(
+      pokemonVarietyForRegion?.pokemon.url.split("/").at(-2)
+    );
 
     sprite = getSpriteUrl({
       versionGroup: game,
