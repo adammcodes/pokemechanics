@@ -1,4 +1,4 @@
-export const numOfPokemonByGen: any = {
+export const numOfPokemonByGen: { [key: string]: number } = {
   "generation-i": 151,
   "generation-ii": 251,
   "generation-iii": 386,

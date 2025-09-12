@@ -19,9 +19,7 @@ export async function GET(request: NextRequest) {
 
   if (!id) {
     return NextResponse.json(
-      {
-        error: "ID parameter is required",
-      },
+      { error: "ID parameter is required" },
       { status: 400 }
     );
   }
@@ -43,7 +41,6 @@ export async function GET(request: NextRequest) {
     }
 
     const data = await response.json();
-    console.log(`Successfully fetched ${endpoint} data for ID ${id}`);
     return NextResponse.json(data);
   } catch (error) {
     console.error(`Error fetching ${endpoint} data:`, error);

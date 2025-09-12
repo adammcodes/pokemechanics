@@ -20,9 +20,12 @@ type PokedexEntry = {
 
 export default function ForwardBack() {
   const router = useRouter();
+  // game e.g. "red-blue"
   const { game } = useContext(GameContext);
   const version = useGameVersion(game);
-  const gen = version.data.generation.name;
+  // generation name e.g. "generation-i"
+  const gen = version.data?.generation.name ?? "generation-i";
+  // last dex entry number for the generation
   const lastDexEntryNum = numOfPokemonByGen[gen];
   const d = useContext(PokedexContext);
   const p = useContext(PokemonContext);

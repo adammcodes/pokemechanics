@@ -68,8 +68,6 @@ export default function Pokemon({ params }: { params: any }) {
     }
   );
 
-  console.log(pokemonSpeciesQuery.data);
-
   // Generate canonical URL - use the Pokemon ID without query parameters
   const canonicalUrl = `https://www.pokemechanics.app/pokemon/${id}`;
 

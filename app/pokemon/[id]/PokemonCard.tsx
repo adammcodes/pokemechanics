@@ -52,11 +52,13 @@ const PokemonCard: React.FC<PokemonCardProps> = (props) => {
   // props has all the variant specific data
   // p from PokemonContext has all the other generic species data
   const p = useContext(PokemonContext);
-  const { game } = useContext(GameContext);
   const dex = useContext(PokedexContext);
+  // game e.g. "red-blue"
+  const { game } = useContext(GameContext);
   const versionGroup = useGameVersion(game);
   const versionGroupData = versionGroup.data;
   const genId: number = versionGroupData?.id || 1;
+  // generation number e.g. "i"
   const genNumber: string =
     versionGroupData?.generation.name.split("-")[1] || "i";
   const isGenOneOrTwo = genNumber === "i" || genNumber === "ii";
