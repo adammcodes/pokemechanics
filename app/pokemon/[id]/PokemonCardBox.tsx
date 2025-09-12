@@ -17,6 +17,7 @@ import { Genus, PokemonSprites, PokemonType } from "pokenode-ts";
 // context
 import { GameContext, PokemonContext } from "@/context/_context";
 import useGameVersion from "@/hooks/useGameVersion";
+import { useSearchParams } from "next/navigation";
 
 // styles
 // import PokeballSpans from "@/components/common/PokeballSpans";
@@ -35,12 +36,15 @@ type PokemonCardBoxProps = {
 const PokemonCardBox: React.FC<PokemonCardBoxProps> = (props) => {
   const p = useContext(PokemonContext);
   const { game } = useContext(GameContext);
-  const versionGroup = useGameVersion(game);
+  const searchParams = useSearchParams();
+  const paramsGame = searchParams.get("game") as string;
+  const selectedGame = paramsGame || game || "red-blue";
+  const versionGroup = useGameVersion(selectedGame);
   const generationIdString: string | undefined =
     versionGroup.data?.generation.name.split("-")[1]; // e.g. generation = "generation-i", generationId = 1
   const generationId: number = parseInt(generationIdString || "1");
 
-  const spriteSize: number = spriteSizesByVersion[game];
+  const spriteSize: number = spriteSizesByVersion[selectedGame];
   const pokemonGenus: string | undefined = p.genera
     ? p.genera.find((g: Genus) => {
         return g.language.name === "en";

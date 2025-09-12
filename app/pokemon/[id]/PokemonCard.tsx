@@ -75,7 +75,7 @@ const PokemonCard: React.FC<PokemonCardProps> = (props) => {
     props.is_variant && regionName
       ? `${pokemonName} (${regionName})`
       : pokemonName;
-  const versions = splitKebabCase(game);
+  const versions = splitKebabCase(game ?? "red-blue");
 
   const types: PokemonType[] = props.is_variant ? props.types : p.types;
   // console.log(props.is_variant);

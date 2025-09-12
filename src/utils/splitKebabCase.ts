@@ -1,6 +1,5 @@
 function splitKebabCase(input: string): string[] | string {
-
-  if (!input.includes("-")) return input;
+  if (typeof input !== "string" || !input.includes("-")) return input;
 
   const words = input.split("-");
   const middleIndex = Math.floor(words.length / 2);
@@ -8,6 +7,6 @@ function splitKebabCase(input: string): string[] | string {
   const second = words.slice(middleIndex).join("-");
 
   return [first, second];
-};
+}
 
 export default splitKebabCase;

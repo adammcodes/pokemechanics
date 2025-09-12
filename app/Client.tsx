@@ -1,4 +1,5 @@
 "use client";
+import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { GameContextProvider } from "@/context/GameContextProvider";
@@ -12,10 +13,14 @@ import { LayoutSkeleton } from "@/components/common/LayoutSkeleton";
 const queryClient = new QueryClient();
 
 export default function Client({ children }: { children?: React.ReactNode }) {
+  const pageParams = useSearchParams();
+  // The game from page search params take priority over the game from the local storage
+  // This is to improve server side rendering performance
+  const selectedGame = pageParams.get("game") as string;
   return (
     <ApolloProvider client={client}>
       <QueryClientProvider client={queryClient}>
-        <GameContextProvider>
+        <GameContextProvider selectedGame={selectedGame}>
           <ChakraProvider>
             <Suspense
               fallback={

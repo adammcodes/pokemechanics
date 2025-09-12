@@ -69,17 +69,14 @@ export default async function Page({ params }: PageProps) {
         >
           {/* render each pokedex in the generation */}
           {pokedexes.length > 0 &&
-            pokedexes.map((dex) => {
-              const dexId: number = dex.id;
-              return (
-                <PokedexById
-                  key={dex.id.toString()}
-                  dexId={dexId}
-                  game={gen}
-                  generationString={generationString}
-                />
-              );
-            })}
+            pokedexes.map((dex) => (
+              <PokedexById
+                key={dex.id.toString()}
+                dexId={dex.id}
+                game={gen}
+                generationString={generationString}
+              />
+            ))}
         </div>
         {/* render the national dex for the game/generation */}
         <NationalDex game={gen} generationString={generationString} />

@@ -7,6 +7,8 @@ import AutocompleteBase from "@/components/common/AutocompleteBase";
 import toTitleCase from "@/utils/toTitleCase";
 // Hooks
 import { useRouter } from "next/navigation";
+import { useContext } from "react";
+import { GameContext } from "@/context/_context";
 
 export type PokemonOption = {
   label: string;
@@ -39,10 +41,11 @@ const PokemonSelector: React.FC<PokemonSelectorProps> =
     generationString,
   }) {
     const router = useRouter();
+    const { game: selectedGame } = useContext(GameContext);
 
     const onPokemonSelect = (pokemonId: number | string) => {
       // Navigate to the pokemon page
-      router.push(`/pokemon/${pokemonId}?dexId=${dexId}`);
+      router.push(`/pokemon/${pokemonId}?dexId=${dexId}&game=${selectedGame}`);
     };
 
     const pokemonOptions: PokemonOption[] = pokemon.map((p) => {
