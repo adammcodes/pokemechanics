@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { getVersionGroup } from "@/app/queries/getVersionGroup";
+// We'll use PokeAPI REST API for dex data to match client-side structure
 // Components
 import PokemonClientWrapper from "app/pokemon/[id]/PokemonClientWrapper";
 
@@ -33,6 +34,21 @@ async function fetchPokemonSpeciesById(id: number) {
 
   if (!response.ok) {
     throw new Error(`Failed to fetch Pokemon species data: ${response.status}`);
+  }
+
+  return response.json();
+}
+
+async function fetchPokedexById(id: number) {
+  const response = await fetch(`https://pokeapi.co/api/v2/pokedex/${id}`, {
+    headers: {
+      Accept: "application/json",
+      "User-Agent": "Pokemechanics/1.0",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch Pokedex data: ${response.status}`);
   }
 
   return response.json();
@@ -117,20 +133,21 @@ export default async function Pokemon({ params, searchParams }: PageProps) {
   }
 
   // Fetch all data on the server
-  const [pokemonData, speciesData, versionData] = await Promise.all([
+  const [pokemonData, speciesData, versionData, dexData] = await Promise.all([
     fetchPokemonById(Number(id)),
     fetchPokemonSpeciesById(Number(id)),
     getVersionGroup(selectedGame),
+    fetchPokedexById(Number(dexId)),
   ]);
 
-  if (versionData.error || pokemonData.error || speciesData.error) {
+  if (versionData.error || pokemonData.error || speciesData.error || !dexData) {
     return (
       <main className="w-full">
         <h1>There was an error</h1>
         <p>
-          {versionData.error.message ||
-            pokemonData.error.message ||
-            speciesData.error.message ||
+          {versionData.error?.message ||
+            pokemonData.error?.message ||
+            speciesData.error?.message ||
             "Failed to load data"}
         </p>
       </main>
@@ -138,7 +155,7 @@ export default async function Pokemon({ params, searchParams }: PageProps) {
   }
 
   // Check if we have the required data
-  if (!pokemonData || !speciesData || !versionData || !dexId) {
+  if (!pokemonData || !speciesData || !versionData || !dexData || !dexId) {
     return (
       <main className="w-full">
         <h1>Loading...</h1>
@@ -153,6 +170,7 @@ export default async function Pokemon({ params, searchParams }: PageProps) {
         pokemonData={pokemonData}
         speciesData={speciesData}
         versionData={versionData}
+        dexData={dexData}
         dexId={Number(dexId)}
       />
     </main>

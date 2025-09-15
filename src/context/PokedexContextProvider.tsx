@@ -6,11 +6,13 @@ import useGameClient from "@/hooks/useGameClient";
 type PokedexContextProps = {
   children: React.ReactNode;
   dexId: number;
+  dexData?: any;
 };
 
 export const PokedexContextProvider: React.FC<PokedexContextProps> = ({
   children,
   dexId,
+  dexData,
 }) => {
   const fetchPokedex = async (dexId: number) => {
     const api = useGameClient();
@@ -25,6 +27,7 @@ export const PokedexContextProvider: React.FC<PokedexContextProps> = ({
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     enabled: Boolean(dexId),
+    initialData: dexData,
   });
 
   return (

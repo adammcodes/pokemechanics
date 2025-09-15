@@ -38,7 +38,7 @@ const GenSelector: React.FC<GenSelectorProps> = function GenSelector({ gens }) {
     router.push(`/pokedex/${value}`);
   };
 
-  return (    
+  return (
     <AutocompleteBase
       options={genOptions}
       onSelect={handleSelect}

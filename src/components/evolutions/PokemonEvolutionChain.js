@@ -13,6 +13,8 @@ function onlyEvolutionsForGen(evolution, generation) {
 const renderEvolutionNode = (node, gameInfo, prevEvolutionInGen) => {
   const { species, evolves_to, evolution_details } = node;
   const { game, generation } = gameInfo;
+  console.log("game", game);
+  console.log("generation", generation);
   const formatName = convertKebabCaseToTitleCase;
   const isPokemonInGen = onlyEvolutionsForGen(node, generation);
   const pokemonDexNumber = Number(species.url.split("/").at(-2));

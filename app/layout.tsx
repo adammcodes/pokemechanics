@@ -1,6 +1,6 @@
 import "@/styles/globals.css";
 import Client from "app/Client";
-import { cookies } from 'next/headers';
+import { cookies } from "next/headers";
 
 export const metadata = {
   title: "Pokémechanics",
@@ -19,7 +19,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   const cookieStore = cookies();
-  const theme = cookieStore.get('theme')?.value || 'light'; // Default to 'light' if not set
+  const theme = cookieStore.get("theme")?.value || "light"; // Default to 'light' if not set
   return (
     <html lang="en" data-theme={theme}>
       <body>

@@ -8,6 +8,7 @@ type PokemonClientWrapperProps = {
   pokemonData: any;
   speciesData: any;
   versionData: any;
+  dexData: any;
   dexId: number;
 };
 
@@ -15,10 +16,11 @@ export default function PokemonClientWrapper({
   pokemonData,
   speciesData,
   versionData,
+  dexData,
   dexId,
 }: PokemonClientWrapperProps) {
   return (
-    <PokedexContextProvider dexId={dexId}>
+    <PokedexContextProvider dexId={dexId} dexData={dexData}>
       <PokemonContextProvider
         pokemonData={pokemonData}
         speciesData={speciesData}
