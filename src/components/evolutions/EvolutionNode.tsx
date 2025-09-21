@@ -3,24 +3,7 @@ import { SpeciesVariety } from "@/types/index";
 import findVarietyForRegion from "@/lib/findVarietyForRegion";
 import PokemonSpriteById from "../sprites/PokemonSpriteById";
 import getSpriteUrl from "@/constants/spriteUrlTemplates";
-
-async function fetchPokemonSpeciesById(id: number) {
-  const response = await fetch(
-    `https://pokeapi.co/api/v2/pokemon-species/${id}`,
-    {
-      headers: {
-        Accept: "application/json",
-        "User-Agent": "Pokemechanics/1.0",
-      },
-    }
-  );
-
-  if (!response.ok) {
-    throw new Error(`Failed to fetch Pokemon species data: ${response.status}`);
-  }
-
-  return response.json();
-}
+import { fetchPokemonSpeciesById } from "@/app/helpers/rest/fetchPokemonSpeciesById";
 
 const EvolutionNode = async ({
   pokemonDexNumber,

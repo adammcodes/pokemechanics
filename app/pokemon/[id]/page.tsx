@@ -1,59 +1,11 @@
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { getVersionGroup } from "@/app/queries/getVersionGroup";
-// We'll use PokeAPI REST API for dex data to match client-side structure
-// Components
-// import PokemonClientWrapper from "app/pokemon/[id]/PokemonClientWrapper";
+import { getVersionGroup } from "@/app/helpers/graphql/getVersionGroup";
+import { fetchPokemonSpeciesById } from "@/app/helpers/rest/fetchPokemonSpeciesById";
+import { fetchPokemonById } from "@/app/helpers/rest/fetchPokemonById";
+import { fetchPokedexById } from "@/app/helpers/rest/fetchPokedexById";
 import PokemonCardServer from "./PokemonCardServer";
-
-// Server-side data fetching functions
-async function fetchPokemonById(id: number) {
-  const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`, {
-    headers: {
-      Accept: "application/json",
-      "User-Agent": "Pokemechanics/1.0",
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error(`Failed to fetch Pokemon data: ${response.status}`);
-  }
-
-  return response.json();
-}
-
-async function fetchPokemonSpeciesById(id: number) {
-  const response = await fetch(
-    `https://pokeapi.co/api/v2/pokemon-species/${id}`,
-    {
-      headers: {
-        Accept: "application/json",
-        "User-Agent": "Pokemechanics/1.0",
-      },
-    }
-  );
-
-  if (!response.ok) {
-    throw new Error(`Failed to fetch Pokemon species data: ${response.status}`);
-  }
-
-  return response.json();
-}
-
-async function fetchPokedexById(id: number) {
-  const response = await fetch(`https://pokeapi.co/api/v2/pokedex/${id}`, {
-    headers: {
-      Accept: "application/json",
-      "User-Agent": "Pokemechanics/1.0",
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error(`Failed to fetch Pokedex data: ${response.status}`);
-  }
-
-  return response.json();
-}
+import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
 
 type PageProps = {
   params: {
@@ -73,25 +25,20 @@ export async function generateMetadata({
   const selectedGame = (searchParams?.game as string) ?? "red-blue";
 
   try {
-    const [pokemonData, speciesData, versionData] = await Promise.all([
-      fetchPokemonById(Number(id)),
+    const [speciesData, versionData] = await Promise.all([
       fetchPokemonSpeciesById(Number(id)),
       getVersionGroup(selectedGame),
     ]);
 
     const pokemonName = speciesData.name;
-    const types = pokemonData.types
-      .map((type: any) => type.type.name)
-      .join(" and ");
-    const height = pokemonData.height / 10; // Convert from decimeters to meters
-    const weight = pokemonData.weight / 10; // Convert from hectograms to kg
+    const versionName = convertKebabCaseToTitleCase(versionData.name);
 
     const title = `${
       pokemonName.charAt(0).toUpperCase() + pokemonName.slice(1)
-    } | Pokémechanics`;
+    } | ${versionName}`;
     const description = `Learn about ${
       pokemonName.charAt(0).toUpperCase() + pokemonName.slice(1)
-    }, a ${types} type Pokémon. Height: ${height}m, Weight: ${weight}kg. Complete stats, moves, abilities, and evolution information.`;
+    } | Pokémechanics - Complete stats, moves, abilities, and evolution information.`;
     const canonicalUrl = `https://www.pokemechanics.app/pokemon/${id}`;
 
     return {

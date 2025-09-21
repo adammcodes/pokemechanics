@@ -1,4 +1,4 @@
-import { getVersionGroup } from "@/app/queries/getVersionGroup";
+import { getVersionGroup } from "@/app/helpers/graphql/getVersionGroup";
 import findVarietyForRegion from "@/lib/findVarietyForRegion";
 import { PokemonSpeciesVariety, SpeciesVariety } from "@/types/index";
 import {

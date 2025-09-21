@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { getVersionGroup } from "@/app/queries/getVersionGroup";
+import { getVersionGroup } from "@/app/helpers/graphql/getVersionGroup";
 
 export default function useGameVersion(versionGroupName: string) {
   const fetchGameVersion = async (versionGroupName: string) => {
