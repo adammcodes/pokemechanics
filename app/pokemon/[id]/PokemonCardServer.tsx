@@ -1,16 +1,17 @@
-import { getVersionGroup } from "@/app/helpers/graphql/getVersionGroup";
-import findVarietyForRegion from "@/lib/findVarietyForRegion";
-import { PokemonSpeciesVariety, SpeciesVariety } from "@/types/index";
 import {
-  PokemonAbility,
-  PokemonSprites,
-  NamedAPIResource,
-  PokemonType,
-} from "pokenode-ts";
-import { FlavorTextForVersion } from "@/types/index";
+  SpeciesVariety,
+  Pokedex,
+  Pokemon,
+  PokemonSpecies,
+} from "@/types/index";
+import { PokemonType } from "pokenode-ts";
 import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
 import toTitleCase from "@/utils/toTitleCase";
 import splitKebabCase from "@/utils/splitKebabCase";
+import findVarietyForRegion from "@/lib/findVarietyForRegion";
+import { fetchPokemonById } from "@/app/helpers/rest/fetchPokemonById";
+import { fetchEvolutionChainById } from "@/app/helpers/rest/fetchEvolutionChainById";
+import type { VersionGroup } from "@/app/helpers/graphql/getVersionGroup";
 
 // components
 import PokemonCardBoxServer from "./PokemonCardBoxServer";
@@ -23,109 +24,11 @@ import Stats from "@/components/stats/Stats";
 import LocationsForVersionGroupServer from "./LocationsForVersionGroupServer";
 import TypeEfficacyServer from "./TypeEfficacyServer";
 
-// Server-side data fetching functions
-async function fetchPokemonById(id: number) {
-  const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`, {
-    headers: {
-      Accept: "application/json",
-      "User-Agent": "Pokemechanics/1.0",
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error(`Failed to fetch Pokemon data: ${response.status}`);
-  }
-
-  return response.json();
-}
-
-async function fetchEvolutionChainById(id: number) {
-  const response = await fetch(
-    `https://pokeapi.co/api/v2/evolution-chain/${id}`,
-    {
-      headers: {
-        Accept: "application/json",
-        "User-Agent": "Pokemechanics/1.0",
-      },
-    }
-  );
-
-  if (!response.ok) {
-    throw new Error(`Failed to fetch evolution chain data: ${response.status}`);
-  }
-
-  return response.json();
-}
-
 type PokemonCardServerProps = {
-  pokemonData: any;
-  speciesData: {
-    id: number;
-    base_happiness: number;
-    capture_rate: number;
-    color: { name: string; url: string };
-    egg_groups: { name: string; url: string }[];
-    evolution_chain: { url: string };
-    evolves_from_species: { name: string; url: string } | null;
-    flavor_text_entries: FlavorTextForVersion[];
-    form_descriptions: {
-      description: string;
-      language: { name: string; url: string };
-    }[];
-    forms_switchable: boolean;
-    gender_rate: number;
-    genera: { genus: string; language: { name: string; url: string } }[];
-    generation: { name: string; url: string };
-    growth_rate: { name: string; url: string };
-    habitat: { name: string; url: string };
-    has_gender_differences: boolean;
-    hatch_counter: number;
-    is_baby: boolean;
-    is_mythical: boolean;
-    is_legendary: boolean;
-    name: string;
-    names: { name: string; language: { name: string; url: string } }[];
-    order: number;
-    pal_park_encounters: {
-      area: { name: string; url: string };
-      base_score: number;
-      rate: number;
-    }[];
-    pokedex_numbers: {
-      entry_number: number;
-      pokedex: { name: string; url: string };
-    }[];
-    shape: { name: string; url: string };
-    varieties: {
-      is_default: boolean;
-      pokemon: { name: string; url: string };
-    }[];
-  };
-  versionData: {
-    id: number;
-    name: string;
-    order: number;
-    regions: { name: string; id: number }[];
-    generation: { name: string; id: number };
-    versions: { name: string; id: number }[];
-    pokedexes: { name: string; id: number }[];
-  };
-  dexData: {
-    descriptions: {
-      description: string;
-      language: { name: string; url: string };
-    }[];
-    id: number;
-    is_main_series: boolean;
-    name: string;
-    names: { name: string; language: { name: string; url: string } }[];
-    pokemon_entries: {
-      entry_number: number;
-      pokemon_species: { name: string; url: string };
-    }[];
-    region: { name: string; url: string };
-    version_groups: { name: string; url: string }[];
-  };
+  pokemonData: Pokemon;
+  speciesData: PokemonSpecies;
+  versionData: VersionGroup;
+  dexData: Pokedex;
   dexId: number; // e.g. 1
   game: string; // e.g. "red-blue"
 };
@@ -138,11 +41,15 @@ export default async function PokemonCardServer({
   dexId,
   game,
 }: PokemonCardServerProps) {
-  // console.log("=================== PokemonCardServer pokemonData ===================");
+  // console.log(
+  //   "=================== PokemonCardServer pokemonData ==================="
+  // );
   // console.log(pokemonData);
   // console.log("=================== PokemonCardServer speciesData ===================");
   // console.log(speciesData);
-  // console.log("=================== PokemonCardServer versionData ===================");
+  // console.log(
+  //   "=================== PokemonCardServer versionData ==================="
+  // );
   // console.log(versionData);
   // console.log("=================== PokemonCardServer dexData ===================");
   // console.log(dexData);
@@ -151,7 +58,8 @@ export default async function PokemonCardServer({
   // console.log("=================== PokemonCardServer game ===================");
   // console.log(game);
   // Use region name of the Pokedex
-  const regionName = dexData.region.name;
+  const regionName =
+    dexId === 1 ? versionData.regions[0].name : dexData.region.name;
   // Find variety for region if there are multiple varieties
   const pokemonVarietyForRegion: SpeciesVariety | undefined =
     findVarietyForRegion(speciesData.varieties, regionName);
@@ -192,18 +100,17 @@ export default async function PokemonCardServer({
   const displayPokemonData =
     isVariant && variantPokemonData ? variantPokemonData : pokemonData;
 
-  // Merge species data with Pokemon data for context compatibility
-  const mergedData = {
-    ...pokemonData,
-    ...speciesData,
-    regions: versionData.regions,
-  };
+  // // Merge species data with Pokemon data for context compatibility
+  // const mergedData = {
+  //   ...pokemonData,
+  //   ...speciesData,
+  //   regions: versionData.regions,
+  // };
 
   // Get version group data
-  const versionGroupData = versionData;
-  const genId: number = versionGroupData?.id || 1;
-  const genNumber: string =
-    versionGroupData?.generation.name.split("-")[1] || "i";
+  const versionId: number = versionData?.id || 1;
+  const genName: string = versionData?.generation.name || "generation-i";
+  const genNumber: string = genName.split("-")[1] || "i";
   const isGenOneOrTwo = genNumber === "i" || genNumber === "ii";
 
   // Format names
@@ -254,9 +161,9 @@ export default async function PokemonCardServer({
         {dexData && game ? (
           <ForwardBack
             game={game}
-            p={mergedData}
-            d={{ dexQuery: { data: dexData } }}
-            version={{ data: versionGroupData, isLoading: false }}
+            pokedexNumbers={speciesData.pokedex_numbers}
+            d={dexData}
+            version={versionData}
           />
         ) : (
           <p>Loading dex data...</p>
@@ -284,7 +191,7 @@ export default async function PokemonCardServer({
       <EvolutionsServer
         evolutionChainData={evolutionChainData}
         game={game}
-        generation={versionGroupData?.generation?.name || "generation-i"}
+        generation={genName}
         dexId={dexId.toString()}
         regionName={variantRegionName}
       />
@@ -305,16 +212,16 @@ export default async function PokemonCardServer({
         {/* Stats */}
         <Stats pokemonName={variantName} />
         {/* Encounters */}
-        {versionGroupData && (
+        {versionData && (
           <LocationsForVersionGroupServer
             pokemonSpeciesId={pokemonId}
-            versions={versionGroupData.versions.map((v) => v.name)}
+            versions={versionData.versions.map((v) => v.name)}
             evolutionData={evolutionChainData}
           />
         )}
         {/* Type Efficacy */}
         {typeIds && typeIds.length > 0 && (
-          <TypeEfficacyServer typeIds={typeIds} genId={genId} />
+          <TypeEfficacyServer typeIds={typeIds} versionId={versionId} />
         )}
       </section>
 

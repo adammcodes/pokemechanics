@@ -1,49 +1,70 @@
 "use client";
 import { Sprite } from "@/components/sprites/Sprite";
 import { useRouter } from "next/navigation";
-import { Pokedex } from "pokenode-ts";
 import toTitleCase from "@/utils/toTitleCase";
 import { numOfPokemonByGen } from "@/constants/numOfPokemonByGen";
 import addPrecedingZeros from "@/utils/addPrecedingZeros";
+import { VersionGroup } from "@/app/helpers/graphql/getVersionGroup";
+import { Pokedex } from "@/types/index";
 
-type PokedexEntry = {
+type PokedexNumber = {
   entry_number: number;
-  pokedex: Pokedex;
+  pokedex: { name: string; url: string };
+};
+
+type PokemonEntry = {
+  entry_number: number;
+  pokemon_species: { name: string; url: string };
 };
 
 type ForwardBackProps = {
   game: string;
-  p: any;
-  d: any;
-  version: any;
+  pokedexNumbers: PokedexNumber[];
+  d: Pokedex;
+  version: VersionGroup;
 };
 
-export default function ForwardBack({ game, p, d, version }: ForwardBackProps) {
+export default function ForwardBack({
+  game,
+  pokedexNumbers,
+  d,
+  version,
+}: ForwardBackProps) {
+  const dex = d;
   const router = useRouter();
-  // game e.g. "red-blue"
 
-  // generation name e.g. "generation-i"
-  const gen = version.data?.generation?.name ?? "generation-i";
-  // last dex entry number for the generation
+  const fallbackPokemonEntry = {
+    entry_number: 0,
+    pokemon_species: { name: "", url: "" },
+  };
+
+  const gen = version.generation?.name ?? "generation-i";
+
   const lastDexEntryNum = numOfPokemonByGen[gen];
 
-  const dex = d.dexQuery.data;
-  const currentPokemonEntry: PokedexEntry = p.pokedex_numbers.find(
-    (entry: PokedexEntry) => {
+  const currentPokemonEntry: PokedexNumber | undefined = pokedexNumbers.find(
+    (entry: PokedexNumber) => {
       return entry.pokedex.name === dex.name;
     }
   );
+
   // Get entry numbers of current, 1 before, 1 after
-  const currentEntryNum: number = currentPokemonEntry.entry_number;
-  const prevEntryNum: number = Math.max(currentEntryNum - 1, 1); // don't go below 1
-  const nextEntryNum: number = Math.min(currentEntryNum + 1, lastDexEntryNum); // don't go above the national dex
+  const currentEntryNum: number = currentPokemonEntry?.entry_number ?? 0;
+  const prevEntryNum: number = Math.max(currentEntryNum - 1, 0); // don't go below 0
+  const nextEntryNum: number = Math.min(currentEntryNum + 1, lastDexEntryNum); // don't go above the national dex for the generation
 
   // Get pokemon entry before and after
-  const prevPokemonEntry = dex.pokemon_entries[prevEntryNum - 1];
-  const nextPokemonEntry = dex.pokemon_entries[nextEntryNum - 1];
+  const prevPokemonEntry =
+    dex.pokemon_entries.find((entry: PokemonEntry) => {
+      return entry.entry_number === prevEntryNum;
+    }) ?? fallbackPokemonEntry;
+  const nextPokemonEntry =
+    dex.pokemon_entries.find((entry: PokemonEntry) => {
+      return entry.entry_number === nextEntryNum;
+    }) ?? fallbackPokemonEntry;
 
   // Get national dex Ids
-  const prevPokemonId = prevPokemonEntry.pokemon_species.url.split("/").at(-2);
+  const prevPokemonId = prevPokemonEntry?.pokemon_species.url.split("/").at(-2);
   const nextPokemonId = nextPokemonEntry?.pokemon_species.url.split("/").at(-2);
 
   // Get regional dex numbers with preceeding zeros
@@ -65,7 +86,7 @@ export default function ForwardBack({ game, p, d, version }: ForwardBackProps) {
 
   return (
     <div className="lg:absolute flex flex-row justify-between w-full px-5 pb-5 lg:py-0">
-      {currentEntryNum !== prevEntryNum && (
+      {currentEntryNum !== prevEntryNum && prevPokemonId && (
         <div
           className="hover:underline cursor-pointer"
           onClick={() =>

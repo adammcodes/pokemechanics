@@ -90,12 +90,12 @@ type EfficacyData = {
 
 interface TypeEfficacyServerProps {
   typeIds: number[];
-  genId: number;
+  versionId: number;
 }
 
 export default async function TypeEfficacyServer({
   typeIds,
-  genId,
+  versionId,
 }: TypeEfficacyServerProps) {
   // Fetch type efficacies data
   const { data } = await fetchTypeEfficacies();
@@ -121,13 +121,13 @@ export default async function TypeEfficacyServer({
 
     // Use past efficacies if they exist for the generation of the pokemon
     const pastEfficacy = pastEfficacies.filter(
-      (efficacy: any) => efficacy.generation_id <= genId
+      (efficacy: any) => efficacy.generation_id <= versionId
     );
 
     efficacies
       // only include type generations that are equal to or less than same generation as the pokemon
       .filter(
-        (efficacy: any) => efficacy.pokemon_v2_type.generation_id <= genId
+        (efficacy: any) => efficacy.pokemon_v2_type.generation_id <= versionId
       )
       .forEach((efficacy: any) => {
         const damageTypeId = efficacy.damage_type_id;

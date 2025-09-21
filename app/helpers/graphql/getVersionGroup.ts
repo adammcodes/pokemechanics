@@ -5,19 +5,16 @@ type NamedAPIResource = {
   id: number;
 };
 
-export interface VersionGroup {
+export type VersionGroup = {
   id: number;
   name: string;
   order: number;
   versions: NamedAPIResource[];
   regions: NamedAPIResource[];
-  generation: {
-    name: string;
-    id: number;
-  };
+  generation: NamedAPIResource;
   pokedexes: NamedAPIResource[];
   error?: any;
-}
+};
 
 // The reason we're using a raw string query is because this can be called from a server component
 // and we're using the fetchFromGraphQL function which is a wrapper around the fetch API.
