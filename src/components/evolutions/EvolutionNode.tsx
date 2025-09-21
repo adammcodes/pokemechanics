@@ -1,4 +1,3 @@
-import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
 import PokemonSpriteForGen from "../sprites/PokemonSpriteForGen";
 import { SpeciesVariety } from "@/types/index";
 import findVarietyForRegion from "@/lib/findVarietyForRegion";
@@ -44,8 +43,6 @@ const EvolutionNode = async ({
     Number(pokemonDexNumber)
   );
 
-  const formatName = convertKebabCaseToTitleCase;
-
   // Initialize the pokemonVarietyId
   let pokemonVarietyId: number | undefined;
 
@@ -58,6 +55,7 @@ const EvolutionNode = async ({
     // Figure out which version of the sprite to use based on the game region
     const pokemonVarietyForRegion: SpeciesVariety | undefined =
       findVarietyForRegion(varieties, regionName);
+
     // If there is a matching pokemon variety for this game region, use that pokemon variety's id
     pokemonVarietyId = Number(
       pokemonVarietyForRegion?.pokemon.url.split("/").at(-2)
@@ -82,15 +80,13 @@ const EvolutionNode = async ({
   }
 
   return (
-    <figure className="flex flex-col items-center cursor-pointer">
-      <PokemonSpriteForGen
-        pokemonId={pokemonDexNumber.toString()}
-        sprite={sprite}
-        game={game}
-        dexId={dexId}
-      />
-      <label>{formatName(species.name)}</label>
-    </figure>
+    <PokemonSpriteForGen
+      pokemonId={pokemonDexNumber.toString()}
+      sprite={sprite}
+      game={game}
+      dexId={dexId}
+      speciesName={species.name}
+    />
   );
 };
 

@@ -15,7 +15,7 @@ export default function findVarietyForRegion(
   const pokemonVarietyForRegion: SpeciesVariety | undefined = varieties
     .filter((variety) => !variety.is_default)
     .find((variety) => {
-      return variety.pokemon.name.includes(regionName);
+      return variety.pokemon.name.includes(regionName.toLowerCase());
     });
 
   return pokemonVarietyForRegion;
