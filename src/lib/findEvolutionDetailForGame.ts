@@ -8,6 +8,7 @@ export default function findEvolutionDetailForGame(
   generation: string
 ): EvolutionDetail {
   const genNumber = Object.keys(numOfPokemonByGen).indexOf(generation) + 1;
+  const genString = Object.keys(numOfPokemonByGen)[genNumber - 1];
   // console.log(genNumber);
   // console.log(speciesName);
   // console.log(evolution_details);

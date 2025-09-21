@@ -1,3 +1,4 @@
+"use client";
 import { EvolutionContext } from "./_context";
 import useEvolutionClient from "@/hooks/useEvolutionClient";
 import { useQuery } from "react-query";

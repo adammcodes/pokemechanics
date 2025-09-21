@@ -1,15 +1,8 @@
 "use client";
 import { Sprite } from "@/components/sprites/Sprite";
-import { useContext } from "react";
 import { useRouter } from "next/navigation";
-import {
-  GameContext,
-  PokedexContext,
-  PokemonContext,
-} from "@/context/_context";
 import { Pokedex } from "pokenode-ts";
 import toTitleCase from "@/utils/toTitleCase";
-import useGameVersion from "@/hooks/useGameVersion";
 import { numOfPokemonByGen } from "@/constants/numOfPokemonByGen";
 import addPrecedingZeros from "@/utils/addPrecedingZeros";
 
@@ -18,17 +11,22 @@ type PokedexEntry = {
   pokedex: Pokedex;
 };
 
-export default function ForwardBack() {
+type ForwardBackProps = {
+  game: string;
+  p: any;
+  d: any;
+  version: any;
+};
+
+export default function ForwardBack({ game, p, d, version }: ForwardBackProps) {
   const router = useRouter();
   // game e.g. "red-blue"
-  const { game } = useContext(GameContext);
-  const version = useGameVersion(game);
+
   // generation name e.g. "generation-i"
   const gen = version.data?.generation?.name ?? "generation-i";
   // last dex entry number for the generation
   const lastDexEntryNum = numOfPokemonByGen[gen];
-  const d = useContext(PokedexContext);
-  const p = useContext(PokemonContext);
+
   const dex = d.dexQuery.data;
   const currentPokemonEntry: PokedexEntry = p.pokedex_numbers.find(
     (entry: PokedexEntry) => {
@@ -68,11 +66,18 @@ export default function ForwardBack() {
   return (
     <div className="lg:absolute flex flex-row justify-between w-full px-5 pb-5 lg:py-0">
       {currentEntryNum !== prevEntryNum && (
-        <a href={`/pokemon/${prevPokemonId}?dexId=${dex.id}`}>
+        <div
+          className="hover:underline cursor-pointer"
+          onClick={() =>
+            onPokemonSelect(
+              `/pokemon/${prevPokemonId}?dexId=${dex.id}&game=${game}`
+            )
+          }
+        >
           &larr; #{prevRegionalDexNum}{" "}
           <Sprite versionGroup={game} gen={gen} id={prevPokemonId} size={50} />
           {toTitleCase(prevPokemonEntry.pokemon_species.name)}
-        </a>
+        </div>
       )}
 
       {currentEntryNum === prevEntryNum && <div>&nbsp;</div>}
@@ -81,7 +86,9 @@ export default function ForwardBack() {
         <div
           className="hover:underline cursor-pointer"
           onClick={() =>
-            onPokemonSelect(`/pokemon/${nextPokemonId}?dexId=${dex.id}`)
+            onPokemonSelect(
+              `/pokemon/${nextPokemonId}?dexId=${dex.id}&game=${game}`
+            )
           }
         >
           #{nextRegionalDexNum}{" "}

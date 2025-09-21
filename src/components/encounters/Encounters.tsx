@@ -1,3 +1,4 @@
+"use client";
 import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
 import { useQuery, gql } from "@apollo/client";
 import VersionChip from "@/components/common/VersionChip";

@@ -44,8 +44,8 @@ const DualFlavorText: React.FC<DualFlavorTextProps> = ({
 };
 
 type PokemonFlavorTextProps = {
-  flavorTextForVersion: FlavorTextForVersion;
-  flavorTextForVersions: FlavorTextForVersion[];
+  flavorTextForVersion: FlavorTextForVersion | undefined;
+  flavorTextForVersions: FlavorTextForVersion[] | null;
   name: string;
   game: string;
 };
@@ -64,7 +64,7 @@ const PokemonFlavorText: React.FC<PokemonFlavorTextProps> = ({
       {flavorTextForVersions && (
         <DualFlavorText flavorTextForVersions={flavorTextForVersions} />
       )}
-      {!flavorTextForVersion && !flavorTextForVersions.length && (
+      {!flavorTextForVersion && !flavorTextForVersions?.length && (
         <div>
           <p className="text-base leading-none">
             There is no flavour text on {name} for{" "}

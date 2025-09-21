@@ -1,8 +1,7 @@
 import EvolutionTrigger from "./EvolutionTrigger";
-import PokemonSpriteForGen from "../sprites/PokemonSpriteForGen";
 import { numOfPokemonByGen } from "@/constants/numOfPokemonByGen";
-import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
 import findEvolutionDetailForGame from "@/lib/findEvolutionDetailForGame";
+import { EvolutionNode } from "./EvolutionNode";
 
 // Filters out evolutions that are not in the given generation
 function onlyEvolutionsForGen(evolution, generation) {
@@ -10,12 +9,28 @@ function onlyEvolutionsForGen(evolution, generation) {
   return pokemonDexNumber < numOfPokemonByGen[generation];
 }
 
+/**
+ *
+ * @param {*} node {
+ *   species: {
+ *     name: string,
+ *     url: string
+ *   },
+ *   evolves_to: Chain[],
+ *   evolution_details: EvolutionDetail[]
+ * }
+ * @param {*} gameInfo {
+ *   game: string, // red-blue, yellow, etc.
+ *   generation: string, // generation-i, generation-ii, etc.
+ *   dexId: number
+ * }
+ * @param {*} prevEvolutionInGen {boolean}
+ * @returns {React.ReactNode}
+ */
 const renderEvolutionNode = (node, gameInfo, prevEvolutionInGen) => {
   const { species, evolves_to, evolution_details } = node;
-  const { game, generation } = gameInfo;
-  console.log("game", game);
-  console.log("generation", generation);
-  const formatName = convertKebabCaseToTitleCase;
+  const { game, generation, regionName } = gameInfo;
+
   const isPokemonInGen = onlyEvolutionsForGen(node, generation);
   const pokemonDexNumber = Number(species.url.split("/").at(-2));
   const dexId = gameInfo.dexId;
@@ -38,12 +53,14 @@ const renderEvolutionNode = (node, gameInfo, prevEvolutionInGen) => {
           {evolution_details.length > 0 && prevEvolutionInGen && (
             <EvolutionTrigger details={evolutionDetails} />
           )}
-          <figure className="flex flex-col items-center">
-            <a href={`/pokemon/${pokemonDexNumber}?dexId=${dexId}`}>
-              <PokemonSpriteForGen pokemonId={pokemonDexNumber} game={game} />
-            </a>
-            <label>{formatName(species.name)}</label>
-          </figure>
+          <EvolutionNode
+            pokemonDexNumber={pokemonDexNumber}
+            dexId={dexId}
+            game={game}
+            regionName={regionName}
+            generation={generation}
+            species={species}
+          />
         </>
       )}
       {evolves_to.length > 0 && (
@@ -65,13 +82,17 @@ const renderEvolutionNode = (node, gameInfo, prevEvolutionInGen) => {
   );
 };
 
-/* 
-  gameInfo {
-    game: string,
-    generation: number,
-    dexId: number
-  }
-*/
+/**
+ *
+ * @param {*} chain
+ * @param {*} gameInfo {
+ *   game: string, // red-blue, yellow, etc.
+ *   generation: string, // generation-i, generation-ii, etc.
+ *   dexId: number
+ *   regionName: string // "Alola", "Galar", etc.
+ * }
+ * @returns {React.ReactNode}
+ */
 const PokemonEvolutionChain = (chain, gameInfo) => {
   return (
     <div className="flex justify-center">

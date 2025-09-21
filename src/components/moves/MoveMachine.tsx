@@ -1,3 +1,4 @@
+"use client";
 import { useQuery } from "react-query";
 import { MachineVersion } from "@/types/index";
 import useMachineClient from "@/hooks/useMachineClient";

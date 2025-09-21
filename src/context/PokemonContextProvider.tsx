@@ -1,3 +1,4 @@
+"use client";
 import { PokemonContext } from "./_context";
 
 type PokemonContextProps = {

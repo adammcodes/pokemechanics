@@ -1,3 +1,4 @@
+"use client";
 import Encounters from "./Encounters";
 import { useContext } from "react";
 import { EvolutionContext } from "@/context/_context";

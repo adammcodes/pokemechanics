@@ -1,8 +1,9 @@
 "use client";
+// THIS COMPONENT IS NOT USED
 import { useContext } from "react";
 import { useQuery } from "react-query";
 import { PokemonSpeciesVariety, SpeciesVariety } from "@/types/index";
-import PokemonCard from "./PokemonCard";
+import PokemonCardServer from "./PokemonCardServer";
 import { PokemonContext } from "@/context/_context";
 import findVarietyForRegion from "@/lib/findVarietyForRegion";
 import usePokemonClient from "@/hooks/usePokemonClient";
@@ -19,11 +20,12 @@ const PokemonVariety: React.FC<PokemonVarietyProps> = ({
 }) => {
   const api = usePokemonClient();
   const p = useContext(PokemonContext);
+  const regionName = regions[0].name;
 
   // If the pokemon's non-default variety matches the name of the region for this game
   // Then we will fetch that pokemon variety by id
   const pokemonVarietyForRegion: SpeciesVariety | undefined =
-    findVarietyForRegion(varieties, regions);
+    findVarietyForRegion(varieties, regionName);
 
   const pokemonVarietyId: number | undefined = Number(
     pokemonVarietyForRegion?.pokemon.url.split("/").at(-2)
@@ -51,14 +53,14 @@ const PokemonVariety: React.FC<PokemonVarietyProps> = ({
     <>
       {pokemonVarietyForRegionQuery.isLoading && "Loading variant..."}
       {pokemonVarietyForRegion && pokemonVarietyForRegionQuery.data && (
-        <PokemonCard
+        <PokemonCardServer
           {...pokemonVarietyForRegionQuery.data}
-          is_variant={true}
           name={pokemonVarietyForRegionQuery.data.name}
+          regionName={regionName}
         />
       )}
       {!Boolean(pokemonVarietyForRegion) && (
-        <PokemonCard is_variant={false} name={p.name} />
+        <PokemonCardServer {...p} name={p.name} regionName={regionName} />
       )}
     </>
   );

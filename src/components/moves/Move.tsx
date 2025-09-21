@@ -1,3 +1,4 @@
+"use client";
 import useMoveClient from "../../hooks/useMoveClient";
 import { useQuery } from "react-query";
 import { useContext } from "react";

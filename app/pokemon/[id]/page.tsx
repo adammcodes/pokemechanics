@@ -3,7 +3,8 @@ import { redirect } from "next/navigation";
 import { getVersionGroup } from "@/app/queries/getVersionGroup";
 // We'll use PokeAPI REST API for dex data to match client-side structure
 // Components
-import PokemonClientWrapper from "app/pokemon/[id]/PokemonClientWrapper";
+// import PokemonClientWrapper from "app/pokemon/[id]/PokemonClientWrapper";
+import PokemonCardServer from "./PokemonCardServer";
 
 // Server-side data fetching functions
 async function fetchPokemonById(id: number) {
@@ -166,12 +167,13 @@ export default async function Pokemon({ params, searchParams }: PageProps) {
 
   return (
     <main className="w-full">
-      <PokemonClientWrapper
+      <PokemonCardServer
         pokemonData={pokemonData}
         speciesData={speciesData}
         versionData={versionData}
         dexData={dexData}
         dexId={Number(dexId)}
+        game={selectedGame}
       />
     </main>
   );

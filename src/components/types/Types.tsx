@@ -1,3 +1,4 @@
+"use client";
 import { useQuery, gql } from "@apollo/client";
 import PokemonTypes from "./PokemonTypes";
 

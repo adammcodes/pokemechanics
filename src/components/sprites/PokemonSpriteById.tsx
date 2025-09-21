@@ -1,15 +1,20 @@
+"use client";
 import usePokemonClient from "../../hooks/usePokemonClient";
 import { useQuery } from "react-query";
 import findSpritesForVersion from "../../lib/findSpritesForVersion";
+import { useRouter } from "next/navigation";
 
 // Component that renders the pokemon sprite for the current generation
 const PokemonSpriteById = ({
   pokemonId,
   game,
+  dexId,
 }: {
   pokemonId: string | number | undefined;
   game: string;
+  dexId: number;
 }) => {
+  const router = useRouter();
   if (!pokemonId) return <p>Sprite not available</p>;
   const officialSpriteById = (id: number | string) =>
     `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`;
@@ -58,7 +63,16 @@ const PokemonSpriteById = ({
     width: `${spriteSize}px`,
   };
 
-  return <img src={sprite} alt={spriteAltText} style={spriteStyle} />;
+  const onPokemonSelect = (pokemonId: number | string) => {
+    // Navigate to the pokemon page
+    router.push(`/pokemon/${pokemonId}?dexId=${dexId}&game=${game}`);
+  };
+
+  return (
+    <div onClick={() => onPokemonSelect(pokemonId)}>
+      <img src={sprite} alt={spriteAltText} style={spriteStyle} />
+    </div>
+  );
 };
 
 export default PokemonSpriteById;

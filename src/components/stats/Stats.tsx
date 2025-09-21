@@ -1,3 +1,4 @@
+"use client";
 import { useQuery, gql } from "@apollo/client";
 import StatBars from "./StatsBar";
 import Box from "../common/Box";
