@@ -214,6 +214,9 @@ export default async function PokemonCardServer({
         {/* Encounters */}
         {versionData && (
           <LocationsForVersionGroupServer
+            locationAreaEncountersUrl={
+              displayPokemonData.location_area_encounters
+            }
             pokemonSpeciesId={pokemonId}
             versions={versionData.versions.map((v) => v.name)}
             evolutionData={evolutionChainData}
