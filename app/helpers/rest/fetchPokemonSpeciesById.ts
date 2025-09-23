@@ -1,4 +1,12 @@
+import { MAX_SPECIES_ID } from "@/constants/numOfPokemonByGen";
+
 export async function fetchPokemonSpeciesById(id: number) {
+  if (id > MAX_SPECIES_ID) {
+    throw new Error(
+      `Pokemon species ID ${id} is greater than the maximum species ID`
+    );
+  }
+
   const response = await fetch(
     `https://pokeapi.co/api/v2/pokemon-species/${id}`,
     {

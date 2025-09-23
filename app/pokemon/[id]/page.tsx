@@ -54,6 +54,8 @@ export async function generateMetadata({
     };
   } catch (error) {
     console.error("Error generating metadata:", error);
+
+    // Return fallback metadata
     return {
       title: "Pokémon | Pokémechanics",
       description:
@@ -71,57 +73,79 @@ export default async function Pokemon({ params, searchParams }: PageProps) {
   const selectedGame = (searchParams?.game as string) ?? "red-blue";
 
   if (!selectedGame) {
-    // redirect to the home page
     redirect("/");
   }
 
   if (!id || !dexId) {
-    // redirect to the pokedex page
     redirect("/pokedex");
   }
 
-  // Fetch all data on the server
-  const [pokemonData, speciesData, versionData, dexData] = await Promise.all([
-    fetchPokemonById(Number(id)),
-    fetchPokemonSpeciesById(Number(id)),
-    getVersionGroup(selectedGame),
-    fetchPokedexById(Number(dexId)),
-  ]);
+  try {
+    // Fetch all data on the server
+    const [pokemonData, speciesData, versionData, dexData] = await Promise.all([
+      fetchPokemonById(Number(id)),
+      fetchPokemonSpeciesById(Number(id)),
+      getVersionGroup(selectedGame),
+      fetchPokedexById(Number(dexId)),
+    ]);
 
-  if (versionData.error || pokemonData.error || speciesData.error || !dexData) {
+    // Check if we have the required data
+    if (!pokemonData || !speciesData || !versionData || !dexData) {
+      return (
+        <main className="w-full">
+          <h1>Data Not Found</h1>
+          <p>The requested Pokémon data could not be found.</p>
+        </main>
+      );
+    }
+
     return (
       <main className="w-full">
-        <h1>There was an error</h1>
+        <PokemonCardServer
+          pokemonData={pokemonData}
+          speciesData={speciesData}
+          versionData={versionData}
+          dexData={dexData}
+          dexId={Number(dexId)}
+          game={selectedGame}
+        />
+      </main>
+    );
+  } catch (error) {
+    console.error("Error loading Pokémon data:", error);
+
+    // Handle specific error types
+    if (error instanceof Error) {
+      if (error.message.includes("Failed to fetch")) {
+        return (
+          <main className="w-full">
+            <h1>Network Error</h1>
+            <p>
+              Unable to connect to the Pokémon database. Please try again later.
+            </p>
+          </main>
+        );
+      }
+
+      if (error.message.includes("greater than the maximum")) {
+        return (
+          <main className="w-full max-w-screen-sm mx-auto text-center">
+            <h1>Invalid Pokémon</h1>
+            <p>The requested Pokémon ID is not valid.</p>
+          </main>
+        );
+      }
+    }
+
+    // Generic error fallback
+    return (
+      <main className="w-full">
+        <h1>Something went wrong</h1>
         <p>
-          {versionData.error?.message ||
-            pokemonData.error?.message ||
-            speciesData.error?.message ||
-            "Failed to load data"}
+          We encountered an error while loading the Pokémon data. Please try
+          again.
         </p>
       </main>
     );
   }
-
-  // Check if we have the required data
-  if (!pokemonData || !speciesData || !versionData || !dexData || !dexId) {
-    return (
-      <main className="w-full">
-        <h1>Loading...</h1>
-        <p>Please wait while we load the Pokémon data.</p>
-      </main>
-    );
-  }
-
-  return (
-    <main className="w-full">
-      <PokemonCardServer
-        pokemonData={pokemonData}
-        speciesData={speciesData}
-        versionData={versionData}
-        dexData={dexData}
-        dexId={Number(dexId)}
-        game={selectedGame}
-      />
-    </main>
-  );
 }

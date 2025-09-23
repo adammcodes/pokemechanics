@@ -20,9 +20,10 @@ function onlyEvolutionsForGen(evolution, generation) {
  *   evolution_details: EvolutionDetail[]
  * }
  * @param {*} gameInfo {
- *   game: string, // red-blue, yellow, etc.
- *   generation: string, // generation-i, generation-ii, etc.
- *   dexId: number
+ *   game: string,
+ *   generation: string,
+ *   dexId: number,
+ *   regionName: string
  * }
  * @param {*} prevEvolutionInGen {boolean}
  * @returns {React.ReactNode}
@@ -86,11 +87,15 @@ const renderEvolutionNode = (node, gameInfo, prevEvolutionInGen) => {
  *
  * @param {*} chain
  * @param {*} gameInfo {
- *   game: string, // red-blue, yellow, etc.
- *   generation: string, // generation-i, generation-ii, etc.
+ *   game: string,
+ *   generation: string,
  *   dexId: number
- *   regionName: string // "Alola", "Galar", etc.
+ *   regionName: string
  * }
+ * - gameInfo.game e.g. "red-blue", "yellow", etc.
+ * - gameInfo.generation e.g. "generation-i", "generation-ii", etc.
+ * - gameInfo.dexId e.g. 1, 2, etc.
+ * - gameInfo.regionName e.g. "Alola", "Galar", etc.
  * @returns {React.ReactNode}
  */
 const PokemonEvolutionChain = (chain, gameInfo) => {

@@ -1,3 +1,5 @@
+export const MAX_SPECIES_ID = 1025;
+
 export const numOfPokemonByGen: { [key: string]: number } = {
   "generation-i": 151,
   "generation-ii": 251,
@@ -7,5 +9,5 @@ export const numOfPokemonByGen: { [key: string]: number } = {
   "generation-vi": 721,
   "generation-vii": 809,
   "generation-viii": 905,
-  "generation-ix": 1017,
+  "generation-ix": MAX_SPECIES_ID,
 };
