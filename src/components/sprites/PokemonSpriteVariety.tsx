@@ -1,13 +1,11 @@
-"use client";
-import usePokemonClient from "../../hooks/usePokemonClient";
-import { useQuery } from "react-query";
 import findSpritesForVersion from "../../lib/findSpritesForVersion";
 import { PokemonSprite } from "./PokemonSprite";
 import splitKebabCase from "@/utils/splitKebabCase";
 import toTitleCase from "@/utils/toTitleCase";
+import { fetchPokemonById } from "@/app/helpers/rest/fetchPokemonById";
 
 // Component that renders the pokemon sprite for the current generation
-const PokemonSpriteVariety = ({
+const PokemonSpriteVariety = async ({
   pokemonId,
   pokemonVarietyId,
   game,
@@ -18,57 +16,60 @@ const PokemonSpriteVariety = ({
   game: string;
   dexId: number;
 }) => {
-  if (!pokemonId) return <p>Sprite not available</p>;
-  const officialSpriteById = (id: number | string) =>
-    `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`;
-
-  // If there is no sprite for the current generation, use the official artwork
-  let sprite = officialSpriteById(pokemonVarietyId);
-
-  // Use pokemonId to fetch the pokemon data for the pokemon using the PokemonClient
-  // This will give us all the sprites for the pokemon
-  const api = usePokemonClient();
-  const fetchPokemon = (pokemonId: number) => {
-    return api
-      .getPokemonById(Number(pokemonId))
-      .then((data) => data)
-      .catch((err) => {
-        throw err;
-      });
-  };
-
-  // Use react-query to fetch the pokemon data
-  const pokemonQuery = useQuery(
-    ["pokemonEvolutionSprite", pokemonVarietyId],
-    () => fetchPokemon(Number(pokemonVarietyId)),
-    {
-      enabled: Boolean(pokemonVarietyId),
-      refetchOnMount: false,
-      refetchOnWindowFocus: false,
-    }
-  );
-
-  // If the pokemon/species data is loading, return a loading message
-  if (pokemonQuery.isLoading) return <div>Loading sprite...</div>;
-  // If there is an error, return an error message
-  if (pokemonQuery.isError) return <div>Error loading sprite</div>;
-
-  if (pokemonQuery.data) {
-    // Render the pokemon sprite for the current generation
-    const allSprites = pokemonQuery.data.sprites;
-    // Use the sprite for the generation if it exists, otherwise use the default official artwork sprite
-    sprite = findSpritesForVersion(allSprites, game).front_default ?? sprite;
+  // Early return for missing pokemonId
+  if (!pokemonId) {
+    return (
+      <div className="flex flex-col items-center p-4">
+        <p className="text-gray-500">Sprite not available</p>
+      </div>
+    );
   }
 
-  const [speciesName, regionName] = splitKebabCase(pokemonQuery.data?.name);
-  const regionTitle = toTitleCase(regionName);
+  // Default to official artwork sprite
+  let sprite = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonVarietyId}.png`;
+  let speciesName = "Unknown";
+  let regionTitle = "";
+
+  try {
+    // Fetch Pokemon data using the existing helper function
+    const pokemonData = await fetchPokemonById(Number(pokemonVarietyId));
+
+    if (pokemonData?.sprites) {
+      // Use the sprite for the generation if it exists, otherwise use the default official artwork sprite
+      const versionSprites = findSpritesForVersion(pokemonData.sprites, game);
+      sprite = versionSprites?.front_default ?? sprite;
+    }
+
+    // Extract species name and region from Pokemon name
+    if (pokemonData?.name) {
+      const [extractedSpeciesName, extractedRegionName] = splitKebabCase(
+        pokemonData.name
+      );
+      speciesName = extractedSpeciesName || "Unknown";
+      regionTitle = extractedRegionName ? toTitleCase(extractedRegionName) : "";
+    }
+  } catch (error) {
+    console.error("Error in PokemonSpriteVariety:", error);
+
+    // Return error UI instead of crashing
+    return (
+      <div className="flex flex-col items-center p-4">
+        <div className="bg-gray-200 rounded-lg flex items-center justify-center mb-2 px-4">
+          <span className="text-gray-500 text-sm">Error loading sprite</span>
+        </div>
+        <p className="text-gray-500 text-sm">Failed to load Pokemon data</p>
+      </div>
+    );
+  }
 
   return (
     <PokemonSprite
       pokemonId={pokemonId}
       dexId={dexId}
       game={game}
-      speciesName={`${speciesName} (${regionTitle})`}
+      speciesName={
+        regionTitle ? `${speciesName} (${regionTitle})` : speciesName
+      }
       sprite={sprite}
     />
   );

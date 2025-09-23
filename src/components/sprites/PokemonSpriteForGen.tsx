@@ -1,5 +1,3 @@
-"use client";
-
 import { PokemonSprite } from "./PokemonSprite";
 
 // Component that renders the pokemon sprite for the current generation
