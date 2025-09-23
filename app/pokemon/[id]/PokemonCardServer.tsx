@@ -45,15 +45,21 @@ export default async function PokemonCardServer({
   //   "=================== PokemonCardServer pokemonData ==================="
   // );
   // console.log(pokemonData);
-  // console.log("=================== PokemonCardServer speciesData ===================");
+  // console.log(
+  //   "=================== PokemonCardServer speciesData ==================="
+  // );
   // console.log(speciesData);
   // console.log(
   //   "=================== PokemonCardServer versionData ==================="
   // );
   // console.log(versionData);
-  // console.log("=================== PokemonCardServer dexData ===================");
+  // console.log(
+  //   "=================== PokemonCardServer dexData ==================="
+  // );
   // console.log(dexData);
-  // console.log("=================== PokemonCardServer dexId ===================");
+  // console.log(
+  //   "=================== PokemonCardServer dexId ==================="
+  // );
   // console.log(dexId);
   // console.log("=================== PokemonCardServer game ===================");
   // console.log(game);

@@ -9,6 +9,7 @@ import {
   VersionDetails,
   EncounterDetails,
 } from "@/app/pokemon/[id]/LocationsForVersionGroupServer";
+import toTitleCase from "@/utils/toTitleCase";
 
 const GetPokemonLocationsForVersion = gql`
   query GetPokemonLocationsForVersion(
@@ -290,10 +291,8 @@ const Encounters: React.FC<EncountersProps> = ({
   evolutionData,
 }) => {
   const formatName = convertKebabCaseToTitleCase;
-  // console.log(version, "version");
-  // console.log(pokemonSpeciesId, "pokemonSpeciesId");
-  // console.log(evolutionData, "evolutionData");
-  console.log(locationAreaEncounters, "locationAreaEncounters");
+  console.log(pokemonSpeciesId, "pokemonSpeciesId");
+
   const { loading, error, data } = useQuery(GetPokemonLocationsForVersion, {
     variables: {
       version: version.toLowerCase(),
@@ -310,24 +309,16 @@ const Encounters: React.FC<EncountersProps> = ({
 
   if (!data) return null;
 
-  // console.log(data);
-
   const { pokemon_v2_encounter, pokemon_v2_version } = data as EncountersData;
 
+  const locationEncounters = groupEncountersByLocation(
+    pokemon_v2_encounter,
+    locationAreaEncounters,
+    version.toLowerCase()
+  );
+
+  // console.log(locationEncounters, "locationEncounters");
   // console.log(pokemon_v2_encounter, "pokemon_v2_encounter");
-  // console.log(pokemon_v2_version, "pokemon_v2_version");
-
-  // Use server data if GraphQL data is empty, otherwise use GraphQL data
-  const encountersToUse =
-    pokemon_v2_encounter.length > 0
-      ? pokemon_v2_encounter
-      : transformLocationAreaEncountersToEncounters(
-          locationAreaEncounters,
-          version,
-          pokemonSpeciesId
-        );
-
-  const locationEncounters = groupEncountersByLocation(encountersToUse);
 
   // const generationId =
   //   pokemon_v2_version[0].pokemon_v2_versiongroup.pokemon_v2_generation.id;
@@ -360,6 +351,13 @@ const Encounters: React.FC<EncountersProps> = ({
   // We assuming if there are no encounters and no evolutions, the pokemon is obtainable only by an event
   const isMythical = thisPokemon?.is_mythical;
 
+  const dedupeEncounterMethods = (encounterMethods: EncounterDetails[]) => {
+    return encounterMethods.filter(
+      (method, index, self) =>
+        index === self.findIndex((t) => t.method.name === method.method.name)
+    );
+  };
+
   return (
     <>
       <VersionChip versionName={version} />
@@ -390,6 +388,12 @@ const Encounters: React.FC<EncountersProps> = ({
                     <Text>Min. Level: {location.minLevel}</Text>
                     <Text>Max. Level: {location.maxLevel}</Text>
                     <Text>Rate: {location.encounterRate}%</Text>
+                    <Text>
+                      Method:{" "}
+                      {dedupeEncounterMethods(location.encounterMethods)
+                        .map((method) => toTitleCase(method.method.name))
+                        .join(", ")}
+                    </Text>
                   </Stack>
                 }
               >
