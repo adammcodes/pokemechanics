@@ -16,7 +16,6 @@
     "framer-motion": "^11.1.1",
     "graphql": "^16.8.1",
     "next": "^14.0.4",
-    "pokeapi-typescript": "^3.0.3",
     "pokenode-ts": "^1.20.0",
     "postcss-import": "^16.1.0",
     "postcss-nested": "^6.0.1",
