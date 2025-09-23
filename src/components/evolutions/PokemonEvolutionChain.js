@@ -29,6 +29,7 @@ function onlyEvolutionsForGen(evolution, generation) {
  * @returns {React.ReactNode}
  */
 const renderEvolutionNode = (node, gameInfo, prevEvolutionInGen) => {
+  console.log(node, "node");
   const { species, evolves_to, evolution_details } = node;
   const { game, generation, regionName } = gameInfo;
 
@@ -99,6 +100,7 @@ const renderEvolutionNode = (node, gameInfo, prevEvolutionInGen) => {
  * @returns {React.ReactNode}
  */
 const PokemonEvolutionChain = (chain, gameInfo) => {
+  console.log(chain, "chain");
   return (
     <div className="flex justify-center">
       {renderEvolutionNode(chain, gameInfo, false)}

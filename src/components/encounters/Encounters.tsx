@@ -291,7 +291,6 @@ const Encounters: React.FC<EncountersProps> = ({
   evolutionData,
 }) => {
   const formatName = convertKebabCaseToTitleCase;
-  console.log(pokemonSpeciesId, "pokemonSpeciesId");
 
   const { loading, error, data } = useQuery(GetPokemonLocationsForVersion, {
     variables: {

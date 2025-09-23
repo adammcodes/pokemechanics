@@ -2,25 +2,28 @@
 import usePokemonClient from "../../hooks/usePokemonClient";
 import { useQuery } from "react-query";
 import findSpritesForVersion from "../../lib/findSpritesForVersion";
-import { useRouter } from "next/navigation";
+import { PokemonSprite } from "./PokemonSprite";
+import splitKebabCase from "@/utils/splitKebabCase";
+import toTitleCase from "@/utils/toTitleCase";
 
 // Component that renders the pokemon sprite for the current generation
-const PokemonSpriteById = ({
+const PokemonSpriteVariety = ({
   pokemonId,
+  pokemonVarietyId,
   game,
   dexId,
 }: {
   pokemonId: string | number | undefined;
+  pokemonVarietyId: number;
   game: string;
   dexId: number;
 }) => {
-  const router = useRouter();
   if (!pokemonId) return <p>Sprite not available</p>;
   const officialSpriteById = (id: number | string) =>
     `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`;
 
   // If there is no sprite for the current generation, use the official artwork
-  let sprite = officialSpriteById(pokemonId);
+  let sprite = officialSpriteById(pokemonVarietyId);
 
   // Use pokemonId to fetch the pokemon data for the pokemon using the PokemonClient
   // This will give us all the sprites for the pokemon
@@ -36,10 +39,10 @@ const PokemonSpriteById = ({
 
   // Use react-query to fetch the pokemon data
   const pokemonQuery = useQuery(
-    ["pokemonEvolutionSprite", pokemonId],
-    () => fetchPokemon(Number(pokemonId)),
+    ["pokemonEvolutionSprite", pokemonVarietyId],
+    () => fetchPokemon(Number(pokemonVarietyId)),
     {
-      enabled: Boolean(pokemonId),
+      enabled: Boolean(pokemonVarietyId),
       refetchOnMount: false,
       refetchOnWindowFocus: false,
     }
@@ -57,22 +60,18 @@ const PokemonSpriteById = ({
     sprite = findSpritesForVersion(allSprites, game).front_default ?? sprite;
   }
 
-  const spriteSize = 80;
-  const spriteAltText = `Pokemon sprite`;
-  const spriteStyle = {
-    width: `${spriteSize}px`,
-  };
-
-  const onPokemonSelect = (pokemonId: number | string) => {
-    // Navigate to the pokemon page
-    router.push(`/pokemon/${pokemonId}?dexId=${dexId}&game=${game}`);
-  };
+  const [speciesName, regionName] = splitKebabCase(pokemonQuery.data?.name);
+  const regionTitle = toTitleCase(regionName);
 
   return (
-    <div onClick={() => onPokemonSelect(pokemonId)}>
-      <img src={sprite} alt={spriteAltText} style={spriteStyle} />
-    </div>
+    <PokemonSprite
+      pokemonId={pokemonId}
+      dexId={dexId}
+      game={game}
+      speciesName={`${speciesName} (${regionTitle})`}
+      sprite={sprite}
+    />
   );
 };
 
-export default PokemonSpriteById;
+export default PokemonSpriteVariety;

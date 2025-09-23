@@ -1,7 +1,7 @@
 import PokemonSpriteForGen from "../sprites/PokemonSpriteForGen";
 import { SpeciesVariety } from "@/types/index";
 import findVarietyForRegion from "@/lib/findVarietyForRegion";
-import PokemonSpriteById from "../sprites/PokemonSpriteById";
+import PokemonSpriteVariety from "../sprites/PokemonSpriteVariety";
 import getSpriteUrl from "@/constants/spriteUrlTemplates";
 import { fetchPokemonSpeciesById } from "@/app/helpers/rest/fetchPokemonSpeciesById";
 
@@ -54,8 +54,9 @@ const EvolutionNode = async ({
   // If there is a pokemonVarietyId, use the PokemonSpriteById component to render the regional variant sprite
   if (pokemonVarietyId) {
     return (
-      <PokemonSpriteById
-        pokemonId={pokemonVarietyId}
+      <PokemonSpriteVariety
+        pokemonId={pokemonDexNumber}
+        pokemonVarietyId={Number(pokemonVarietyId)}
         game={game}
         dexId={dexId}
       />
