@@ -1,4 +1,4 @@
-interface PokeballLoaderProps {
+interface SpinnerProps {
   size?: "sm" | "md" | "lg";
   className?: string;
 }
@@ -6,7 +6,7 @@ interface PokeballLoaderProps {
 export default function LoadingSpinner({
   size = "md",
   className = "",
-}: PokeballLoaderProps) {
+}: SpinnerProps) {
   const sizeClasses = {
     sm: "w-6 h-6",
     md: "w-8 h-8",
@@ -15,8 +15,22 @@ export default function LoadingSpinner({
 
   return (
     <div className={`flex items-center justify-center ${className}`}>
-      <div className={`${sizeClasses[size]} animate-spin`}>
-        <div className="w-full h-full border-4 border-gray-200 border-t-blue-500 rounded-full"></div>
+      <div className={`${sizeClasses[size]} animate-spin relative`}>
+        <div
+          className="w-full h-full border-4 rounded-full"
+          style={{
+            borderColor: "var(--background-colour)",
+            borderTopColor: "var(--text-colour)",
+            borderBottomColor: "var(--shadow-colour)",
+          }}
+        ></div>
+        {/* Middle circle */}
+        <div
+          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full"
+          style={{
+            backgroundColor: "var(--text-colour)",
+          }}
+        />
       </div>
     </div>
   );

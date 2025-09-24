@@ -1,25 +1,22 @@
-"use client";
-import { useContext, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { GameContext } from "@/context/_context";
-import PokeballLoader from "@/components/common/PokeballLoader";
+import { redirect } from "next/navigation";
+import styles from "@/styles/TypingText.module.css";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
 
-export default function Pokedex() {
-  // Get currently selected version group
-  const { game } = useContext(GameContext);
-  const router = useRouter();
+type PageProps = {
+  searchParams?: {
+    [key: string]: string | string[] | undefined;
+  };
+};
 
-  useEffect(() => {
-    // Check if the game generation value is available
-    if (game) {
-      // Redirect to the /pokedex/[gen] page
-      router.push(`/pokedex/${game}`);
-    } else {
-      // Redirect to the index page
-      router.push("/");
-    }
-  }, [game, router]);
+export default function Pokedex({ searchParams }: PageProps) {
+  // Check if there's a game parameter in the URL
+  const game = searchParams?.game;
 
-  // Return jsx for Loading page
-  return <PokeballLoader />;
+  // If no game parameter, redirect to home page
+  if (!game) {
+    redirect("/");
+  }
+
+  // If there is a game parameter, redirect to the specific generation page
+  redirect(`/pokedex/${game}`);
 }

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import "@/styles/slider.css";
 import styles from "./Header.module.css";
+import { usePathname, useSearchParams } from "next/navigation";
 
 const DarkModeToggle = ({
   darkMode,
@@ -52,14 +53,21 @@ const Nav = ({
   onDarkModeChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   setIsNavOpen: (value: boolean) => void;
 }) => {
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const gameSearchParam = searchParams.get("game");
+  // Get the "game" page path either from the search params "game" or from the pathname from /pokedex/[game]
+  const game = gameSearchParam || pathname.split("/")[2];
+  const gamePath = game && game !== "undefined" ? `/${game}` : "";
+
   const closeNav = () => {
     setIsNavOpen(false);
   };
 
   const navLinks = [
-    { href: "/pokedex", text: "Pokédex" },
-    { href: "/bag", text: "Bag" },
-    { href: "/map", text: "Map" },
+    { href: "/pokedex" + gamePath, text: "Pokédex" },
+    { href: "/bag" + gamePath, text: "Bag" },
+    { href: "/map" + gamePath, text: "Map" },
     { href: "/", text: "Select Version" },
   ];
 
