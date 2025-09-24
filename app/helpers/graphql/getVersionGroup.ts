@@ -51,7 +51,10 @@ const query = `
 // fetch the game version for the selected generation
 export async function getVersionGroup(gen: string): Promise<VersionGroup> {
   try {
-    const response = await fetchFromGraphQL(query, { name: gen });
+    const response = await fetchFromGraphQL({
+      query,
+      variables: { name: gen },
+    });
 
     if (!response.data?.pokemon_v2_versiongroup?.[0]) {
       throw new Error(`Version group '${gen}' not found`);

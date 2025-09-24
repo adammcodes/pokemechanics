@@ -1,6 +1,6 @@
 "use client";
 // Types
-import { PokedexPokemon } from "./PokedexById";
+import { PokedexPokemon } from "./[gen]/PokedexById";
 // Components
 import AutocompleteBase from "@/components/common/AutocompleteBase";
 // Utils

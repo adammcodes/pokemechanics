@@ -1,7 +1,7 @@
 import styles from "../Pokedexes.module.css";
 // components
-import PokedexById from "../PokedexById";
-import NationalDex from "../NationalDex";
+import PokedexById from "./PokedexById";
+import NationalDex from "./NationalDex";
 import { getVersionGroup } from "@/app/helpers/graphql/getVersionGroup";
 import { Metadata } from "next";
 

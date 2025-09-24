@@ -1,10 +1,9 @@
-// import PokeballLoader css module
-import styles from "@/styles/PokeballLoader.module.css";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
 
 export default function Loading() {
   return (
-    <div className={styles.container}>
-      <div className={styles.pokeball}></div>
+    <div className="flex items-center justify-center h-screen">
+      <LoadingSpinner />
     </div>
   );
 }

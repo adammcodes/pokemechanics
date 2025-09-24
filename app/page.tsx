@@ -22,7 +22,7 @@ async function getVersionGroups(): Promise<Gen[]> {
   `;
 
   try {
-    const data = await fetchFromGraphQL(query);
+    const data = await fetchFromGraphQL({ query });
 
     // Transform the GraphQL response to match the expected Gen[] format
     return data.data.pokemon_v2_versiongroup.map((versionGroup: any) => {

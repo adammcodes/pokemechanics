@@ -1,7 +1,7 @@
-"use client";
-import { getNationalDexByLimit } from "./NationalDexQuery";
-import { useEffect, useState } from "react";
-import PokemonSelector from "./PokemonSelector";
+// "use client";
+import { getNationalDexByLimit } from "@/app/helpers/graphql/getNationalDexByLimit";
+// import { useEffect, useState } from "react";
+import PokemonSelector from "../PokemonSelector";
 // type imports
 import { PokedexPokemon } from "./PokedexById";
 import { numOfPokemonByGen } from "@/constants/numOfPokemonByGen";
@@ -24,7 +24,7 @@ type Pokedex = {
   }[];
 };
 
-export default function NationalDex({
+export default async function NationalDex({
   game,
   generationString,
   includeHeader = true,
@@ -32,34 +32,41 @@ export default function NationalDex({
   const isFireRedLeafGreen = game === "firered-leafgreen";
   const limit = isFireRedLeafGreen ? 151 : numOfPokemonByGen[generationString];
 
+  console.log("limit", limit);
+  const dex = await getNationalDexByLimit(limit);
+
+  if (!dex) {
+    return <></>;
+  }
+
   // The limit param is to limit the number of Pokémon returned that applies to the National Pokédex for that generation.
   // For example, in Generation 1, the National Pokédex only contains 151 Pokémon. So the limit param would be 151.
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<unknown>(null);
-  const [dex, setPokedex] = useState({} as Pokedex);
+  // const [loading, setLoading] = useState(true);
+  // const [error, setError] = useState<unknown>(null);
+  // const [dex, setPokedex] = useState({} as Pokedex);
 
-  useEffect(() => {
-    async function fetchPokedexData() {
-      try {
-        const data = await getNationalDexByLimit(limit);
-        setPokedex(data);
-      } catch (error) {
-        console.error(error);
-        setError(error);
-      } finally {
-        setLoading(false);
-      }
-    }
+  // useEffect(() => {
+  //   async function fetchPokedexData() {
+  //     try {
+  //       const data = await getNationalDexByLimit(limit);
+  //       setPokedex(data);
+  //     } catch (error) {
+  //       console.error(error);
+  //       setError(error);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   }
 
-    fetchPokedexData();
-  }, [limit]);
+  //   fetchPokedexData();
+  // }, [limit]);
 
-  if (loading) return null;
+  // if (loading) return null;
 
-  if (error) {
-    console.log(error);
-    return <p>The PokeAPI returned an error. Please try again later.</p>;
-  }
+  // if (error) {
+  //   console.log(error);
+  //   return <p>The PokeAPI returned an error. Please try again later.</p>;
+  // }
 
   const firstPokemonSpecies = dex.pokemon_v2_pokemondexnumbers[0];
   const lastPokemonSpecies = dex.pokemon_v2_pokemondexnumbers.slice(-1)[0];

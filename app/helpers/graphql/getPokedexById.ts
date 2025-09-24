@@ -34,7 +34,10 @@ const query = `
 
 export async function getPokedexById(dexId: number) {
   try {
-    const gqlResponse = await fetchFromGraphQL(query, { dexId });
+    const gqlResponse = await fetchFromGraphQL({
+      query,
+      variables: { dexId },
+    });
 
     // Optional: fetch Pokedex data from the REST API where its easier to access the region name
     // const restResponse = await fetchPokedexById(dexId);

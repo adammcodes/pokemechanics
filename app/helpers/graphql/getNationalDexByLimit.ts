@@ -1,10 +1,11 @@
-import { gql } from "@apollo/client";
-import client from "@/apollo/apollo-client";
+// import { gql } from "@apollo/client";
+// import client from "@/apollo/apollo-client";
+import { fetchFromGraphQL } from "@/utils/api";
 
 export const getNationalDexByLimit = async (limit: number) => {
   // The limit param is to limit the number of Pokémon returned that applies to the National Pokédex for that generation.
   // For example, in Generation 1, the National Pokédex only contains 151 Pokémon. So the limit param would be 151.
-  const query = gql`
+  const query = `
     query GetPokedexByLimit($limit: Int!) {
       pokemon_v2_pokedex_by_pk(id: 1) {
         id
@@ -29,11 +30,16 @@ export const getNationalDexByLimit = async (limit: number) => {
   `;
 
   try {
-    const { data } = await client.query({
+    const response = await fetchFromGraphQL({
       query,
       variables: { limit },
     });
-    return data.pokemon_v2_pokedex_by_pk;
+
+    if (!response.data?.pokemon_v2_pokedex_by_pk) {
+      throw new Error(`National Pokédex not found`);
+    }
+
+    return response.data.pokemon_v2_pokedex_by_pk;
   } catch (error) {
     console.error("Error fetching National Pokédex:", error);
     return null;
