@@ -1,5 +1,3 @@
-// import { GameClient, NamedAPIResourceList } from "pokenode-ts"; // import the GameClient that is auto-cached
-
 // Components
 import GenSelector from "app/GenSelector";
 // Utils
@@ -13,14 +11,6 @@ type Gen = {
 };
 
 async function getVersionGroups(): Promise<Gen[]> {
-  // const api = new GameClient();
-  // return await api
-  //   .listVersionGroups(0, 25) // right now supporting up to scarlet-violet
-  //   .then((data: NamedAPIResourceList) => {
-  //     return data.results;
-  //   })
-  //   .catch((error: any) => error);
-
   const query = `
     query GetVersionGroups {
       pokemon_v2_versiongroup(limit: 25, order_by: {id: asc}) {
