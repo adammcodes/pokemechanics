@@ -70,11 +70,14 @@ const Abilities: React.FC<AbilitiesProps> = ({ pokemonName }) => {
   const formatName = convertKebabCaseToTitleCase;
   const { loading, error, data } = useQuery(GetAbilitiesByPokemon, {
     variables: { pokemonName: pokemonName.toLowerCase() },
+    errorPolicy: "all",
+    fetchPolicy: "cache-first",
+    notifyOnNetworkStatusChange: false,
   });
 
   if (loading) return null;
   if (error) {
-    console.error(error);
+    console.error("Abilities query error:", error);
     return null;
   }
 

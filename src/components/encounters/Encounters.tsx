@@ -298,6 +298,9 @@ const Encounters: React.FC<EncountersProps> = ({
       pokemonSpeciesId,
       evolutionChainId: evolutionData.id,
     },
+    errorPolicy: "all",
+    fetchPolicy: "cache-first",
+    notifyOnNetworkStatusChange: false,
   });
 
   if (loading) return null;

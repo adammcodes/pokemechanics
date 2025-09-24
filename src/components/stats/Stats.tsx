@@ -38,11 +38,14 @@ type PokemonStats = {
 const Stats: React.FC<StatsProps> = ({ pokemonName }) => {
   const { loading, error, data } = useQuery(GetPokemonStats, {
     variables: { pokemonName: pokemonName.toLowerCase() },
+    errorPolicy: "all",
+    fetchPolicy: "cache-first",
+    notifyOnNetworkStatusChange: false,
   });
 
   if (loading) return null;
   if (error) {
-    console.error(error);
+    console.error("Stats query error:", error);
     return null;
   }
 

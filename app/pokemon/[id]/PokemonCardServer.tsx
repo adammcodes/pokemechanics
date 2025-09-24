@@ -23,6 +23,7 @@ import Abilities from "@/components/abilities/Abilities";
 import Stats from "@/components/stats/Stats";
 import LocationsForVersionGroupServer from "./LocationsForVersionGroupServer";
 import TypeEfficacyServer from "./TypeEfficacyServer";
+import GraphQLErrorBoundary from "@/components/common/GraphQLErrorBoundary";
 
 type PokemonCardServerProps = {
   pokemonData: Pokemon;
@@ -214,23 +215,33 @@ export default async function PokemonCardServer({
           flavorTextForVersions={flavorTextForVersions}
         />
         {/* Abilities */}
-        {!isGenOneOrTwo && <Abilities pokemonName={variantName} />}
+        {!isGenOneOrTwo && (
+          <GraphQLErrorBoundary>
+            <Abilities pokemonName={variantName} />
+          </GraphQLErrorBoundary>
+        )}
         {/* Stats */}
-        <Stats pokemonName={variantName} />
+        <GraphQLErrorBoundary>
+          <Stats pokemonName={variantName} />
+        </GraphQLErrorBoundary>
         {/* Encounters */}
         {versionData && (
-          <LocationsForVersionGroupServer
-            locationAreaEncountersUrl={
-              displayPokemonData.location_area_encounters
-            }
-            pokemonSpeciesId={pokemonId}
-            versions={versionData.versions.map((v) => v.name)}
-            evolutionData={evolutionChainData}
-          />
+          <GraphQLErrorBoundary>
+            <LocationsForVersionGroupServer
+              locationAreaEncountersUrl={
+                displayPokemonData.location_area_encounters
+              }
+              pokemonSpeciesId={pokemonId}
+              versions={versionData.versions.map((v) => v.name)}
+              evolutionData={evolutionChainData}
+            />
+          </GraphQLErrorBoundary>
         )}
         {/* Type Efficacy */}
         {typeIds && typeIds.length > 0 && (
-          <TypeEfficacyServer typeIds={typeIds} versionId={versionId} />
+          <GraphQLErrorBoundary>
+            <TypeEfficacyServer typeIds={typeIds} versionId={versionId} />
+          </GraphQLErrorBoundary>
         )}
       </section>
 

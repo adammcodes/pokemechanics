@@ -35,6 +35,8 @@ export const versionColours: VersionColours = {
   "lets-go-eevee": "#c0c0c0",
   sword: "#ff0000",
   shield: "#0000ff",
+  "the-isle-of-armor": "#ffcc00",
+  "the-crown-tundra": "#0000ff",
   "brilliant-diamond": "#b9f2ff",
   "shining-pearl": "#eaeaea",
   "legends-arceus": "#b9f2ff",

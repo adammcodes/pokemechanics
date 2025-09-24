@@ -91,11 +91,14 @@ const Types: React.FC<TypesProps> = ({ generationId, pokemonId }) => {
 
   const { loading, error, data } = useQuery(GetPokemonTypes, {
     variables: { generationId, pokemonId },
+    errorPolicy: "all",
+    fetchPolicy: "cache-first",
+    notifyOnNetworkStatusChange: false,
   });
 
   if (loading) return null;
   if (error) {
-    console.error(error);
+    console.error("Types query error:", error);
     return null;
   }
 

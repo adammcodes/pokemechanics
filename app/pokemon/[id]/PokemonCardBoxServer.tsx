@@ -5,6 +5,7 @@ import getSpriteUrl from "@/constants/spriteUrlTemplates";
 import DynamicImage from "@/components/common/DynamicImage";
 import DualDynamicImages from "./DualDynamicImages";
 import Types from "@/components/types/Types";
+import GraphQLErrorBoundary from "@/components/common/GraphQLErrorBoundary";
 import { Genus, PokemonSprites, PokemonType } from "pokenode-ts";
 
 type PokemonCardBoxServerProps = {
@@ -94,10 +95,12 @@ const PokemonCardBoxServer: React.FC<PokemonCardBoxServerProps> = (props) => {
                 )}
               </div>
               <div className="mx-auto flex justify-around items-center mb-2">
-                <Types
-                  generationId={generationId}
-                  pokemonId={props.pokemonId}
-                />
+                <GraphQLErrorBoundary>
+                  <Types
+                    generationId={generationId}
+                    pokemonId={props.pokemonId}
+                  />
+                </GraphQLErrorBoundary>
               </div>
             </td>
           </tr>

@@ -22,6 +22,10 @@ export default function VersionChip({ versionName }: { versionName: string }) {
   // version names are all in kebab-case from the API
   let versionColour: string = versionColours[versionName];
 
+  if (!versionColour) {
+    versionColour = "#000000";
+  }
+
   // Use a css property for text color that contrasts with the versionColour hex code
   let textColour: string = getTextColor(versionColour);
 
