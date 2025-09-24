@@ -1,7 +1,5 @@
-"use client";
-import { useEffect, useState } from "react";
 import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
-import { getPokedexById } from "./getPokedexById";
+import { getPokedexById } from "@/app/helpers/graphql/getPokedexById";
 import PokemonSelector from "./PokemonSelector";
 
 export type PokedexPokemon = {
@@ -19,21 +17,12 @@ export type PokedexPokemon = {
   };
 };
 
-type VersionGroup = {
-  name: string;
-  pokemon_v2_versiongroupregions: {
-    pokemon_v2_region: {
-      name: string;
-    };
-  }[];
-};
-
 type Pokedex = {
   name: string;
   pokemon_v2_pokemondexnumbers: PokedexPokemon[];
-  pokemon_v2_pokedexversiongroups: {
-    pokemon_v2_versiongroup: VersionGroup;
-  }[];
+  pokemon_v2_region: {
+    name: string;
+  };
   pokemon_v2_pokedexdescriptions: {
     description: string;
     language: {
@@ -52,7 +41,7 @@ type PokedexByIdProps = {
   includeHeader?: boolean;
 };
 
-export default function PokedexById({
+export default async function PokedexById({
   dexId,
   game,
   generationString,
@@ -61,38 +50,13 @@ export default function PokedexById({
 }: PokedexByIdProps) {
   const formatName = convertKebabCaseToTitleCase;
 
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<unknown>(null);
-  const [dex, setPokedex] = useState({} as Pokedex);
+  const dex: Pokedex = await getPokedexById(dexId);
 
-  useEffect(() => {
-    async function fetchPokedexData() {
-      try {
-        const data = await getPokedexById(dexId);
-        setPokedex(data);
-      } catch (error) {
-        console.error(error);
-        setError(error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchPokedexData();
-  }, [dexId]);
-
-  if (loading) return null;
-
-  if (error) {
-    console.log(error);
-    return <p>The PokeAPI returned an error. Please try again later.</p>;
+  if (!dex) {
+    return <></>;
   }
 
-  const regionName =
-    dex.pokemon_v2_pokedexversiongroups.length > 0
-      ? dex.pokemon_v2_pokedexversiongroups[0].pokemon_v2_versiongroup
-          .pokemon_v2_versiongroupregions[0].pokemon_v2_region.name
-      : "National";
+  const regionName = dex.pokemon_v2_region.name;
 
   const defaultPokemon = dex.pokemon_v2_pokemondexnumbers.find(
     (p) => p.pokemon_species_id === pokemonId

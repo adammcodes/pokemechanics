@@ -1,4 +1,6 @@
-export async function fetchPokedexById(id: number) {
+import { Pokedex } from "@/types/index";
+
+export async function fetchPokedexById(id: number): Promise<Pokedex> {
   const response = await fetch(`https://pokeapi.co/api/v2/pokedex/${id}`, {
     headers: {
       Accept: "application/json",

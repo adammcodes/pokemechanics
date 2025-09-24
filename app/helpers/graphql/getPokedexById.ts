@@ -1,21 +1,13 @@
-import { gql } from "@apollo/client";
-import client from "@/apollo/apollo-client";
+import { fetchFromGraphQL } from "@/utils/api";
+// import { fetchPokedexById } from "../rest/fetchPokedexById";
 
-export const getPokedexById = async (dexId: number) => {
-  const query = gql`
+const query = `
     query GetPokedexById($dexId: Int!) {
       pokemon_v2_pokedex_by_pk(id: $dexId) {
         id
         name
-        pokemon_v2_pokedexversiongroups {
-          pokemon_v2_versiongroup {
-            name
-            pokemon_v2_versiongroupregions {
-              pokemon_v2_region {
-                name
-              }
-            }
-          }
+        pokemon_v2_region {
+          name
         }
         pokemon_v2_pokedexdescriptions(
           where: { pokemon_v2_language: { name: { _eq: "en" } } }
@@ -40,15 +32,23 @@ export const getPokedexById = async (dexId: number) => {
     }
   `;
 
+export async function getPokedexById(dexId: number) {
   try {
-    const { data } = await client.query({
-      query,
-      variables: { dexId },
-    });
-    // console.log(data);
-    return data.pokemon_v2_pokedex_by_pk;
+    const gqlResponse = await fetchFromGraphQL(query, { dexId });
+
+    // Optional: fetch Pokedex data from the REST API where its easier to access the region name
+    // const restResponse = await fetchPokedexById(dexId);
+
+    if (!gqlResponse.data?.pokemon_v2_pokedex_by_pk) {
+      throw new Error(`Pokedex with ID ${dexId} not found`);
+    }
+
+    // console.log("gqlResponse", gqlResponse);
+    // console.log("restResponse", restResponse);
+
+    return gqlResponse.data.pokemon_v2_pokedex_by_pk;
   } catch (error) {
-    console.error("Error fetching Pokédex:", error);
+    console.error("Error fetching Pokedex data:", error);
     return null;
   }
-};
+}
