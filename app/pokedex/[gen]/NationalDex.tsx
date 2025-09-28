@@ -22,6 +22,8 @@ type Pokedex = {
   }[];
 };
 
+// Display the National Dex for the selected game/generation
+// Use "dex.pokemon_v2_pokemondexnumbers -> pokemon_species_id" to get the national dex number
 export default async function NationalDex({
   game,
   generationString,

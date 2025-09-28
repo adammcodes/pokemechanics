@@ -41,6 +41,8 @@ type PokedexByIdProps = {
   includeHeader?: boolean;
 };
 
+// Display a Regional Pokedex by ID
+// Use "dex.pokemon_v2_pokemondexnumbers -> pokedex_number" to get the regional dex number
 export default async function PokedexById({
   dexId,
   game,
@@ -59,14 +61,14 @@ export default async function PokedexById({
   const regionName = dex.pokemon_v2_region.name;
 
   const defaultPokemon = dex.pokemon_v2_pokemondexnumbers.find(
-    (p) => p.pokemon_species_id === pokemonId
+    (p) => p.pokedex_number === pokemonId
   );
 
   const defaultRegionalDexId = defaultPokemon?.pokedex_number;
 
   const firstPokemonSpecies = dex.pokemon_v2_pokemondexnumbers[0];
   const lastPokemonSpecies = dex.pokemon_v2_pokemondexnumbers.slice(-1)[0];
-  const pokedexIdRange = `${firstPokemonSpecies.pokemon_species_id} - ${lastPokemonSpecies.pokemon_species_id}`;
+  const pokedexIdRange = `${firstPokemonSpecies.pokedex_number} - ${lastPokemonSpecies.pokedex_number}`;
 
   return (
     <section className="flex flex-col justify-center">
