@@ -1,11 +1,8 @@
-"use client";
-import { Sprite } from "@/components/sprites/Sprite";
-import { useRouter } from "next/navigation";
-import toTitleCase from "@/utils/toTitleCase";
 import { numOfPokemonByGen } from "@/constants/numOfPokemonByGen";
 import addPrecedingZeros from "@/utils/addPrecedingZeros";
 import { VersionGroup } from "@/app/helpers/graphql/getVersionGroup";
 import { Pokedex } from "@/types/index";
+import { ForwardBackSprite } from "./ForwardBackSprite";
 
 type PokedexNumber = {
   entry_number: number;
@@ -31,7 +28,6 @@ export default function ForwardBack({
   version,
 }: ForwardBackProps) {
   const dex = d;
-  const router = useRouter();
 
   const fallbackPokemonEntry = {
     entry_number: 0,
@@ -79,43 +75,34 @@ export default function ForwardBack({
       )
     : 0;
 
-  const onPokemonSelect = (path: string) => {
-    // Navigate to the pokemon page
-    router.push(path);
-  };
-
   return (
     <div className="lg:absolute flex flex-row justify-between w-full px-5 pb-5 lg:py-0">
+      {prevEntryNum === 0 && <div>&nbsp;</div>}
       {currentEntryNum !== prevEntryNum && prevPokemonId && (
-        <div
-          className="hover:underline cursor-pointer"
-          onClick={() =>
-            onPokemonSelect(
-              `/pokemon/${prevPokemonId}?dexId=${dex.id}&game=${game}`
-            )
-          }
-        >
-          &larr; #{prevRegionalDexNum}{" "}
-          <Sprite versionGroup={game} gen={gen} id={prevPokemonId} size={50} />
-          {toTitleCase(prevPokemonEntry.pokemon_species.name)}
-        </div>
+        <ForwardBackSprite
+          direction="back"
+          pokemonId={prevPokemonId}
+          regionalDexNum={prevRegionalDexNum}
+          pokemonEntry={prevPokemonEntry}
+          game={game}
+          gen={gen}
+          dexId={dex.id.toString()}
+        />
       )}
 
+      {/* Empty space between the previous and current pokemon */}
       {currentEntryNum === prevEntryNum && <div>&nbsp;</div>}
 
       {currentEntryNum !== nextEntryNum && nextPokemonId && (
-        <div
-          className="hover:underline cursor-pointer"
-          onClick={() =>
-            onPokemonSelect(
-              `/pokemon/${nextPokemonId}?dexId=${dex.id}&game=${game}`
-            )
-          }
-        >
-          #{nextRegionalDexNum}{" "}
-          <Sprite versionGroup={game} gen={gen} id={nextPokemonId} size={50} />
-          {toTitleCase(nextPokemonEntry.pokemon_species.name)} &rarr;
-        </div>
+        <ForwardBackSprite
+          direction="forward"
+          pokemonId={nextPokemonId}
+          regionalDexNum={nextRegionalDexNum.toString()}
+          pokemonEntry={nextPokemonEntry}
+          game={game}
+          gen={gen}
+          dexId={dex.id.toString()}
+        />
       )}
       {currentEntryNum === nextEntryNum && <div>&nbsp;</div>}
     </div>
