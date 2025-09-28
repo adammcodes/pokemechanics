@@ -59,7 +59,6 @@ const AutocompleteBase: React.FC<AutocompleteProps> = ({
   };
 
   // Create an event listener that closes the dropdown when the user clicks outside of it
-  // It should be inside a useEffect hook
   useEffect(() => {
     // callback function for outside click
     const onOutsideClick = (event: MouseEvent) => {
@@ -127,7 +126,7 @@ const AutocompleteBase: React.FC<AutocompleteProps> = ({
           ></i>
         </div>
         <ul
-          className={`overflow-scroll ${showList ? "max-h-[450px]" : "hidden"}`}
+          className={`overflow-scroll ${showList ? "max-h-[400px]" : "hidden"}`}
         >
           {filteredOptions.map((option) => (
             <li key={option.value}>
