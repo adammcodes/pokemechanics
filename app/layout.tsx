@@ -1,6 +1,7 @@
 import "@/styles/globals.css";
 import Client from "app/Client";
 import { cookies } from "next/headers";
+import { Analytics } from "@vercel/analytics/next";
 
 export const metadata = {
   title: "Pokémechanics",
@@ -26,6 +27,7 @@ export default function RootLayout({
     <html lang="en" data-theme={theme}>
       <body>
         <Client initialGame={game}>{children}</Client>
+        <Analytics />
       </body>
     </html>
   );
