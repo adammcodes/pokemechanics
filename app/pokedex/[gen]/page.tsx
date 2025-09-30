@@ -62,8 +62,8 @@ export default async function Page({ params }: PageProps) {
   const pokedexes = versionGroup.pokedexes;
 
   return (
-    <section className="flex flex-col w-full h-full px-2 lg:px-5 mt-2">
-      <div className="flex flex-wrap gap-y-2 w-full justify-around items-start px-2 lg:px-5">
+    <section className="flex flex-col w-full h-full px-2 lg:px-5">
+      <div className="flex flex-wrap gap-y-2 w-full justify-around items-start px-2 py-2 lg:px-5">
         <div
           className={`${styles.pokedexes} flex flex-wrap gap-4 w-full justify-around items-start px-5`}
         >
