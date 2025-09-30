@@ -42,28 +42,6 @@ export default async function PokemonCardServer({
   dexId,
   game,
 }: PokemonCardServerProps) {
-  // console.log(
-  //   "=================== PokemonCardServer pokemonData ==================="
-  // );
-  // console.log(pokemonData);
-  // console.log(
-  //   "=================== PokemonCardServer speciesData ==================="
-  // );
-  // console.log(speciesData);
-  // console.log(
-  //   "=================== PokemonCardServer versionData ==================="
-  // );
-  // console.log(versionData);
-  // console.log(
-  //   "=================== PokemonCardServer dexData ==================="
-  // );
-  // console.log(dexData);
-  // console.log(
-  //   "=================== PokemonCardServer dexId ==================="
-  // );
-  // console.log(dexId);
-  // console.log("=================== PokemonCardServer game ===================");
-  // console.log(game);
   // Use region name of the Pokedex
   const regionName =
     dexId === 1 ? versionData.regions[0].name : dexData.region.name;

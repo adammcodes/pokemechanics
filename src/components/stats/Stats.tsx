@@ -1,65 +1,21 @@
-"use client";
-import { useQuery, gql } from "@apollo/client";
 import StatBars from "./StatsBar";
 import Box from "../common/Box";
-
-const GetPokemonStats = gql`
-  query GetPokemonStats($pokemonName: String!) {
-    stats: pokemon_v2_pokemon(where: { name: { _eq: $pokemonName } }) {
-      name
-      pokemon_v2_pokemonstats {
-        base_stat
-        effort
-        pokemon_v2_stat {
-          name
-        }
-      }
-    }
-  }
-`;
+import {
+  getStatsByPokemon,
+  PokemonStats,
+} from "@/app/helpers/graphql/getStatsByPokemon";
 
 type StatsProps = {
   pokemonName: string;
 };
 
-type PokemonStat = {
-  base_stat: number;
-  effort: number;
-  pokemon_v2_stat: {
-    name: string;
-  };
-};
-
-type PokemonStats = {
-  name: string;
-  pokemon_v2_pokemonstats: PokemonStat[];
-};
-
-const Stats: React.FC<StatsProps> = ({ pokemonName }) => {
-  const { loading, error, data } = useQuery(GetPokemonStats, {
-    variables: { pokemonName: pokemonName.toLowerCase() },
-    errorPolicy: "all",
-    fetchPolicy: "cache-first",
-    notifyOnNetworkStatusChange: false,
-  });
-
-  if (loading) return null;
-  if (error) {
-    console.error("Stats query error:", error);
-    return null;
-  }
-
-  const statsData: PokemonStats | undefined =
-    data?.stats?.length > 0 ? data.stats[0] : undefined;
+const Stats: React.FC<StatsProps> = async ({ pokemonName }) => {
+  const statsData: PokemonStats | undefined = await getStatsByPokemon(
+    pokemonName
+  );
 
   if (!statsData)
-    return (
-      <section
-        className={`card__border w-full lg:w-[400px] p-[1em] flex flex-col gap-y-3`}
-      >
-        Could not find stats.
-      </section>
-    );
+    return <Box headingText="Base Stats:">Could not find stats.</Box>;
 
   const { pokemon_v2_pokemonstats } = statsData;
 
