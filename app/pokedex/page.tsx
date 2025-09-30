@@ -1,6 +1,4 @@
 import { redirect } from "next/navigation";
-import styles from "@/styles/TypingText.module.css";
-import LoadingSpinner from "@/components/common/LoadingSpinner";
 
 type PageProps = {
   searchParams?: {

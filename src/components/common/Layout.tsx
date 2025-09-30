@@ -1,4 +1,4 @@
-import Header from "./Header";
+import Header from "@/components/header/Header";
 import Footer from "./Footer";
 import styles from "./Layout.module.css";
 
@@ -11,7 +11,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
     <>
       <div className={`${styles.container}`}>
         <Header />
-        <main>{children}</main>
+        {children}
         <Footer />
       </div>
     </>

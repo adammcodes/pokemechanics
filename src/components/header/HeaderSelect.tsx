@@ -1,22 +1,19 @@
 import PokedexById from "@/app/pokedex/[gen]/PokedexById";
 import NationalDex from "@/app/pokedex/[gen]/NationalDex";
 
-type HeaderSelectServerProps = {
-  game: string;
-  generationString: string;
-  dexId: string | null;
-  pokemonId: string | undefined;
-};
-
-export default function HeaderSelectServer({
+export default function HeaderSelect({
+  pokemonId,
+  dexId,
   game,
   generationString,
-  dexId,
-  pokemonId,
-}: HeaderSelectServerProps) {
+}: {
+  pokemonId: string;
+  dexId: string;
+  game: string;
+  generationString: string;
+}) {
   const isNationalDex = dexId === "1";
   const isPokemonPage = dexId && pokemonId && generationString;
-
   return (
     <>
       {isPokemonPage && !isNationalDex && (

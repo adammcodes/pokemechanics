@@ -1,6 +1,6 @@
+"use client";
 import styles from "./Header.module.css";
 import HeaderTitle from "./HeaderTitle";
-import HeaderSelect from "./HeaderSelect";
 import HeaderOptions from "./HeaderOptions";
 
 export default function Header() {
@@ -8,8 +8,6 @@ export default function Header() {
     <div className="w-full flex">
       <header className={styles.header}>
         <HeaderTitle />
-
-        <HeaderSelect />
 
         <HeaderOptions />
       </header>

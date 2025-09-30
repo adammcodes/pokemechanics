@@ -12,6 +12,7 @@ export default function useGameVersion(versionGroupName: string) {
     () => fetchGameVersion(versionGroupName),
     {
       refetchOnWindowFocus: false,
+      refetchOnMount: false,
       enabled: Boolean(versionGroupName),
     }
   );

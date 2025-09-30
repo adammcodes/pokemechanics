@@ -42,7 +42,8 @@ type PokedexByIdProps = {
 };
 
 // Display a Regional Pokedex by ID
-// Use "dex.pokemon_v2_pokemondexnumbers -> pokedex_number" to get the regional dex number
+// Use "dex.pokemon_v2_pokemondexnumbers -> pokedex_number" to get the regional dex pokemon id number
+// The pokemonId property is the national dex id number
 export default async function PokedexById({
   dexId,
   game,
@@ -51,23 +52,23 @@ export default async function PokedexById({
   includeHeader = true,
 }: PokedexByIdProps) {
   const formatName = convertKebabCaseToTitleCase;
+  const regionalDex: Pokedex = await getPokedexById(dexId);
 
-  const dex: Pokedex = await getPokedexById(dexId);
-
-  if (!dex) {
+  if (!regionalDex) {
     return <></>;
   }
+  const regionalDexNumbers = regionalDex.pokemon_v2_pokemondexnumbers;
 
-  const regionName = dex.pokemon_v2_region.name;
+  const regionName = regionalDex.pokemon_v2_region.name;
 
-  const defaultPokemon = dex.pokemon_v2_pokemondexnumbers.find(
-    (p) => p.pokedex_number === pokemonId
+  const defaultPokemon = regionalDexNumbers.find(
+    (p) => p.pokemon_species_id === pokemonId
   );
 
-  const defaultRegionalDexId = defaultPokemon?.pokedex_number;
+  const defaultRegionalDexPokemonId = defaultPokemon?.pokedex_number;
 
-  const firstPokemonSpecies = dex.pokemon_v2_pokemondexnumbers[0];
-  const lastPokemonSpecies = dex.pokemon_v2_pokemondexnumbers.slice(-1)[0];
+  const firstPokemonSpecies = regionalDexNumbers[0];
+  const lastPokemonSpecies = regionalDexNumbers.slice(-1)[0];
   const pokedexIdRange = `${firstPokemonSpecies.pokedex_number} - ${lastPokemonSpecies.pokedex_number}`;
 
   return (
@@ -75,22 +76,22 @@ export default async function PokedexById({
       {includeHeader && (
         <header className="my-2 text-center">
           <h2>
-            {formatName(dex.name)} Dex ({pokedexIdRange})
+            {formatName(regionalDex.name)} Dex ({pokedexIdRange})
           </h2>
           <p className="text-[1rem]">
-            {dex.pokemon_v2_pokedexdescriptions[0].description}
+            {regionalDex.pokemon_v2_pokedexdescriptions[0].description}
           </p>
         </header>
       )}
 
       <div className="lg:max-w-sm mx-auto">
         <PokemonSelector
-          pokemon={dex.pokemon_v2_pokemondexnumbers}
+          pokemon={regionalDexNumbers}
           regionName={regionName}
           dexId={dexId}
           game={game}
           generationString={generationString}
-          defaultPokemonId={defaultRegionalDexId || pokemonId}
+          defaultPokemonId={defaultRegionalDexPokemonId || pokemonId}
           defaultPokemonName={defaultPokemon?.pokemon_v2_pokemonspecy.name}
         />
       </div>

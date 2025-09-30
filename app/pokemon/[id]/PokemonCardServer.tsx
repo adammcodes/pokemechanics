@@ -23,7 +23,7 @@ import Abilities from "@/components/abilities/Abilities";
 import Stats from "@/components/stats/Stats";
 import LocationsForVersionGroupServer from "./LocationsForVersionGroupServer";
 import TypeEfficacyServer from "./TypeEfficacyServer";
-import GraphQLErrorBoundary from "@/components/common/GraphQLErrorBoundary";
+import HeaderSelect from "@/components/header/HeaderSelect";
 
 type PokemonCardServerProps = {
   pokemonData: Pokemon;
@@ -177,7 +177,13 @@ export default async function PokemonCardServer({
         )}
       </div>
 
-      <div className="flex w-full max-w-[500px] mx-auto px-0">
+      <div className="flex flex-col gap-y-2 w-full max-w-[500px] mx-auto px-0">
+        <HeaderSelect
+          pokemonId={pokemonId.toString()}
+          dexId={dexId.toString()}
+          game={game}
+          generationString={genName}
+        />
         {/* Sprite + Types */}
         <PokemonCardBoxServer
           name={name}
@@ -215,33 +221,23 @@ export default async function PokemonCardServer({
           flavorTextForVersions={flavorTextForVersions}
         />
         {/* Abilities */}
-        {!isGenOneOrTwo && (
-          <GraphQLErrorBoundary>
-            <Abilities pokemonName={variantName} />
-          </GraphQLErrorBoundary>
-        )}
+        {!isGenOneOrTwo && <Abilities pokemonName={variantName} />}
         {/* Stats */}
-        <GraphQLErrorBoundary>
-          <Stats pokemonName={variantName} />
-        </GraphQLErrorBoundary>
+        <Stats pokemonName={variantName} />
         {/* Encounters */}
         {versionData && (
-          <GraphQLErrorBoundary>
-            <LocationsForVersionGroupServer
-              locationAreaEncountersUrl={
-                displayPokemonData.location_area_encounters
-              }
-              pokemonSpeciesId={pokemonId}
-              versions={versionData.versions.map((v) => v.name)}
-              evolutionData={evolutionChainData}
-            />
-          </GraphQLErrorBoundary>
+          <LocationsForVersionGroupServer
+            locationAreaEncountersUrl={
+              displayPokemonData.location_area_encounters
+            }
+            pokemonSpeciesId={pokemonId}
+            versions={versionData.versions.map((v) => v.name)}
+            evolutionData={evolutionChainData}
+          />
         )}
         {/* Type Efficacy */}
         {typeIds && typeIds.length > 0 && (
-          <GraphQLErrorBoundary>
-            <TypeEfficacyServer typeIds={typeIds} versionId={versionId} />
-          </GraphQLErrorBoundary>
+          <TypeEfficacyServer typeIds={typeIds} versionId={versionId} />
         )}
       </section>
 
