@@ -1,7 +1,6 @@
 "use client";
-import { useCallback } from "react";
+import Link from "next/link";
 import { Sprite } from "@/components/sprites/Sprite";
-import { useRouter } from "next/navigation";
 import toTitleCase from "@/utils/toTitleCase";
 
 type ForwardBackSpriteProps = {
@@ -23,27 +22,15 @@ export const ForwardBackSprite = ({
   gen,
   dexId,
 }: ForwardBackSpriteProps) => {
-  const router = useRouter();
-
-  const onPokemonSelect = useCallback(
-    (path: string) => {
-      // Navigate to the pokemon page
-      router.push(path);
-    },
-    [router]
-  );
-
   return (
-    <div
-      className="hover:underline cursor-pointer"
-      onClick={() =>
-        onPokemonSelect(`/pokemon/${pokemonId}?dexId=${dexId}&game=${game}`)
-      }
+    <Link
+      href={`/pokemon/${pokemonId}?dexId=${dexId}&game=${game}`}
+      className="hover:underline cursor-pointer block"
     >
       {direction === "back" && <>&larr;</>} #{regionalDexNum}{" "}
       <Sprite versionGroup={game} gen={gen} id={pokemonId} size={50} />
       {toTitleCase(pokemonEntry.pokemon_species.name)}{" "}
       {direction === "forward" && <>&rarr;</>}
-    </div>
+    </Link>
   );
 };

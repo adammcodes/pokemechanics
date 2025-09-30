@@ -1,7 +1,7 @@
 "use client";
 
 import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 // Set the sprite size, alt text, and style
 const spriteSize = 80;
@@ -24,24 +24,19 @@ export const PokemonSprite = ({
   sprite: string;
 }) => {
   const formatName = convertKebabCaseToTitleCase;
-  const router = useRouter();
-  const onPokemonSelect = (pokemonId: number | string) => {
-    // Navigate to the pokemon page
-    router.push(`/pokemon/${pokemonId}?dexId=${dexId}&game=${game}`);
-  };
+
   return (
-    <figure
-      className="flex flex-col items-center cursor-pointer"
-      onClick={() => onPokemonSelect(pokemonId)}
-    >
-      <img
-        src={sprite}
-        height={150}
-        width={150}
-        alt={spriteAltText}
-        style={spriteStyle}
-      />
-      <label className="cursor-pointer">{formatName(speciesName)}</label>
-    </figure>
+    <Link href={`/pokemon/${pokemonId}?dexId=${dexId}&game=${game}`}>
+      <figure className="flex flex-col items-center cursor-pointer">
+        <img
+          src={sprite}
+          height={150}
+          width={150}
+          alt={spriteAltText}
+          style={spriteStyle}
+        />
+        <label className="cursor-pointer">{formatName(speciesName)}</label>
+      </figure>
+    </Link>
   );
 };

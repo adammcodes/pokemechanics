@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import getSpriteUrl from "@/constants/spriteUrlTemplates";
 import { optionSpriteSizesByVersion } from "@/constants/spriteSizesByVersion";
 import styles from "./Autocomplete.module.css";
@@ -9,6 +10,7 @@ interface AutocompleteProps {
   onSelect: (selectedValue: string | number) => void;
   defaultValue?: string | number;
   hasImageOptions?: boolean;
+  linkTemplate?: string; // Template for Link href, e.g., "/pokedex/{value}"
 }
 
 const AutocompleteBase: React.FC<AutocompleteProps> = ({
@@ -16,6 +18,7 @@ const AutocompleteBase: React.FC<AutocompleteProps> = ({
   defaultValue,
   onSelect,
   hasImageOptions = false,
+  linkTemplate,
 }) => {
   const [inputValue, setInputValue] = useState(defaultValue || "");
   const [filteredOptions, setFilteredOptions] = useState(options);
@@ -128,14 +131,18 @@ const AutocompleteBase: React.FC<AutocompleteProps> = ({
         <ul
           className={`overflow-scroll ${showList ? "max-h-[400px]" : "hidden"}`}
         >
-          {filteredOptions.map((option) => (
-            <li key={option.value}>
-              <button
-                id={`${option.name}-${option.value}`}
-                name={option.value?.toString()}
-                className={`${styles.autocomplete__li__btn} border-0 px-2 py-1 m-0 w-full text-left flex justify-between items-center`}
-                onClick={handleOptionClick}
-              >
+          {filteredOptions.map((option) => {
+            const href = linkTemplate
+              ? linkTemplate
+                  .replace("{value}", option.value?.toString() || "")
+                  .replace("{dexId}", option.dexId?.toString() || "")
+                  .replace("{game}", option.game?.toString() || "")
+                  .replace("{pokemonId}", option.pokemonId?.toString() || "")
+                  .replace("{variantId}", option.variantId?.toString() || "")
+              : undefined;
+
+            const OptionContent = () => (
+              <>
                 <span id="label">
                   {hasImageOptions
                     ? `(#${option.pokemonId || option.value})`
@@ -157,9 +164,36 @@ const AutocompleteBase: React.FC<AutocompleteProps> = ({
                     />
                   </div>
                 )}
-              </button>
-            </li>
-          ))}
+              </>
+            );
+
+            return (
+              <li key={option.value}>
+                {href ? (
+                  <Link
+                    href={href}
+                    className={`${styles.autocomplete__li__btn} border-0 px-2 py-1 m-0 w-full text-left flex justify-between items-center block`}
+                    onClick={() => {
+                      onSelect(option.value);
+                      setInputValue(option.label);
+                      setShowList(false);
+                    }}
+                  >
+                    <OptionContent />
+                  </Link>
+                ) : (
+                  <button
+                    id={`${option.name}-${option.value}`}
+                    name={option.value?.toString()}
+                    className={`${styles.autocomplete__li__btn} border-0 px-2 py-1 m-0 w-full text-left flex justify-between items-center`}
+                    onClick={handleOptionClick}
+                  >
+                    <OptionContent />
+                  </button>
+                )}
+              </li>
+            );
+          })}
         </ul>
       </div>
     </div>

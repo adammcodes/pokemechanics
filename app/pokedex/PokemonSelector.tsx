@@ -44,8 +44,7 @@ const PokemonSelector: React.FC<PokemonSelectorProps> =
     const { game: selectedGame } = useContext(GameContext);
 
     const onPokemonSelect = (pokemonId: number | string) => {
-      // Navigate to the pokemon page
-      router.push(`/pokemon/${pokemonId}?dexId=${dexId}&game=${selectedGame}`);
+      // Navigation will be handled by Link components in AutocompleteBase
     };
 
     const pokemonOptions: PokemonOption[] = pokemon.map((p) => {
@@ -69,6 +68,8 @@ const PokemonSelector: React.FC<PokemonSelectorProps> =
         variantId: variantId, // for variant forms of pokemon we use this as the [id] in pokemon page dynamic routes
         versionGroup: game,
         generationString: generationString,
+        dexId: dexId, // for link template
+        game: selectedGame, // for link template
       };
     });
 
@@ -83,6 +84,7 @@ const PokemonSelector: React.FC<PokemonSelectorProps> =
               ? `(#${defaultPokemonId}) ${toTitleCase(defaultPokemonName)}`
               : ""
           }
+          linkTemplate="/pokemon/{value}?dexId={dexId}&game={game}"
         />
       </>
     );

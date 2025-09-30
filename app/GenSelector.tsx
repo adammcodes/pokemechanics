@@ -1,6 +1,6 @@
 "use client";
-import { useRouter } from "next/navigation";
 import { useContext } from "react";
+import Link from "next/link";
 import { GameOption } from "../src/types";
 // Components
 import AutocompleteBase from "@/components/common/AutocompleteBase";
@@ -22,7 +22,6 @@ type GenSelectorProps = {
 const GenSelector: React.FC<GenSelectorProps> = function GenSelector({ gens }) {
   const { setGame, game, setLoading } = useContext(GameContext);
   console.log("game", game);
-  const router = useRouter();
 
   const genOptions: GameOption[] = gens.map((gen, index) => {
     return {
@@ -36,7 +35,7 @@ const GenSelector: React.FC<GenSelectorProps> = function GenSelector({ gens }) {
   const handleSelect = (value: string | number) => {
     setLoading(true);
     setGame(value);
-    router.push(`/pokedex/${value}`);
+    // Navigation will be handled by Link components in AutocompleteBase
   };
 
   return (
@@ -45,6 +44,7 @@ const GenSelector: React.FC<GenSelectorProps> = function GenSelector({ gens }) {
       onSelect={handleSelect}
       defaultValue={convertKebabCaseToTitleCase(game || "red-blue")}
       hasImageOptions={false}
+      linkTemplate="/pokedex/{value}"
     />
   );
 };
