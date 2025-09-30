@@ -1,5 +1,4 @@
 import { fetchFromGraphQL } from "@/utils/api";
-// import { fetchPokedexById } from "../rest/fetchPokedexById";
 
 const query = `
     query GetPokedexById($dexId: Int!) {

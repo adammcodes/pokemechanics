@@ -19,7 +19,7 @@ import PokemonFlavorText from "app/pokemon/[id]/PokemonFlavorText";
 import EvolutionsServer from "./EvolutionsServer";
 import ForwardBack from "app/pokemon/[id]/ForwardBack";
 import { MovesServer } from "./MovesServer";
-import Abilities from "@/components/abilities/Abilities";
+import Abilities from "@/app/pokemon/[id]/Abilities";
 import Stats from "@/components/stats/Stats";
 import LocationsForVersionGroupServer from "./LocationsForVersionGroupServer";
 import TypeEfficacyServer from "./TypeEfficacyServer";
