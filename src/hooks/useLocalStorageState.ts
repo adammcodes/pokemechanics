@@ -30,6 +30,6 @@ export default function useLocalStorageState<T>(
     }
   }, [key, state, isHydrated]);
 
-  // used as game and setGame in GameContextProvider to store the game state in local storage
-  return [state, setState];
+  // Return the defaultValue during SSR and initial hydration to prevent mismatch
+  return [isHydrated ? state : defaultValue, setState];
 }

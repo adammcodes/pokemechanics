@@ -21,6 +21,7 @@ type GenSelectorProps = {
 // Component for selecting a Version Group: e.g. "Red/Blue", "Yellow", "Silver/Gold", etc
 const GenSelector: React.FC<GenSelectorProps> = function GenSelector({ gens }) {
   const { setGame, game, setLoading } = useContext(GameContext);
+  console.log("game", game);
   const router = useRouter();
 
   const genOptions: GameOption[] = gens.map((gen, index) => {

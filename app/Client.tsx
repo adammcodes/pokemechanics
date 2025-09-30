@@ -8,32 +8,45 @@ import { ApolloProvider } from "@apollo/client";
 import { ChakraProvider } from "@chakra-ui/react";
 import client from "@/apollo/apollo-client.js";
 import { LayoutSkeleton } from "@/components/common/LayoutSkeleton";
+import { ErrorBoundary } from "@/components/common/ErrorBoundary";
 
 // query client for react-query
 const queryClient = new QueryClient();
 
-export default function Client({ children }: { children?: React.ReactNode }) {
+export default function Client({
+  children,
+  initialGame,
+}: {
+  children?: React.ReactNode;
+  initialGame: string;
+}) {
   const pageParams = useSearchParams();
-  // The game from page search params take priority over the game from the local storage
+  // The game from page search params take priority over the game from cookies
   // This is to improve server side rendering performance
   const selectedGame = pageParams.get("game") as string;
+
   return (
-    <ApolloProvider client={client}>
-      <QueryClientProvider client={queryClient}>
-        <GameContextProvider selectedGame={selectedGame}>
-          <ChakraProvider>
-            <Suspense
-              fallback={
-                <LayoutSkeleton>
-                  <div></div>
-                </LayoutSkeleton>
-              }
-            >
-              <Layout>{children}</Layout>
-            </Suspense>
-          </ChakraProvider>
-        </GameContextProvider>
-      </QueryClientProvider>
-    </ApolloProvider>
+    <ErrorBoundary>
+      <ApolloProvider client={client}>
+        <QueryClientProvider client={queryClient}>
+          <GameContextProvider
+            selectedGame={selectedGame}
+            initialGame={initialGame}
+          >
+            <ChakraProvider>
+              <Suspense
+                fallback={
+                  <LayoutSkeleton>
+                    <div></div>
+                  </LayoutSkeleton>
+                }
+              >
+                <Layout>{children}</Layout>
+              </Suspense>
+            </ChakraProvider>
+          </GameContextProvider>
+        </QueryClientProvider>
+      </ApolloProvider>
+    </ErrorBoundary>
   );
 }

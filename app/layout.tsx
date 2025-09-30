@@ -19,11 +19,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   const cookieStore = cookies();
-  const theme = cookieStore.get("theme")?.value || "light"; // Default to 'light' if not set
+  const theme = cookieStore.get("theme")?.value || "light";
+  const game = cookieStore.get("game")?.value || "red-blue"; // Add game cookie
+
   return (
     <html lang="en" data-theme={theme}>
       <body>
-        <Client>{children}</Client>
+        <Client initialGame={game}>{children}</Client>
       </body>
     </html>
   );
