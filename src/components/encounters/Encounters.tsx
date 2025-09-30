@@ -382,7 +382,7 @@ const Encounters: React.FC<EncountersProps> = ({
             <div
               className="inline-block cursor-pointer mr-1"
               style={{ lineHeight: "10px" }}
-              key={location.locationName}
+              key={`${location.locationName}-${i}`}
             >
               <Tooltip
                 label={
