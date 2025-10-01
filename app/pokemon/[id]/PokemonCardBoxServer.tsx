@@ -1,3 +1,4 @@
+import { romanToNumber } from "@/utils/romanToNumber";
 import convertHeightToCmOrM from "@/utils/convertHeightToCmOrM";
 import convertWeightToGramsOrKg from "@/utils/convertWeightToGramsOrKg";
 import { spriteSizesByVersion } from "@/constants/spriteSizesByVersion";
@@ -24,8 +25,7 @@ type PokemonCardBoxServerProps = {
 const PokemonCardBoxServer: React.FC<PokemonCardBoxServerProps> = (props) => {
   const selectedGame = props.game || "red-blue";
   const generationIdString: string | undefined = props.genNumber; // e.g. "i", "ii", etc.
-  const generationId: number = parseInt(generationIdString || "1");
-
+  const generationId: number = romanToNumber(generationIdString || "i");
   const spriteSize: number = spriteSizesByVersion[selectedGame];
   const pokemonGenus: string | undefined = props.genera
     ? props.genera.find((g: Genus) => {

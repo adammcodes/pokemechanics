@@ -1,79 +1,5 @@
-"use client";
-import { useQuery, gql } from "@apollo/client";
 import PokemonTypes from "./PokemonTypes";
-
-const GetPokemonTypes = gql`
-  query GetPokemonTypes($pokemonId: Int!) {
-    pokemon_v2_pokemontype(where: { pokemon_id: { _eq: $pokemonId } }) {
-      pokemon_v2_pokemon {
-        name
-        pokemon_v2_pokemontypepasts {
-          pokemon_v2_type {
-            generation_id
-            name
-          }
-        }
-        pokemon_v2_pokemontypes {
-          pokemon_v2_type {
-            generation_id
-            name
-          }
-        }
-      }
-    }
-  }
-`;
-
-// Example query response for pokemonId 35 (clefairy):
-/**
-  {
-    "data": {
-      "pokemon_v2_pokemontype": [
-        {
-          "pokemon_v2_pokemon": {
-            "name": "clefairy",
-            "pokemon_v2_pokemontypepasts": [
-              {
-                "pokemon_v2_type": {
-                  "generation_id": 1,
-                  "name": "normal"
-                }
-              }
-            ],
-            "pokemon_v2_pokemontypes": [
-              {
-                "pokemon_v2_type": {
-                  "generation_id": 6,
-                  "name": "fairy"
-                }
-              }
-            ]
-          }
-        }
-      ]
-    }
-  }
- */
-
-type TypesData = {
-  pokemon_v2_pokemontype: {
-    pokemon_v2_pokemon: {
-      name: string;
-      pokemon_v2_pokemontypepasts: {
-        pokemon_v2_type: {
-          generation_id: number;
-          name: string;
-        };
-      }[];
-      pokemon_v2_pokemontypes: {
-        pokemon_v2_type: {
-          generation_id: number;
-          name: string;
-        };
-      }[];
-    };
-  }[];
-};
+import { getTypesByPokemonId } from "@/app/helpers/graphql/getTypesByPokemonId";
 
 type TypesProps = {
   generationId: number; // 1
@@ -85,24 +11,8 @@ type TypesProps = {
  * @param pokemonId = number e.g. 35 (clefairy)
  * @returns Component displaying type chips for a pokemon
  */
-const Types: React.FC<TypesProps> = ({ generationId, pokemonId }) => {
-  // console.log("generationId", generationId);
-  // console.log("pokemonId", pokemonId); // This is actually the pokemon sprite Id
-
-  const { loading, error, data } = useQuery(GetPokemonTypes, {
-    variables: { generationId, pokemonId },
-    errorPolicy: "all",
-    fetchPolicy: "cache-first",
-    notifyOnNetworkStatusChange: false,
-  });
-
-  if (loading) return null;
-  if (error) {
-    console.error("Types query error:", error);
-    return null;
-  }
-
-  const typesData = data as TypesData;
+const Types: React.FC<TypesProps> = async ({ generationId, pokemonId }) => {
+  const typesData = await getTypesByPokemonId(pokemonId);
 
   if (!typesData) {
     return <span>Could not find types data.</span>;
@@ -120,13 +30,37 @@ const Types: React.FC<TypesProps> = ({ generationId, pokemonId }) => {
   const pastTypes = pokemon_v2_pokemon.pokemon_v2_pokemontypepasts;
   const presentTypes = pokemon_v2_pokemon.pokemon_v2_pokemontypes;
 
-  const existingPastTypesForGen = pastTypes.filter(
-    (t) => t.pokemon_v2_type.generation_id >= generationId
-  );
+  // Find the highest generation among past types
+  const maxPastTypeGeneration =
+    pastTypes.length > 0
+      ? Math.max(...pastTypes.map((t) => t.pokemon_v2_type.generation_id))
+      : 0;
 
-  // Do not show past types if the current generation is greater than the past type's generation
-  // Do not show present types if the current generation is less than the present type's generation
-  const typesForGen = existingPastTypesForGen.length ? pastTypes : presentTypes;
+  // Find the lowest generation among present types
+  const minPresentTypeGeneration =
+    presentTypes.length > 0
+      ? Math.min(...presentTypes.map((t) => t.pokemon_v2_type.generation_id))
+      : Infinity;
+
+  // Use past types if current generation is greater than past types generation
+  // AND less than present types generation
+  const shouldUsePastTypes =
+    generationId >= maxPastTypeGeneration &&
+    generationId < minPresentTypeGeneration;
+
+  let typesForGen;
+
+  if (shouldUsePastTypes) {
+    // Use past types when generation is between past and present
+    typesForGen = pastTypes;
+  } else {
+    // Use present types for current generation and beyond
+    const presentTypesForGen = presentTypes.filter(
+      (t) => t.pokemon_v2_type.generation_id <= generationId
+    );
+    typesForGen =
+      presentTypesForGen.length > 0 ? presentTypesForGen : presentTypes;
+  }
 
   if (typesForGen.length === 0) {
     return (
