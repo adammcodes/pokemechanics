@@ -35,6 +35,8 @@ const PokemonCardBoxServer: React.FC<PokemonCardBoxServerProps> = (props) => {
 
   const pokemonName = props.name;
 
+  console.log("Height: ", props.height);
+
   return (
     <div
       className={`card__border w-full mx-auto p-3 flex flex-col justify-center items-center`}

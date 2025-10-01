@@ -4,6 +4,7 @@
 const LARGE = 180;
 const MEDIUM = 150;
 const SMALL = 100;
+const TINY = 50;
 
 // For the autocomplete option sprites
 const OPTION_LARGE = 100;
@@ -25,7 +26,7 @@ export const spriteSizesByVersion: Record<string, number> = {
   colosseum: MEDIUM,
   xd: MEDIUM,
   "black-2-white-2": MEDIUM,
-  "x-y": MEDIUM,
+  "x-y": SMALL,
   "omega-ruby-alpha-sapphire": LARGE,
   "sun-moon": MEDIUM,
   "ultra-sun-ultra-moon": MEDIUM,
@@ -53,7 +54,7 @@ export const optionSpriteSizesByVersion: Record<string, number> = {
   colosseum: OPTION_MEDIUM,
   xd: OPTION_MEDIUM,
   "black-2-white-2": OPTION_MEDIUM,
-  "x-y": OPTION_LARGE,
+  "x-y": OPTION_SMALL,
   "omega-ruby-alpha-sapphire": OPTION_LARGE,
   "sun-moon": OPTION_MEDIUM,
   "ultra-sun-ultra-moon": OPTION_MEDIUM,

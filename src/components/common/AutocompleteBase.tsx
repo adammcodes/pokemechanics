@@ -150,7 +150,7 @@ const AutocompleteBase: React.FC<AutocompleteProps> = ({
                   {option.label}
                 </span>
                 {hasImageOptions && (
-                  <div>
+                  <div className="flex justify-center items-center overflow-hidden">
                     <img
                       width={
                         optionSpriteSizesByVersion[option.versionGroup] || 50
