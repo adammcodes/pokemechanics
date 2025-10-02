@@ -2,7 +2,6 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import getSpriteUrl from "@/constants/spriteUrlTemplates";
-import { optionSpriteSizesByVersion } from "@/constants/spriteSizesByVersion";
 import styles from "./Autocomplete.module.css";
 
 interface AutocompleteProps {
@@ -152,9 +151,6 @@ const AutocompleteBase: React.FC<AutocompleteProps> = ({
                 {hasImageOptions && (
                   <div className="flex justify-center items-center overflow-hidden">
                     <img
-                      width={
-                        optionSpriteSizesByVersion[option.versionGroup] || 50
-                      }
                       src={getSpriteUrl({
                         versionGroup: option.versionGroup,
                         pokemonId: option.variantId || option.value,

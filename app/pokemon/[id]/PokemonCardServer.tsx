@@ -185,6 +185,7 @@ export default async function PokemonCardServer({
         generation={genName}
         dexId={dexId.toString()}
         regionName={variantRegionName}
+        pokemonHeight={pokemonHeight}
       />
       <section
         className={`grid grid-cols-1 md:grid-cols-2 ${

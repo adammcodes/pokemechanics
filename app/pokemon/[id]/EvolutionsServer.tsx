@@ -7,6 +7,7 @@ type EvolutionsServerProps = {
   generation: string;
   dexId: string;
   regionName: string;
+  pokemonHeight: number;
 };
 
 export default function EvolutionsServer({
@@ -15,6 +16,7 @@ export default function EvolutionsServer({
   generation,
   dexId,
   regionName,
+  pokemonHeight,
 }: EvolutionsServerProps) {
   if (!evolutionChainData) return <div className="p-5">Loading...</div>;
 
@@ -27,6 +29,7 @@ export default function EvolutionsServer({
             generation,
             dexId,
             regionName,
+            pokemonHeight,
           })}
         </div>
       )}

@@ -4,11 +4,11 @@ import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
 import Link from "next/link";
 
 // Set the sprite size, alt text, and style
-const spriteSize = 80;
+// const spriteSize = 80;
 const spriteAltText = `Pokemon sprite`;
-const spriteStyle = {
-  width: `${spriteSize}px`,
-};
+// const spriteStyle = {
+//   width: `${spriteSize}px`,
+// };
 
 export const PokemonSprite = ({
   pokemonId,
@@ -26,15 +26,12 @@ export const PokemonSprite = ({
   const formatName = convertKebabCaseToTitleCase;
 
   return (
-    <Link href={`/pokemon/${pokemonId}?dexId=${dexId}&game=${game}`}>
+    <Link
+      href={`/pokemon/${pokemonId}?dexId=${dexId}&game=${game}`}
+      className="mt-auto"
+    >
       <figure className="flex flex-col items-center cursor-pointer">
-        <img
-          src={sprite}
-          height={150}
-          width={150}
-          alt={spriteAltText}
-          style={spriteStyle}
-        />
+        <img src={sprite} alt={spriteAltText} />
         <label className="cursor-pointer">{formatName(speciesName)}</label>
       </figure>
     </Link>

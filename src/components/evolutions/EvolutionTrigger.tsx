@@ -26,7 +26,7 @@ const EvolutionTrigger = ({ details }: { details: EvolutionDetail }) => {
   const locationName = location?.name;
 
   return (
-    <div className="flex flex-col justify-center items-center text-center px-3 py-3 max-w-[150px]">
+    <div className="mt-auto flex flex-col justify-center items-center text-center p-3 max-w-[150px]">
       {trigger === "level-up" && (
         <small>
           {level && `Lv. ${level}`}

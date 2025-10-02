@@ -1,5 +1,6 @@
 import { romanToNumber } from "@/utils/romanToNumber";
 import convertHeightToCmOrM from "@/utils/convertHeightToCmOrM";
+import spriteWidthBasedOnHeight from "@/utils/spriteWidthBasedOnHeight";
 import convertWeightToGramsOrKg from "@/utils/convertWeightToGramsOrKg";
 import { spriteSizesByVersion } from "@/constants/spriteSizesByVersion";
 import getSpriteUrl from "@/constants/spriteUrlTemplates";
@@ -26,7 +27,13 @@ const PokemonCardBoxServer: React.FC<PokemonCardBoxServerProps> = (props) => {
   const selectedGame = props.game || "red-blue";
   const generationIdString: string | undefined = props.genNumber; // e.g. "i", "ii", etc.
   const generationId: number = romanToNumber(generationIdString || "i");
-  const spriteSize: number = spriteSizesByVersion[selectedGame];
+  const spriteSize: number =
+    selectedGame === "x-y"
+      ? spriteWidthBasedOnHeight(props.height * 10)
+      : spriteSizesByVersion[selectedGame];
+
+  console.log("spriteSize", spriteSize);
+
   const pokemonGenus: string | undefined = props.genera
     ? props.genera.find((g: Genus) => {
         return g.language.name === "en";
@@ -81,6 +88,7 @@ const PokemonCardBoxServer: React.FC<PokemonCardBoxServerProps> = (props) => {
                 )}
                 {selectedGame !== "gold-silver" && (
                   <DynamicImage
+                    game={selectedGame}
                     src={getSpriteUrl({
                       versionGroup: selectedGame,
                       pokemonId: props.pokemonId,

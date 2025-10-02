@@ -26,7 +26,7 @@ export const spriteSizesByVersion: Record<string, number> = {
   colosseum: MEDIUM,
   xd: MEDIUM,
   "black-2-white-2": MEDIUM,
-  "x-y": SMALL,
+  "x-y": TINY,
   "omega-ruby-alpha-sapphire": LARGE,
   "sun-moon": MEDIUM,
   "ultra-sun-ultra-moon": MEDIUM,

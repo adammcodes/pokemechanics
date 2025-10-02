@@ -1,7 +1,7 @@
 import { PokemonSprite } from "./PokemonSprite";
 
 // Component that renders the pokemon sprite for the current generation
-const PokemonSpriteForGen = ({
+const PokemonSpriteForGen = async ({
   sprite,
   dexId,
   game,
@@ -15,7 +15,6 @@ const PokemonSpriteForGen = ({
   speciesName: string;
 }) => {
   if (!sprite) return <p>Sprite not available</p>;
-
   // Otherwise, return the sprite
   return (
     <PokemonSprite
