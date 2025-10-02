@@ -1,5 +1,8 @@
+"use client";
+import { Suspense } from "react";
 import Header from "@/components/header/Header";
 import Footer from "./Footer";
+import LoadingSpinner from "./LoadingSpinner";
 import styles from "./Layout.module.css";
 
 type LayoutProps = {
@@ -11,7 +14,15 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
     <>
       <div className={`${styles.container}`}>
         <Header />
-        {children}
+        <Suspense
+          fallback={
+            <main className="w-full flex justify-center items-center min-h-[400px]">
+              <LoadingSpinner size="md" />
+            </main>
+          }
+        >
+          {children}
+        </Suspense>
         <Footer />
       </div>
     </>

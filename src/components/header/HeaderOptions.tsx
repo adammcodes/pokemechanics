@@ -66,8 +66,8 @@ const Nav = ({
 
   const navLinks = [
     { href: "/pokedex" + gamePath, text: "Pokédex" },
-    { href: "/bag" + gamePath, text: "Bag" },
-    { href: "/map" + gamePath, text: "Map" },
+    // { href: "/bag" + gamePath, text: "Bag" },
+    // { href: "/map" + gamePath, text: "Map" },
     { href: "/", text: "Select Version" },
   ];
 

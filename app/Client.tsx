@@ -1,10 +1,8 @@
 "use client";
 import { useSearchParams } from "next/navigation";
-import { Suspense } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { GameContextProvider } from "@/context/GameContextProvider";
 import { Layout } from "@/components/common/Layout";
-import { LayoutSkeleton } from "@/components/common/LayoutSkeleton";
 import { ErrorBoundary } from "@/components/common/ErrorBoundary";
 
 // query client for react-query
@@ -29,15 +27,7 @@ export default function Client({
           selectedGame={selectedGame}
           initialGame={initialGame}
         >
-          <Suspense
-            fallback={
-              <LayoutSkeleton>
-                <div></div>
-              </LayoutSkeleton>
-            }
-          >
-            <Layout>{children}</Layout>
-          </Suspense>
+          <Layout>{children}</Layout>
         </GameContextProvider>
       </QueryClientProvider>
     </ErrorBoundary>
