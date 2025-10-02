@@ -66,7 +66,7 @@ const renderEvolutionNode = (node, gameInfo, prevEvolutionInGen) => {
       )}
       {evolves_to.length > 0 && (
         <div
-          className={`flex flex-wrap justify-center items-center flex-${
+          className={`flex flex-wrap justify-center items-center mt-auto flex-${
             evolves_to.length === 2 ? "col" : "row"
           }`}
         >
