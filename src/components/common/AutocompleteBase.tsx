@@ -6,7 +6,7 @@ import styles from "./Autocomplete.module.css";
 
 interface AutocompleteProps {
   options: any[]; // this autocomplete doesn't care what the options are
-  onSelect: (selectedValue: string | number) => void;
+  onSelect?: (selectedValue: string | number) => void;
   defaultValue?: string | number;
   hasImageOptions?: boolean;
   linkTemplate?: string; // Template for Link href, e.g., "/pokedex/{value}"
@@ -15,9 +15,9 @@ interface AutocompleteProps {
 const AutocompleteBase: React.FC<AutocompleteProps> = ({
   options,
   defaultValue,
-  onSelect,
   hasImageOptions = false,
   linkTemplate,
+  onSelect,
 }) => {
   const [inputValue, setInputValue] = useState(defaultValue || "");
   const [filteredOptions, setFilteredOptions] = useState(options);
@@ -55,7 +55,9 @@ const AutocompleteBase: React.FC<AutocompleteProps> = ({
       return;
     }
 
-    onSelect(selectedValue);
+    if (onSelect) {
+      onSelect(selectedValue);
+    }
     setInputValue(selectedLabel);
     setShowList(false);
   };
@@ -163,7 +165,6 @@ const AutocompleteBase: React.FC<AutocompleteProps> = ({
                     href={href}
                     className={`${styles.autocomplete__li__btn} border-0 px-2 py-1 m-0 w-full text-left flex justify-between items-center block`}
                     onClick={() => {
-                      onSelect(option.value);
                       setInputValue(option.label);
                       setShowList(false);
                     }}

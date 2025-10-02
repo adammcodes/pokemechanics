@@ -5,10 +5,6 @@ import { PokedexPokemon } from "./[gen]/PokedexById";
 import AutocompleteBase from "@/components/common/AutocompleteBase";
 // Utils
 import toTitleCase from "@/utils/toTitleCase";
-// Hooks
-import { useRouter } from "next/navigation";
-import { useContext } from "react";
-import { GameContext } from "@/context/_context";
 
 export type PokemonOption = {
   label: string;
@@ -40,13 +36,6 @@ const PokemonSelector: React.FC<PokemonSelectorProps> =
     game,
     generationString,
   }) {
-    const router = useRouter();
-    const { game: selectedGame } = useContext(GameContext);
-
-    const onPokemonSelect = (pokemonId: number | string) => {
-      // Navigation will be handled by Link components in AutocompleteBase
-    };
-
     const pokemonOptions: PokemonOption[] = pokemon.map((p) => {
       // If the regionName is not "National" then we need to check if there is a variant id of the pokemon for the region
       let variantId: number | undefined;
@@ -69,7 +58,7 @@ const PokemonSelector: React.FC<PokemonSelectorProps> =
         versionGroup: game,
         generationString: generationString,
         dexId: dexId, // for link template
-        game: selectedGame, // for link template
+        game, // for link template
       };
     });
 
@@ -77,7 +66,6 @@ const PokemonSelector: React.FC<PokemonSelectorProps> =
       <>
         <AutocompleteBase
           options={pokemonOptions}
-          onSelect={onPokemonSelect}
           hasImageOptions={true}
           defaultValue={
             defaultPokemonName

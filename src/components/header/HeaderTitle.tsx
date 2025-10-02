@@ -25,17 +25,20 @@ export default function HeaderTitle() {
         />
       </Link>
       <div>
-        <Link href="/">
-          <h1>POKEMECHANICS</h1>
-        </Link>
         {game && genNumber && (
-          <span className="text-[0.9em] lg:text-[1em]">
-            <span className="hidden lg:inline">&nbsp;-</span> {formatName(game)}{" "}
-            <span className="inline lg:hidden">
-              <br />
+          <>
+            <Link href="/">
+              <h1>POKEMECHANICS</h1>
+            </Link>
+            <span className="text-[0.9em] lg:text-[1em]">
+              <span className="hidden lg:inline">&nbsp;-</span>{" "}
+              {formatName(game)}{" "}
+              <span className="inline lg:hidden">
+                <br />
+              </span>
+              {genNumber && <>(Gen {genNumber.toUpperCase()})</>}
             </span>
-            {genNumber && <>(Gen {genNumber.toUpperCase()})</>}
-          </span>
+          </>
         )}
       </div>
     </div>
