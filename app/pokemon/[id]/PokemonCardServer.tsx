@@ -24,6 +24,7 @@ import Stats from "@/components/stats/Stats";
 import LocationsForVersionGroupServer from "./LocationsForVersionGroupServer";
 import TypeEfficacyServer from "./TypeEfficacyServer";
 import HeaderSelect from "@/components/header/HeaderSelect";
+import { romanToNumber } from "@/utils/romanToNumber";
 
 type PokemonCardServerProps = {
   pokemonData: Pokemon;
@@ -96,6 +97,7 @@ export default async function PokemonCardServer({
   const versionId: number = versionData?.id || 1;
   const genName: string = versionData?.generation.name || "generation-i";
   const genNumber: string = genName.split("-")[1] || "i";
+  const generationId: number = romanToNumber(genNumber || "i");
   const isGenOneOrTwo = genNumber === "i" || genNumber === "ii";
 
   // Format names
@@ -216,7 +218,7 @@ export default async function PokemonCardServer({
         )}
         {/* Type Efficacy */}
         {typeIds && typeIds.length > 0 && (
-          <TypeEfficacyServer typeIds={typeIds} versionId={versionId} />
+          <TypeEfficacyServer typeIds={typeIds} generationId={generationId} />
         )}
       </section>
 

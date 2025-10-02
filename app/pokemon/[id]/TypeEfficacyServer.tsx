@@ -78,27 +78,30 @@ type EfficacyPast = {
   };
 };
 
+type PokemonV2Type = {
+  name: string;
+  id: number;
+  generation_id: number;
+  pokemonV2TypeefficaciesByTargetTypeId: Efficacy[];
+  pokemon_v2_typeefficacypasts: EfficacyPast[];
+};
+
 type EfficacyData = {
-  pokemon_v2_type: {
-    name: string;
-    id: number;
-    generation_id: number;
-    pokemonV2TypeefficaciesByTargetTypeId: Efficacy[];
-    pokemon_v2_typeefficacypasts: EfficacyPast[];
-  }[];
+  pokemon_v2_type: PokemonV2Type[];
 };
 
 interface TypeEfficacyServerProps {
   typeIds: number[];
-  versionId: number;
+  generationId: number;
 }
 
 export default async function TypeEfficacyServer({
   typeIds,
-  versionId,
+  generationId,
 }: TypeEfficacyServerProps) {
   // Fetch type efficacies data
-  const { data } = await fetchTypeEfficacies();
+  const response = await fetchTypeEfficacies();
+  const data: EfficacyData | undefined = response?.data;
 
   if (!data || !data.pokemon_v2_type) return null;
 
@@ -107,34 +110,35 @@ export default async function TypeEfficacyServer({
     damage_factor: number;
   }[] = [];
 
-  const pokemonTypes = data.pokemon_v2_type.filter((type: any) =>
-    typeIds.includes(type.id)
+  const pokemonTypes: PokemonV2Type[] = data.pokemon_v2_type.filter(
+    (type: PokemonV2Type) => typeIds.includes(type.id)
   );
 
   // Multiply the damage factor of the type efficacy of the first type by the damage factor of the type efficacy of the second type,
   // for each type in the pokemonV2TypeByTargetTypeId array
   // If there is only one type, return the damage factor of the type efficacy of the first type only
   // Store the result in the multipliedEfficacies array
-  pokemonTypes.forEach((type: any) => {
+  pokemonTypes.forEach((type) => {
     const efficacies = type.pokemonV2TypeefficaciesByTargetTypeId;
     const pastEfficacies = type.pokemon_v2_typeefficacypasts;
 
     // Use past efficacies if they exist for the generation of the pokemon
     const pastEfficacy = pastEfficacies.filter(
-      (efficacy: any) => efficacy.generation_id <= versionId
+      (efficacy: EfficacyPast) => efficacy.generation_id <= generationId
     );
 
     efficacies
       // only include type generations that are equal to or less than same generation as the pokemon
       .filter(
-        (efficacy: any) => efficacy.pokemon_v2_type.generation_id <= versionId
+        (efficacy: Efficacy) =>
+          efficacy.pokemon_v2_type.generation_id <= generationId
       )
-      .forEach((efficacy: any) => {
+      .forEach((efficacy: Efficacy) => {
         const damageTypeId = efficacy.damage_type_id;
 
         // find the efficacy for the generation of the pokemon if the was an efficacy for the generation of the pokemon
         const pastEfficacyForDamageType = pastEfficacy.find(
-          (e: any) => e.target_type_id === damageTypeId
+          (e: EfficacyPast) => e.target_type_id === damageTypeId
         );
 
         const df = pastEfficacyForDamageType
