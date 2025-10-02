@@ -10,8 +10,8 @@ export default function useCookieState<T>(
   // Set cookie helper
   const setCookie = (value: T) => {
     if (typeof window !== "undefined") {
-      const stringValue = JSON.stringify(value);
-      document.cookie = `${key}=${stringValue}; path=/; max-age=31536000`; // 1 year
+      const stringValue = typeof value === "string" ? value : JSON.stringify(value);
+      document.cookie = `${key}=${encodeURIComponent(stringValue)}; path=/; max-age=31536000`; // 1 year
     }
   };
 
@@ -22,8 +22,13 @@ export default function useCookieState<T>(
       const cookie = cookies.find((c) => c.trim().startsWith(`${key}=`));
       if (cookie) {
         try {
-          const value = cookie.split("=")[1];
-          return JSON.parse(decodeURIComponent(value));
+          const value = decodeURIComponent(cookie.split("=")[1]);
+          // Try to parse as JSON, if it fails treat as plain string
+          try {
+            return JSON.parse(value);
+          } catch {
+            return value as T;
+          }
         } catch (error) {
           console.error("Error parsing cookie value:", error);
         }

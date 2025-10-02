@@ -1,14 +1,10 @@
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 
-type PageProps = {
-  searchParams?: {
-    [key: string]: string | string[] | undefined;
-  };
-};
-
-export default function Pokedex({ searchParams }: PageProps) {
-  // Check if there's a game parameter in the URL
-  const game = searchParams?.game;
+export default function Pokedex() {
+  // Check if there's a game value in the cookie store
+  const cookieStore = cookies();
+  const game = cookieStore.get("game")?.value;
 
   // If no game parameter, redirect to home page
   if (!game) {

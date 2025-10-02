@@ -22,6 +22,7 @@ const DynamicImage: React.FC<Props> = ({
   }
 
   if (game === "x-y" && priority) {
+    // We are choosing not to optimize x-y images as they cannot be given a fixed width and height
     return <img src={src} alt={alt} />;
   }
 
