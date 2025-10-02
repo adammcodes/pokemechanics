@@ -78,13 +78,6 @@ const AutocompleteBase: React.FC<AutocompleteProps> = ({
     };
 
     // Close the dropdown if the user presses the escape key
-    window.addEventListener("keydown", (event) => {
-      if (event.key === "Escape") {
-        setShowList(false);
-      }
-    });
-
-    // Close the dropdown if the user presses the escape key
     window.addEventListener("keydown", onEscapeKey);
     // Close the dropdown if the user clicks outside of it
     window.addEventListener("click", onOutsideClick);
