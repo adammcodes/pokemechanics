@@ -9,7 +9,9 @@ import useGameVersion from "@/hooks/useGameVersion";
 const logoSize: number = 80;
 
 export default function HeaderTitle() {
-  const { game } = useContext(GameContext);
+  const { game, generationString } = useContext(GameContext);
+
+  console.log(generationString, "generationString");
 
   const versionGroup = useGameVersion(game);
   const formatName = convertKebabCaseToTitleCase;
