@@ -4,24 +4,11 @@
 @tailwind utilities;
 
 @font-face {
-  font-family: "RBYGSC";
-  src: url("/fonts/RBYGSC.woff2") format("woff2");
-  font-weight: normal;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "RSE";
-  src: url("/fonts/RSE.woff2") format("woff2");
-  font-weight: normal;
-  font-style: normal;
-}
-
-@font-face {
   font-family: "BWB2W2";
   src: url("/fonts/BWB2W2.woff2") format("woff2");
   font-weight: normal;
   font-style: normal;
+  font-display: swap;
 }
 
 /* CSS custom properties / CSS variables = default light mode */
@@ -38,6 +25,9 @@
   --shadow-colour: oklch(0% 0 0);
   --header-shadow: oklch(0% 0 0 / 10%);
   --header-border: oklch(0% 0 0 / 10%);
+  --font-family: "BWB2W2", Inter, -apple-system, BlinkMacSystemFont, Segoe UI,
+    Roboto, Ubuntu, Oxygen, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
+    sans-serif;
 }
 
 html,
@@ -45,9 +35,7 @@ body {
   height: 100vh;
   padding: 0;
   margin: 0;
-  font-family: "BWB2W2", Inter, -apple-system, BlinkMacSystemFont, Segoe UI,
-    Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
-    sans-serif;
+  font-family: var(--font-family);
 }
 
 html,
@@ -68,7 +56,7 @@ a {
   box-sizing: border-box;
   font-size: var(--font-size);
   line-height: 1em;
-  font-family: "BWB2W2";
+  font-family: var(--font-family);
 }
 
 img {
@@ -163,10 +151,14 @@ main {
   --shadow-colour: black;
   border: var(--border-thickness) solid var(--border-colour);
   border-radius: 0.4em;
-  box-shadow: var(--offset-x) var(--offset-y) var(--blur-radius) var(--spread-radius) var(--shadow-colour), 
-  inset var(--offset-x) var(--offset-y) var(--blur-radius) var(--spread-radius) var(--shadow-colour), 
-  var(--offset-x) var(--offset-y) var(--blur-radius) var(--spread-radius) var(--shadow-colour),
-  inset var(--offset-x) var(--offset-y) var(--blur-radius) var(--spread-radius) var(--shadow-colour);
+  box-shadow: var(--offset-x) var(--offset-y) var(--blur-radius)
+      var(--spread-radius) var(--shadow-colour),
+    inset var(--offset-x) var(--offset-y) var(--blur-radius)
+      var(--spread-radius) var(--shadow-colour),
+    var(--offset-x) var(--offset-y) var(--blur-radius) var(--spread-radius)
+      var(--shadow-colour),
+    inset var(--offset-x) var(--offset-y) var(--blur-radius)
+      var(--spread-radius) var(--shadow-colour);
 }
 
 /* Dark mode */
