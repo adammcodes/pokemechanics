@@ -1,4 +1,3 @@
-"use client";
 import styles from "./Header.module.css";
 import HeaderTitle from "./HeaderTitle";
 import HeaderOptions from "./HeaderOptions";
