@@ -4,8 +4,6 @@ import { Suspense } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { GameContextProvider } from "@/context/GameContextProvider";
 import { Layout } from "@/components/common/Layout";
-import { ApolloProvider } from "@apollo/client";
-import client from "@/apollo/apollo-client.js";
 import { LayoutSkeleton } from "@/components/common/LayoutSkeleton";
 import { ErrorBoundary } from "@/components/common/ErrorBoundary";
 
@@ -26,24 +24,22 @@ export default function Client({
 
   return (
     <ErrorBoundary>
-      <ApolloProvider client={client}>
-        <QueryClientProvider client={queryClient}>
-          <GameContextProvider
-            selectedGame={selectedGame}
-            initialGame={initialGame}
+      <QueryClientProvider client={queryClient}>
+        <GameContextProvider
+          selectedGame={selectedGame}
+          initialGame={initialGame}
+        >
+          <Suspense
+            fallback={
+              <LayoutSkeleton>
+                <div></div>
+              </LayoutSkeleton>
+            }
           >
-            <Suspense
-              fallback={
-                <LayoutSkeleton>
-                  <div></div>
-                </LayoutSkeleton>
-              }
-            >
-              <Layout>{children}</Layout>
-            </Suspense>
-          </GameContextProvider>
-        </QueryClientProvider>
-      </ApolloProvider>
+            <Layout>{children}</Layout>
+          </Suspense>
+        </GameContextProvider>
+      </QueryClientProvider>
     </ErrorBoundary>
   );
 }

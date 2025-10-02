@@ -16,7 +16,6 @@
     "incremental": true,
     "baseUrl": ".",
     "paths": {
-      "@/apollo/*": ["apollo/*"],
       "@/app/*": ["app/*"],
       "@/components/*": ["src/components/*"],
       "@/constants/*": ["src/constants/*"],
