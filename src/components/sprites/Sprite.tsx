@@ -6,16 +6,11 @@ import getSpriteUrl from "@/constants/spriteUrlTemplates";
 type SpriteProps = {
   id: number | string;
   size: number;
-  versionGroup: string;
+  game: string;
   gen: string;
 };
 
-export const Sprite: React.FC<SpriteProps> = ({
-  id,
-  size,
-  gen,
-  versionGroup,
-}) => {
+export const Sprite: React.FC<SpriteProps> = ({ id, size, gen, game }) => {
   const api = usePokemonClient();
   const p = useQuery(
     ["pokemonSprite", id],
@@ -40,13 +35,14 @@ export const Sprite: React.FC<SpriteProps> = ({
   const spriteSrc = getSpriteUrl({
     pokemonId: id,
     generation: gen.split("-")[1],
-    versionGroup,
+    versionGroup: game,
   });
 
   return (
     <>
       {p.data && (
         <DynamicImage
+          game={game}
           width={size}
           height={size}
           src={iconSrc || spriteSrc}

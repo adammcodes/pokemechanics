@@ -28,7 +28,7 @@ export const ForwardBackSprite = ({
       className="hover:underline cursor-pointer block"
     >
       {direction === "back" && <>&larr;</>} #{regionalDexNum}{" "}
-      <Sprite versionGroup={game} gen={gen} id={pokemonId} size={50} />
+      <Sprite game={game} gen={gen} id={pokemonId} size={50} />
       {toTitleCase(pokemonEntry.pokemon_species.name)}{" "}
       {direction === "forward" && <>&rarr;</>}
     </Link>

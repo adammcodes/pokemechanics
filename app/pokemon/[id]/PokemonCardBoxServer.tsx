@@ -32,8 +32,6 @@ const PokemonCardBoxServer: React.FC<PokemonCardBoxServerProps> = (props) => {
       ? spriteWidthBasedOnHeight(props.height * 10)
       : spriteSizesByVersion[selectedGame];
 
-  console.log("spriteSize", spriteSize);
-
   const pokemonGenus: string | undefined = props.genera
     ? props.genera.find((g: Genus) => {
         return g.language.name === "en";

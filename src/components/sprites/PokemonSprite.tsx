@@ -3,13 +3,6 @@
 import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
 import Link from "next/link";
 
-// Set the sprite size, alt text, and style
-// const spriteSize = 80;
-const spriteAltText = `Pokemon sprite`;
-// const spriteStyle = {
-//   width: `${spriteSize}px`,
-// };
-
 export const PokemonSprite = ({
   pokemonId,
   dexId,
@@ -31,7 +24,7 @@ export const PokemonSprite = ({
       className="mt-auto"
     >
       <figure className="flex flex-col items-center cursor-pointer">
-        <img src={sprite} alt={spriteAltText} />
+        <img src={sprite} alt="Pokemon sprite" />
         <label className="cursor-pointer">{formatName(speciesName)}</label>
       </figure>
     </Link>
