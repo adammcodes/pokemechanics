@@ -26,11 +26,13 @@ export async function fetchFromGraphQL<
 >({
   query,
   variables,
+  endpoint = "https://beta.pokeapi.co/graphql/v1beta",
 }: {
   query: string;
   variables?: TVariables;
+  endpoint?: string;
 }): Promise<GraphQLResponse<TData>> {
-  const url = "https://beta.pokeapi.co/graphql/v1beta";
+  const url = endpoint;
 
   try {
     const response = await fetch(url, {

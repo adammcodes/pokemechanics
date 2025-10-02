@@ -1,17 +1,17 @@
 "use client";
 import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
-import { useQuery, gql } from "@apollo/client";
+import { useQuery } from "react-query";
 import VersionChip from "@/components/common/VersionChip";
 import { groupEncountersByLocation } from "./groupEncountersByLocation";
 import Tooltip from "@/components/common/Tooltip";
 import {
   LocationAreaEncounters,
-  VersionDetails,
   EncounterDetails,
 } from "@/app/pokemon/[id]/LocationsForVersionGroupServer";
 import toTitleCase from "@/utils/toTitleCase";
+import { fetchFromGraphQL } from "@/utils/api";
 
-const GetPokemonLocationsForVersion = gql`
+const GRAPHQL_QUERY = `
   query GetPokemonLocationsForVersion(
     $version: String!
     $pokemonSpeciesId: Int!
@@ -122,6 +122,7 @@ const GetPokemonLocationsForVersion = gql`
   }
 `;
 
+
 type EncountersProps = {
   version: string; // e.g. "ruby"
   pokemonSpeciesId: number; // national dex number
@@ -198,62 +199,62 @@ export type Encounter = {
 };
 
 // Transform server data to match Encounter format
-const transformLocationAreaEncountersToEncounters = (
-  locationAreaEncounters: LocationAreaEncounters[],
-  version: string,
-  pokemonSpeciesId: number
-): Encounter[] => {
-  const encounters: Encounter[] = [];
-  let encounterId = 1;
+// const transformLocationAreaEncountersToEncounters = (
+//   locationAreaEncounters: LocationAreaEncounters[],
+//   version: string,
+//   pokemonSpeciesId: number
+// ): Encounter[] => {
+//   const encounters: Encounter[] = [];
+//   let encounterId = 1;
 
-  locationAreaEncounters.forEach((locationArea) => {
-    const versionDetails = locationArea.version_details.find(
-      (vd) => vd.version.name.toLowerCase() === version.toLowerCase()
-    );
+//   locationAreaEncounters.forEach((locationArea) => {
+//     const versionDetails = locationArea.version_details.find(
+//       (vd) => vd.version.name.toLowerCase() === version.toLowerCase()
+//     );
 
-    if (!versionDetails) return;
+//     if (!versionDetails) return;
 
-    versionDetails.encounter_details.forEach((encounterDetail) => {
-      // Extract location name from the location_area name
-      const locationName = locationArea.location_area.name;
+//     versionDetails.encounter_details.forEach((encounterDetail) => {
+//       // Extract location name from the location_area name
+//       const locationName = locationArea.location_area.name;
 
-      encounters.push({
-        id: encounterId++,
-        version_id: 0, // Not available in server data
-        location_area_id: 0, // Not available in server data
-        min_level: encounterDetail.min_level,
-        max_level: encounterDetail.max_level,
-        pokemon_id: pokemonSpeciesId, // Using species ID as fallback
-        encounter_slot_id: 0, // Not available in server data
-        pokemon_v2_locationarea: {
-          name: locationName,
-          location_id: 0, // Not available in server data
-          pokemon_v2_location: {
-            name: locationName,
-            id: 0, // Not available in server data
-            region_id: 0, // Not available in server data
-            pokemon_v2_region: {
-              name: "Unknown", // Not available in server data
-            },
-          },
-        },
-        pokemon_v2_encounterslot: {
-          rarity: encounterDetail.chance,
-          slot: null, // Not available in server data
-          version_group_id: 0, // Not available in server data
-        },
-        pokemon_v2_pokemon: {
-          pokemon_species_id: pokemonSpeciesId,
-          id: pokemonSpeciesId, // Using species ID as fallback
-          name: "Unknown", // Not available in server data
-        },
-        pokemon_v2_encounterconditionvaluemaps: [], // Not available in server data
-      });
-    });
-  });
+//       encounters.push({
+//         id: encounterId++,
+//         version_id: 0, // Not available in server data
+//         location_area_id: 0, // Not available in server data
+//         min_level: encounterDetail.min_level,
+//         max_level: encounterDetail.max_level,
+//         pokemon_id: pokemonSpeciesId, // Using species ID as fallback
+//         encounter_slot_id: 0, // Not available in server data
+//         pokemon_v2_locationarea: {
+//           name: locationName,
+//           location_id: 0, // Not available in server data
+//           pokemon_v2_location: {
+//             name: locationName,
+//             id: 0, // Not available in server data
+//             region_id: 0, // Not available in server data
+//             pokemon_v2_region: {
+//               name: "Unknown", // Not available in server data
+//             },
+//           },
+//         },
+//         pokemon_v2_encounterslot: {
+//           rarity: encounterDetail.chance,
+//           slot: null, // Not available in server data
+//           version_group_id: 0, // Not available in server data
+//         },
+//         pokemon_v2_pokemon: {
+//           pokemon_species_id: pokemonSpeciesId,
+//           id: pokemonSpeciesId, // Using species ID as fallback
+//           name: "Unknown", // Not available in server data
+//         },
+//         pokemon_v2_encounterconditionvaluemaps: [], // Not available in server data
+//       });
+//     });
+//   });
 
-  return encounters;
-};
+//   return encounters;
+// };
 
 type Version = {
   name: string;
@@ -292,18 +293,27 @@ const Encounters: React.FC<EncountersProps> = ({
 }) => {
   const formatName = convertKebabCaseToTitleCase;
 
-  const { loading, error, data } = useQuery(GetPokemonLocationsForVersion, {
-    variables: {
-      version: version.toLowerCase(),
-      pokemonSpeciesId,
-      evolutionChainId: evolutionData.id,
+  const { isLoading, error, data } = useQuery<EncountersData>(
+    ["pokemonLocations", version, pokemonSpeciesId, evolutionData.id],
+    async () => {
+      const result = await fetchFromGraphQL<EncountersData>({
+        query: GRAPHQL_QUERY,
+        variables: {
+          version: version.toLowerCase(),
+          pokemonSpeciesId,
+          evolutionChainId: evolutionData.id,
+        },
+        endpoint: "/api/graphql", // Use Next.js API route to avoid CORS in client component
+      });
+      return result.data!;
     },
-    errorPolicy: "all",
-    fetchPolicy: "cache-first",
-    notifyOnNetworkStatusChange: false,
-  });
+    {
+      staleTime: 1000 * 60 * 60, // 1 hour
+      cacheTime: 1000 * 60 * 60 * 24, // 24 hours
+    }
+  );
 
-  if (loading) return null;
+  if (isLoading) return null;
   if (error) {
     console.error(error);
     return null;
@@ -311,7 +321,7 @@ const Encounters: React.FC<EncountersProps> = ({
 
   if (!data) return null;
 
-  const { pokemon_v2_encounter, pokemon_v2_version } = data as EncountersData;
+  const { pokemon_v2_encounter, pokemon_v2_version } = data;
 
   const locationEncounters = groupEncountersByLocation(
     pokemon_v2_encounter,
@@ -327,15 +337,17 @@ const Encounters: React.FC<EncountersProps> = ({
 
   const evolutionChainData = data.pokemon_v2_evolutionchain[0];
 
-  const thisPokemon: PokemonV2Species =
+  const thisPokemon: PokemonV2Species | undefined =
     evolutionChainData?.pokemon_v2_pokemonspecies.find(
       (pokemon: PokemonV2Species) => pokemon.id === pokemonSpeciesId
     );
 
+  if (!thisPokemon) return null;
+
   const evolvesFromPokemonSpeciesId = thisPokemon?.evolves_from_species_id;
 
   const evolvesFromPokemon = evolutionChainData.pokemon_v2_pokemonspecies.find(
-    (p: PokemonV2) => p.id === evolvesFromPokemonSpeciesId
+    (p: PokemonV2Species) => p.id === evolvesFromPokemonSpeciesId
   );
 
   const versionGroups =
