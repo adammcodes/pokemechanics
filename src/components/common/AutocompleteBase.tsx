@@ -9,7 +9,7 @@ interface AutocompleteProps {
   onSelect?: (selectedValue: string | number) => void;
   defaultValue?: string | number;
   hasImageOptions?: boolean;
-  linkTemplate?: string; // Template for Link href, e.g., "/pokedex/{value}"
+  linkTemplate: string; // Template for Link href, e.g., "/pokedex/{value}"
 }
 
 const AutocompleteBase: React.FC<AutocompleteProps> = ({
@@ -40,26 +40,6 @@ const AutocompleteBase: React.FC<AutocompleteProps> = ({
       return option.label.toLowerCase().includes(inputValue.toLowerCase());
     });
     setFilteredOptions(filteredOptions);
-  };
-
-  const handleOptionClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    const selectedValue = event.currentTarget.name;
-    // select DOM element with id of label
-    const selectedLabel =
-      event.currentTarget.querySelector("#label")?.textContent;
-
-    if (!selectedValue || !selectedLabel) {
-      console.error("No value or label found in selected option");
-      console.log("selectedValue", selectedValue);
-      console.log("selectedLabel", selectedLabel);
-      return;
-    }
-
-    if (onSelect) {
-      onSelect(selectedValue);
-    }
-    setInputValue(selectedLabel);
-    setShowList(false);
   };
 
   // Create an event listener that closes the dropdown when the user clicks outside of it
@@ -127,13 +107,11 @@ const AutocompleteBase: React.FC<AutocompleteProps> = ({
         >
           {filteredOptions.map((option) => {
             const href = linkTemplate
-              ? linkTemplate
-                  .replace("{value}", option.value?.toString() || "")
-                  .replace("{dexId}", option.dexId?.toString() || "")
-                  .replace("{game}", option.game?.toString() || "")
-                  .replace("{pokemonId}", option.pokemonId?.toString() || "")
-                  .replace("{variantId}", option.variantId?.toString() || "")
-              : undefined;
+              .replace("{value}", option.value?.toString() || "")
+              .replace("{dexId}", option.dexId?.toString() || "")
+              .replace("{game}", option.game?.toString() || "")
+              .replace("{pokemonId}", option.pokemonId?.toString() || "")
+              .replace("{variantId}", option.variantId?.toString() || "");
 
             const OptionContent = () => (
               <>
@@ -160,27 +138,19 @@ const AutocompleteBase: React.FC<AutocompleteProps> = ({
 
             return (
               <li key={option.value}>
-                {href ? (
-                  <Link
-                    href={href}
-                    className={`${styles.autocomplete__li__btn} border-0 px-2 py-1 m-0 w-full text-left flex justify-between items-center block`}
-                    onClick={() => {
-                      setInputValue(option.label);
-                      setShowList(false);
-                    }}
-                  >
-                    <OptionContent />
-                  </Link>
-                ) : (
-                  <button
-                    id={`${option.name}-${option.value}`}
-                    name={option.value?.toString()}
-                    className={`${styles.autocomplete__li__btn} border-0 px-2 py-1 m-0 w-full text-left flex justify-between items-center`}
-                    onClick={handleOptionClick}
-                  >
-                    <OptionContent />
-                  </button>
-                )}
+                <Link
+                  href={href}
+                  className={`${styles.autocomplete__li__btn} border-0 px-2 py-1 m-0 w-full text-left flex justify-between items-center block`}
+                  onClick={() => {
+                    if (onSelect) {
+                      onSelect(option.value);
+                    }
+                    setInputValue(option.label);
+                    setShowList(false);
+                  }}
+                >
+                  <OptionContent />
+                </Link>
               </li>
             );
           })}

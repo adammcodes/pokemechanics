@@ -1,5 +1,4 @@
 "use client";
-import { useState } from "react";
 import { GameContext } from "./_context";
 import useCookieState from "@/hooks/useCookieState";
 import useGameVersion from "@/hooks/useGameVersion";
@@ -18,7 +17,6 @@ export const GameContextProvider: React.FC<GameContextProps> = ({
   // Use selectedGame as fallback, then initialGame from cookies
   const fallbackGame = selectedGame || initialGame;
   const [game, setGame] = useCookieState<string>("game", fallbackGame);
-  const [loading, setLoading] = useState(false);
 
   const versionGroup = useGameVersion(game);
   // e.g. "generation-i"
@@ -29,8 +27,6 @@ export const GameContextProvider: React.FC<GameContextProps> = ({
       value={{
         game,
         setGame,
-        loading,
-        setLoading,
         versionGroup,
         generationString,
       }}

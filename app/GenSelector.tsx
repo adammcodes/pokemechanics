@@ -1,6 +1,5 @@
 "use client";
 import { useContext } from "react";
-import Link from "next/link";
 import { GameOption } from "../src/types";
 // Components
 import AutocompleteBase from "@/components/common/AutocompleteBase";
@@ -20,7 +19,7 @@ type GenSelectorProps = {
 
 // Component for selecting a Version Group: e.g. "Red/Blue", "Yellow", "Silver/Gold", etc
 const GenSelector: React.FC<GenSelectorProps> = function GenSelector({ gens }) {
-  const { setGame, game, setLoading } = useContext(GameContext);
+  const { setGame, game } = useContext(GameContext);
 
   const genOptions: GameOption[] = gens.map((gen, index) => {
     return {
@@ -32,7 +31,6 @@ const GenSelector: React.FC<GenSelectorProps> = function GenSelector({ gens }) {
   });
 
   const handleSelect = (value: string | number) => {
-    setLoading(true);
     setGame(value);
     // Navigation will be handled by Link components in AutocompleteBase
   };
