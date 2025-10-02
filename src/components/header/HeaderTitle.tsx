@@ -19,7 +19,7 @@ export default function HeaderTitle() {
     <div className="hidden lg:flex flex flex-row justify-center items-center">
       <Link href="/">
         <Image
-          src="/images/dudelax.png"
+          src="/images/dudelax.webp"
           width={logoSize}
           height={logoSize}
           alt="Munchlax"

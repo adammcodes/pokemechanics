@@ -5,8 +5,8 @@ interface Props {
   alt: string;
   width: number;
   height: number;
-  priority: boolean;
   game: string;
+  priority?: boolean;
 }
 
 const DynamicImage: React.FC<Props> = ({
@@ -14,14 +14,14 @@ const DynamicImage: React.FC<Props> = ({
   alt,
   width,
   height,
-  priority = false,
   game,
+  priority = false,
 }) => {
   if (!src) {
     return <div>No image available</div>;
   }
 
-  if (game === "x-y") {
+  if (game === "x-y" && priority) {
     return <img src={src} alt={alt} />;
   }
 
@@ -32,6 +32,7 @@ const DynamicImage: React.FC<Props> = ({
       width={width}
       height={height}
       priority={priority}
+      fetchPriority="high"
     />
   );
 };

@@ -26,6 +26,10 @@ export default function RootLayout({
 
   return (
     <html lang="en" data-theme={theme}>
+      <head>
+        <link rel="preconnect" href="https://raw.githubusercontent.com" />
+        <link rel="dns-prefetch" href="https://raw.githubusercontent.com" />
+      </head>
       <body>
         <Client initialGame={game}>{children}</Client>
         <Analytics />

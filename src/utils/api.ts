@@ -30,17 +30,9 @@ export async function fetchFromGraphQL<
   query: string;
   variables?: TVariables;
 }): Promise<GraphQLResponse<TData>> {
+  const url = "https://beta.pokeapi.co/graphql/v1beta";
+
   try {
-    // Check if we're in a browser environment
-    const isBrowser = typeof window !== "undefined";
-    const appUrl =
-      process.env.NODE_ENV === "development"
-        ? "http://localhost:3000"
-        : "https://pokemechanics.app";
-
-    // Use relative URL for client-side, absolute for server-side
-    const url = isBrowser ? "/api/graphql" : `${appUrl}/api/graphql`;
-
     const response = await fetch(url, {
       method: "POST",
       headers: {

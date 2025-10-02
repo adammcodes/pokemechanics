@@ -34,6 +34,7 @@ const DualDynamicImages: React.FC<Props> = ({
             width={width}
             height={height}
             priority={priority}
+            fetchPriority="high"
           />
         ) : (
           "Sprite not available"
@@ -48,6 +49,7 @@ const DualDynamicImages: React.FC<Props> = ({
             width={width}
             height={height}
             priority={priority}
+            fetchPriority="high"
           />
         ) : (
           "Sprite not available"
