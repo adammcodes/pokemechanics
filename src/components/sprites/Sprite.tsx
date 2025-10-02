@@ -2,6 +2,7 @@ import { useQuery } from "react-query";
 import DynamicImage from "../common/DynamicImage";
 import usePokemonClient from "@/hooks/usePokemonClient";
 import getSpriteUrl from "@/constants/spriteUrlTemplates";
+import getSpriteIconUrl from "@/constants/spriteIconUrlTemplate";
 
 type SpriteProps = {
   id: number | string;
@@ -11,45 +12,39 @@ type SpriteProps = {
 };
 
 export const Sprite: React.FC<SpriteProps> = ({ id, size, gen, game }) => {
-  const api = usePokemonClient();
-  const p = useQuery(
-    ["pokemonSprite", id],
-    async () => {
-      return api
-        .getPokemonById(Number(id))
-        .then((data) => data)
-        .catch((err) => {
-          throw err;
-        });
-    },
-    {
-      refetchOnMount: false,
-      refetchOnWindowFocus: false,
-      enabled: Boolean(id),
-    }
-  );
+  // const api = usePokemonClient();
+  // const p = useQuery(
+  //   ["pokemonSprite", id],
+  //   async () => {
+  //     return api
+  //       .getPokemonById(Number(id))
+  //       .then((data) => data)
+  //       .catch((err) => {
+  //         throw err;
+  //       });
+  //   },
+  //   {
+  //     refetchOnMount: false,
+  //     refetchOnWindowFocus: false,
+  //     enabled: Boolean(id),
+  //   }
+  // );
 
-  const iconSrc =
-    p.data && p.data.sprites.versions["generation-vii"].icons.front_default;
-
-  const spriteSrc = getSpriteUrl({
+  const spriteIconSrc = getSpriteIconUrl({
     pokemonId: id,
-    generation: gen.split("-")[1],
+    generation: gen,
     versionGroup: game,
   });
 
   return (
     <>
-      {p.data && (
-        <DynamicImage
-          game={game}
-          width={size}
-          height={size}
-          src={iconSrc || spriteSrc}
-          alt={"icon sprite"}
-          priority={false}
-        />
-      )}
+      <DynamicImage
+        game={game}
+        width={size}
+        height={size}
+        src={spriteIconSrc}
+        alt={"icon sprite"}
+      />
     </>
   );
 };

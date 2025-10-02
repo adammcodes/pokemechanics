@@ -75,9 +75,11 @@ export default function ForwardBack({
       )
     : 0;
 
+  const isBlackWhite = game === "black-white" || game === "black-2-white-2";
+
   return (
     <div className="lg:absolute flex flex-row justify-between w-full px-5 pb-5 lg:py-0">
-      {prevEntryNum === 0 && <div>&nbsp;</div>}
+      {prevEntryNum === 0 && !isBlackWhite && <div>&nbsp;</div>}
       {currentEntryNum !== prevEntryNum && prevPokemonId && (
         <ForwardBackSprite
           direction="back"
