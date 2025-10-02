@@ -18,7 +18,7 @@ import PokemonCardBoxServer from "./PokemonCardBoxServer";
 import PokemonFlavorText from "app/pokemon/[id]/PokemonFlavorText";
 import EvolutionsServer from "./EvolutionsServer";
 import ForwardBack from "app/pokemon/[id]/ForwardBack";
-import { MovesServer } from "./MovesServer";
+import { MovesServer } from "./moves/MovesServer";
 import Abilities from "@/app/pokemon/[id]/Abilities";
 import Stats from "@/components/stats/Stats";
 import LocationsForVersionGroupServer from "./LocationsForVersionGroupServer";

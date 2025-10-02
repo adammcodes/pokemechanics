@@ -1,7 +1,7 @@
 import { PokemonMoveByMethod } from "@/types/index";
 import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
 import replaceNewlinesAndFeeds from "@/utils/replaceNewlinesAndFeeds";
-import { MoveMachine } from "@/components/moves/MoveMachine";
+import { MoveMachine } from "./MoveMachine";
 import PokemonTypeChip from "@/components/common/PokemonTypeChip";
 
 // Server-side data fetching function

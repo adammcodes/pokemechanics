@@ -1,7 +1,4 @@
-"use client";
-import { useContext } from "react";
-import { Move } from "./Move";
-import { GameContext } from "@/context/_context";
+import { MoveServer } from "./MoveServer";
 import filterMovesForGen from "@/lib/filterMovesForGen";
 import mapMoves from "@/lib/mapMoves";
 import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
@@ -39,13 +36,13 @@ const sortMoveMethods = (a: string, b: string) => {
   return 0;
 };
 
-type MovesProps = {
+type MovesServerProps = {
   moves: PokemonMoveVersion[];
+  game: string;
 };
 
-export const Moves: React.FC<MovesProps> = ({ moves }) => {
+export const MovesServer: React.FC<MovesServerProps> = ({ moves, game }) => {
   const formatName = convertKebabCaseToTitleCase;
-  const { game } = useContext(GameContext);
 
   // Filter out moves that do not exist in the game
   const movesForGen = filterMovesForGen(moves, game);
@@ -56,9 +53,6 @@ export const Moves: React.FC<MovesProps> = ({ moves }) => {
   );
   // Create an array of unique move_learn_methods for this gen
   const moveLearnMethods = getLearnMethods(allMoves).sort(sortMoveMethods);
-
-  // console.log(moves);
-  // console.log(movesForGen);
 
   return (
     <div className={`mt-10 w-full ${styles.container}`}>
@@ -112,7 +106,14 @@ export const Moves: React.FC<MovesProps> = ({ moves }) => {
                   </thead>
                   <tbody>
                     {filterMovesByMethod(allMoves, method).map((m, index) => {
-                      return <Move key={index} m={m} method={method} />;
+                      return (
+                        <MoveServer
+                          key={index}
+                          m={m}
+                          method={method}
+                          game={game}
+                        />
+                      );
                     })}
                   </tbody>
                 </table>
