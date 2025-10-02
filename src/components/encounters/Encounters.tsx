@@ -3,7 +3,7 @@ import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
 import { useQuery, gql } from "@apollo/client";
 import VersionChip from "@/components/common/VersionChip";
 import { groupEncountersByLocation } from "./groupEncountersByLocation";
-import { Tooltip, Stack, Text } from "@chakra-ui/react";
+import Tooltip from "@/components/common/Tooltip";
 import {
   LocationAreaEncounters,
   VersionDetails,
@@ -386,17 +386,17 @@ const Encounters: React.FC<EncountersProps> = ({
             >
               <Tooltip
                 label={
-                  <Stack>
-                    <Text>Min. Level: {location.minLevel}</Text>
-                    <Text>Max. Level: {location.maxLevel}</Text>
-                    <Text>Rate: {location.encounterRate}%</Text>
-                    <Text>
+                  <div className="flex flex-col gap-1">
+                    <p>Min. Level: {location.minLevel}</p>
+                    <p>Max. Level: {location.maxLevel}</p>
+                    <p>Rate: {location.encounterRate}%</p>
+                    <p>
                       Method:{" "}
                       {dedupeEncounterMethods(location.encounterMethods)
                         .map((method) => toTitleCase(method.method.name))
                         .join(", ")}
-                    </Text>
-                  </Stack>
+                    </p>
+                  </div>
                 }
               >
                 <span className="text-base leading-none">

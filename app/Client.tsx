@@ -5,7 +5,6 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { GameContextProvider } from "@/context/GameContextProvider";
 import { Layout } from "@/components/common/Layout";
 import { ApolloProvider } from "@apollo/client";
-import { ChakraProvider } from "@chakra-ui/react";
 import client from "@/apollo/apollo-client.js";
 import { LayoutSkeleton } from "@/components/common/LayoutSkeleton";
 import { ErrorBoundary } from "@/components/common/ErrorBoundary";
@@ -33,17 +32,15 @@ export default function Client({
             selectedGame={selectedGame}
             initialGame={initialGame}
           >
-            <ChakraProvider>
-              <Suspense
-                fallback={
-                  <LayoutSkeleton>
-                    <div></div>
-                  </LayoutSkeleton>
-                }
-              >
-                <Layout>{children}</Layout>
-              </Suspense>
-            </ChakraProvider>
+            <Suspense
+              fallback={
+                <LayoutSkeleton>
+                  <div></div>
+                </LayoutSkeleton>
+              }
+            >
+              <Layout>{children}</Layout>
+            </Suspense>
           </GameContextProvider>
         </QueryClientProvider>
       </ApolloProvider>
