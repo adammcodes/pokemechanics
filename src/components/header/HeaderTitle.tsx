@@ -4,18 +4,14 @@ import Image from "next/image";
 import { useContext } from "react";
 import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
 import { GameContext } from "@/context/_context";
-import useGameVersion from "@/hooks/useGameVersion";
 
 const logoSize: number = 80;
 
 export default function HeaderTitle() {
   const { game, generationString } = useContext(GameContext);
 
-  console.log(generationString, "generationString");
-
-  const versionGroup = useGameVersion(game);
   const formatName = convertKebabCaseToTitleCase;
-  const genNumber = versionGroup.data?.generation?.name.split("-")[1] || "i";
+  const genNumber = generationString?.split("-")[1] || "i";
 
   return (
     <div className="hidden lg:flex flex flex-row justify-center items-center">
@@ -32,7 +28,7 @@ export default function HeaderTitle() {
         <Link href="/">
           <h1>POKEMECHANICS</h1>
         </Link>
-        {game && versionGroup.data && (
+        {game && genNumber && (
           <span className="text-[0.9em] lg:text-[1em]">
             <span className="hidden lg:inline">&nbsp;-</span> {formatName(game)}{" "}
             <span className="inline lg:hidden">
