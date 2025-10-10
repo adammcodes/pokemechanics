@@ -25,6 +25,7 @@ Upgrade from PokéAPI GraphQL v1beta to v1beta2. The newer endpoint removes the 
   - etc.
 - Update client-side queries:
   - `src/components/encounters/Encounters.tsx`
+  - There are more...
 - Test all queries after migration
 
 **Benefits:**
