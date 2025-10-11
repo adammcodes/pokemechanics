@@ -154,13 +154,23 @@ Audit `src/components/` and move route-specific components closer to their route
 - Implement incremental static regeneration (ISR) for Pokémon pages
 - Add service worker for offline support
 
-### 8. New Features
+### 8. New Features (Not all accessible via current PokeAPI)
 
-- Team builder tool
-- Damage calculator
-- Advanced search/filtering
+- Add "Bag" page and route "/bag" for searching items in the current game they are playing:
+  - What items do, where to find them
+  - Medicines, Berries, Balls, Machines, Machines
+- Add "Map" page and route "/map" for searching locations in the current game
+  - What pokemon are encountered there?
+  - What items are found there?
+  - What trainer battles happen there? (Trainers and Gym Leaders)
+  - What NPC trades can be made there?
 - Comparison tool (compare two Pokémon side-by-side)
-- User accounts with favorites/teams
+- Add a database: Add user accounts
+  - Add User Sign Up, Login, and Auth
+  - Add User Team/Party Builder
+  - User can set current game(s) they are playing.
+  - Add "Walkthroughs" where users can author/publish their own walkthroughs
+- Add "Walkthrough" page where visitors can search walkthroughs for the current game they are playing
 
 ---
 
