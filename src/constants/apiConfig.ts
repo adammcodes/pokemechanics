@@ -14,3 +14,11 @@ export const POKEAPI_GRAPHQL_ENDPOINT = "https://graphql.pokeapi.co/v1beta2";
  * @see https://pokeapi.co/docs/v2
  */
 export const POKEAPI_REST_ENDPOINT = "https://pokeapi.co/api/v2";
+
+/**
+ * PokéAPI Sprite base URL
+ * Base URL for Pokémon sprite images hosted on GitHub
+ * @see https://github.com/PokeAPI/sprites
+ */
+export const POKEAPI_SPRITE_BASE_URL =
+  "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon";

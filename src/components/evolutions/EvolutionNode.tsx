@@ -4,6 +4,7 @@ import findVarietyForRegion from "@/lib/findVarietyForRegion";
 import PokemonSpriteVariety from "../sprites/PokemonSpriteVariety";
 import getSpriteUrl from "@/constants/spriteUrlTemplates";
 import { fetchPokemonSpeciesById } from "@/app/helpers/rest/fetchPokemonSpeciesById";
+import { POKEAPI_SPRITE_BASE_URL } from "@/constants/apiConfig";
 
 const EvolutionNode = async ({
   pokemonDexNumber,
@@ -30,7 +31,7 @@ const EvolutionNode = async ({
   let pokemonVarietyId: number | undefined;
 
   // If there is no sprite for the current generation, use the official artwork
-  let sprite = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonDexNumber}.png`;
+  let sprite = `${POKEAPI_SPRITE_BASE_URL}/other/official-artwork/${pokemonDexNumber}.png`;
 
   const varieties = pokemonSpecies.varieties;
 

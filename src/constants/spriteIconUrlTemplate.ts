@@ -1,3 +1,5 @@
+import { POKEAPI_SPRITE_BASE_URL } from "./apiConfig";
+
 // Determine the correct template for sprite URLs based on the version group and generation string and pokemon id
 interface SpriteIconUrlTemplate {
   versionGroup: string; // e.g. "red-blue", "gold-silver", "ruby-sapphire", "diamond-pearl", "black-white", "x-y", "omega-ruby-alpha-sapphire", "sun-moon", "sword-shield"
@@ -14,9 +16,9 @@ export default function getSpriteIconUrl({
 }: SpriteIconUrlTemplate): string {
   // after sun-moon the sprite url template changes
   if (Number(pokemonId) >= 722)
-    return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png`;
+    return `${POKEAPI_SPRITE_BASE_URL}/${pokemonId}.png`;
 
-  let spriteUrlTemplate: string = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-vii/icons/${pokemonId}.png`;
+  let spriteUrlTemplate: string = `${POKEAPI_SPRITE_BASE_URL}/versions/generation-vii/icons/${pokemonId}.png`;
 
   return spriteUrlTemplate;
 }

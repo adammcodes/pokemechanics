@@ -3,6 +3,7 @@ import { PokemonSprite } from "./PokemonSprite";
 import splitKebabCase from "@/utils/splitKebabCase";
 import toTitleCase from "@/utils/toTitleCase";
 import { fetchPokemonById } from "@/app/helpers/rest/fetchPokemonById";
+import { POKEAPI_SPRITE_BASE_URL } from "@/constants/apiConfig";
 
 // Component that renders the pokemon sprite for the current generation
 const PokemonSpriteVariety = async ({
@@ -26,7 +27,7 @@ const PokemonSpriteVariety = async ({
   }
 
   // Default to official artwork sprite
-  let sprite = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonVarietyId}.png`;
+  let sprite = `${POKEAPI_SPRITE_BASE_URL}/other/official-artwork/${pokemonVarietyId}.png`;
   let speciesName = "Unknown";
   let regionTitle = "";
 

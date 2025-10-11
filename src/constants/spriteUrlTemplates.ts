@@ -1,3 +1,5 @@
+import { POKEAPI_SPRITE_BASE_URL } from "./apiConfig";
+
 // Determine the correct template for sprite URLs based on the version group and generation string and pokemon id
 interface SpriteUrlTemplate {
   versionGroup: string; // e.g. "red-blue", "gold-silver", "ruby-sapphire", "diamond-pearl", "black-white", "x-y", "omega-ruby-alpha-sapphire", "sun-moon", "sword-shield"
@@ -14,10 +16,10 @@ export default function getSpriteUrl({
 }: SpriteUrlTemplate): string {
   // after sun-moon the sprite url template changes
   if (Number(pokemonId) >= 722)
-    return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png`;
+    return `${POKEAPI_SPRITE_BASE_URL}/${pokemonId}.png`;
 
   let spriteUrlTemplate: string =
-    "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-";
+    `${POKEAPI_SPRITE_BASE_URL}/versions/generation-`;
   switch (versionGroup) {
     case "red-blue":
       spriteUrlTemplate += `${generation}/${versionGroup}/transparent/${pokemonId}.png`;
@@ -49,19 +51,19 @@ export default function getSpriteUrl({
       spriteUrlTemplate += `vii/ultra-sun-ultra-moon/${pokemonId}.png`;
       break;
     case "lets-go-pikachu-lets-go-eevee":
-      return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png`;
+      return `${POKEAPI_SPRITE_BASE_URL}/${pokemonId}.png`;
     case "sword-shield":
-      return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png`;
+      return `${POKEAPI_SPRITE_BASE_URL}/${pokemonId}.png`;
     case "the-isle-of-armor":
-      return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png`;
+      return `${POKEAPI_SPRITE_BASE_URL}/${pokemonId}.png`;
     case "the-crown-tundra":
-      return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png`;
+      return `${POKEAPI_SPRITE_BASE_URL}/${pokemonId}.png`;
     case "brilliant-diamond-and-shining-pearl":
-      return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png`;
+      return `${POKEAPI_SPRITE_BASE_URL}/${pokemonId}.png`;
     case "legends-arceus":
-      return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png`;
+      return `${POKEAPI_SPRITE_BASE_URL}/${pokemonId}.png`;
     case "scarlet-violet":
-      return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png`;
+      return `${POKEAPI_SPRITE_BASE_URL}/${pokemonId}.png`;
     default:
       // This default template works with all games after crystal except for above cases
       spriteUrlTemplate += `${generation}/${versionGroup}/${pokemonId}.png`;
