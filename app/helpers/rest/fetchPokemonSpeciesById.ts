@@ -1,4 +1,5 @@
 import { MAX_SPECIES_ID } from "@/constants/numOfPokemonByGen";
+import { POKEAPI_REST_ENDPOINT } from "@/constants/apiConfig";
 
 export async function fetchPokemonSpeciesById(id: number) {
   if (id > MAX_SPECIES_ID) {
@@ -8,7 +9,7 @@ export async function fetchPokemonSpeciesById(id: number) {
   }
 
   const response = await fetch(
-    `https://pokeapi.co/api/v2/pokemon-species/${id}`,
+    `${POKEAPI_REST_ENDPOINT}/pokemon-species/${id}`,
     {
       headers: {
         Accept: "application/json",

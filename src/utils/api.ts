@@ -3,6 +3,8 @@
  * Use the GraphQL API
  */
 
+import { POKEAPI_GRAPHQL_ENDPOINT } from "@/constants/apiConfig";
+
 // GraphQL response types
 interface GraphQLError {
   message: string;
@@ -26,7 +28,7 @@ export async function fetchFromGraphQL<
 >({
   query,
   variables,
-  endpoint = "https://beta.pokeapi.co/graphql/v1beta",
+  endpoint = POKEAPI_GRAPHQL_ENDPOINT,
 }: {
   query: string;
   variables?: TVariables;

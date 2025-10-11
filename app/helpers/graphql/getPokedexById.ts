@@ -2,26 +2,26 @@ import { fetchFromGraphQL } from "@/utils/api";
 
 const query = `
     query GetPokedexById($dexId: Int!) {
-      pokemon_v2_pokedex_by_pk(id: $dexId) {
+      pokedex(where: { id: { _eq: $dexId } }) {
         id
         name
-        pokemon_v2_region {
+        region {
           name
         }
-        pokemon_v2_pokedexdescriptions(
-          where: { pokemon_v2_language: { name: { _eq: "en" } } }
+        pokedexdescriptions(
+          where: { language: { name: { _eq: "en" } } }
         ) {
           description
         }
-        pokemon_v2_pokemondexnumbers(order_by: { pokedex_number: asc }) {
+        pokemondexnumbers(order_by: { pokedex_number: asc }) {
           pokedex_number # this is the "regional" dex number
           pokemon_species_id # this is the national dex id for the pokemon
-          pokemon_v2_pokemonspecy {
+          pokemonspecy {
             name
-            pokemon_v2_pokemons(where: { is_default: { _eq: false } }) {
+            pokemons(where: { is_default: { _eq: false } }) {
               name
               is_default
-              pokemon_v2_pokemonsprites {
+              pokemonsprites {
                 id
               }
             }
@@ -41,14 +41,14 @@ export async function getPokedexById(dexId: number) {
     // Optional: fetch Pokedex data from the REST API where its easier to access the region name
     // const restResponse = await fetchPokedexById(dexId);
 
-    if (!gqlResponse.data?.pokemon_v2_pokedex_by_pk) {
+    if (!gqlResponse.data?.pokedex?.[0]) {
       throw new Error(`Pokedex with ID ${dexId} not found`);
     }
 
     // console.log("gqlResponse", gqlResponse);
     // console.log("restResponse", restResponse);
 
-    return gqlResponse.data.pokemon_v2_pokedex_by_pk;
+    return gqlResponse.data.pokedex[0];
   } catch (error) {
     console.error("Error fetching Pokedex data:", error);
     return null;

@@ -1,10 +1,11 @@
 import Box from "@/components/common/Box";
 import PokemonTypeChip from "@/components/common/PokemonTypeChip";
+import { POKEAPI_GRAPHQL_ENDPOINT } from "@/constants/apiConfig";
 import "./TypeEfficacy.css";
 
 // Server-side data fetching function
 async function fetchTypeEfficacies() {
-  const response = await fetch("https://beta.pokeapi.co/graphql/v1beta", {
+  const response = await fetch(POKEAPI_GRAPHQL_ENDPOINT, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -12,29 +13,29 @@ async function fetchTypeEfficacies() {
     body: JSON.stringify({
       query: `
         query GetAllTypeEfficacies {
-          pokemon_v2_type {
+          type {
             name
             id
             generation_id
-            pokemonV2TypeefficaciesByTargetTypeId {
+            TypeefficaciesByTargetTypeId {
               damage_factor
               damage_type_id
               target_type_id
-              pokemon_v2_type {
+              type {
                 name
                 generation_id
               }
             }
-            pokemon_v2_typeefficacypasts {
+            typeefficacypasts {
               damage_factor
               damage_type_id
               target_type_id
               generation_id
-              pokemon_v2_generation {
+              generation {
                 name
                 id
               }
-              pokemon_v2_type {
+              type {
                 name
                 generation_id
               }
@@ -54,7 +55,7 @@ async function fetchTypeEfficacies() {
 }
 
 type Efficacy = {
-  pokemon_v2_type: {
+  type: {
     name: string;
     generation_id: number;
   };
@@ -64,7 +65,7 @@ type Efficacy = {
 };
 
 type EfficacyPast = {
-  pokemon_v2_type: {
+  type: {
     name: string;
     generation_id: number;
   };
@@ -72,7 +73,7 @@ type EfficacyPast = {
   damage_type_id: number;
   target_type_id: number;
   generation_id: number;
-  pokemon_v2_generation: {
+  generation: {
     name: string;
     id: number;
   };
@@ -82,12 +83,12 @@ type PokemonV2Type = {
   name: string;
   id: number;
   generation_id: number;
-  pokemonV2TypeefficaciesByTargetTypeId: Efficacy[];
-  pokemon_v2_typeefficacypasts: EfficacyPast[];
+  TypeefficaciesByTargetTypeId: Efficacy[];
+  typeefficacypasts: EfficacyPast[];
 };
 
 type EfficacyData = {
-  pokemon_v2_type: PokemonV2Type[];
+  type: PokemonV2Type[];
 };
 
 interface TypeEfficacyServerProps {
@@ -103,14 +104,14 @@ export default async function TypeEfficacyServer({
   const response = await fetchTypeEfficacies();
   const data: EfficacyData | undefined = response?.data;
 
-  if (!data || !data.pokemon_v2_type) return null;
+  if (!data || !data.type) return null;
 
   const pokemonTypeEfficacies: {
     type: string;
     damage_factor: number;
   }[] = [];
 
-  const pokemonTypes: PokemonV2Type[] = data.pokemon_v2_type.filter(
+  const pokemonTypes: PokemonV2Type[] = data.type.filter(
     (type: PokemonV2Type) => typeIds.includes(type.id)
   );
 
@@ -119,8 +120,8 @@ export default async function TypeEfficacyServer({
   // If there is only one type, return the damage factor of the type efficacy of the first type only
   // Store the result in the multipliedEfficacies array
   pokemonTypes.forEach((type) => {
-    const efficacies = type.pokemonV2TypeefficaciesByTargetTypeId;
-    const pastEfficacies = type.pokemon_v2_typeefficacypasts;
+    const efficacies = type.TypeefficaciesByTargetTypeId;
+    const pastEfficacies = type.typeefficacypasts;
 
     // Use past efficacies if they exist for the generation of the pokemon
     const pastEfficacy = pastEfficacies.filter(
@@ -131,7 +132,7 @@ export default async function TypeEfficacyServer({
       // only include type generations that are equal to or less than same generation as the pokemon
       .filter(
         (efficacy: Efficacy) =>
-          efficacy.pokemon_v2_type.generation_id <= generationId
+          efficacy.type.generation_id <= generationId
       )
       .forEach((efficacy: Efficacy) => {
         const damageTypeId = efficacy.damage_type_id;
@@ -146,14 +147,14 @@ export default async function TypeEfficacyServer({
           : efficacy.damage_factor;
 
         const existingEfficacy = pokemonTypeEfficacies.find(
-          (e) => e.type === efficacy.pokemon_v2_type.name
+          (e) => e.type === efficacy.type.name
         );
 
         if (existingEfficacy) {
           existingEfficacy.damage_factor *= df / 100;
         } else {
           pokemonTypeEfficacies.push({
-            type: efficacy.pokemon_v2_type.name,
+            type: efficacy.type.name,
             damage_factor: df,
           });
         }

@@ -1,5 +1,7 @@
+import { POKEAPI_REST_ENDPOINT } from "@/constants/apiConfig";
+
 export async function fetchPokemonById(id: number) {
-  const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`, {
+  const response = await fetch(`${POKEAPI_REST_ENDPOINT}/pokemon/${id}`, {
     headers: {
       Accept: "application/json",
       "User-Agent": "Pokemechanics/1.0",

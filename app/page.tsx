@@ -13,7 +13,7 @@ type Gen = {
 async function getVersionGroups(): Promise<Gen[]> {
   const query = `
     query GetVersionGroups {
-      pokemon_v2_versiongroup(limit: 25, order_by: {id: asc}) {
+      versiongroup(limit: 25, order_by: {id: asc}) {
         id
         name
         generation_id
@@ -25,7 +25,7 @@ async function getVersionGroups(): Promise<Gen[]> {
     const data = await fetchFromGraphQL({ query });
 
     // Transform the GraphQL response to match the expected Gen[] format
-    return data.data.pokemon_v2_versiongroup.map((versionGroup: any) => {
+    return data.data.versiongroup.map((versionGroup: any) => {
       return {
         name: versionGroup.name,
         url: `/pokedex/${versionGroup.generation_id}`,

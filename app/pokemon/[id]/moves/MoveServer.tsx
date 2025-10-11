@@ -3,10 +3,11 @@ import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
 import replaceNewlinesAndFeeds from "@/utils/replaceNewlinesAndFeeds";
 import { MoveMachine } from "./MoveMachine";
 import PokemonTypeChip from "@/components/common/PokemonTypeChip";
+import { POKEAPI_REST_ENDPOINT } from "@/constants/apiConfig";
 
 // Server-side data fetching function
 async function fetchMoveById(id: number) {
-  const response = await fetch(`https://pokeapi.co/api/v2/move/${id}`, {
+  const response = await fetch(`${POKEAPI_REST_ENDPOINT}/move/${id}`, {
     headers: {
       Accept: "application/json",
       "User-Agent": "Pokemechanics/1.0",

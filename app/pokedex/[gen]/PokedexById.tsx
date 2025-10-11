@@ -5,12 +5,12 @@ import PokemonSelector from "../PokemonSelector";
 export type PokedexPokemon = {
   pokedex_number: number;
   pokemon_species_id: number;
-  pokemon_v2_pokemonspecy: {
+  pokemonspecy: {
     name: string;
-    pokemon_v2_pokemons: {
+    pokemons: {
       name: string;
       is_default: boolean;
-      pokemon_v2_pokemonsprites: {
+      pokemonsprites: {
         id: number;
       }[];
     }[];
@@ -19,11 +19,11 @@ export type PokedexPokemon = {
 
 type Pokedex = {
   name: string;
-  pokemon_v2_pokemondexnumbers: PokedexPokemon[];
-  pokemon_v2_region: {
+  pokemondexnumbers: PokedexPokemon[];
+  region: {
     name: string;
   };
-  pokemon_v2_pokedexdescriptions: {
+  pokedexdescriptions: {
     description: string;
     language: {
       name: string;
@@ -42,7 +42,7 @@ type PokedexByIdProps = {
 };
 
 // Display a Regional Pokedex by ID
-// Use "dex.pokemon_v2_pokemondexnumbers -> pokedex_number" to get the regional dex pokemon id number
+// Use "dex.pokemondexnumbers -> pokedex_number" to get the regional dex pokemon id number
 // The pokemonId property is the national dex id number
 export default async function PokedexById({
   dexId,
@@ -57,9 +57,9 @@ export default async function PokedexById({
   if (!regionalDex) {
     return <></>;
   }
-  const regionalDexNumbers = regionalDex.pokemon_v2_pokemondexnumbers;
+  const regionalDexNumbers = regionalDex.pokemondexnumbers;
 
-  const regionName = regionalDex.pokemon_v2_region.name;
+  const regionName = regionalDex.region.name;
 
   const defaultPokemon = regionalDexNumbers.find(
     (p) => p.pokemon_species_id === pokemonId
@@ -79,7 +79,7 @@ export default async function PokedexById({
             {formatName(regionalDex.name)} Dex ({pokedexIdRange})
           </h2>
           <p className="text-[1rem]">
-            {regionalDex.pokemon_v2_pokedexdescriptions[0].description}
+            {regionalDex.pokedexdescriptions[0].description}
           </p>
         </header>
       )}
@@ -92,7 +92,7 @@ export default async function PokedexById({
           game={game}
           generationString={generationString}
           defaultPokemonId={defaultRegionalDexPokemonId || pokemonId}
-          defaultPokemonName={defaultPokemon?.pokemon_v2_pokemonspecy.name}
+          defaultPokemonName={defaultPokemon?.pokemonspecy.name}
         />
       </div>
     </section>

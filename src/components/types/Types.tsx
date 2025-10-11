@@ -18,28 +18,28 @@ const Types: React.FC<TypesProps> = async ({ generationId, pokemonId }) => {
     return <span>Could not find types data.</span>;
   }
 
-  const pokemonTypes = typesData.pokemon_v2_pokemontype;
+  const pokemonTypes = typesData.pokemontype;
 
   if (pokemonTypes.length === 0) {
     return <span>Could not find pokemon types.</span>;
   }
 
-  const { pokemon_v2_pokemon } = pokemonTypes[0];
+  const { pokemon } = pokemonTypes[0];
 
   // past and present types
-  const pastTypes = pokemon_v2_pokemon.pokemon_v2_pokemontypepasts;
-  const presentTypes = pokemon_v2_pokemon.pokemon_v2_pokemontypes;
+  const pastTypes = pokemon.pokemontypepasts;
+  const presentTypes = pokemon.pokemontypes;
 
   // Find the highest generation among past types
   const maxPastTypeGeneration =
     pastTypes.length > 0
-      ? Math.max(...pastTypes.map((t) => t.pokemon_v2_type.generation_id))
+      ? Math.max(...pastTypes.map((t) => t.type.generation_id))
       : 0;
 
   // Find the lowest generation among present types
   const minPresentTypeGeneration =
     presentTypes.length > 0
-      ? Math.min(...presentTypes.map((t) => t.pokemon_v2_type.generation_id))
+      ? Math.min(...presentTypes.map((t) => t.type.generation_id))
       : Infinity;
 
   // Use past types if current generation is greater than past types generation
@@ -56,7 +56,7 @@ const Types: React.FC<TypesProps> = async ({ generationId, pokemonId }) => {
   } else {
     // Use present types for current generation and beyond
     const presentTypesForGen = presentTypes.filter(
-      (t) => t.pokemon_v2_type.generation_id <= generationId
+      (t) => t.type.generation_id <= generationId
     );
     typesForGen =
       presentTypesForGen.length > 0 ? presentTypesForGen : presentTypes;

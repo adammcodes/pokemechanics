@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
+import { POKEAPI_GRAPHQL_ENDPOINT } from "@/constants/apiConfig";
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
-    const response = await fetch("https://beta.pokeapi.co/graphql/v1beta", {
+    const response = await fetch(POKEAPI_GRAPHQL_ENDPOINT, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

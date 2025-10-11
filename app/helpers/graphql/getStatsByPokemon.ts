@@ -2,12 +2,12 @@ import { fetchFromGraphQL } from "@/utils/api";
 
 const query = `
   query GetStatsByPokemonName($pokemonName: String!) {
-    stats: pokemon_v2_pokemon(where: { name: { _eq: $pokemonName } }) {
+    stats: pokemon(where: { name: { _eq: $pokemonName } }) {
       name
-      pokemon_v2_pokemonstats {
+      pokemonstats {
         base_stat
         effort
-        pokemon_v2_stat {
+        stat {
           name
         }
       }
@@ -18,14 +18,14 @@ const query = `
 type PokemonStat = {
   base_stat: number;
   effort: number;
-  pokemon_v2_stat: {
+  stat: {
     name: string;
   };
 };
 
 export type PokemonStats = {
   name: string;
-  pokemon_v2_pokemonstats: PokemonStat[];
+  pokemonstats: PokemonStat[];
 };
 
 export async function getStatsByPokemon(pokemonName: string) {

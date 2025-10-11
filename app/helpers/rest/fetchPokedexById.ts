@@ -1,7 +1,8 @@
 import { Pokedex } from "@/types/index";
+import { POKEAPI_REST_ENDPOINT } from "@/constants/apiConfig";
 
 export async function fetchPokedexById(id: number): Promise<Pokedex> {
-  const response = await fetch(`https://pokeapi.co/api/v2/pokedex/${id}`, {
+  const response = await fetch(`${POKEAPI_REST_ENDPOINT}/pokedex/${id}`, {
     headers: {
       Accept: "application/json",
       "User-Agent": "Pokemechanics/1.0",

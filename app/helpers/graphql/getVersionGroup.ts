@@ -21,25 +21,25 @@ export type VersionGroup = {
 // The fetch API doesn't support Apollo Client's gql template literal.
 const query = `
   query GetVersionGroup($name: String!) {
-    pokemon_v2_versiongroup(where: {name: {_eq: $name}}) {
+    versiongroup(where: {name: {_eq: $name}}) {
       id
       name
       order
-      pokemon_v2_versions {
+      versions {
         name
         id
       }
-      pokemon_v2_versiongroupregions {
-        pokemon_v2_region {
+      versiongroupregions {
+        region {
           name
           id
         }
       }
-      pokemon_v2_generation {
+      generation {
         name
       }
-      pokemon_v2_pokedexversiongroups {
-        pokemon_v2_pokedex {
+      pokedexversiongroups {
+        pokedex {
           id
           name
         }
@@ -56,35 +56,35 @@ export async function getVersionGroup(gen: string): Promise<VersionGroup> {
       variables: { name: gen },
     });
 
-    if (!response.data?.pokemon_v2_versiongroup?.[0]) {
+    if (!response.data?.versiongroup?.[0]) {
       throw new Error(`Version group '${gen}' not found`);
     }
 
-    const versionGroup = response.data.pokemon_v2_versiongroup[0];
+    const versionGroup = response.data.versiongroup[0];
 
     // Transform the GraphQL response to match the expected VersionGroup interface
     return {
       id: versionGroup.id,
       name: versionGroup.name,
       order: versionGroup.order,
-      versions: versionGroup.pokemon_v2_versions.map((v: NamedAPIResource) => ({
+      versions: versionGroup.versions.map((v: NamedAPIResource) => ({
         name: v.name,
         id: v.id,
       })),
-      regions: versionGroup.pokemon_v2_versiongroupregions.map(
-        (region: { pokemon_v2_region: NamedAPIResource }) => ({
-          name: region.pokemon_v2_region.name,
-          id: region.pokemon_v2_region.id,
+      regions: versionGroup.versiongroupregions.map(
+        (region: { region: NamedAPIResource }) => ({
+          name: region.region.name,
+          id: region.region.id,
         })
       ),
       generation: {
-        name: versionGroup.pokemon_v2_generation.name,
-        id: versionGroup.pokemon_v2_generation.id,
+        name: versionGroup.generation.name,
+        id: versionGroup.generation.id,
       },
-      pokedexes: versionGroup.pokemon_v2_pokedexversiongroups.map(
-        (pokedexVersionGroup: { pokemon_v2_pokedex: NamedAPIResource }) => ({
-          name: pokedexVersionGroup.pokemon_v2_pokedex.name,
-          id: pokedexVersionGroup.pokemon_v2_pokedex.id,
+      pokedexes: versionGroup.pokedexversiongroups.map(
+        (pokedexVersionGroup: { pokedex: NamedAPIResource }) => ({
+          name: pokedexVersionGroup.pokedex.name,
+          id: pokedexVersionGroup.pokedex.id,
         })
       ),
     };

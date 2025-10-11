@@ -1,6 +1,8 @@
+import { POKEAPI_REST_ENDPOINT } from "@/constants/apiConfig";
+
 export async function fetchEvolutionChainById(id: number) {
   const response = await fetch(
-    `https://pokeapi.co/api/v2/evolution-chain/${id}`,
+    `${POKEAPI_REST_ENDPOINT}/evolution-chain/${id}`,
     {
       headers: {
         Accept: "application/json",

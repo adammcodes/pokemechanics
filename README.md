@@ -109,7 +109,7 @@ pokemechanics/
 
 **Server Components (default):**
 
-- Fetch directly from external APIs: `https://pokeapi.co` or `https://beta.pokeapi.co/graphql/v1beta`
+- Fetch directly from external APIs: `https://pokeapi.co` or `https://graphql.pokeapi.co/v1beta2
 - Use in `page.tsx`, `layout.tsx`, and `*Server.tsx` components
 - Better performance, reduced bundle size, SEO-friendly
 
@@ -223,7 +223,7 @@ import type { Pokemon } from "@/types"; // src/types/index
 This app uses [PokéAPI](https://pokeapi.co/), a free RESTful and GraphQL API for Pokémon data.
 
 **REST API:** `https://pokeapi.co/api/v2/`
-**GraphQL API:** `https://beta.pokeapi.co/graphql/v1beta`
+**GraphQL API:** `https://graphql.pokeapi.co/v1beta2
 
 API routes in `/app/api/` act as proxies to handle CORS for client-side requests.
 

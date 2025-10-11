@@ -12,8 +12,8 @@ type NationalDexProps = {
 
 type Pokedex = {
   name: string;
-  pokemon_v2_pokemondexnumbers: PokedexPokemon[];
-  pokemon_v2_pokedexdescriptions: {
+  pokemondexnumbers: PokedexPokemon[];
+  pokedexdescriptions: {
     description: string;
     language: {
       name: string;
@@ -23,7 +23,7 @@ type Pokedex = {
 };
 
 // Display the National Dex for the selected game/generation
-// Use "dex.pokemon_v2_pokemondexnumbers -> pokemon_species_id" to get the national dex number
+// Use "dex.pokemondexnumbers -> pokemon_species_id" to get the national dex number
 export default async function NationalDex({
   game,
   generationString,
@@ -38,8 +38,8 @@ export default async function NationalDex({
     return <></>;
   }
 
-  const firstPokemonSpecies = dex.pokemon_v2_pokemondexnumbers[0];
-  const lastPokemonSpecies = dex.pokemon_v2_pokemondexnumbers.slice(-1)[0];
+  const firstPokemonSpecies = dex.pokemondexnumbers[0];
+  const lastPokemonSpecies = dex.pokemondexnumbers.slice(-1)[0];
   const pokedexIdRange = `${firstPokemonSpecies.pokemon_species_id} - ${lastPokemonSpecies.pokemon_species_id}`;
 
   return (
@@ -52,7 +52,7 @@ export default async function NationalDex({
 
       <div className="max-w-sm mx-auto">
         <PokemonSelector
-          pokemon={dex.pokemon_v2_pokemondexnumbers}
+          pokemon={dex.pokemondexnumbers}
           regionName="National"
           dexId={1}
           game={game}

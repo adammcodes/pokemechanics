@@ -17,35 +17,35 @@ const GRAPHQL_QUERY = `
     $pokemonSpeciesId: Int!
     $evolutionChainId: Int!
   ) {
-    pokemon_v2_version(where: { name: { _eq: $version } }) {
+    version(where: { name: { _eq: $version } }) {
       name
-      pokemon_v2_versiongroup {
+      versiongroup {
         id
         name
-        pokemon_v2_generation {
+        generation {
           id
           name
-          pokemon_v2_versiongroups {
+          versiongroups {
             name
             generation_id
-            pokemon_v2_versions {
+            versions {
               name
               version_group_id
-              pokemon_v2_encounters(
+              encounters(
                 where: {
-                  pokemon_v2_pokemon: {
+                  pokemon: {
                     pokemon_species_id: { _eq: $pokemonSpeciesId }
                   }
                 }
               ) {
-                pokemon_v2_locationarea {
+                locationarea {
                   name
                   location_id
-                  pokemon_v2_location {
+                  location {
                     name
                     id
                     region_id
-                    pokemon_v2_region {
+                    region {
                       name
                     }
                   }
@@ -56,10 +56,10 @@ const GRAPHQL_QUERY = `
         }
       }
     }
-    pokemon_v2_encounter(
+    encounter(
       where: {
-        pokemon_v2_version: { name: { _eq: $version } }
-        pokemon_v2_pokemon: { pokemon_species_id: { _eq: $pokemonSpeciesId } }
+        version: { name: { _eq: $version } }
+        pokemon: { pokemon_species_id: { _eq: $pokemonSpeciesId } }
       }
     ) {
       id
@@ -69,47 +69,47 @@ const GRAPHQL_QUERY = `
       max_level
       pokemon_id
       encounter_slot_id
-      pokemon_v2_locationarea {
+      locationarea {
         name
         location_id
-        pokemon_v2_location {
+        location {
           name
           id
           region_id
-          pokemon_v2_region {
+          region {
             name
           }
         }
       }
-      pokemon_v2_encounterslot {
+      encounterslot {
         rarity
         slot
         version_group_id
       }
-      pokemon_v2_pokemon {
+      pokemon {
         pokemon_species_id
         id
         name
       }
-      pokemon_v2_encounterconditionvaluemaps {
+      encounterconditionvaluemaps {
         encounter_condition_value_id
-        pokemon_v2_encounterconditionvalue {
+        encounterconditionvalue {
           name
           is_default
-          pokemon_v2_encountercondition {
+          encountercondition {
             name
             id
           }
         }
       }
     }
-    pokemon_v2_evolutionchain(where: { id: { _eq: $evolutionChainId } }) {
+    evolutionchain(where: { id: { _eq: $evolutionChainId } }) {
       id
       baby_trigger_item_id
-      pokemon_v2_item {
+      item {
         name
       }
-      pokemon_v2_pokemonspecies {
+      pokemonspecies {
         id
         name
         evolves_from_species_id
@@ -143,18 +143,18 @@ type PokemonV2Species = {
 type PokemonV2EvolutionChain = {
   baby_trigger_item_id: number | null;
   id: number;
-  pokemon_v2_item: any;
-  pokemon_v2_pokemonspecies: PokemonV2Species[];
+  item: any;
+  pokemonspecies: PokemonV2Species[];
 };
 
 type PokemonV2LocationArea = {
   name: string;
   location_id: number;
-  pokemon_v2_location: {
+  location: {
     name: string; // e.g. "kanto-route-24"
     id: number;
     region_id: number;
-    pokemon_v2_region: {
+    region: {
       name: string;
     };
   };
@@ -174,10 +174,10 @@ type PokemonV2 = {
 
 type EncounterConditionalValue = {
   encounter_condition_value_id: number;
-  pokemon_v2_encounterconditionvalue: {
+  encounterconditionvalue: {
     name: string;
     is_default: boolean;
-    pokemon_v2_encountercondition: {
+    encountercondition: {
       name: string;
       id: number;
     };
@@ -192,10 +192,10 @@ export type Encounter = {
   max_level: number;
   pokemon_id: number;
   encounter_slot_id: number;
-  pokemon_v2_locationarea: PokemonV2LocationArea;
-  pokemon_v2_encounterslot: PokemonV2EncounterSlot;
-  pokemon_v2_pokemon: PokemonV2;
-  pokemon_v2_encounterconditionvaluemaps: EncounterConditionalValue[];
+  locationarea: PokemonV2LocationArea;
+  encounterslot: PokemonV2EncounterSlot;
+  pokemon: PokemonV2;
+  encounterconditionvaluemaps: EncounterConditionalValue[];
 };
 
 // Transform server data to match Encounter format
@@ -258,20 +258,20 @@ export type Encounter = {
 
 type Version = {
   name: string;
-  pokemon_v2_versiongroup: {
+  versiongroup: {
     name: string;
-    pokemon_v2_generation: {
+    generation: {
       id: number;
       name: string;
-      pokemon_v2_versiongroups: {
+      versiongroups: {
         name: string;
         generation_id: number;
-        pokemon_v2_versions: {
+        versions: {
           __typename: string;
           name: string;
           version_group_id: number;
-          pokemon_v2_encounters: {
-            pokemon_v2_locationarea: PokemonV2LocationArea;
+          encounters: {
+            locationarea: PokemonV2LocationArea;
           }[];
         }[];
       }[];
@@ -280,9 +280,9 @@ type Version = {
 };
 
 type EncountersData = {
-  pokemon_v2_version: Version[];
-  pokemon_v2_encounter: Encounter[];
-  pokemon_v2_evolutionchain: PokemonV2EvolutionChain[];
+  version: Version[];
+  encounter: Encounter[];
+  evolutionchain: PokemonV2EvolutionChain[];
 };
 
 const Encounters: React.FC<EncountersProps> = ({
@@ -321,24 +321,24 @@ const Encounters: React.FC<EncountersProps> = ({
 
   if (!data) return null;
 
-  const { pokemon_v2_encounter, pokemon_v2_version } = data;
+  const { encounter, version: versionData } = data;
 
   const locationEncounters = groupEncountersByLocation(
-    pokemon_v2_encounter,
+    encounter,
     locationAreaEncounters,
     version.toLowerCase()
   );
 
   // console.log(locationEncounters, "locationEncounters");
-  // console.log(pokemon_v2_encounter, "pokemon_v2_encounter");
+  // console.log(encounter, "encounter");
 
   // const generationId =
-  //   pokemon_v2_version[0].pokemon_v2_versiongroup.pokemon_v2_generation.id;
+  //   versionData[0].versiongroup.generation.id;
 
-  const evolutionChainData = data.pokemon_v2_evolutionchain[0];
+  const evolutionChainData = data.evolutionchain[0];
 
   const thisPokemon: PokemonV2Species | undefined =
-    evolutionChainData?.pokemon_v2_pokemonspecies.find(
+    evolutionChainData?.pokemonspecies.find(
       (pokemon: PokemonV2Species) => pokemon.id === pokemonSpeciesId
     );
 
@@ -346,20 +346,20 @@ const Encounters: React.FC<EncountersProps> = ({
 
   const evolvesFromPokemonSpeciesId = thisPokemon?.evolves_from_species_id;
 
-  const evolvesFromPokemon = evolutionChainData.pokemon_v2_pokemonspecies.find(
+  const evolvesFromPokemon = evolutionChainData.pokemonspecies.find(
     (p: PokemonV2Species) => p.id === evolvesFromPokemonSpeciesId
   );
 
   const versionGroups =
-    pokemon_v2_version[0].pokemon_v2_versiongroup.pokemon_v2_generation
-      .pokemon_v2_versiongroups;
+    versionData[0].versiongroup.generation
+      .versiongroups;
 
   // Filter the other versions in this generation that have encounters for this pokemon
   const otherVersionsWithEncounters = versionGroups
-    .flatMap((group) => group.pokemon_v2_versions)
+    .flatMap((group) => group.versions)
     .filter((v) => {
       const isSameVersion = v.name === version;
-      return !isSameVersion && v.pokemon_v2_encounters.length > 0;
+      return !isSameVersion && v.encounters.length > 0;
     });
 
   // We assuming if there are no encounters and no evolutions, the pokemon is obtainable only by an event

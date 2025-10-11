@@ -22,14 +22,14 @@ export const groupEncountersByLocation = (
 
   // For each encounter, group by unique location name with encounter rate summed and min/max levels for each location
   encounters.forEach((encounter) => {
-    const locationAreaName = encounter.pokemon_v2_locationarea.name;
+    const locationAreaName = encounter.locationarea.name;
     const locationName =
-      encounter.pokemon_v2_locationarea.pokemon_v2_location.name;
+      encounter.locationarea.location.name;
     const existingLocationArea = locationAreas.find(
       (location) => location.locationAreaName === locationAreaName
     );
 
-    const encounterRate = encounter.pokemon_v2_encounterslot.rarity;
+    const encounterRate = encounter.encounterslot.rarity;
     const minLevel = encounter.min_level;
     const maxLevel = encounter.max_level;
     const encounterMethods = locationAreaEncounters

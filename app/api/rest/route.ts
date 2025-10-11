@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { POKEAPI_REST_ENDPOINT } from "@/constants/apiConfig";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -25,7 +26,7 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const url = `https://pokeapi.co/api/v2/${endpoint}/${id}`;
+    const url = `${POKEAPI_REST_ENDPOINT}/${endpoint}/${id}`;
     console.log(`Fetching from: ${url}`);
 
     const response = await fetch(url, {

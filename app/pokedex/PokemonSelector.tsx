@@ -41,14 +41,14 @@ const PokemonSelector: React.FC<PokemonSelectorProps> =
       let variantId: number | undefined;
       if (regionName !== "National") {
         const variantForRegion =
-          p.pokemon_v2_pokemonspecy.pokemon_v2_pokemons.find((variant) =>
+          p.pokemonspecy.pokemons.find((variant) =>
             variant.name.includes(regionName)
           );
-        variantId = variantForRegion?.pokemon_v2_pokemonsprites[0].id;
+        variantId = variantForRegion?.pokemonsprites[0].id;
       }
       const dexNumber: number = p.pokemon_species_id; // this is the national dex number
       const pokemonId: number = p.pokedex_number; // this is the regional dex number
-      const pokemonName: string = p.pokemon_v2_pokemonspecy.name;
+      const pokemonName: string = p.pokemonspecy.name;
       return {
         label: toTitleCase(pokemonName),
         name: pokemonName,

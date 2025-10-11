@@ -1,7 +1,7 @@
 import PokemonTypeChip from "@/components/common/PokemonTypeChip";
 
 export type PokemonType = {
-  pokemon_v2_type: {
+  type: {
     name: string;
     generation_id: number;
   };
@@ -13,7 +13,7 @@ type PokemonTypesProps = {
 
 const PokemonTypes: React.FC<PokemonTypesProps> = ({ types }) => {
   const mappedTypes = types.map((t, i, arr) => {
-    let typeName = t.pokemon_v2_type.name;
+    let typeName = t.type.name;
 
     return <PokemonTypeChip key={typeName} typeName={typeName} />;
   });

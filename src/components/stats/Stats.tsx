@@ -17,11 +17,11 @@ const Stats: React.FC<StatsProps> = async ({ pokemonName }) => {
   if (!statsData)
     return <Box headingText="Base Stats:">Could not find stats.</Box>;
 
-  const { pokemon_v2_pokemonstats } = statsData;
+  const { pokemonstats } = statsData;
 
-  const stats = pokemon_v2_pokemonstats.map((stats) => {
-    const { base_stat, effort, pokemon_v2_stat } = stats;
-    const { name } = pokemon_v2_stat;
+  const stats = pokemonstats.map((stats) => {
+    const { base_stat, effort, stat } = stats;
+    const { name } = stat;
     return {
       name,
       base_stat,
