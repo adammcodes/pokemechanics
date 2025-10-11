@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { getVersionGroup } from "@/app/helpers/graphql/getVersionGroup";
 
 export default function useGameVersion(versionGroupName: string) {
@@ -7,15 +7,13 @@ export default function useGameVersion(versionGroupName: string) {
   };
 
   // Get selected game version by name e.g. "red-blue"
-  const version = useQuery(
-    ["version", versionGroupName],
-    () => fetchGameVersion(versionGroupName),
-    {
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-      enabled: Boolean(versionGroupName),
-    }
-  );
+  const version = useQuery({
+    queryKey: ["version", versionGroupName],
+    queryFn: () => fetchGameVersion(versionGroupName),
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    enabled: Boolean(versionGroupName),
+  });
 
   return version;
 }

@@ -1,6 +1,6 @@
 "use client";
 import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import VersionChip from "@/components/common/VersionChip";
 import { groupEncountersByLocation } from "./groupEncountersByLocation";
 import Tooltip from "@/components/common/Tooltip";
@@ -293,9 +293,9 @@ const Encounters: React.FC<EncountersProps> = ({
 }) => {
   const formatName = convertKebabCaseToTitleCase;
 
-  const { isLoading, error, data } = useQuery<EncountersData>(
-    ["pokemonLocations", version, pokemonSpeciesId, evolutionData.id],
-    async () => {
+  const { isLoading, error, data } = useQuery<EncountersData>({
+    queryKey: ["pokemonLocations", version, pokemonSpeciesId, evolutionData.id],
+    queryFn: async () => {
       const result = await fetchFromGraphQL<EncountersData>({
         query: GRAPHQL_QUERY,
         variables: {
@@ -307,11 +307,9 @@ const Encounters: React.FC<EncountersProps> = ({
       });
       return result.data!;
     },
-    {
-      staleTime: 1000 * 60 * 60, // 1 hour
-      cacheTime: 1000 * 60 * 60 * 24, // 24 hours
-    }
-  );
+    staleTime: 1000 * 60 * 60, // 1 hour
+    gcTime: 1000 * 60 * 60 * 24, // 24 hours (garbage collection time)
+  });
 
   if (isLoading) return null;
   if (error) {

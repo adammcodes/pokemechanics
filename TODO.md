@@ -6,50 +6,7 @@ Project roadmap and planned improvements for Pokémechanics.
 
 ## 🔥 High Priority
 
-### 1. Upgrade React Query v3 → v5
-
-**Status:** 📋 Planned
-
-**Description:**
-Upgrade from deprecated `react-query@3.39.3` to latest `@tanstack/react-query@5.x`. The package has been renamed and includes significant API improvements.
-
-**Changes Required:**
-
-- Uninstall old package: `npm uninstall react-query`
-- Install new package: `npm install @tanstack/react-query@5`
-- Update imports across codebase:
-  - `import { useQuery } from 'react-query'` → `import { useQuery } from '@tanstack/react-query'`
-  - `import { QueryClient, QueryClientProvider } from 'react-query'` → same with `@tanstack/react-query`
-- Update `QueryClient` configuration (new defaults in v5)
-- Review and update `useQuery` options:
-  - `staleTime`, `cacheTime` (now `gcTime`), etc.
-- Update error handling patterns (v5 has better TypeScript support)
-
-**Breaking Changes:**
-
-- `cacheTime` renamed to `gcTime` (garbage collection time)
-- `useQuery` signature changes
-- Query keys must be arrays (already using this pattern ✅)
-- SSR hydration API changes (may not affect this project)
-
-**Benefits:**
-
-- Better TypeScript support and type inference
-- Improved performance
-- Active maintenance and security updates
-- Better devtools
-- Suspense support improvements
-
-**Resources:**
-
-- [React Query v5 Migration Guide](https://tanstack.com/query/latest/docs/react/guides/migrating-to-v5)
-- [TanStack Query v5 Docs](https://tanstack.com/query/latest/docs/react/overview)
-
-**Estimated Effort:** Medium (3-5 hours)
-
----
-
-### 2. Create Testing Infrastructure
+### 1. Create Testing Infrastructure
 
 **Status:** 📋 Planned
 
@@ -116,7 +73,7 @@ Establish a testing framework to prevent regressions and ensure code quality as 
 
 ## 📚 Medium Priority
 
-### 3. Add ESLint Configuration
+### 2. Add ESLint Configuration
 
 **Status:** 📋 Planned
 
@@ -141,7 +98,7 @@ Create `.eslintrc.json`:
 
 ---
 
-### 4. Create CONTRIBUTING.md
+### 3. Create CONTRIBUTING.md
 
 **Status:** 📋 Planned
 
@@ -157,7 +114,7 @@ Document how to contribute to the project, including:
 
 ---
 
-### 5. Add Inline Code Documentation
+### 4. Add Inline Code Documentation
 
 **Status:** 📋 Planned
 
@@ -175,7 +132,7 @@ Add JSDoc comments to complex functions and utilities:
 
 ## 🚀 Future Ideas
 
-### 6. Centralize Configuration
+### 5. Centralize Configuration
 
 Create `/src/config/` with:
 
@@ -183,21 +140,21 @@ Create `/src/config/` with:
 - Environment variable schema validation (Zod)
 - Feature flags
 
-### 7. Move Route-Specific Components
+### 6. Move Route-Specific Components
 
 Audit `src/components/` and move route-specific components closer to their routes:
 
 - Consider moving `Encounters.tsx` to `app/pokemon/[id]/_components/`
 - Keep only truly reusable components in `/src/components`
 
-### 8. Performance Improvements
+### 7. Performance Improvements
 
 - Add bundle analyzer
 - Optimize image loading strategies
 - Implement incremental static regeneration (ISR) for Pokémon pages
 - Add service worker for offline support
 
-### 9. New Features
+### 8. New Features
 
 - Team builder tool
 - Damage calculator
@@ -209,6 +166,7 @@ Audit `src/components/` and move route-specific components closer to their route
 
 ## ✅ Completed
 
+- [x] **Upgrade React Query v3 → v5** - Migrated from `react-query@3.39.3` to `@tanstack/react-query@5.90.2`, updated all useQuery calls to new object-based API, renamed `cacheTime` to `gcTime`
 - [x] **Migrate to GraphQL v1beta2 Endpoint** - Upgraded from v1beta to v1beta2 with cleaner schema (removed `pokemon_v2_` prefix)
 - [x] **Centralize API Configuration** - Created `src/constants/apiConfig.ts` for all API endpoints (GraphQL, REST, Sprites)
 - [x] Remove Apollo Client, consolidate on React Query

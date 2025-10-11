@@ -1,5 +1,5 @@
 "use client";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { MachineVersion } from "@/types/index";
 import useMachineClient from "@/hooks/useMachineClient";
 
@@ -25,15 +25,13 @@ export const MoveMachine: React.FC<MoveMachineProps> = ({ machines, game }) => {
       });
   };
 
-  const machineQ = useQuery(
-    [`machine`, machineId],
-    () => fetchMachine(machineId),
-    {
-      enabled: Boolean(machineId),
-      refetchOnMount: false,
-      refetchOnWindowFocus: false,
-    }
-  );
+  const machineQ = useQuery({
+    queryKey: [`machine`, machineId],
+    queryFn: () => fetchMachine(machineId),
+    enabled: Boolean(machineId),
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+  });
 
   return (
     <>

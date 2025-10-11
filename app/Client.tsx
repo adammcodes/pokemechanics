@@ -1,11 +1,11 @@
 "use client";
 import { useSearchParams } from "next/navigation";
-import { QueryClient, QueryClientProvider } from "react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { GameContextProvider } from "@/context/GameContextProvider";
 import { Layout } from "@/components/common/Layout";
 import { ErrorBoundary } from "@/components/common/ErrorBoundary";
 
-// query client for react-query
+// query client for @tanstack/react-query
 const queryClient = new QueryClient();
 
 export default function Client({
