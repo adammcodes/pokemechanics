@@ -6,45 +6,7 @@ Project roadmap and planned improvements for Pokémechanics.
 
 ## 🔥 High Priority
 
-### 1. Migrate to GraphQL v1beta2 Endpoint
-
-**Status:** 📋 Planned
-
-**Description:**
-Upgrade from PokéAPI GraphQL v1beta to v1beta2. The newer endpoint removes the `pokemon_v2_` prefix from all schema types, providing a cleaner API surface.
-
-**Changes Required:**
-
-- Update endpoint URL in `src/utils/api.ts`:
-  - From: `https://beta.pokeapi.co/graphql/v1beta`
-  - To: `https://beta.pokeapi.co/graphql/v1beta2`
-- Update all GraphQL queries in `/app/helpers/graphql/`:
-  - `pokemon_v2_pokedex` → `pokedex`
-  - `pokemon_v2_pokemonspecies` → `pokemon_species`
-  - `pokemon_v2_versiongroup` → `version_group`
-  - etc.
-- Update client-side queries:
-  - `src/components/encounters/Encounters.tsx`
-  - There are more...
-- Test all queries after migration
-
-**Benefits:**
-
-- Cleaner, more intuitive query syntax
-- Future-proofed against v1beta deprecation
-- Better alignment with GraphQL best practices
-
-**Resources:**
-
-- [PokéAPI GraphQL Docs](https://beta.pokeapi.co/graphql/console/)
-- GraphQL schema explorer for field mappings
-- Use graphiQL console for development: https://graphql.pokeapi.co/v1beta2/console
-
-**Estimated Effort:** Medium (2-4 hours)
-
----
-
-### 2. Upgrade React Query v3 → v5
+### 1. Upgrade React Query v3 → v5
 
 **Status:** 📋 Planned
 
@@ -87,7 +49,7 @@ Upgrade from deprecated `react-query@3.39.3` to latest `@tanstack/react-query@5.
 
 ---
 
-### 3. Create Testing Infrastructure
+### 2. Create Testing Infrastructure
 
 **Status:** 📋 Planned
 
@@ -154,7 +116,7 @@ Establish a testing framework to prevent regressions and ensure code quality as 
 
 ## 📚 Medium Priority
 
-### 4. Add ESLint Configuration
+### 3. Add ESLint Configuration
 
 **Status:** 📋 Planned
 
@@ -179,7 +141,7 @@ Create `.eslintrc.json`:
 
 ---
 
-### 5. Create CONTRIBUTING.md
+### 4. Create CONTRIBUTING.md
 
 **Status:** 📋 Planned
 
@@ -195,7 +157,7 @@ Document how to contribute to the project, including:
 
 ---
 
-### 6. Add Inline Code Documentation
+### 5. Add Inline Code Documentation
 
 **Status:** 📋 Planned
 
@@ -213,7 +175,7 @@ Add JSDoc comments to complex functions and utilities:
 
 ## 🚀 Future Ideas
 
-### 7. Centralize Configuration
+### 6. Centralize Configuration
 
 Create `/src/config/` with:
 
@@ -221,21 +183,21 @@ Create `/src/config/` with:
 - Environment variable schema validation (Zod)
 - Feature flags
 
-### 8. Move Route-Specific Components
+### 7. Move Route-Specific Components
 
 Audit `src/components/` and move route-specific components closer to their routes:
 
 - Consider moving `Encounters.tsx` to `app/pokemon/[id]/_components/`
 - Keep only truly reusable components in `/src/components`
 
-### 9. Performance Improvements
+### 8. Performance Improvements
 
 - Add bundle analyzer
 - Optimize image loading strategies
 - Implement incremental static regeneration (ISR) for Pokémon pages
 - Add service worker for offline support
 
-### 10. New Features
+### 9. New Features
 
 - Team builder tool
 - Damage calculator
@@ -247,6 +209,8 @@ Audit `src/components/` and move route-specific components closer to their route
 
 ## ✅ Completed
 
+- [x] **Migrate to GraphQL v1beta2 Endpoint** - Upgraded from v1beta to v1beta2 with cleaner schema (removed `pokemon_v2_` prefix)
+- [x] **Centralize API Configuration** - Created `src/constants/apiConfig.ts` for all API endpoints (GraphQL, REST, Sprites)
 - [x] Remove Apollo Client, consolidate on React Query
 - [x] Fix memory leak in AutocompleteBase
 - [x] Remove duplicate Move/Moves components
@@ -256,4 +220,4 @@ Audit `src/components/` and move route-specific components closer to their route
 
 ---
 
-**Last Updated:** 2025-10-02
+**Last Updated:** 2025-10-10
