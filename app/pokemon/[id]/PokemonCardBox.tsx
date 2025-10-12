@@ -9,7 +9,7 @@ import DualDynamicImages from "./DualDynamicImages";
 import Types from "./_components/types/Types";
 import { Genus, PokemonSprites, PokemonType } from "pokenode-ts";
 
-type PokemonCardBoxServerProps = {
+type PokemonCardBoxProps = {
   name: string;
   pokemonId: number;
   is_variant: boolean;
@@ -23,7 +23,7 @@ type PokemonCardBoxServerProps = {
   nationalId: number;
 };
 
-const PokemonCardBoxServer: React.FC<PokemonCardBoxServerProps> = (props) => {
+const PokemonCardBox: React.FC<PokemonCardBoxProps> = (props) => {
   const selectedGame = props.game || "red-blue";
   const generationIdString: string | undefined = props.genNumber; // e.g. "i", "ii", etc.
   const generationId: number = romanToNumber(generationIdString || "i");
@@ -137,4 +137,4 @@ const PokemonCardBoxServer: React.FC<PokemonCardBoxServerProps> = (props) => {
   );
 };
 
-export default PokemonCardBoxServer;
+export default PokemonCardBox;

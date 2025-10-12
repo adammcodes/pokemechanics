@@ -1,7 +1,7 @@
 import Encounters from "./_components/encounters/Encounters";
 import Box from "@/components/common/Box";
 
-type LocationsForVersionGroupServerProps = {
+type LocationsForVersionGroupProps = {
   versions: string[]; // e.g. ["red", "blue"]
   pokemonSpeciesId: number; // national dex number
   evolutionData: any;
@@ -38,8 +38,8 @@ const fetchLocationAreaEncounters = async (url: string) => {
   return response.json();
 };
 
-const LocationsForVersionGroupServer: React.FC<
-  LocationsForVersionGroupServerProps
+const LocationsForVersionGroup: React.FC<
+  LocationsForVersionGroupProps
 > = async ({
   versions,
   pokemonSpeciesId,
@@ -68,4 +68,4 @@ const LocationsForVersionGroupServer: React.FC<
   );
 };
 
-export default LocationsForVersionGroupServer;
+export default LocationsForVersionGroup;

@@ -21,14 +21,14 @@ async function fetchMoveById(id: number) {
   return response.json();
 }
 
-type MoveServerProps = {
+type MoveProps = {
   m: PokemonMoveByMethod;
   method: string;
   game: string;
   moveData?: any; // Pre-fetched move data
 };
 
-export const MoveServer: React.FC<MoveServerProps> = async ({
+export const Move: React.FC<MoveProps> = async ({
   m,
   method,
   game,

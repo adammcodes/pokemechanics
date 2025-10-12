@@ -1,4 +1,4 @@
-import { MoveServer } from "./MoveServer";
+import { Move } from "./Move";
 import filterMovesForGen from "@/lib/filterMovesForGen";
 import mapMoves from "@/lib/mapMoves";
 import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
@@ -36,12 +36,12 @@ const sortMoveMethods = (a: string, b: string) => {
   return 0;
 };
 
-type MovesServerProps = {
+type MovesProps = {
   moves: PokemonMoveVersion[];
   game: string;
 };
 
-export const MovesServer: React.FC<MovesServerProps> = ({ moves, game }) => {
+export const Moves: React.FC<MovesProps> = ({ moves, game }) => {
   const formatName = convertKebabCaseToTitleCase;
 
   // Filter out moves that do not exist in the game
@@ -107,12 +107,7 @@ export const MovesServer: React.FC<MovesServerProps> = ({ moves, game }) => {
                   <tbody>
                     {filterMovesByMethod(allMoves, method).map((m, index) => {
                       return (
-                        <MoveServer
-                          key={index}
-                          m={m}
-                          method={method}
-                          game={game}
-                        />
+                        <Move key={index} m={m} method={method} game={game} />
                       );
                     })}
                   </tbody>

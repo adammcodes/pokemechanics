@@ -39,7 +39,7 @@ pokemechanics/
 │   │   │   └── types/       # Type display components
 │   │   │   └── moves/       # Move-related components
 │   │   ├── page.tsx         # Pokemon detail page
-│   │   └── *Server.tsx      # Server components for this route
+│   │   └── *.tsx            # Route components
 │   │
 │   ├── pokedex/[gen]/       # Pokedex route
 │   │   └── page.tsx         # Pokedex listing page
@@ -92,22 +92,22 @@ pokemechanics/
 app/pokemon/[id]/
 ├── _components/              # Private components (underscore prevents routing)
 │   ├── encounters/
-│   │   ├── Encounters.tsx   # Only used by LocationsForVersionGroupServer
+│   │   ├── Encounters.tsx   # Only used by LocationsForVersionGroup
 │   │   └── groupEncountersByLocation.ts
 │   ├── evolutions/
 │   │   ├── EvolutionNode.tsx
 │   │   └── PokemonEvolutionChain.js
 │   └── stats/
-│       └── Stats.tsx        # Only used by PokemonCardServer
+│       └── Stats.tsx        # Only used by PokemonCard
 ├── page.tsx                 # Main route page
-├── PokemonCardServer.tsx    # Imports from _components/
-└── LocationsForVersionGroupServer.tsx
+├── PokemonCard.tsx          # Imports from _components/
+└── LocationsForVersionGroup.tsx
 ```
 
 **File Naming Conventions**
 
-- `*Server.tsx` - Server components (fetch data, no client interactivity)
-- `*Client.tsx` - Client components (require "use client" directive)
+- All components are **server components by default** (no special naming needed)
+- `"use client"` directive at top of file - Client components (require interactivity)
 - `*.module.css` - CSS Modules for component-scoped styles
 - `_folder/` - Private folders (underscore prefix prevents Next.js route creation)
 - `page.tsx` - Next.js route pages

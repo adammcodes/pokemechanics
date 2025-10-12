@@ -4,7 +4,7 @@ import { getVersionGroup } from "@/app/helpers/graphql/getVersionGroup";
 import { fetchPokemonSpeciesById } from "@/app/helpers/rest/fetchPokemonSpeciesById";
 import { fetchPokemonById } from "@/app/helpers/rest/fetchPokemonById";
 import { fetchPokedexById } from "@/app/helpers/rest/fetchPokedexById";
-import PokemonCardServer from "./PokemonCardServer";
+import PokemonCard from "./PokemonCard";
 import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
 
 type PageProps = {
@@ -101,7 +101,7 @@ export default async function Pokemon({ params, searchParams }: PageProps) {
 
     return (
       <main className="w-full">
-        <PokemonCardServer
+        <PokemonCard
           pokemonData={pokemonData}
           speciesData={speciesData}
           versionData={versionData}

@@ -14,19 +14,19 @@ import { fetchEvolutionChainById } from "@/app/helpers/rest/fetchEvolutionChainB
 import type { VersionGroup } from "@/app/helpers/graphql/getVersionGroup";
 
 // components
-import PokemonCardBoxServer from "./PokemonCardBoxServer";
+import PokemonCardBox from "./PokemonCardBox";
 import PokemonFlavorText from "app/pokemon/[id]/PokemonFlavorText";
-import EvolutionsServer from "./EvolutionsServer";
+import Evolutions from "./Evolutions";
 import ForwardBack from "app/pokemon/[id]/ForwardBack";
-import { MovesServer } from "./_components/moves/MovesServer";
+import { Moves } from "./_components/moves/Moves";
 import Abilities from "@/app/pokemon/[id]/Abilities";
 import Stats from "./_components/stats/Stats";
-import LocationsForVersionGroupServer from "./LocationsForVersionGroupServer";
-import TypeEfficacyServer from "./TypeEfficacyServer";
+import LocationsForVersionGroup from "./LocationsForVersionGroup";
+import TypeEfficacy from "./TypeEfficacy";
 import HeaderSelect from "@/components/header/HeaderSelect";
 import { romanToNumber } from "@/utils/romanToNumber";
 
-type PokemonCardServerProps = {
+type PokemonCardProps = {
   pokemonData: Pokemon;
   speciesData: PokemonSpecies;
   versionData: VersionGroup;
@@ -35,14 +35,14 @@ type PokemonCardServerProps = {
   game: string; // e.g. "red-blue"
 };
 
-export default async function PokemonCardServer({
+export default async function PokemonCard({
   pokemonData,
   speciesData,
   versionData,
   dexData,
   dexId,
   game,
-}: PokemonCardServerProps) {
+}: PokemonCardProps) {
   // Use region name of the Pokedex
   const regionName =
     dexId === 1 ? versionData.regions[0].name : dexData.region.name;
@@ -165,7 +165,7 @@ export default async function PokemonCardServer({
           generationString={genName}
         />
         {/* Sprite + Types */}
-        <PokemonCardBoxServer
+        <PokemonCardBox
           name={name}
           pokemonId={pokemonId}
           is_variant={isVariant}
@@ -181,7 +181,7 @@ export default async function PokemonCardServer({
       </div>
 
       {/* Evolutions */}
-      <EvolutionsServer
+      <Evolutions
         evolutionChainData={evolutionChainData}
         game={game}
         generation={genName}
@@ -207,7 +207,7 @@ export default async function PokemonCardServer({
         <Stats pokemonName={variantName} />
         {/* Encounters */}
         {versionData && (
-          <LocationsForVersionGroupServer
+          <LocationsForVersionGroup
             locationAreaEncountersUrl={
               displayPokemonData.location_area_encounters
             }
@@ -218,12 +218,12 @@ export default async function PokemonCardServer({
         )}
         {/* Type Efficacy */}
         {typeIds && typeIds.length > 0 && (
-          <TypeEfficacyServer typeIds={typeIds} generationId={generationId} />
+          <TypeEfficacy typeIds={typeIds} generationId={generationId} />
         )}
       </section>
 
       {/* Moves */}
-      <MovesServer moves={pokemonMoves} game={game} />
+      <Moves moves={pokemonMoves} game={game} />
     </div>
   );
 }

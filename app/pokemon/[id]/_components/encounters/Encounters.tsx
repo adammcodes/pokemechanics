@@ -7,7 +7,7 @@ import Tooltip from "@/components/common/Tooltip";
 import {
   LocationAreaEncounters,
   EncounterDetails,
-} from "@/app/pokemon/[id]/LocationsForVersionGroupServer";
+} from "@/app/pokemon/[id]/LocationsForVersionGroup";
 import toTitleCase from "@/utils/toTitleCase";
 import { fetchFromGraphQL } from "@/utils/api";
 

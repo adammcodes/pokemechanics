@@ -91,15 +91,15 @@ type EfficacyData = {
   type: PokemonV2Type[];
 };
 
-interface TypeEfficacyServerProps {
+interface TypeEfficacyProps {
   typeIds: number[];
   generationId: number;
 }
 
-export default async function TypeEfficacyServer({
+export default async function TypeEfficacy({
   typeIds,
   generationId,
-}: TypeEfficacyServerProps) {
+}: TypeEfficacyProps) {
   // Fetch type efficacies data
   const response = await fetchTypeEfficacies();
   const data: EfficacyData | undefined = response?.data;

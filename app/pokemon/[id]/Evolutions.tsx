@@ -1,7 +1,7 @@
 import styles from "./_components/evolutions/Evolutions.module.css";
 import PokemonEvolutionChain from "./_components/evolutions/PokemonEvolutionChain";
 
-type EvolutionsServerProps = {
+type EvolutionsProps = {
   evolutionChainData: any;
   game: string;
   generation: string;
@@ -10,14 +10,14 @@ type EvolutionsServerProps = {
   pokemonHeight: number;
 };
 
-export default function EvolutionsServer({
+export default function Evolutions({
   evolutionChainData,
   game,
   generation,
   dexId,
   regionName,
   pokemonHeight,
-}: EvolutionsServerProps) {
+}: EvolutionsProps) {
   if (!evolutionChainData) return <div className="p-5">Loading...</div>;
 
   return (
