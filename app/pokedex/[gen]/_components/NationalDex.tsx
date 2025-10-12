@@ -1,6 +1,5 @@
 import { getNationalDexByLimit } from "@/app/helpers/graphql/getNationalDexByLimit";
-import PokemonSelector from "../PokemonSelector";
-// type imports
+import PokemonSelector from "./PokemonSelector";
 import { PokedexPokemon } from "./PokedexById";
 import { numOfPokemonByGen } from "@/constants/numOfPokemonByGen";
 

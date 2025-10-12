@@ -15,14 +15,14 @@ import type { VersionGroup } from "@/app/helpers/graphql/getVersionGroup";
 
 // components
 import PokemonCardBox from "./PokemonCardBox";
-import PokemonFlavorText from "app/pokemon/[id]/PokemonFlavorText";
-import Evolutions from "./Evolutions";
-import ForwardBack from "app/pokemon/[id]/ForwardBack";
-import { Moves } from "./_components/moves/Moves";
-import Abilities from "@/app/pokemon/[id]/Abilities";
-import Stats from "./_components/stats/Stats";
-import LocationsForVersionGroup from "./LocationsForVersionGroup";
-import TypeEfficacy from "./TypeEfficacy";
+import PokemonFlavorText from "../flavor-text/PokemonFlavorText";
+import Evolutions from "../evolutions/Evolutions";
+import ForwardBack from "../navigation/ForwardBack";
+import { Moves } from "../moves/Moves";
+import Abilities from "../abilities/Abilities";
+import Stats from "../stats/Stats";
+import LocationsForVersionGroup from "../encounters/LocationsForVersionGroup";
+import TypeEfficacy from "../type-efficacy/TypeEfficacy";
 import HeaderSelect from "@/components/header/HeaderSelect";
 import { romanToNumber } from "@/utils/romanToNumber";
 

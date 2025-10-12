@@ -92,16 +92,14 @@ pokemechanics/
 app/pokemon/[id]/
 ├── _components/              # Private components (underscore prevents routing)
 │   ├── encounters/
-│   │   ├── Encounters.tsx   # Only used by LocationsForVersionGroup
+│   │   ├── Encounters.tsx    # Only used by LocationsForVersionGroup
 │   │   └── groupEncountersByLocation.ts
 │   ├── evolutions/
 │   │   ├── EvolutionNode.tsx
 │   │   └── PokemonEvolutionChain.js
 │   └── stats/
-│       └── Stats.tsx        # Only used by PokemonCard
-├── page.tsx                 # Main route page
-├── PokemonCard.tsx          # Imports from _components/
-└── LocationsForVersionGroup.tsx
+│       └── Stats.tsx
+├── page.tsx                  # Main route page
 ```
 
 **File Naming Conventions**
@@ -136,7 +134,6 @@ app/pokemon/[id]/
 **Server Components (default):**
 
 - Fetch directly from external APIs: `https://pokeapi.co` or `https://graphql.pokeapi.co/v1beta2
-- Use in `page.tsx`, `layout.tsx`, and `*Server.tsx` components
 - Better performance, reduced bundle size, SEO-friendly
 
 ```typescript

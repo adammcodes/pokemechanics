@@ -1,6 +1,6 @@
 import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
 import { getPokedexById } from "@/app/helpers/graphql/getPokedexById";
-import PokemonSelector from "../PokemonSelector";
+import PokemonSelector from "./PokemonSelector";
 
 export type PokedexPokemon = {
   pokedex_number: number;

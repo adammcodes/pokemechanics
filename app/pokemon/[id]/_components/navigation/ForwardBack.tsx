@@ -2,7 +2,7 @@ import { numOfPokemonByGen } from "@/constants/numOfPokemonByGen";
 import addPrecedingZeros from "@/utils/addPrecedingZeros";
 import { VersionGroup } from "@/app/helpers/graphql/getVersionGroup";
 import { Pokedex } from "@/types/index";
-import { ForwardBackSprite } from "./ForwardBackSprite";
+import { ForwardBackSprite } from "../sprites/ForwardBackSprite";
 
 type PokedexNumber = {
   entry_number: number;

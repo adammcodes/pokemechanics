@@ -1,7 +1,7 @@
 import {
   EncounterDetails,
   LocationAreaEncounters,
-} from "@/app/pokemon/[id]/LocationsForVersionGroup";
+} from "./LocationsForVersionGroup";
 import { Encounter } from "./Encounters";
 
 type LocationEncounter = {

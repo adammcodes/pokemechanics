@@ -1,5 +1,5 @@
-import PokedexById from "@/app/pokedex/[gen]/PokedexById";
-import NationalDex from "@/app/pokedex/[gen]/NationalDex";
+import PokedexById from "@/app/pokedex/[gen]/_components/PokedexById";
+import NationalDex from "@/app/pokedex/[gen]/_components/NationalDex";
 
 export default function HeaderSelect({
   pokemonId,

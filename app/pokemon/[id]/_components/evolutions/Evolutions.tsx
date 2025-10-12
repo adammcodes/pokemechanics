@@ -1,5 +1,5 @@
-import styles from "./_components/evolutions/Evolutions.module.css";
-import PokemonEvolutionChain from "./_components/evolutions/PokemonEvolutionChain";
+import styles from "./Evolutions.module.css";
+import PokemonEvolutionChain from "./PokemonEvolutionChain";
 
 type EvolutionsProps = {
   evolutionChainData: any;

@@ -4,7 +4,7 @@ import { getVersionGroup } from "@/app/helpers/graphql/getVersionGroup";
 import { fetchPokemonSpeciesById } from "@/app/helpers/rest/fetchPokemonSpeciesById";
 import { fetchPokemonById } from "@/app/helpers/rest/fetchPokemonById";
 import { fetchPokedexById } from "@/app/helpers/rest/fetchPokedexById";
-import PokemonCard from "./PokemonCard";
+import PokemonCard from "./_components/card/PokemonCard";
 import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
 
 type PageProps = {
