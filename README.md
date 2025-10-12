@@ -31,7 +31,13 @@ This project follows Next.js 14 App Router conventions with a clear separation b
 pokemechanics/
 ├── app/                      # Route-specific components & pages
 │   ├── pokemon/[id]/         # Pokemon detail route
-│   │   ├── moves/           # Route-specific move components
+│   │   ├── _components/     # Route-specific components (not a route)
+│   │   │   ├── encounters/  # Encounter location components
+│   │   │   ├── evolutions/  # Evolution chain components
+│   │   │   ├── sprites/     # Sprite display components
+│   │   │   ├── stats/       # Stats display components
+│   │   │   └── types/       # Type display components
+│   │   │   └── moves/       # Move-related components
 │   │   ├── page.tsx         # Pokemon detail page
 │   │   └── *Server.tsx      # Server components for this route
 │   │
@@ -51,15 +57,14 @@ pokemechanics/
 │   └── Client.tsx           # Client-side providers wrapper
 │
 └── src/                     # Reusable/shared code
-    ├── components/          # Shared UI components
+    ├── components/          # Shared UI components (used across routes)
     │   ├── common/         # Generic components (Box, Tooltip, etc.)
-    │   ├── header/         # Header components
-    │   ├── sprites/        # Sprite display components
-    │   └── ...
+    │   └── header/         # Header components
     │
     ├── context/            # React context providers
     ├── hooks/              # Custom React hooks
     ├── utils/              # Utility functions
+    ├── lib/                # Business logic & helpers
     ├── types/              # TypeScript type definitions
     ├── constants/          # App-wide constants
     └── styles/             # Global styles & CSS modules
@@ -70,20 +75,41 @@ pokemechanics/
 **`/app` directory** - Route-specific code
 
 - Components that are only used by a single route should be colocated with that route
-- Example: `app/pokemon/[id]/moves/` contains move components only used on Pokemon detail pages
-- Use `_components/` subdirectory (with underscore) to prevent route creation if needed
+- Use `_components/` subdirectory (with underscore prefix) to store components without creating routes
+- Example: `app/pokemon/[id]/_components/encounters/` contains encounter components only used on Pokemon detail pages
+- Benefits: Better code splitting, easier maintenance, clearer dependencies
 
 **`/src` directory** - Reusable code
 
-- Components used across multiple routes (Header, Footer, Autocomplete, etc.)
+- Components used across **multiple routes** (Header, Autocomplete, ErrorBoundary, etc.)
 - Shared utilities, hooks, types, and constants
 - Business logic that isn't tied to a specific route
+- If a component is only used in one place, it should live in `/app` near that route
+
+**Component Colocation Example**
+
+```
+app/pokemon/[id]/
+├── _components/              # Private components (underscore prevents routing)
+│   ├── encounters/
+│   │   ├── Encounters.tsx   # Only used by LocationsForVersionGroupServer
+│   │   └── groupEncountersByLocation.ts
+│   ├── evolutions/
+│   │   ├── EvolutionNode.tsx
+│   │   └── PokemonEvolutionChain.js
+│   └── stats/
+│       └── Stats.tsx        # Only used by PokemonCardServer
+├── page.tsx                 # Main route page
+├── PokemonCardServer.tsx    # Imports from _components/
+└── LocationsForVersionGroupServer.tsx
+```
 
 **File Naming Conventions**
 
 - `*Server.tsx` - Server components (fetch data, no client interactivity)
 - `*Client.tsx` - Client components (require "use client" directive)
 - `*.module.css` - CSS Modules for component-scoped styles
+- `_folder/` - Private folders (underscore prefix prevents Next.js route creation)
 - `page.tsx` - Next.js route pages
 - `layout.tsx` - Next.js layouts
 - `loading.tsx` - Next.js loading UI

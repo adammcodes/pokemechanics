@@ -1,4 +1,4 @@
-import findSpritesForVersion from "../../lib/findSpritesForVersion";
+import findSpritesForVersion from "@/lib/findSpritesForVersion";
 import { PokemonSprite } from "./PokemonSprite";
 import splitKebabCase from "@/utils/splitKebabCase";
 import toTitleCase from "@/utils/toTitleCase";

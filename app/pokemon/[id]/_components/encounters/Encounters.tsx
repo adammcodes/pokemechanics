@@ -122,7 +122,6 @@ const GRAPHQL_QUERY = `
   }
 `;
 
-
 type EncountersProps = {
   version: string; // e.g. "ruby"
   pokemonSpeciesId: number; // national dex number
@@ -197,64 +196,6 @@ export type Encounter = {
   pokemon: PokemonV2;
   encounterconditionvaluemaps: EncounterConditionalValue[];
 };
-
-// Transform server data to match Encounter format
-// const transformLocationAreaEncountersToEncounters = (
-//   locationAreaEncounters: LocationAreaEncounters[],
-//   version: string,
-//   pokemonSpeciesId: number
-// ): Encounter[] => {
-//   const encounters: Encounter[] = [];
-//   let encounterId = 1;
-
-//   locationAreaEncounters.forEach((locationArea) => {
-//     const versionDetails = locationArea.version_details.find(
-//       (vd) => vd.version.name.toLowerCase() === version.toLowerCase()
-//     );
-
-//     if (!versionDetails) return;
-
-//     versionDetails.encounter_details.forEach((encounterDetail) => {
-//       // Extract location name from the location_area name
-//       const locationName = locationArea.location_area.name;
-
-//       encounters.push({
-//         id: encounterId++,
-//         version_id: 0, // Not available in server data
-//         location_area_id: 0, // Not available in server data
-//         min_level: encounterDetail.min_level,
-//         max_level: encounterDetail.max_level,
-//         pokemon_id: pokemonSpeciesId, // Using species ID as fallback
-//         encounter_slot_id: 0, // Not available in server data
-//         pokemon_v2_locationarea: {
-//           name: locationName,
-//           location_id: 0, // Not available in server data
-//           pokemon_v2_location: {
-//             name: locationName,
-//             id: 0, // Not available in server data
-//             region_id: 0, // Not available in server data
-//             pokemon_v2_region: {
-//               name: "Unknown", // Not available in server data
-//             },
-//           },
-//         },
-//         pokemon_v2_encounterslot: {
-//           rarity: encounterDetail.chance,
-//           slot: null, // Not available in server data
-//           version_group_id: 0, // Not available in server data
-//         },
-//         pokemon_v2_pokemon: {
-//           pokemon_species_id: pokemonSpeciesId,
-//           id: pokemonSpeciesId, // Using species ID as fallback
-//           name: "Unknown", // Not available in server data
-//         },
-//         pokemon_v2_encounterconditionvaluemaps: [], // Not available in server data
-//       });
-//     });
-//   });
-
-//   return encounters;
-// };
 
 type Version = {
   name: string;
@@ -348,9 +289,7 @@ const Encounters: React.FC<EncountersProps> = ({
     (p: PokemonV2Species) => p.id === evolvesFromPokemonSpeciesId
   );
 
-  const versionGroups =
-    versionData[0].versiongroup.generation
-      .versiongroups;
+  const versionGroups = versionData[0].versiongroup.generation.versiongroups;
 
   // Filter the other versions in this generation that have encounters for this pokemon
   const otherVersionsWithEncounters = versionGroups

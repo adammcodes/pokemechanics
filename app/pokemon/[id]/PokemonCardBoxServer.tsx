@@ -6,7 +6,7 @@ import { spriteSizesByVersion } from "@/constants/spriteSizesByVersion";
 import getSpriteUrl from "@/constants/spriteUrlTemplates";
 import DynamicImage from "@/components/common/DynamicImage";
 import DualDynamicImages from "./DualDynamicImages";
-import Types from "@/components/types/Types";
+import Types from "./_components/types/Types";
 import { Genus, PokemonSprites, PokemonType } from "pokenode-ts";
 
 type PokemonCardBoxServerProps = {

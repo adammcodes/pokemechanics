@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { Sprite } from "@/components/sprites/Sprite";
+import { Sprite } from "./_components/sprites/Sprite";
 import toTitleCase from "@/utils/toTitleCase";
 
 type ForwardBackSpriteProps = {

@@ -1,4 +1,4 @@
-import Encounters from "@/components/encounters/Encounters";
+import Encounters from "./_components/encounters/Encounters";
 import Box from "@/components/common/Box";
 
 type LocationsForVersionGroupServerProps = {

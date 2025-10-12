@@ -1,5 +1,5 @@
 import StatBars from "./StatsBar";
-import Box from "../common/Box";
+import Box from "@/components/common/Box";
 import {
   getStatsByPokemon,
   PokemonStats,

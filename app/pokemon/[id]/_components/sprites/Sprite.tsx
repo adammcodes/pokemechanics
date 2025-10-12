@@ -1,4 +1,4 @@
-import DynamicImage from "../common/DynamicImage";
+import DynamicImage from "@/components/common/DynamicImage";
 import getSpriteIconUrl from "@/constants/spriteIconUrlTemplate";
 
 type SpriteProps = {

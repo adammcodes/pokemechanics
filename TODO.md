@@ -140,22 +140,17 @@ Create `/src/config/` with:
 - Environment variable schema validation (Zod)
 - Feature flags
 
-### 6. Move Route-Specific Components
-
-Audit `src/components/` and move route-specific components closer to their routes:
-
-- Consider moving `Encounters.tsx` to `app/pokemon/[id]/_components/`
-- Keep only truly reusable components in `/src/components`
-
-### 7. Performance Improvements
+### 6. Performance Improvements
 
 - Add bundle analyzer
 - Optimize image loading strategies
 - Implement incremental static regeneration (ISR) for Pokémon pages
 - Add service worker for offline support
 
-### 8. New Features (Not all accessible via current PokeAPI)
+### 7. New Features (Not all accessible via current PokeAPI)
 
+- Add Shiny sprites
+- Use Type images from api (Game-Specific images) instead of local static images
 - Add "Bag" page and route "/bag" for searching items in the current game they are playing:
   - What items do, where to find them
   - Medicines, Berries, Balls, Machines, Machines
@@ -172,10 +167,18 @@ Audit `src/components/` and move route-specific components closer to their route
   - Add "Walkthroughs" where users can author/publish their own walkthroughs
 - Add "Walkthrough" page where visitors can search walkthroughs for the current game they are playing
 
+### 8. Issues (Missing from PokeAPI)
+
+- In-game NPC Trades (Only encounters for some pokemon)
+- Trophy Garden - Daily Pokemon in Generation IV (diamond-pearl, platinum)
+- No enounter data beyond Sun-Moon generation
+- Fossil revived Pokemon (No data in evolution chain on which fossils to use)
+
 ---
 
 ## ✅ Completed
 
+- [x] **Move Route-Specific Components** - Reorganized codebase by moving route-specific components (encounters, evolutions, sprites, stats, types) from `src/components/` to `app/pokemon/[id]/_components/`, keeping only truly reusable components (common, header) in `src/components/`
 - [x] **Upgrade React Query v3 → v5** - Migrated from `react-query@3.39.3` to `@tanstack/react-query@5.90.2`, updated all useQuery calls to new object-based API, renamed `cacheTime` to `gcTime`
 - [x] **Migrate to GraphQL v1beta2 Endpoint** - Upgraded from v1beta to v1beta2 with cleaner schema (removed `pokemon_v2_` prefix)
 - [x] **Centralize API Configuration** - Created `src/constants/apiConfig.ts` for all API endpoints (GraphQL, REST, Sprites)
@@ -188,4 +191,4 @@ Audit `src/components/` and move route-specific components closer to their route
 
 ---
 
-**Last Updated:** 2025-10-10
+**Last Updated:** 2025-10-11
