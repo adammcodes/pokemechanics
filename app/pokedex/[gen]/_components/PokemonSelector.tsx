@@ -1,6 +1,6 @@
 "use client";
 // Types
-import { PokedexPokemon } from "./[gen]/PokedexById";
+import { PokedexPokemon } from "./PokedexById";
 // Components
 import AutocompleteBase from "@/components/common/AutocompleteBase";
 // Utils
@@ -40,10 +40,9 @@ const PokemonSelector: React.FC<PokemonSelectorProps> =
       // If the regionName is not "National" then we need to check if there is a variant id of the pokemon for the region
       let variantId: number | undefined;
       if (regionName !== "National") {
-        const variantForRegion =
-          p.pokemonspecy.pokemons.find((variant) =>
-            variant.name.includes(regionName)
-          );
+        const variantForRegion = p.pokemonspecy.pokemons.find((variant) =>
+          variant.name.includes(regionName)
+        );
         variantId = variantForRegion?.pokemonsprites[0].id;
       }
       const dexNumber: number = p.pokemon_species_id; // this is the national dex number
