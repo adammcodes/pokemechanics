@@ -24,7 +24,11 @@ export const PokemonSprite = ({
       className="mt-auto"
     >
       <figure className="flex flex-col items-center cursor-pointer">
-        <img src={sprite} alt="Pokemon sprite" />
+        <img
+          src={sprite}
+          alt={speciesName}
+          data-testid={`${speciesName}-evolution-sprite`}
+        />
         <label className="cursor-pointer">{formatName(speciesName)}</label>
       </figure>
     </Link>

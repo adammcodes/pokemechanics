@@ -31,6 +31,7 @@ const DualDynamicImages: React.FC<Props> = ({
           <Image
             src={srcLeft}
             alt={altLeft}
+            data-testid={`${altLeft}-main-sprite`}
             width={width}
             height={height}
             priority={priority}
@@ -46,6 +47,7 @@ const DualDynamicImages: React.FC<Props> = ({
           <Image
             src={srcRight}
             alt={altRight}
+            data-testid={`${altRight}-main-sprite`}
             width={width}
             height={height}
             priority={priority}

@@ -30,6 +30,7 @@ const DynamicImage: React.FC<Props> = ({
     <Image
       src={src}
       alt={alt}
+      data-testid={`${alt}-main-sprite`}
       width={width}
       height={height}
       priority={priority}

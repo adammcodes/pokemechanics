@@ -48,12 +48,13 @@ const PokemonCardBox: React.FC<PokemonCardBoxProps> = (props) => {
         <tbody>
           <tr>
             <td className="w-full text-center font-bold" colSpan={3}>
-              <div className="text-2xl leading-[24px]">
+              <div
+                className="text-2xl leading-[24px]"
+                data-testid={`${pokemonName}-heading`}
+              >
                 {pokemonName.split(" ")[0]}
                 {pokemonName.split(" ")[1] && (
-                  <span className="text-xl mb-5 leading-[24px]">
-                    &nbsp;{pokemonName.split(" ")[1]}
-                  </span>
+                  <span>&nbsp;{pokemonName.split(" ")[1]}</span>
                 )}
               </div>
             </td>
