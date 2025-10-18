@@ -28,7 +28,7 @@ export default function HeaderTitle() {
         {game && genNumber && (
           <>
             <Link href="/">
-              <h1>POKEMECHANICS</h1>
+              <span className="block text-2xl font-bold">POKEMECHANICS</span>
             </Link>
             <span className="text-[0.9em] lg:text-[1em]">
               <span className="hidden lg:inline">&nbsp;-</span>{" "}

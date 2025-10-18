@@ -1,5 +1,5 @@
 "use client";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, usePathname } from "next/navigation";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { GameContextProvider } from "@/context/GameContextProvider";
 import { Layout } from "@/components/common/Layout";
@@ -16,9 +16,16 @@ export default function Client({
   initialGame: string;
 }) {
   const pageParams = useSearchParams();
+  const pathname = usePathname();
+
+  // Extract game from URL path if we're on a /pokedex/[gen] route
+  const pokedexMatch = pathname?.match(/^\/pokedex\/([^\/]+)/);
+  const gameFromPath = pokedexMatch?.[1] || null;
+
+  // Priority: URL path param > search param > cookie
   // The game from page search params take priority over the game from cookies
   // This is to improve server side rendering performance
-  const selectedGame = pageParams.get("game") as string;
+  const selectedGame = gameFromPath || (pageParams.get("game") as string);
 
   return (
     <ErrorBoundary>
