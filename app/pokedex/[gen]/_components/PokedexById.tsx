@@ -74,7 +74,7 @@ export default async function PokedexById({
   return (
     <section className="flex flex-col justify-center">
       {includeHeader && (
-        <header className="my-2 text-center">
+        <header className="my-2 text-center" data-testid="regional-dex-header">
           <h2>
             {formatName(regionalDex.name)} Dex ({pokedexIdRange})
           </h2>
@@ -84,7 +84,10 @@ export default async function PokedexById({
         </header>
       )}
 
-      <div className="lg:max-w-sm mx-auto">
+      <div
+        className="lg:max-w-sm mx-auto"
+        data-testid={`regional-dex-selector`}
+      >
         <PokemonSelector
           pokemon={regionalDexNumbers}
           regionName={regionName}

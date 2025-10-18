@@ -53,6 +53,12 @@ test.describe("Yellow Version - National Dex - Pikachu", () => {
     // Step 4: Should navigate to the pokedex page
     await page.waitForURL("**/pokedex/yellow", { timeout: 10000 });
 
+    // Wait for loading spinner to disappear (page fully loaded)
+    await page.waitForSelector(".animate-spin", {
+      state: "detached",
+      timeout: 10000,
+    });
+
     // Step 5: Verify we're on the pokedex page with National Dex
     await expect(page.getByText(/National Dex/i)).toBeVisible();
 
@@ -130,18 +136,26 @@ test.describe("Gold/Silver Version - Johto Dex - Chikorita", () => {
     // Step 3: Should navigate to the pokedex page
     await page.waitForURL("**/pokedex/gold-silver", { timeout: 10000 });
 
+    // Wait for loading spinner to disappear (page fully loaded)
+    await page.waitForSelector(".animate-spin", {
+      state: "detached",
+      timeout: 10000,
+    });
+
     // Step 4: Verify we're on the pokedex page with Regional Dex (Johto)
-    await expect(page.getByText(/Johto.*Dex/i)).toBeVisible();
+    const regionalDexHeader = page.locator(
+      '[data-testid="regional-dex-header"]'
+    );
+    await expect(regionalDexHeader).toBeVisible();
 
     // Step 5: Find and interact with Regional Dex Pokemon selector using heading
-    const johtoHeading = page.getByRole("heading", { name: /Johto.*Dex/i });
-    await expect(johtoHeading).toBeVisible();
+    const regionalDexSelector = page
+      .locator('[data-testid="regional-dex-selector"]')
+      .first();
+    await expect(regionalDexSelector).toBeVisible();
 
     // Find the search input within the section that contains this heading
-    const regionalDexSection = page
-      .locator("section")
-      .filter({ has: johtoHeading });
-    const regionalDexSearch = regionalDexSection.getByPlaceholder("Search...");
+    const regionalDexSearch = regionalDexSelector.getByPlaceholder("Search...");
     await expect(regionalDexSearch).toBeVisible();
 
     // Step 6: Search for Chikorita in the Regional Dex (Gen 2 starter)
@@ -150,7 +164,8 @@ test.describe("Gold/Silver Version - Johto Dex - Chikorita", () => {
     await page.waitForTimeout(500);
 
     // Step 7: Wait for dropdown to appear and click on Chikorita
-    const regionalDropdown = page.locator("ul").first(); // Regional Dex dropdown appears first
+    // Find the dropdown within the regional dex selector to avoid finding other ul elements
+    const regionalDropdown = regionalDexSelector.locator("ul");
     await expect(regionalDropdown).toBeVisible();
 
     const chikoritaOption = regionalDropdown
@@ -170,16 +185,20 @@ test.describe("Gold/Silver Version - Johto Dex - Chikorita", () => {
     });
 
     // Step 10: Verify we're on Chikorita's page
-    // Look for the Pokemon name in the card (it's in a div with class text-2xl, not always an h1)
-    const pokemonNameElement = page.locator(
-      'div[data-testid="Chikorita-heading"]'
-    );
+    // Look for the Pokemon name in the card (it's in a div with data-testid, not always an h1)
+    const pokemonNameElement = page
+      .locator('div[data-testid="Chikorita-heading"]')
+      .first();
     await expect(pokemonNameElement).toContainText(/chikorita/i);
 
-    // Verify the Pokemon sprite has loaded
-    const spriteImage = page.locator(
-      'img[data-testid="Chikorita-main-sprite"]'
+    // Verify the Pokemon sprite has loaded in both gold and silver versions
+    const spriteImageGold = page.locator(
+      'img[data-testid="Chikorita-gold-main-sprite"]'
     );
-    await expect(spriteImage).toBeVisible();
+    await expect(spriteImageGold).toBeVisible();
+    const spriteImageSilver = page.locator(
+      'img[data-testid="Chikorita-silver-main-sprite"]'
+    );
+    await expect(spriteImageSilver).toBeVisible();
   });
 });
