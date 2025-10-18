@@ -6,68 +6,53 @@ Project roadmap and planned improvements for Pokémechanics.
 
 ## 🔥 High Priority
 
-### 1. Create Testing Infrastructure
+### 1. Improve Test Coverage for Edge Cases
 
 **Status:** 📋 Planned
 
 **Description:**
-Establish a testing framework to prevent regressions and ensure code quality as the project grows.
+Expand E2E test coverage to include edge cases and scenarios that are prone to problems and rely on more complex parts of the codebase, particularly regional variants and version-specific sprite handling.
 
-**Recommended Stack:**
+**Target Scenarios:**
 
-- **Vitest** - Fast, Vite-powered test runner with Jest-compatible API
-- **React Testing Library** - Component testing following best practices
-- **Playwright** (optional) - E2E testing for critical user flows
+1. **Regional Variant - Legends Arceus**
+   - Game: Legends Arceus
+   - Dex: Hisui Dex
+   - Pokemon: Typhlosion (Hisuian form)
+   - Verify: Correct Hisuian sprite is displayed (not Johto form)
 
-**Setup Steps:**
+2. **Regional Variant - Sun/Moon**
+   - Game: Sun/Moon
+   - Dex: Any regional dex (Alola, Melemele, Akala, Ulaula, Poni)
+   - Pokemon: Raichu (Alolan form)
+   - Verify: Correct Alolan sprite is displayed (not Kanto form)
 
-1. **Install dependencies:**
+**Implementation Notes:**
 
-   ```bash
-   npm install -D vitest @testing-library/react @testing-library/jest-dom
-   npm install -D @testing-library/user-event jsdom
-   ```
+- Follow established E2E patterns from `e2e/search-pokemon.spec.ts`
+- Use `data-testid` attributes for reliable element selection
+- Wait for `.animate-spin` to be detached before verifying content
+- Scope selectors to components using `data-testid` attributes
+- Verify sprite images load with correct variant-specific `data-testid`
 
-2. **Configure Vitest:**
+**Why These Tests Matter:**
 
-   - Create `vitest.config.ts`
-   - Set up jsdom environment
-   - Configure path aliases to match `tsconfig.json`
+- Regional variants rely on complex logic in `findVarietyForRegion`
+- Sprite selection for variants uses different code paths
+- Sun/Moon has multiple regional dexes (5 different ones)
+- These scenarios have historically been prone to bugs
+- Tests document expected behavior for future developers
 
-3. **Add test scripts to `package.json`:**
+**Success Criteria:**
 
-   ```json
-   "test": "vitest",
-   "test:ui": "vitest --ui",
-   "test:coverage": "vitest --coverage"
-   ```
+- ✅ Test navigates to Legends Arceus Hisui Dex
+- ✅ Test searches for and selects Typhlosion
+- ✅ Test verifies Hisuian Typhlosion sprite loads (not Johto)
+- ✅ Test navigates to Sun/Moon regional dex
+- ✅ Test searches for and selects Raichu
+- ✅ Test verifies Alolan Raichu sprite loads (not Kanto)
 
-4. **Create initial tests:**
-   - `src/utils/api.test.ts` - Test `fetchFromGraphQL` utility
-   - `src/hooks/useCookieState.test.ts` - Test cookie hook
-   - `src/components/common/AutocompleteBase.test.tsx` - Test autocomplete component
-
-**Priority Test Coverage:**
-
-- Data fetching utilities (`fetchFromGraphQL`, REST helpers)
-- Custom hooks (`useCookieState`, `useGameVersion`)
-- Shared components (Autocomplete, Tooltip, ErrorBoundary)
-- Critical user flows (search Pokémon, navigate between pages)
-
-**Benefits:**
-
-- Prevent regressions during refactors
-- Catch bugs early in development
-- Documentation through test cases
-- Confidence when upgrading dependencies
-
-**Resources:**
-
-- [Vitest Getting Started](https://vitest.dev/guide/)
-- [React Testing Library Docs](https://testing-library.com/docs/react-testing-library/intro/)
-- [Next.js Testing Docs](https://nextjs.org/docs/app/building-your-application/testing/vitest)
-
-**Estimated Effort:** Medium-Large (4-8 hours initial setup + ongoing test writing)
+**Estimated Effort:** Medium (3-4 hours for both tests + debugging variant logic if needed)
 
 ---
 
@@ -178,6 +163,22 @@ Create `/src/config/` with:
 
 ## ✅ Completed
 
+- [x] **Create Testing Infrastructure** - Established comprehensive testing framework with Vitest for unit tests and Playwright for E2E tests
+  - **Unit Tests (134 passing):**
+    - 9 utility function tests (convertHeightToCmOrM, convertWeightToGramsOrKg, romanToNumber, addPrecedingZeros, toTitleCase, convertKebabCaseToTitleCase, splitKebabCase, replaceNewlinesAndFeeds, spriteWidthBasedOnHeight)
+    - 7 business logic tests (filterMovesForGen, mapMoves, relativeAttackAndDefence, findSpritesForVersion, findSpritesForGoldSilver, findEvolutionDetailForGame, findVarietyForRegion)
+  - **E2E Tests (2 passing):**
+    - Yellow version - National Dex - Pikachu search flow
+    - Gold/Silver version - Regional Dex (Johto) - Chikorita search flow
+  - **Configuration:**
+    - Created `vitest.config.ts` with jsdom environment and path aliases
+    - Created `playwright.config.ts` with chromium/firefox/webkit browsers
+    - Added test scripts to `package.json` (test, test:ui, test:coverage, test:e2e, test:e2e:ui)
+  - **Best Practices Established:**
+    - Use `data-testid` attributes for reliable E2E element selection
+    - Always wait for `.animate-spin` loading spinner to disappear before verifying content
+    - Scope selectors to components to avoid finding wrong elements
+    - Created comprehensive `e2e/README.md` documentation
 - [x] **Move Route-Specific Components** - Reorganized codebase by moving route-specific components (encounters, evolutions, sprites, stats, types) from `src/components/` to `app/pokemon/[id]/_components/`, keeping only truly reusable components (common, header) in `src/components/`
 - [x] **Upgrade React Query v3 → v5** - Migrated from `react-query@3.39.3` to `@tanstack/react-query@5.90.2`, updated all useQuery calls to new object-based API, renamed `cacheTime` to `gcTime`
 - [x] **Migrate to GraphQL v1beta2 Endpoint** - Upgraded from v1beta to v1beta2 with cleaner schema (removed `pokemon_v2_` prefix)
@@ -191,4 +192,4 @@ Create `/src/config/` with:
 
 ---
 
-**Last Updated:** 2025-10-11
+**Last Updated:** 2025-10-17
