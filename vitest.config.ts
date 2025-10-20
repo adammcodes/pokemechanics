@@ -10,7 +10,7 @@ export default defineConfig({
     globals: true,
 
     // Setup files to run before tests
-    // setupFiles: ['./vitest.setup.ts'],
+    setupFiles: ['./vitest.setup.ts'],
 
     // Coverage configuration
     coverage: {
