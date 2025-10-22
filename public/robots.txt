@@ -1,35 +1,80 @@
 # Robots.txt for Pokemechanics
-# Prevent rate limiting by controlling crawler behavior
+# PokeAPI rate limit: 100 calls/hour per IP
+# Each page requires ~10 API calls
+# Therefore: 100 calls/hour ÷ 10 calls/page = 10 pages/hour max
+# Crawl-delay: 3600 seconds/hour ÷ 10 pages = 360 seconds between requests
 
 User-agent: *
-# Allow homepage and main sections
-Allow: /
-Allow: /pokedex
+Crawl-delay: 360
 
-# Crawl pokemon pages slowly to avoid rate limiting
-Crawl-delay: 2
+# Allow homepage and pokedex listings
+Allow: /$
+Allow: /pokedex$
+Allow: /pokedex/
 
-# Disallow crawling of all pokemon variation pages
-# Only allow main pokemon pages to be indexed
-Disallow: /pokemon/*/ultra-sun-ultra-moon/
-Disallow: /pokemon/*/sun-moon/
-Disallow: /pokemon/*/omega-ruby-alpha-sapphire/
-Disallow: /pokemon/*/x-y/
-Disallow: /pokemon/*/black-2-white-2/
-Disallow: /pokemon/*/black-white/
-Disallow: /pokemon/*/heartgold-soulsilver/
-Disallow: /pokemon/*/platinum/
-Disallow: /pokemon/*/diamond-pearl/
-Disallow: /pokemon/*/emerald/
-Disallow: /pokemon/*/firered-leafgreen/
-Disallow: /pokemon/*/ruby-sapphire/
-Disallow: /pokemon/*/crystal/
-Disallow: /pokemon/*/gold-silver/
-Disallow: /pokemon/*/yellow/
+# Allow all national pokedex pages for any Pokemon in any game
+Allow: /pokemon/*/*/national
 
-# Allow only the most recent/relevant game versions
-# Allow: /pokemon/*/red-blue/national
-# Allow: /pokemon/*/scarlet-violet/
+# Allow Sun/Moon pokedexes
+Allow: /pokemon/*/sun-moon/original-melemele
+Allow: /pokemon/*/sun-moon/original-alola
+Allow: /pokemon/*/sun-moon/original-akala
+Allow: /pokemon/*/sun-moon/original-ulaula
+Allow: /pokemon/*/sun-moon/original-poni
 
-# Sitemap location (we'll create this later)
+# Allow Ultra Sun/Ultra Moon pokedexes
+Allow: /pokemon/*/ultra-sun-ultra-moon/updated-alola
+Allow: /pokemon/*/ultra-sun-ultra-moon/updated-melemele
+Allow: /pokemon/*/ultra-sun-ultra-moon/updated-akala
+Allow: /pokemon/*/ultra-sun-ultra-moon/updated-ulaula
+Allow: /pokemon/*/ultra-sun-ultra-moon/updated-poni
+
+# Allow Omega Ruby/Alpha Sapphire pokedexes
+Allow: /pokemon/*/omega-ruby-alpha-sapphire/updated-hoenn
+
+# Allow X/Y pokedexes
+Allow: /pokemon/*/x-y/kalos-central
+Allow: /pokemon/*/x-y/kalos-coastal
+Allow: /pokemon/*/x-y/kalos-mountain
+
+# Allow Black 2/White 2 pokedexes
+Allow: /pokemon/*/black-2-white-2/updated-unova
+
+# Allow Black/White pokedexes
+Allow: /pokemon/*/black-white/original-unova
+
+# Allow HeartGold/SoulSilver pokedexes
+Allow: /pokemon/*/heartgold-soulsilver/updated-johto
+
+# Allow Platinum pokedexes
+Allow: /pokemon/*/platinum/extended-sinnoh
+
+# Allow Diamond/Pearl pokedexes
+Allow: /pokemon/*/diamond-pearl/original-sinnoh
+
+# Allow Emerald pokedexes
+Allow: /pokemon/*/emerald/hoenn
+
+# Allow FireRed/LeafGreen pokedexes
+Allow: /pokemon/*/firered-leafgreen/kanto
+
+# Allow Ruby/Sapphire pokedexes
+Allow: /pokemon/*/ruby-sapphire/hoenn
+
+# Allow Crystal pokedexes
+Allow: /pokemon/*/crystal/original-johto
+
+# Allow Gold/Silver pokedexes
+Allow: /pokemon/*/gold-silver/original-johto
+
+# Allow Yellow pokedexes
+Allow: /pokemon/*/yellow/kanto
+
+# Allow Red/Blue pokedexes
+Allow: /pokemon/*/red-blue/kanto
+
+# Disallow all other pokemon/game/pokedex combinations (invalid combinations)
+Disallow: /pokemon/*/*/
+
+# Sitemap location
 Sitemap: https://www.pokemechanics.app/sitemap.xml
