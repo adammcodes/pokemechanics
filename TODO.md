@@ -6,7 +6,48 @@ Project roadmap and planned improvements for Pokémechanics.
 
 ## 🔥 High Priority
 
-Increase test coverage
+### Rate Limiting & API Optimization
+
+**Context:** PokeAPI has a 100 calls/hour per IP rate limit. Each page requires ~10 API calls. Bot/crawler traffic was causing 429 (Too Many Requests) errors.
+
+#### ✅ Immediate Fixes (Completed)
+
+- [x] **Add robots.txt** - Control crawler behavior with 360-second crawl-delay and allow only valid pokedex/version-group combinations
+- [x] **Add ISR caching** - Cache pages for 1 hour using `export const revalidate = 3600` on all dynamic pages
+- [x] **Add retry logic** - Implement exponential backoff (1s, 2s, 4s) for 429 errors in all API helpers
+
+#### 📋 Short-term Fixes (Planned)
+
+**Status:** Ready to implement
+**Estimated Effort:** Medium (4-6 hours)
+
+- [ ] **Consolidate duplicate fetches** - Remove duplicate API calls between `generateMetadata()` and page components
+  - Currently: Same data fetched twice per page render
+  - Solution: Use Next.js request deduplication properly or cache in React context
+- [ ] **Add generateStaticParams()** - Pre-generate static pages for top 150 Pokemon at build time
+  - Reduces runtime API calls for popular Pokemon
+  - Improves page load performance
+- [ ] **Optimize request patterns** - Review and reduce unnecessary nested fetches in components
+
+#### 🚀 Long-term Solutions (Future)
+
+**Status:** Research phase
+**Estimated Effort:** High (20-40 hours)
+
+- [ ] **Local PokeAPI cache** - Download and cache PokeAPI data locally in a database
+  - Eliminates external API dependency for static data
+  - Options: PostgreSQL, SQLite, or JSON files
+  - Requires sync strategy for PokeAPI updates
+- [ ] **Redis/KV caching layer** - Add distributed cache for API responses
+  - Reduces duplicate API calls across deployments
+  - Options: Vercel KV, Upstash Redis, or self-hosted
+- [ ] **Edge caching** - Implement proper Cache-Control headers for CDN caching
+  - Leverage Vercel Edge Network or Cloudflare
+  - Cache static assets and API responses at edge locations
+
+---
+
+### Increase test coverage
 
 - React Testing Library for testing hooks and components.
 - Write failing tests for bugs below. Then implement the fixes to have passing tests:
@@ -150,4 +191,4 @@ Create `/src/config/` with:
 
 ---
 
-**Last Updated:** 2025-10-19
+**Last Updated:** 2025-10-22
