@@ -1,30 +1,68 @@
 import { MetadataRoute } from "next";
+import { numOfPokemonByGen } from "@/constants/numOfPokemonByGen";
 
-// Version groups with their valid pokedexes (from robots.txt)
+// Version groups with their valid pokedexes and generation
 const VERSION_GROUPS = [
   // Gen 1
-  { name: "red-blue", pokedexes: ["kanto"] },
-  { name: "yellow", pokedexes: ["kanto"] },
+  { name: "red-blue", pokedexes: ["kanto"], generation: "generation-i" },
+  { name: "yellow", pokedexes: ["kanto"], generation: "generation-i" },
   // Gen 2
-  { name: "gold-silver", pokedexes: ["original-johto"] },
-  { name: "crystal", pokedexes: ["original-johto"] },
+  {
+    name: "gold-silver",
+    pokedexes: ["original-johto"],
+    generation: "generation-ii",
+  },
+  {
+    name: "crystal",
+    pokedexes: ["original-johto"],
+    generation: "generation-ii",
+  },
   // Gen 3
-  { name: "ruby-sapphire", pokedexes: ["hoenn"] },
-  { name: "emerald", pokedexes: ["hoenn"] },
-  { name: "firered-leafgreen", pokedexes: ["kanto"] },
+  { name: "ruby-sapphire", pokedexes: ["hoenn"], generation: "generation-iii" },
+  { name: "emerald", pokedexes: ["hoenn"], generation: "generation-iii" },
+  {
+    name: "firered-leafgreen",
+    pokedexes: ["kanto"],
+    generation: "generation-iii",
+  },
   // Gen 4
-  { name: "diamond-pearl", pokedexes: ["original-sinnoh"] },
-  { name: "platinum", pokedexes: ["extended-sinnoh"] },
-  { name: "heartgold-soulsilver", pokedexes: ["updated-johto"] },
+  {
+    name: "diamond-pearl",
+    pokedexes: ["original-sinnoh"],
+    generation: "generation-iv",
+  },
+  {
+    name: "platinum",
+    pokedexes: ["extended-sinnoh"],
+    generation: "generation-iv",
+  },
+  {
+    name: "heartgold-soulsilver",
+    pokedexes: ["updated-johto"],
+    generation: "generation-iv",
+  },
   // Gen 5
-  { name: "black-white", pokedexes: ["original-unova"] },
-  { name: "black-2-white-2", pokedexes: ["updated-unova"] },
+  {
+    name: "black-white",
+    pokedexes: ["original-unova"],
+    generation: "generation-v",
+  },
+  {
+    name: "black-2-white-2",
+    pokedexes: ["updated-unova"],
+    generation: "generation-v",
+  },
   // Gen 6
   {
     name: "x-y",
     pokedexes: ["kalos-central", "kalos-coastal", "kalos-mountain"],
+    generation: "generation-vi",
   },
-  { name: "omega-ruby-alpha-sapphire", pokedexes: ["updated-hoenn"] },
+  {
+    name: "omega-ruby-alpha-sapphire",
+    pokedexes: ["updated-hoenn"],
+    generation: "generation-vi",
+  },
   // Gen 7
   {
     name: "sun-moon",
@@ -35,6 +73,7 @@ const VERSION_GROUPS = [
       "original-ulaula",
       "original-poni",
     ],
+    generation: "generation-vii",
   },
   {
     name: "ultra-sun-ultra-moon",
@@ -45,32 +84,59 @@ const VERSION_GROUPS = [
       "updated-ulaula",
       "updated-poni",
     ],
+    generation: "generation-vii",
   },
-  { name: "lets-go-pikachu-lets-go-eevee", pokedexes: ["letsgo-kanto"] },
+  {
+    name: "lets-go-pikachu-lets-go-eevee",
+    pokedexes: ["letsgo-kanto"],
+    generation: "generation-vii",
+  },
   // Gen 8
   {
     name: "sword-shield",
     pokedexes: ["galar", "isle-of-armor", "crown-tundra"],
+    generation: "generation-viii",
   },
-  { name: "the-isle-of-armor", pokedexes: ["isle-of-armor"] },
-  { name: "the-crown-tundra", pokedexes: ["crown-tundra"] },
+  {
+    name: "the-isle-of-armor",
+    pokedexes: ["isle-of-armor"],
+    generation: "generation-viii",
+  },
+  {
+    name: "the-crown-tundra",
+    pokedexes: ["crown-tundra"],
+    generation: "generation-viii",
+  },
   {
     name: "brilliant-diamond-and-shining-pearl",
     pokedexes: ["original-sinnoh"],
+    generation: "generation-viii",
   },
-  { name: "legends-arceus", pokedexes: ["hisui"] },
+  {
+    name: "legends-arceus",
+    pokedexes: ["hisui"],
+    generation: "generation-viii",
+  },
   // Gen 9
-  { name: "scarlet-violet", pokedexes: ["paldea"] },
-  { name: "the-teal-mask", pokedexes: ["kitakami"] },
-  { name: "the-indigo-disk", pokedexes: ["blueberry"] },
+  {
+    name: "scarlet-violet",
+    pokedexes: ["paldea"],
+    generation: "generation-ix",
+  },
+  {
+    name: "the-teal-mask",
+    pokedexes: ["kitakami"],
+    generation: "generation-ix",
+  },
+  {
+    name: "the-indigo-disk",
+    pokedexes: ["blueberry"],
+    generation: "generation-ix",
+  },
 ];
 
-// Total Pokemon species in the National Pokedex
-// We'll limit to first 1025 to avoid massive sitemap
-const TOTAL_POKEMON = 1025;
-
-// Popular/starter Pokemon to prioritize (Gen 1-3 starters + legendaries + fan favorites)
-const PRIORITY_POKEMON = [
+// Popular/starter Pokemon to prioritize for higher priority score
+const PRIORITY_POKEMON = new Set([
   "bulbasaur",
   "charmander",
   "squirtle",
@@ -98,7 +164,12 @@ const PRIORITY_POKEMON = [
   "lucario",
   "greninja",
   "decidueye",
-];
+]);
+
+type PokemonSpecies = {
+  name: string;
+  id: number;
+};
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://www.pokemechanics.app";
@@ -132,74 +203,70 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     });
   });
 
-  // Strategy: Add National Pokedex pages for ALL Pokemon across major version groups
-  // This gives search engines comprehensive coverage without bloating the sitemap
-  const majorVersionGroups = [
-    "red-blue", // Gen 1
-    "crystal", // Gen 2
-    "emerald", // Gen 3
-    "platinum", // Gen 4
-    "black-2-white-2", // Gen 5
-    "x-y", // Gen 6
-    "ultra-sun-ultra-moon", // Gen 7
-    "lets-go-pikachu-lets-go-eevee", // Gen 7 (Let's Go)
-    "sword-shield", // Gen 8
-    "legends-arceus", // Gen 8 (Legends)
-    "brilliant-diamond-and-shining-pearl", // Gen 8 (remakes)
-    "scarlet-violet", // Gen 9
-  ];
-
-  // Fetch first 151 Pokemon (Gen 1) - these are most searched
+  // Fetch all 1025 Pokemon species with IDs for generation-based filtering
   try {
     const response = await fetch(
-      "https://pokeapi.co/api/v2/pokemon-species?limit=151&offset=0",
+      "https://pokeapi.co/api/v2/pokemon-species?limit=1025&offset=0",
       {
         next: { revalidate: 86400 }, // Cache for 24 hours
       }
     );
     const data = await response.json();
-    const gen1Pokemon: string[] = data.results.map(
-      (p: { name: string }) => p.name
+    const allPokemon: PokemonSpecies[] = data.results.map(
+      (p: { name: string; url: string }, index: number) => ({
+        name: p.name,
+        id: index + 1, // PokeAPI species IDs are sequential starting from 1
+      })
     );
 
-    // Add national dex pages for Gen 1 Pokemon across major version groups
-    gen1Pokemon.forEach((pokemonName) => {
-      majorVersionGroups.forEach((versionGroup) => {
-        const isPriority = PRIORITY_POKEMON.includes(pokemonName);
+    console.log(
+      `Generating sitemap for ${allPokemon.length} Pokemon across ${VERSION_GROUPS.length} version groups...`
+    );
+
+    // For each version group, generate URLs for all valid Pokemon
+    VERSION_GROUPS.forEach((vg) => {
+      // Get max Pokemon ID for this generation
+      const maxPokemonId = numOfPokemonByGen[vg.generation];
+
+      // Filter Pokemon that exist in this generation
+      const validPokemon = allPokemon.filter((p) => p.id <= maxPokemonId);
+
+      console.log(
+        `${vg.name} (${vg.generation}): ${validPokemon.length}/${allPokemon.length} Pokemon`
+      );
+
+      // Generate national dex URLs for all valid Pokemon
+      validPokemon.forEach((pokemon) => {
+        const isPriority = PRIORITY_POKEMON.has(pokemon.name);
 
         urls.push({
-          url: `${baseUrl}/pokemon/${pokemonName}/${versionGroup}/national`,
+          url: `${baseUrl}/pokemon/${pokemon.name}/${vg.name}/national`,
           lastModified: currentDate,
           changeFrequency: "monthly",
           priority: isPriority ? 0.8 : 0.6,
         });
       });
+
+      // Generate regional dex URLs for all valid Pokemon
+      vg.pokedexes.forEach((dexName) => {
+        validPokemon.forEach((pokemon) => {
+          const isPriority = PRIORITY_POKEMON.has(pokemon.name);
+
+          urls.push({
+            url: `${baseUrl}/pokemon/${pokemon.name}/${vg.name}/${dexName}`,
+            lastModified: currentDate,
+            changeFrequency: "monthly",
+            priority: isPriority ? 0.7 : 0.5,
+          });
+        });
+      });
     });
 
-    // Add priority Pokemon for ALL version groups (not just major ones)
-    PRIORITY_POKEMON.forEach((pokemonName) => {
-      VERSION_GROUPS.forEach((vg) => {
-        urls.push({
-          url: `${baseUrl}/pokemon/${pokemonName}/${vg.name}/national`,
-          lastModified: currentDate,
-          changeFrequency: "monthly",
-          priority: 0.7,
-        });
-      });
-    });
+    console.log(`Total sitemap URLs generated: ${urls.length}`);
   } catch (error) {
     console.error("Error generating sitemap:", error);
-    // Fallback: at least include priority Pokemon
-    PRIORITY_POKEMON.forEach((pokemonName) => {
-      majorVersionGroups.forEach((versionGroup) => {
-        urls.push({
-          url: `${baseUrl}/pokemon/${pokemonName}/${versionGroup}/national`,
-          lastModified: currentDate,
-          changeFrequency: "monthly",
-          priority: 0.7,
-        });
-      });
-    });
+    // Fallback: at least include homepage and pokedex pages
+    // (already added above)
   }
 
   return urls;
