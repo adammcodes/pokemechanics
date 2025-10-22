@@ -12,7 +12,19 @@ Project roadmap and planned improvements for Pokémechanics.
 
 #### ✅ Immediate Fixes (Completed)
 
-- [x] **Add robots.txt** - Control crawler behavior with 360-second crawl-delay and allow only valid pokedex/version-group combinations
+- [x] **Add robots.txt** - Control crawler behavior and prevent bot abuse
+  - 360-second crawl-delay (calculated from 100 calls/hour ÷ 10 calls/page)
+  - Block AI training bots (GPTBot, Claude-Web, anthropic-ai, etc.)
+  - Block aggressive SEO crawlers (AhrefsBot, SemrushBot, etc.)
+  - Allow legitimate search engines (Googlebot, Bingbot) with rate limiting
+  - Explicitly allow only valid pokedex/version-group combinations
+  - Include sitemap reference for search engines
+- [x] **Add comprehensive sitemap** - Created `app/sitemap.ts` with 42,167 valid URLs
+  - Generation-based filtering (Gen 1 games only include Pokemon 1-151, etc.)
+  - Single PokeAPI call cached for 24 hours
+  - Includes national + regional dex URLs for all 25 version groups
+  - Priority scoring for popular Pokemon (starters, legendaries)
+  - Prevents invalid URLs (e.g., Greninja in Gen 1 games)
 - [x] **Add ISR caching** - Cache pages for 1 hour using `export const revalidate = 3600` on all dynamic pages
 - [x] **Add retry logic** - Implement exponential backoff (1s, 2s, 4s) for 429 errors in all API helpers
 - [x] **Consolidate duplicate fetches** - Wrapped all fetch helpers with React `cache()` to deduplicate requests

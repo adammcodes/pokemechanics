@@ -2,6 +2,7 @@ import { MetadataRoute } from "next";
 import { numOfPokemonByGen } from "@/constants/numOfPokemonByGen";
 
 // Version groups with their valid pokedexes and generation
+// maxPokemonId overrides the generation's default for remakes
 const VERSION_GROUPS = [
   // Gen 1
   { name: "red-blue", pokedexes: ["kanto"], generation: "generation-i" },
@@ -24,6 +25,7 @@ const VERSION_GROUPS = [
     name: "firered-leafgreen",
     pokedexes: ["kanto"],
     generation: "generation-iii",
+    maxPokemonId: 151, // Kanto dex only has Gen I Pokemon
   },
   // Gen 4
   {
@@ -90,6 +92,7 @@ const VERSION_GROUPS = [
     name: "lets-go-pikachu-lets-go-eevee",
     pokedexes: ["letsgo-kanto"],
     generation: "generation-vii",
+    maxPokemonId: 151, // Kanto dex only has Gen I Pokemon
   },
   // Gen 8
   {
@@ -111,6 +114,7 @@ const VERSION_GROUPS = [
     name: "brilliant-diamond-and-shining-pearl",
     pokedexes: ["original-sinnoh"],
     generation: "generation-viii",
+    maxPokemonId: 493, // Original Sinnoh dex only has Gen I-IV Pokemon
   },
   {
     name: "legends-arceus",
@@ -225,10 +229,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     // For each version group, generate URLs for all valid Pokemon
     VERSION_GROUPS.forEach((vg) => {
-      // Get max Pokemon ID for this generation
-      const maxPokemonId = numOfPokemonByGen[vg.generation];
+      // Get max Pokemon ID for this version group
+      // Use override if present (for remakes), otherwise use generation default
+      const maxPokemonId =
+        "maxPokemonId" in vg
+          ? vg.maxPokemonId
+          : numOfPokemonByGen[vg.generation];
 
-      // Filter Pokemon that exist in this generation
+      // Filter Pokemon that exist in this version group
       const validPokemon = allPokemon.filter((p) => p.id <= maxPokemonId);
 
       console.log(
