@@ -4,6 +4,50 @@
 # Therefore: 100 calls/hour ÷ 10 calls/page = 10 pages/hour max
 # Crawl-delay: 3600 seconds/hour ÷ 10 pages = 360 seconds between requests
 
+# Block AI crawlers and LLM training bots
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ChatGPT-User
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: anthropic-ai
+Disallow: /
+
+User-agent: Claude-Web
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+User-agent: PerplexityBot
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
+
+User-agent: Amazonbot
+Disallow: /
+
+User-agent: FacebookBot
+Disallow: /
+
+User-agent: Applebot-Extended
+Disallow: /
+
+User-agent: cohere-ai
+Disallow: /
+
+User-agent: Omgilibot
+Disallow: /
+
+User-agent: Diffbot
+Disallow: /
+
+# Allow legitimate search engines with rate limiting
 User-agent: *
 Crawl-delay: 360
 
