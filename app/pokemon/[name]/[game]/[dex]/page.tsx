@@ -6,6 +6,9 @@ import { fetchPokemonByName } from "@/app/helpers/rest/fetchPokemonByName";
 import { fetchPokedexByName } from "@/app/helpers/rest/fetchPokedexByName";
 import PokemonCard from "./_components/card/PokemonCard";
 import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
+import { romanToNumber } from "@/utils/romanToNumber";
+import { fetchGenerationById } from "@/app/helpers/rest/fetchGenerationById";
+import { numOfPokemonByGen } from "@/constants/numOfPokemonByGen";
 
 type PageProps = {
   params: {
@@ -90,6 +93,34 @@ export default async function Pokemon({ params }: PageProps) {
       );
     }
 
+    const generation = versionData.generation.name;
+    const pokemonNationalDexNumber = speciesData.id;
+    const maxDexNumberForGen = numOfPokemonByGen[generation];
+
+    if (pokemonNationalDexNumber > maxDexNumberForGen) {
+      const displayName =
+        speciesData.name.charAt(0).toUpperCase() + speciesData.name.slice(1);
+      return (
+        <main className="w-full max-w-screen-sm mx-auto text-center p-8">
+          <h1 className="text-2xl font-bold mb-4">Pokémon Not Available</h1>
+          <p className="mb-4">
+            {displayName} does not exist in{" "}
+            {versionData.name
+              .split("-")
+              .map((w: string) => w.charAt(0).toUpperCase() + w.slice(1))
+              .join(" ")}
+            .
+          </p>
+          <a
+            href={`/pokemon/${name}`}
+            className="inline-block bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded"
+          >
+            Choose a valid game version
+          </a>
+        </main>
+      );
+    }
+
     return (
       <main className="w-full">
         <PokemonCard
@@ -118,7 +149,10 @@ export default async function Pokemon({ params }: PageProps) {
         );
       }
 
-      if (error.message.includes("not found") || error.message.includes("404")) {
+      if (
+        error.message.includes("not found") ||
+        error.message.includes("404")
+      ) {
         return (
           <main className="w-full max-w-screen-sm mx-auto text-center">
             <h1>Invalid Pokémon</h1>

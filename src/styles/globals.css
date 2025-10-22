@@ -161,6 +161,19 @@ main {
       var(--spread-radius) var(--shadow-colour);
 }
 
+/* Game selector link styles */
+.game-selector-link {
+  display: block;
+  color: var(--text-colour);
+  border-color: var(--button-border-colour);
+}
+
+.game-selector-link:hover {
+  background-color: var(--hover-bg-colour);
+  color: var(--hover-text-colour);
+  border-color: var(--hover-bg-colour);
+}
+
 /* Dark mode */
 [data-theme="dark"] {
   --background-colour: oklch(21.36% 0.048 257.95);
