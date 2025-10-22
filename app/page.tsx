@@ -13,7 +13,7 @@ type Gen = {
 async function getVersionGroups(): Promise<Gen[]> {
   const query = `
     query GetVersionGroups {
-      versiongroup(limit: 25, order_by: {id: asc}) {
+      versiongroup(order_by: {generation_id: asc}) {
         id
         name
         generation_id
