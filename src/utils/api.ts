@@ -4,9 +4,10 @@
  */
 
 import { POKEAPI_GRAPHQL_ENDPOINT } from "@/constants/apiConfig";
+import { deduplicateRequest } from "./requestDeduplication";
 
-// Utility function to handle retry logic with exponential backoff
-export async function fetchWithRetry(
+// Internal fetch function with retry logic (not deduplicated)
+async function _fetchWithRetry(
   url: string,
   options: RequestInit = {},
   maxRetries = 3
@@ -62,6 +63,22 @@ export async function fetchWithRetry(
   }
 
   throw lastError!;
+}
+
+// Public fetch function with deduplication and retry logic
+export async function fetchWithRetry(
+  url: string,
+  options: RequestInit = {},
+  maxRetries = 3
+): Promise<Response> {
+  // Create a cache key from URL and method
+  const method = options.method || "GET";
+  const cacheKey = `${method}:${url}`;
+
+  // Use deduplication to prevent simultaneous requests to the same endpoint
+  return deduplicateRequest(cacheKey, () =>
+    _fetchWithRetry(url, options, maxRetries)
+  );
 }
 
 // GraphQL response types

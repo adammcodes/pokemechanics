@@ -1,5 +1,6 @@
 import { MetadataRoute } from "next";
 import { numOfPokemonByGen } from "@/constants/numOfPokemonByGen";
+import { PRIORITY_POKEMON_SET } from "@/constants/priorityPokemon";
 
 // Type for version group configuration
 type VersionGroupConfig = {
@@ -147,37 +148,6 @@ const VERSION_GROUPS: VersionGroupConfig[] = [
   },
 ];
 
-// Popular/starter Pokemon to prioritize for higher priority score
-const PRIORITY_POKEMON = new Set([
-  "bulbasaur",
-  "charmander",
-  "squirtle",
-  "pikachu",
-  "mewtwo",
-  "mew",
-  "chikorita",
-  "cyndaquil",
-  "totodile",
-  "lugia",
-  "ho-oh",
-  "treecko",
-  "torchic",
-  "mudkip",
-  "rayquaza",
-  "groudon",
-  "kyogre",
-  "charizard",
-  "blastoise",
-  "venusaur",
-  "gengar",
-  "dragonite",
-  "tyranitar",
-  "garchomp",
-  "lucario",
-  "greninja",
-  "decidueye",
-]);
-
 type PokemonSpecies = {
   name: string;
   id: number;
@@ -251,7 +221,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
       // Generate national dex URLs for all valid Pokemon
       validPokemon.forEach((pokemon) => {
-        const isPriority = PRIORITY_POKEMON.has(pokemon.name);
+        const isPriority = PRIORITY_POKEMON_SET.has(pokemon.name);
 
         urls.push({
           url: `${baseUrl}/pokemon/${pokemon.name}/${vg.name}/national`,
@@ -264,7 +234,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       // Generate regional dex URLs for all valid Pokemon
       vg.pokedexes.forEach((dexName) => {
         validPokemon.forEach((pokemon) => {
-          const isPriority = PRIORITY_POKEMON.has(pokemon.name);
+          const isPriority = PRIORITY_POKEMON_SET.has(pokemon.name);
 
           urls.push({
             url: `${baseUrl}/pokemon/${pokemon.name}/${vg.name}/${dexName}`,

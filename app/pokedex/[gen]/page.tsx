@@ -6,8 +6,9 @@ import { getVersionGroup } from "@/app/helpers/graphql/getVersionGroup";
 import { Metadata } from "next";
 import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
 
-// Enable ISR - revalidate every 1 hour (3600 seconds)
-export const revalidate = 3600;
+// Enable ISR - revalidate every 24 hours (86400 seconds)
+// Pokemon data is static, so long cache times are safe
+export const revalidate = 86400;
 
 // fetch the game version for the selected generation
 type PageProps = {

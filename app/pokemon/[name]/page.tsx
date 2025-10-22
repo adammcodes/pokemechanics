@@ -8,8 +8,9 @@ import Link from "next/link";
 import { romanToNumber } from "@/utils/romanToNumber";
 import { fetchGenerationById } from "@/app/helpers/rest/fetchGenerationById";
 
-// Enable ISR - revalidate every 1 hour (3600 seconds)
-export const revalidate = 3600;
+// Enable ISR - revalidate every 24 hours (86400 seconds)
+// Pokemon data is static, so long cache times are safe
+export const revalidate = 86400;
 
 type PageProps = {
   params: {

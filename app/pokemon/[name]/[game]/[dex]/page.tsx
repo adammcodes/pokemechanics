@@ -9,10 +9,43 @@ import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
 import { romanToNumber } from "@/utils/romanToNumber";
 import { fetchGenerationById } from "@/app/helpers/rest/fetchGenerationById";
 import { numOfPokemonByGen } from "@/constants/numOfPokemonByGen";
+import { PRIORITY_POKEMON } from "@/constants/priorityPokemon";
 
-// Enable ISR - revalidate every 1 hour (3600 seconds)
-// This caches the page and reduces API calls to PokeAPI
-export const revalidate = 3600;
+// Enable ISR - revalidate every 24 hours (86400 seconds)
+// Pokemon data is static, so long cache times are safe
+// Reduces API calls to PokeAPI significantly
+export const revalidate = 86400;
+
+// Generate static pages for popular Pokemon at build time
+// This eliminates runtime API calls for these pages
+export async function generateStaticParams() {
+  // Pre-render top Pokemon for the most popular version groups
+  const popularVersionGroups = [
+    { game: "scarlet-violet", dex: "paldea" },
+    { game: "scarlet-violet", dex: "national" },
+    { game: "sword-shield", dex: "galar" },
+    { game: "sword-shield", dex: "national" },
+    { game: "red-blue", dex: "kanto" },
+    { game: "red-blue", dex: "national" },
+  ];
+
+  const params = [];
+
+  // Generate all combinations of priority Pokemon + popular version groups
+  for (const pokemon of PRIORITY_POKEMON) {
+    for (const vg of popularVersionGroups) {
+      params.push({
+        name: pokemon,
+        game: vg.game,
+        dex: vg.dex,
+      });
+    }
+  }
+
+  console.log(`[StaticGen] Pre-rendering ${params.length} popular Pokemon pages`);
+
+  return params;
+}
 
 type PageProps = {
   params: {
