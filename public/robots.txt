@@ -4,7 +4,14 @@
 # Therefore: 100 calls/hour ÷ 10 calls/page = 10 pages/hour max
 # Crawl-delay: 3600 seconds/hour ÷ 10 pages = 360 seconds between requests
 
-# Block AI crawlers and LLM training bots
+# IMPORTANT: We rely on PokeAPI's free tier (100 calls/hour)
+# Aggressive crawling can get our IP banned. Only legitimate search
+# engines that help users find our content are allowed.
+
+# ============================================================
+# BLOCK: AI Training Bots (don't help users find our content)
+# ============================================================
+
 User-agent: GPTBot
 Disallow: /
 
@@ -47,7 +54,77 @@ Disallow: /
 User-agent: Diffbot
 Disallow: /
 
-# Allow legitimate search engines with rate limiting
+# ============================================================
+# BLOCK: SEO/Analytics Bots (commercial services, very aggressive)
+# ============================================================
+
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+User-agent: PetalBot
+Disallow: /
+
+User-agent: BLEXBot
+Disallow: /
+
+User-agent: DataForSeoBot
+Disallow: /
+
+User-agent: Screaming Frog SEO Spider
+Disallow: /
+
+# ============================================================
+# ALLOW: Legitimate Search Engines (help users find our site)
+# ============================================================
+
+# Google Search - respects crawl-delay
+User-agent: Googlebot
+Crawl-delay: 360
+Allow: /
+
+# Bing/Microsoft - respects crawl-delay
+User-agent: Bingbot
+Crawl-delay: 360
+Allow: /
+
+# DuckDuckGo - privacy-focused search
+User-agent: DuckDuckBot
+Crawl-delay: 360
+Allow: /
+
+# Yahoo (uses Bing, but still has own crawler)
+User-agent: Slurp
+Crawl-delay: 360
+Allow: /
+
+# Apple (for Siri/Spotlight, not Extended version)
+User-agent: Applebot
+Crawl-delay: 360
+Allow: /
+
+# Yandex (Russian search engine)
+User-agent: YandexBot
+Crawl-delay: 360
+Allow: /
+
+# Baidu (Chinese search engine) - only if you want Chinese traffic
+User-agent: Baiduspider
+Crawl-delay: 360
+Allow: /
+
+# ============================================================
+# DEFAULT: Block all other bots
+# ============================================================
+
 User-agent: *
 Crawl-delay: 360
 
