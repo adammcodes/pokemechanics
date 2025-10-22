@@ -11,7 +11,7 @@ export default function getSpriteTypeUrl({
   type: number;
   generationString: string;
   versionGroup: string;
-}): string {
+}): string | null {
   let validVersionGroups: string[] = [];
   // Add type guards to prevent invalid urls
   switch (generationString) {
@@ -54,7 +54,12 @@ export default function getSpriteTypeUrl({
       ];
       break;
     case "generation-ix":
-      validVersionGroups = ["scarlet-violet"];
+      validVersionGroups = [
+        "scarlet-violet",
+        // "the-indigo-disk",
+        // "the-teal-mask",
+        // "legends-za",
+      ];
       break;
     default:
       // return generation-iii/emerald url type urls for generation-i and generation-ii
@@ -62,10 +67,11 @@ export default function getSpriteTypeUrl({
   }
 
   if (!validVersionGroups.includes(versionGroup)) {
-    throw new Error(
-      `Invalid version group: "${versionGroup}" for generation "${generationString}".\n
-      Must be one of: ${validVersionGroups.join(", ")}.`
-    );
+    // console.warn(
+    //   `Invalid version group: "${versionGroup}" for generation "${generationString}".\n
+    //   Must be one of: ${validVersionGroups.join(", ")}.`
+    // );
+    return null;
   }
 
   const genRomanNumeral: string = generationString.split("-")[1];

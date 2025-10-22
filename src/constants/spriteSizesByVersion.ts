@@ -14,6 +14,8 @@ const OPTION_SMALL = 50;
 export const spriteSizesByVersion: Record<string, number> = {
   "red-blue": LARGE,
   yellow: LARGE,
+  "red-green-japan": LARGE,
+  "blue-japan": LARGE,
   "gold-silver": LARGE,
   crystal: LARGE,
   "ruby-sapphire": SMALL,
@@ -37,11 +39,16 @@ export const spriteSizesByVersion: Record<string, number> = {
   "brilliant-diamond-and-shining-pearl": MEDIUM,
   "legends-arceus": MEDIUM,
   "scarlet-violet": MEDIUM,
+  "the-indigo-disk": MEDIUM,
+  "the-teal-mask": MEDIUM,
+  "legends-za": MEDIUM,
 };
 
 export const optionSpriteSizesByVersion: Record<string, number> = {
   "red-blue": OPTION_LARGE,
   yellow: OPTION_LARGE,
+  "red-green-japan": OPTION_LARGE,
+  "blue-japan": OPTION_LARGE,
   "gold-silver": OPTION_LARGE,
   crystal: OPTION_LARGE,
   "ruby-sapphire": OPTION_SMALL,
@@ -65,4 +72,7 @@ export const optionSpriteSizesByVersion: Record<string, number> = {
   "brilliant-diamond-and-shining-pearl": OPTION_MEDIUM,
   "legends-arceus": OPTION_MEDIUM,
   "scarlet-violet": OPTION_MEDIUM,
+  "the-indigo-disk": OPTION_MEDIUM,
+  "the-teal-mask": OPTION_MEDIUM,
+  "legends-za": OPTION_MEDIUM,
 };
