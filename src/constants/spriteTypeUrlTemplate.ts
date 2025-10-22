@@ -91,10 +91,6 @@ export default function getSpriteTypeUrl({
     return `${POKEAPI_TYPE_SPRITE_BASE_URL}/generation-viii/sword-shield/${type}.png`;
   }
 
-  // The ruby-sapphire version group folder is misspelled as "ruby-saphire" in the PokeAPI data/v2/sprites/sprites/types folder.
-  const correctVersionGroup =
-    versionGroup === "ruby-sapphire" ? "ruby-saphire" : versionGroup;
-
-  let spriteTypeUrlTemplate: string = `${POKEAPI_TYPE_SPRITE_BASE_URL}/${generationString}/${correctVersionGroup}/${type}.png`;
+  let spriteTypeUrlTemplate: string = `${POKEAPI_TYPE_SPRITE_BASE_URL}/${generationString}/${versionGroup}/${type}.png`;
   return spriteTypeUrlTemplate;
 }
