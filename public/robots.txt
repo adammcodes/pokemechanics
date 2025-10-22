@@ -194,6 +194,31 @@ Allow: /pokemon/*/yellow/kanto
 # Allow Red/Blue pokedexes
 Allow: /pokemon/*/red-blue/kanto
 
+# Allow Scarlet/Violet DLC pokedexes (Gen 9)
+Allow: /pokemon/*/the-indigo-disk/blueberry
+Allow: /pokemon/*/the-teal-mask/kitakami
+
+# Allow Scarlet/Violet pokedexes (Gen 9)
+Allow: /pokemon/*/scarlet-violet/paldea
+
+# Allow Legends: Arceus pokedexes (Gen 8)
+Allow: /pokemon/*/legends-arceus/hisui
+
+# Allow Brilliant Diamond/Shining Pearl pokedexes (Gen 8)
+Allow: /pokemon/*/brilliant-diamond-and-shining-pearl/original-sinnoh
+
+# Allow Sword/Shield DLC pokedexes (Gen 8)
+Allow: /pokemon/*/the-crown-tundra/crown-tundra
+Allow: /pokemon/*/the-isle-of-armor/isle-of-armor
+
+# Allow Sword/Shield pokedexes (Gen 8)
+Allow: /pokemon/*/sword-shield/galar
+Allow: /pokemon/*/sword-shield/isle-of-armor
+Allow: /pokemon/*/sword-shield/crown-tundra
+
+# Allow Let's Go Pikachu/Eevee pokedexes (Gen 7)
+Allow: /pokemon/*/lets-go-pikachu-lets-go-eevee/letsgo-kanto
+
 # Disallow all other pokemon/game/pokedex combinations (invalid combinations)
 Disallow: /pokemon/*/*/
 
