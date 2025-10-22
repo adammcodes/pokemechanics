@@ -108,7 +108,9 @@ const AutocompleteBase: React.FC<AutocompleteProps> = ({
           {filteredOptions.map((option) => {
             const href = linkTemplate
               .replace("{value}", option.value?.toString() || "")
+              .replace("{name}", option.name?.toString() || "")
               .replace("{dexId}", option.dexId?.toString() || "")
+              .replace("{dexName}", option.dexName?.toString() || "")
               .replace("{game}", option.game?.toString() || "")
               .replace("{pokemonId}", option.pokemonId?.toString() || "")
               .replace("{variantId}", option.variantId?.toString() || "");

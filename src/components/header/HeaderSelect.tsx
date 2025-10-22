@@ -3,22 +3,24 @@ import NationalDex from "@/app/pokedex/[gen]/_components/NationalDex";
 
 export default function HeaderSelect({
   pokemonId,
-  dexId,
+  dexName,
   game,
   generationString,
 }: {
   pokemonId: string;
-  dexId: string;
+  dexName: string;
   game: string;
   generationString: string;
 }) {
-  const isNationalDex = dexId === "1";
-  const isPokemonPage = dexId && pokemonId && generationString;
+  const isNationalDex = dexName === "national";
+  const isPokemonPage = dexName && pokemonId && generationString;
+
   return (
     <>
       {isPokemonPage && !isNationalDex && (
         <PokedexById
-          dexId={parseInt(dexId)}
+          dexId={parseInt(pokemonId)}
+          dexName={dexName}
           pokemonId={parseInt(pokemonId)}
           includeHeader={false}
           game={game}

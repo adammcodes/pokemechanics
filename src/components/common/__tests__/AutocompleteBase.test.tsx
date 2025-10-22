@@ -30,15 +30,15 @@ vi.mock("../Autocomplete.module.css", () => ({
 
 describe("AutocompleteBase", () => {
   const mockOptions = [
-    { label: "Bulbasaur", value: 1, pokemonId: 1 },
-    { label: "Charmander", value: 4, pokemonId: 4 },
-    { label: "Squirtle", value: 7, pokemonId: 7 },
-    { label: "Pikachu", value: 25, pokemonId: 25 },
+    { label: "Bulbasaur", value: 1, name: "bulbasaur", pokemonId: 1, game: "red-blue", dexName: "kanto" },
+    { label: "Charmander", value: 4, name: "charmander", pokemonId: 4, game: "red-blue", dexName: "kanto" },
+    { label: "Squirtle", value: 7, name: "squirtle", pokemonId: 7, game: "red-blue", dexName: "kanto" },
+    { label: "Pikachu", value: 25, name: "pikachu", pokemonId: 25, game: "red-blue", dexName: "kanto" },
   ];
 
   const defaultProps = {
     options: mockOptions,
-    linkTemplate: "/pokemon/{value}",
+    linkTemplate: "/pokemon/{name}/{game}/{dexName}",
   };
 
   beforeEach(() => {
@@ -231,10 +231,10 @@ describe("AutocompleteBase", () => {
 
     await waitFor(() => {
       const bulbasaurLink = screen.getByText("Bulbasaur").closest("a");
-      expect(bulbasaurLink).toHaveAttribute("href", "/pokemon/1");
+      expect(bulbasaurLink).toHaveAttribute("href", "/pokemon/bulbasaur/red-blue/kanto");
 
       const charmanderLink = screen.getByText("Charmander").closest("a");
-      expect(charmanderLink).toHaveAttribute("href", "/pokemon/4");
+      expect(charmanderLink).toHaveAttribute("href", "/pokemon/charmander/red-blue/kanto");
     });
   });
 
@@ -329,7 +329,10 @@ describe("AutocompleteBase", () => {
       {
         label: "Bulbasaur",
         value: 1,
+        name: "bulbasaur",
         pokemonId: 1,
+        game: "red-blue",
+        dexName: "kanto",
         versionGroup: "red-blue",
         generationString: "generation-i",
       },
@@ -338,7 +341,7 @@ describe("AutocompleteBase", () => {
     render(
       <AutocompleteBase
         options={optionsWithImages}
-        linkTemplate="/pokemon/{value}"
+        linkTemplate="/pokemon/{name}/{game}/{dexName}"
         hasImageOptions={true}
       />
     );

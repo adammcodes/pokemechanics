@@ -18,9 +18,10 @@ export default function Client({
   const pageParams = useSearchParams();
   const pathname = usePathname();
 
-  // Extract game from URL path if we're on a /pokedex/[gen] route
+  // Extract game from URL path if we're on a /pokedex/[gen] route or /pokemon/[name]/[game]/[dex] route
   const pokedexMatch = pathname?.match(/^\/pokedex\/([^\/]+)/);
-  const gameFromPath = pokedexMatch?.[1] || null;
+  const pokemonMatch = pathname?.match(/^\/pokemon\/[^\/]+\/([^\/]+)\/[^\/]+$/);
+  const gameFromPath = pokedexMatch?.[1] || pokemonMatch?.[1] || null;
 
   // Priority: URL path param > search param > cookie
   // The game from page search params take priority over the game from cookies

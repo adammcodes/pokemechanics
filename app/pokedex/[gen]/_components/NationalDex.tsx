@@ -54,6 +54,7 @@ export default async function NationalDex({
           pokemon={dex.pokemondexnumbers}
           regionName="National"
           dexId={1}
+          dexName="national"
           game={game}
           generationString={generationString}
         />

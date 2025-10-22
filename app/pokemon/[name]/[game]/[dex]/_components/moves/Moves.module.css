@@ -1,0 +1,29 @@
+.container {
+  background-color: #e0ebeb;
+}
+
+.header {
+  background-color: #24527a;
+  color: white;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  margin-inline: calc(var(--page-gutter) * -1);
+  padding-inline: var(--page-gutter);
+  color: black;
+}
+
+.wrapper > table tbody tr > td {
+  border-width: 2px;
+  vertical-align: top;
+}
+
+/* In mobile the table wrapper should be scrollable */
+@media (max-width: 1280px) {
+  .wrapper {
+    overflow-x: auto;
+    max-height: 100vh;
+  }
+}

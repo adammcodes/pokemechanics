@@ -1,0 +1,29 @@
+/* In light mode: AAA accessible with #fff background */
+.color-super-effective {
+  color: #006400;
+}
+.color-not-effective {
+  color: #6b5b00;
+}
+.color-min-damage {
+  color: #6b5b00;
+}
+.color-no-effect {
+  color: #8b0000;
+}
+
+/* In dark mode */
+[data-theme="dark"] {
+  .color-super-effective {
+    color: #00ff00;
+  }
+  .color-not-effective {
+    color: #eae31a;
+  }
+  .color-min-damage {
+    color: #faf200;
+  }
+  .color-no-effect {
+    color: #ef0707;
+  }
+}

@@ -56,8 +56,14 @@ const Nav = ({
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const gameSearchParam = searchParams.get("game");
-  // Get the "game" page path either from the search params "game" or from the pathname from /pokedex/[game]
-  const game = gameSearchParam || pathname.split("/")[2];
+
+  // Extract game from URL path patterns
+  const pokedexMatch = pathname.match(/^\/pokedex\/([^\/]+)/);
+  const pokemonMatch = pathname.match(/^\/pokemon\/[^\/]+\/([^\/]+)\/[^\/]+$/);
+  const gameFromPath = pokedexMatch?.[1] || pokemonMatch?.[1] || null;
+
+  // Get the "game" either from search params or from the pathname
+  const game = gameSearchParam || gameFromPath;
   const gamePath = game && game !== "undefined" ? `/${game}` : "";
 
   const closeNav = () => {

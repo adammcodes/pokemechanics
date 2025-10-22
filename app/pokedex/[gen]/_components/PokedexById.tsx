@@ -1,5 +1,6 @@
 import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
-import { getPokedexById } from "@/app/helpers/graphql/getPokedexById";
+// import { getPokedexById } from "@/app/helpers/graphql/getPokedexById";
+import { getPokedexByName } from "@/app/helpers/graphql/getPokedexByName";
 import PokemonSelector from "./PokemonSelector";
 
 export type PokedexPokemon = {
@@ -34,6 +35,7 @@ type Pokedex = {
 
 type PokedexByIdProps = {
   dexId: number;
+  dexName: string;
   game: string;
   generationString: string;
   pokemonId?: number; // optional to set the default selected pokemon
@@ -46,13 +48,14 @@ type PokedexByIdProps = {
 // The pokemonId property is the national dex id number
 export default async function PokedexById({
   dexId,
+  dexName,
   game,
   generationString,
   pokemonId,
   includeHeader = true,
 }: PokedexByIdProps) {
   const formatName = convertKebabCaseToTitleCase;
-  const regionalDex: Pokedex = await getPokedexById(dexId);
+  const regionalDex: Pokedex = await getPokedexByName(dexName);
 
   if (!regionalDex) {
     return <></>;
@@ -92,6 +95,7 @@ export default async function PokedexById({
           pokemon={regionalDexNumbers}
           regionName={regionName}
           dexId={dexId}
+          dexName={dexName}
           game={game}
           generationString={generationString}
           defaultPokemonId={defaultRegionalDexPokemonId || pokemonId}

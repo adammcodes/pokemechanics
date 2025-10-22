@@ -80,6 +80,7 @@ export default async function Page({ params }: PageProps) {
               <PokedexById
                 key={dex.id.toString()}
                 dexId={dex.id}
+                dexName={dex.name}
                 game={gen}
                 generationString={generationString}
               />

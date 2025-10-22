@@ -19,6 +19,7 @@ type PokemonSelectorProps = {
   pokemon: PokedexPokemon[];
   regionName: string;
   dexId: number;
+  dexName: string;
   game: string;
   generationString: string;
   defaultPokemonName?: string;
@@ -33,6 +34,7 @@ const PokemonSelector: React.FC<PokemonSelectorProps> =
     defaultPokemonName,
     regionName,
     dexId,
+    dexName,
     game,
     generationString,
   }) {
@@ -57,6 +59,7 @@ const PokemonSelector: React.FC<PokemonSelectorProps> =
         versionGroup: game,
         generationString: generationString,
         dexId: dexId, // for link template
+        dexName: dexName, // for link template
         game, // for link template
       };
     });
@@ -71,7 +74,7 @@ const PokemonSelector: React.FC<PokemonSelectorProps> =
               ? `(#${defaultPokemonId}) ${toTitleCase(defaultPokemonName)}`
               : ""
           }
-          linkTemplate="/pokemon/{value}?dexId={dexId}&game={game}"
+          linkTemplate="/pokemon/{name}/{game}/{dexName}"
         />
       </>
     );
