@@ -1,7 +1,8 @@
 import { POKEAPI_REST_ENDPOINT } from "@/constants/apiConfig";
+import { fetchWithRetry } from "@/utils/api";
 
 export async function fetchPokemonSpeciesByName(name: string) {
-  const response = await fetch(
+  const response = await fetchWithRetry(
     `${POKEAPI_REST_ENDPOINT}/pokemon-species/${name}`,
     {
       headers: {

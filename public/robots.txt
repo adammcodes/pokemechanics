@@ -1,0 +1,35 @@
+# Robots.txt for Pokemechanics
+# Prevent rate limiting by controlling crawler behavior
+
+User-agent: *
+# Allow homepage and main sections
+Allow: /
+Allow: /pokedex
+
+# Crawl pokemon pages slowly to avoid rate limiting
+Crawl-delay: 2
+
+# Disallow crawling of all pokemon variation pages
+# Only allow main pokemon pages to be indexed
+Disallow: /pokemon/*/ultra-sun-ultra-moon/
+Disallow: /pokemon/*/sun-moon/
+Disallow: /pokemon/*/omega-ruby-alpha-sapphire/
+Disallow: /pokemon/*/x-y/
+Disallow: /pokemon/*/black-2-white-2/
+Disallow: /pokemon/*/black-white/
+Disallow: /pokemon/*/heartgold-soulsilver/
+Disallow: /pokemon/*/platinum/
+Disallow: /pokemon/*/diamond-pearl/
+Disallow: /pokemon/*/emerald/
+Disallow: /pokemon/*/firered-leafgreen/
+Disallow: /pokemon/*/ruby-sapphire/
+Disallow: /pokemon/*/crystal/
+Disallow: /pokemon/*/gold-silver/
+Disallow: /pokemon/*/yellow/
+
+# Allow only the most recent/relevant game versions
+# Allow: /pokemon/*/red-blue/national
+# Allow: /pokemon/*/scarlet-violet/
+
+# Sitemap location (we'll create this later)
+Sitemap: https://www.pokemechanics.app/sitemap.xml

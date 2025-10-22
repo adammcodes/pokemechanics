@@ -6,6 +6,9 @@ import { getVersionGroup } from "@/app/helpers/graphql/getVersionGroup";
 import { Metadata } from "next";
 import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
 
+// Enable ISR - revalidate every 1 hour (3600 seconds)
+export const revalidate = 3600;
+
 // fetch the game version for the selected generation
 type PageProps = {
   params: {

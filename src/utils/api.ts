@@ -5,6 +5,65 @@
 
 import { POKEAPI_GRAPHQL_ENDPOINT } from "@/constants/apiConfig";
 
+// Utility function to handle retry logic with exponential backoff
+export async function fetchWithRetry(
+  url: string,
+  options: RequestInit = {},
+  maxRetries = 3
+): Promise<Response> {
+  let lastError: Error;
+
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      const response = await fetch(url, options);
+
+      // If we get a 429, wait and retry
+      if (response.status === 429) {
+        if (attempt < maxRetries) {
+          // Exponential backoff: 1s, 2s, 4s, 8s
+          const delayMs = Math.pow(2, attempt) * 1000;
+          console.warn(
+            `Rate limited (429). Retrying in ${delayMs}ms... (attempt ${
+              attempt + 1
+            }/${maxRetries})`
+          );
+          await new Promise((resolve) => setTimeout(resolve, delayMs));
+          continue;
+        }
+        throw new Error(
+          `Rate limited by API after ${maxRetries} retries. Please try again later.`
+        );
+      }
+
+      // If successful or other error, return the response
+      return response;
+    } catch (error) {
+      lastError = error as Error;
+
+      // Only retry on network errors, not on other types of errors
+      if (
+        attempt < maxRetries &&
+        (error instanceof TypeError || // Network errors in fetch
+          (error as any).code === "ECONNRESET" ||
+          (error as any).code === "ETIMEDOUT")
+      ) {
+        const delayMs = Math.pow(2, attempt) * 1000;
+        console.warn(
+          `Network error. Retrying in ${delayMs}ms... (attempt ${
+            attempt + 1
+          }/${maxRetries})`
+        );
+        await new Promise((resolve) => setTimeout(resolve, delayMs));
+        continue;
+      }
+
+      throw error;
+    }
+  }
+
+  throw lastError!;
+}
+
 // GraphQL response types
 interface GraphQLError {
   message: string;
@@ -37,7 +96,7 @@ export async function fetchFromGraphQL<
   const url = endpoint;
 
   try {
-    const response = await fetch(url, {
+    const response = await fetchWithRetry(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

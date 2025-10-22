@@ -1,7 +1,8 @@
 import { POKEAPI_REST_ENDPOINT } from "@/constants/apiConfig";
+import { fetchWithRetry } from "@/utils/api";
 
 export async function fetchEvolutionChainById(id: number) {
-  const response = await fetch(
+  const response = await fetchWithRetry(
     `${POKEAPI_REST_ENDPOINT}/evolution-chain/${id}`,
     {
       headers: {

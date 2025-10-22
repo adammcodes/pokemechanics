@@ -1,12 +1,16 @@
 import { POKEAPI_REST_ENDPOINT } from "@/constants/apiConfig";
+import { fetchWithRetry } from "@/utils/api";
 
 export async function fetchPokemonByName(name: string) {
-  const response = await fetch(`${POKEAPI_REST_ENDPOINT}/pokemon/${name}`, {
-    headers: {
-      Accept: "application/json",
-      "User-Agent": "Pokemechanics/1.0",
-    },
-  });
+  const response = await fetchWithRetry(
+    `${POKEAPI_REST_ENDPOINT}/pokemon/${name}`,
+    {
+      headers: {
+        Accept: "application/json",
+        "User-Agent": "Pokemechanics/1.0",
+      },
+    }
+  );
 
   if (!response.ok) {
     throw new Error(`Failed to fetch Pokemon data: ${response.status}`);

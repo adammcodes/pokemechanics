@@ -10,6 +10,10 @@ import { romanToNumber } from "@/utils/romanToNumber";
 import { fetchGenerationById } from "@/app/helpers/rest/fetchGenerationById";
 import { numOfPokemonByGen } from "@/constants/numOfPokemonByGen";
 
+// Enable ISR - revalidate every 1 hour (3600 seconds)
+// This caches the page and reduces API calls to PokeAPI
+export const revalidate = 3600;
+
 type PageProps = {
   params: {
     name: string;

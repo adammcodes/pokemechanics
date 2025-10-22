@@ -8,6 +8,9 @@ import Link from "next/link";
 import { romanToNumber } from "@/utils/romanToNumber";
 import { fetchGenerationById } from "@/app/helpers/rest/fetchGenerationById";
 
+// Enable ISR - revalidate every 1 hour (3600 seconds)
+export const revalidate = 3600;
+
 type PageProps = {
   params: {
     name: string;
