@@ -1,7 +1,9 @@
+import { cache } from "react";
 import { POKEAPI_REST_ENDPOINT } from "@/constants/apiConfig";
 import { fetchWithRetry } from "@/utils/api";
 
-export async function fetchEvolutionChainById(id: number) {
+// Wrap with React cache() to deduplicate requests during the same render pass
+export const fetchEvolutionChainById = cache(async (id: number) => {
   const response = await fetchWithRetry(
     `${POKEAPI_REST_ENDPOINT}/evolution-chain/${id}`,
     {
@@ -17,4 +19,4 @@ export async function fetchEvolutionChainById(id: number) {
   }
 
   return response.json();
-}
+});

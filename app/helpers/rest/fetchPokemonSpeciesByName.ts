@@ -1,7 +1,10 @@
+import { cache } from "react";
 import { POKEAPI_REST_ENDPOINT } from "@/constants/apiConfig";
 import { fetchWithRetry } from "@/utils/api";
 
-export async function fetchPokemonSpeciesByName(name: string) {
+// Wrap with React cache() to deduplicate requests during the same render pass
+// This prevents duplicate calls between generateMetadata() and page component
+export const fetchPokemonSpeciesByName = cache(async (name: string) => {
   const response = await fetchWithRetry(
     `${POKEAPI_REST_ENDPOINT}/pokemon-species/${name}`,
     {
@@ -17,4 +20,4 @@ export async function fetchPokemonSpeciesByName(name: string) {
   }
 
   return response.json();
-}
+});

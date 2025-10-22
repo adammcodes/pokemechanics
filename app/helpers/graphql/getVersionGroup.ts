@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { fetchFromGraphQL } from "@/utils/api";
 
 type NamedAPIResource = {
@@ -48,8 +49,9 @@ const query = `
   }
 `;
 
-// fetch the game version for the selected generation
-export async function getVersionGroup(gen: string): Promise<VersionGroup> {
+// Wrap with React cache() to deduplicate requests during the same render pass
+// This prevents duplicate calls between generateMetadata() and page component
+export const getVersionGroup = cache(async (gen: string): Promise<VersionGroup> => {
   try {
     const response = await fetchFromGraphQL({
       query,
@@ -92,4 +94,4 @@ export async function getVersionGroup(gen: string): Promise<VersionGroup> {
     console.error("Error fetching version group:", error);
     return { error } as VersionGroup;
   }
-}
+});

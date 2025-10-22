@@ -1,8 +1,10 @@
+import { cache } from "react";
 import { MAX_SPECIES_ID } from "@/constants/numOfPokemonByGen";
 import { POKEAPI_REST_ENDPOINT } from "@/constants/apiConfig";
 import { fetchWithRetry } from "@/utils/api";
 
-export async function fetchPokemonSpeciesById(id: number) {
+// Wrap with React cache() to deduplicate requests during the same render pass
+export const fetchPokemonSpeciesById = cache(async (id: number) => {
   if (id > MAX_SPECIES_ID) {
     throw new Error(
       `Pokemon species ID ${id} is greater than the maximum species ID`
@@ -24,4 +26,4 @@ export async function fetchPokemonSpeciesById(id: number) {
   }
 
   return response.json();
-}
+});

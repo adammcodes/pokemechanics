@@ -1,8 +1,10 @@
+import { cache } from "react";
 import { Pokedex } from "@/types/index";
 import { POKEAPI_REST_ENDPOINT } from "@/constants/apiConfig";
 import { fetchWithRetry } from "@/utils/api";
 
-export async function fetchPokedexById(id: number): Promise<Pokedex> {
+// Wrap with React cache() to deduplicate requests during the same render pass
+export const fetchPokedexById = cache(async (id: number): Promise<Pokedex> => {
   const response = await fetchWithRetry(
     `${POKEAPI_REST_ENDPOINT}/pokedex/${id}`,
     {
@@ -18,4 +20,4 @@ export async function fetchPokedexById(id: number): Promise<Pokedex> {
   }
 
   return response.json();
-}
+});
