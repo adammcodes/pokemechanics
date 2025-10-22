@@ -2,6 +2,7 @@
 type TypeColours = {
   [key: string]: string;
 };
+// Not currently used
 export const typeColours: TypeColours = {
   bug: "#98c24a",
   dark: "#3b3434",
