@@ -18,6 +18,7 @@ type PokemonCardBoxProps = {
   height: number;
   weight: number;
   genNumber: string;
+  generationString: string;
   game: string;
   genera: Genus[];
   nationalId: number;
@@ -104,6 +105,8 @@ const PokemonCardBox: React.FC<PokemonCardBoxProps> = (props) => {
                 <Types
                   generationId={generationId}
                   pokemonId={props.pokemonId}
+                  versionGroup={selectedGame}
+                  generationString={props.generationString}
                 />
               </div>
             </td>

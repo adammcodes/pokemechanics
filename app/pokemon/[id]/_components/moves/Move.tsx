@@ -26,6 +26,7 @@ type MoveProps = {
   method: string;
   game: string;
   moveData?: any; // Pre-fetched move data
+  generationString: string;
 };
 
 export const Move: React.FC<MoveProps> = async ({
@@ -33,6 +34,7 @@ export const Move: React.FC<MoveProps> = async ({
   method,
   game,
   moveData,
+  generationString,
 }) => {
   const formatName = convertKebabCaseToTitleCase;
 
@@ -58,6 +60,8 @@ export const Move: React.FC<MoveProps> = async ({
 
   if (!move) return null;
 
+  const moveTypeId = move.type.url.split("type/")[1].split("/")[0];
+
   return (
     <>
       <tr>
@@ -75,8 +79,13 @@ export const Move: React.FC<MoveProps> = async ({
           </div>
         </td>
         <td>
-          <div className="flex flex-row justify-center px-2 py-[13.4px] rounded-md bg-[#a7bcb9]">
-            <PokemonTypeChip typeName={move.type.name} />
+          <div className="flex flex-row justify-center px-2 h-[2.3rem] items-center rounded-md bg-[#a7bcb9]">
+            <PokemonTypeChip
+              typeName={move.type.name}
+              typeId={moveTypeId}
+              versionGroup={game}
+              generationString={generationString}
+            />
           </div>
         </td>
         <td>

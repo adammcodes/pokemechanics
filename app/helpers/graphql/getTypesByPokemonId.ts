@@ -7,12 +7,14 @@ const query = `
         name
         pokemontypepasts {
           type {
+            id
             generation_id
             name
           }
         }
         pokemontypes {
           type {
+            id
             generation_id
             name
           }
@@ -28,12 +30,14 @@ type TypesData = {
       name: string;
       pokemontypepasts: {
         type: {
+          id: number;
           generation_id: number;
           name: string;
         };
       }[];
       pokemontypes: {
         type: {
+          id: number;
           generation_id: number;
           name: string;
         };

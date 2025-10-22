@@ -39,9 +39,14 @@ const sortMoveMethods = (a: string, b: string) => {
 type MovesProps = {
   moves: PokemonMoveVersion[];
   game: string;
+  generationString: string;
 };
 
-export const Moves: React.FC<MovesProps> = ({ moves, game }) => {
+export const Moves: React.FC<MovesProps> = ({
+  moves,
+  game,
+  generationString,
+}) => {
   const formatName = convertKebabCaseToTitleCase;
 
   // Filter out moves that do not exist in the game
@@ -107,7 +112,13 @@ export const Moves: React.FC<MovesProps> = ({ moves, game }) => {
                   <tbody>
                     {filterMovesByMethod(allMoves, method).map((m, index) => {
                       return (
-                        <Move key={index} m={m} method={method} game={game} />
+                        <Move
+                          key={index}
+                          m={m}
+                          method={method}
+                          game={game}
+                          generationString={generationString}
+                        />
                       );
                     })}
                   </tbody>

@@ -9,6 +9,8 @@ Project roadmap and planned improvements for Pokémechanics.
 Increase test coverage
 
 - React Testing Library for testing hooks and components.
+- Write failing tests for bugs below. Then implement the fixes to have passing tests:
+  - Choosing Version group "colosseum" -> Venusaur shows Mega-Venusaur sprite by default instead of regular sprite.
 
 ---
 

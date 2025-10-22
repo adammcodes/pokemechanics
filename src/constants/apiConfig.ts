@@ -22,3 +22,11 @@ export const POKEAPI_REST_ENDPOINT = "https://pokeapi.co/api/v2";
  */
 export const POKEAPI_SPRITE_BASE_URL =
   "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon";
+
+/**
+ * PokéAPI Type Sprite base URL
+ * Base URL for Pokémon type sprite images hosted on GitHub
+ * @see https://github.com/PokeAPI/sprites
+ */
+export const POKEAPI_TYPE_SPRITE_BASE_URL =
+  "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/types";

@@ -1,4 +1,6 @@
-export function romanToNumber(roman: string): number {
+export function romanToNumber(
+  roman: string // e.g. "i", "ii", "iii", "iv", "v", "vi", "vii", "viii", "ix", "x"
+): number {
   const romanMap: Record<string, number> = {
     I: 1,
     V: 5,

@@ -141,7 +141,7 @@ export type Pokedex = {
     entry_number: number;
     pokemon_species: { name: string; url: string };
   }[];
-  region: { name: string; url: string };
+  region: { name: string; url: string } | null;
   version_groups: { name: string; url: string }[];
 };
 

@@ -43,9 +43,10 @@ export default async function PokemonCard({
   dexId,
   game,
 }: PokemonCardProps) {
+  const region = versionData.regions.length > 0 ? versionData.regions[0] : null;
+  const dexRegion = dexData.region?.name || "";
   // Use region name of the Pokedex
-  const regionName =
-    dexId === 1 ? versionData.regions[0].name : dexData.region.name;
+  const regionName = dexId === 1 ? region?.name || "" : dexRegion;
   // Find variety for region if there are multiple varieties
   const pokemonVarietyForRegion: SpeciesVariety | undefined =
     findVarietyForRegion(speciesData.varieties, regionName);
@@ -173,6 +174,7 @@ export default async function PokemonCard({
           sprites={sprites}
           height={pokemonHeight}
           weight={pokemonWeight}
+          generationString={genName}
           genNumber={genNumber}
           game={game}
           genera={speciesData.genera}
@@ -218,12 +220,17 @@ export default async function PokemonCard({
         )}
         {/* Type Efficacy */}
         {typeIds && typeIds.length > 0 && (
-          <TypeEfficacy typeIds={typeIds} generationId={generationId} />
+          <TypeEfficacy
+            typeIds={typeIds}
+            generationId={generationId}
+            versionGroup={game}
+            generationString={genName}
+          />
         )}
       </section>
 
       {/* Moves */}
-      <Moves moves={pokemonMoves} game={game} />
+      <Moves moves={pokemonMoves} game={game} generationString={genName} />
     </div>
   );
 }

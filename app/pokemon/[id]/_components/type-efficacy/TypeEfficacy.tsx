@@ -23,6 +23,7 @@ async function fetchTypeEfficacies() {
               target_type_id
               type {
                 name
+                id
                 generation_id
               }
             }
@@ -37,6 +38,7 @@ async function fetchTypeEfficacies() {
               }
               type {
                 name
+                id
                 generation_id
               }
             }
@@ -57,6 +59,7 @@ async function fetchTypeEfficacies() {
 type Efficacy = {
   type: {
     name: string;
+    id: number;
     generation_id: number;
   };
   damage_factor: number;
@@ -67,6 +70,7 @@ type Efficacy = {
 type EfficacyPast = {
   type: {
     name: string;
+    id: number;
     generation_id: number;
   };
   damage_factor: number;
@@ -79,7 +83,7 @@ type EfficacyPast = {
   };
 };
 
-type PokemonV2Type = {
+type PokemonType = {
   name: string;
   id: number;
   generation_id: number;
@@ -88,17 +92,21 @@ type PokemonV2Type = {
 };
 
 type EfficacyData = {
-  type: PokemonV2Type[];
+  type: PokemonType[];
 };
 
 interface TypeEfficacyProps {
   typeIds: number[];
   generationId: number;
+  versionGroup: string;
+  generationString: string;
 }
 
 export default async function TypeEfficacy({
   typeIds,
   generationId,
+  versionGroup,
+  generationString,
 }: TypeEfficacyProps) {
   // Fetch type efficacies data
   const response = await fetchTypeEfficacies();
@@ -107,12 +115,13 @@ export default async function TypeEfficacy({
   if (!data || !data.type) return null;
 
   const pokemonTypeEfficacies: {
-    type: string;
+    typeId: number;
+    typeName: string;
     damage_factor: number;
   }[] = [];
 
-  const pokemonTypes: PokemonV2Type[] = data.type.filter(
-    (type: PokemonV2Type) => typeIds.includes(type.id)
+  const pokemonTypes: PokemonType[] = data.type.filter((type: PokemonType) =>
+    typeIds.includes(type.id)
   );
 
   // Multiply the damage factor of the type efficacy of the first type by the damage factor of the type efficacy of the second type,
@@ -131,8 +140,7 @@ export default async function TypeEfficacy({
     efficacies
       // only include type generations that are equal to or less than same generation as the pokemon
       .filter(
-        (efficacy: Efficacy) =>
-          efficacy.type.generation_id <= generationId
+        (efficacy: Efficacy) => efficacy.type.generation_id <= generationId
       )
       .forEach((efficacy: Efficacy) => {
         const damageTypeId = efficacy.damage_type_id;
@@ -147,21 +155,22 @@ export default async function TypeEfficacy({
           : efficacy.damage_factor;
 
         const existingEfficacy = pokemonTypeEfficacies.find(
-          (e) => e.type === efficacy.type.name
+          (e) => e.typeId === efficacy.type.id
         );
 
         if (existingEfficacy) {
           existingEfficacy.damage_factor *= df / 100;
         } else {
           pokemonTypeEfficacies.push({
-            type: efficacy.type.name,
+            typeName: efficacy.type.name,
+            typeId: efficacy.type.id,
             damage_factor: df,
           });
         }
       });
   });
 
-  const mappedEfficacies = pokemonTypeEfficacies.map((e) => {
+  const mappedEfficacies = pokemonTypeEfficacies.map((e, i, arr) => {
     const df = e.damage_factor;
     const fontColor =
       df === 0
@@ -174,9 +183,18 @@ export default async function TypeEfficacy({
         ? "color-not-effective"
         : "";
     const dfFixed = df === 0 ? 0 : df < 50 ? 2 : 1;
+
     return (
-      <div key={e.type} className="flex flex-col items-center justify-center">
-        <PokemonTypeChip key={e.type} typeName={e.type} />
+      <div
+        key={e.typeId}
+        className={`flex flex-col items-center justify-center`}
+      >
+        <PokemonTypeChip
+          typeId={e.typeId}
+          typeName={e.typeName}
+          versionGroup={versionGroup}
+          generationString={generationString}
+        />
         <span className={`text-sm font-bold ${fontColor}`}>
           x{(df / 100).toFixed(dfFixed)}
         </span>
@@ -186,7 +204,7 @@ export default async function TypeEfficacy({
 
   return (
     <Box headingText="Damage:">
-      <article className="w-full grid grid-cols-3 gap-2">
+      <article className="w-full grid grid-cols-3 gap-x-4">
         {mappedEfficacies}
       </article>
     </Box>

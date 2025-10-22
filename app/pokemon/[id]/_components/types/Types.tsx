@@ -4,6 +4,8 @@ import { getTypesByPokemonId } from "@/app/helpers/graphql/getTypesByPokemonId";
 type TypesProps = {
   generationId: number; // 1
   pokemonId: number; // 35 (clefairy)
+  versionGroup: string; // e.g. "red-blue", "x-y", "omega-ruby-alpha-sapphire"
+  generationString: string; // e.g. "generation-i", "generation-ii", "generation-iii", "generation-iv", "generation-v", "generation-vi", "generation-vii", "generation-viii"
 };
 
 /**
@@ -11,7 +13,12 @@ type TypesProps = {
  * @param pokemonId = number e.g. 35 (clefairy)
  * @returns Component displaying type chips for a pokemon
  */
-const Types: React.FC<TypesProps> = async ({ generationId, pokemonId }) => {
+const Types: React.FC<TypesProps> = async ({
+  generationId,
+  pokemonId,
+  versionGroup,
+  generationString,
+}) => {
   const typesData = await getTypesByPokemonId(pokemonId);
 
   if (!typesData) {
@@ -68,7 +75,13 @@ const Types: React.FC<TypesProps> = async ({ generationId, pokemonId }) => {
     );
   }
 
-  return <PokemonTypes types={typesForGen} />;
+  return (
+    <PokemonTypes
+      types={typesForGen}
+      versionGroup={versionGroup}
+      generationString={generationString}
+    />
+  );
 };
 
 export default Types;
