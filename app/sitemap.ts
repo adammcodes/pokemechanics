@@ -1,9 +1,17 @@
 import { MetadataRoute } from "next";
 import { numOfPokemonByGen } from "@/constants/numOfPokemonByGen";
 
+// Type for version group configuration
+type VersionGroupConfig = {
+  name: string;
+  pokedexes: string[];
+  generation: string;
+  maxPokemonId?: number; // Optional override for remakes
+};
+
 // Version groups with their valid pokedexes and generation
 // maxPokemonId overrides the generation's default for remakes
-const VERSION_GROUPS = [
+const VERSION_GROUPS: VersionGroupConfig[] = [
   // Gen 1
   { name: "red-blue", pokedexes: ["kanto"], generation: "generation-i" },
   { name: "yellow", pokedexes: ["kanto"], generation: "generation-i" },
@@ -232,9 +240,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       // Get max Pokemon ID for this version group
       // Use override if present (for remakes), otherwise use generation default
       const maxPokemonId =
-        "maxPokemonId" in vg
-          ? vg.maxPokemonId
-          : numOfPokemonByGen[vg.generation];
+        vg.maxPokemonId ?? numOfPokemonByGen[vg.generation];
 
       // Filter Pokemon that exist in this version group
       const validPokemon = allPokemon.filter((p) => p.id <= maxPokemonId);
