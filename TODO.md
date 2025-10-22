@@ -15,15 +15,16 @@ Project roadmap and planned improvements for Pokémechanics.
 - [x] **Add robots.txt** - Control crawler behavior with 360-second crawl-delay and allow only valid pokedex/version-group combinations
 - [x] **Add ISR caching** - Cache pages for 1 hour using `export const revalidate = 3600` on all dynamic pages
 - [x] **Add retry logic** - Implement exponential backoff (1s, 2s, 4s) for 429 errors in all API helpers
+- [x] **Consolidate duplicate fetches** - Wrapped all fetch helpers with React `cache()` to deduplicate requests
+  - Eliminates duplicate API calls between `generateMetadata()` and page components
+  - Reduces ~2 API calls per page load (~20% reduction)
+  - Applied to all 9 fetch helpers (REST and GraphQL)
 
 #### 📋 Short-term Fixes (Planned)
 
 **Status:** Ready to implement
-**Estimated Effort:** Medium (4-6 hours)
+**Estimated Effort:** Medium (2-4 hours)
 
-- [ ] **Consolidate duplicate fetches** - Remove duplicate API calls between `generateMetadata()` and page components
-  - Currently: Same data fetched twice per page render
-  - Solution: Use Next.js request deduplication properly or cache in React context
 - [ ] **Add generateStaticParams()** - Pre-generate static pages for top 150 Pokemon at build time
   - Reduces runtime API calls for popular Pokemon
   - Improves page load performance
