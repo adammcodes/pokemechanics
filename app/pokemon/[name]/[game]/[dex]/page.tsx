@@ -42,7 +42,9 @@ export async function generateStaticParams() {
     }
   }
 
-  console.log(`[StaticGen] Pre-rendering ${params.length} popular Pokemon pages`);
+  console.log(
+    `[StaticGen] Pre-rendering ${params.length} popular Pokemon pages`
+  );
 
   return params;
 }
@@ -67,8 +69,8 @@ export async function generateMetadata({
       getVersionGroup(game),
     ]);
 
-    const pokemonName = speciesData.name;
-    const versionName = convertKebabCaseToTitleCase(versionData.name);
+    const pokemonName = speciesData?.name ?? "";
+    const versionName = convertKebabCaseToTitleCase(versionData?.name ?? "");
 
     const title = `${
       pokemonName.charAt(0).toUpperCase() + pokemonName.slice(1)
