@@ -177,6 +177,26 @@ export default async function Pokemon({ params }: PageProps) {
 
     // Handle specific error types
     if (error instanceof Error) {
+      // Rate limiting error - most common during high traffic
+      if (error.message.includes("Rate limited")) {
+        return (
+          <main className="w-full max-w-screen-sm mx-auto text-center p-8">
+            <h1 className="text-2xl font-bold mb-4">Temporarily Unavailable</h1>
+            <p className="mb-4">
+              We're experiencing high traffic right now. Our database is
+              temporarily rate-limited.
+            </p>
+            <p className="mb-4">
+              This page will be cached soon. Please refresh in a few seconds.
+            </p>
+            <p className="text-sm text-gray-600">
+              Most pages load instantly once cached. This is a temporary issue
+              during high crawler activity.
+            </p>
+          </main>
+        );
+      }
+
       if (error.message.includes("Failed to fetch")) {
         return (
           <main className="w-full">
