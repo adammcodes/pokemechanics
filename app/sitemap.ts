@@ -1,6 +1,9 @@
 import { MetadataRoute } from "next";
 import { numOfPokemonByGen } from "@/constants/numOfPokemonByGen";
-import { PRIORITY_POKEMON_SET } from "@/constants/priorityPokemon";
+import {
+  PRIORITY_POKEMON,
+  PRIORITY_POKEMON_SET,
+} from "@/constants/priorityPokemon";
 
 // Type for version group configuration
 type VersionGroupConfig = {
@@ -209,8 +212,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     VERSION_GROUPS.forEach((vg) => {
       // Get max Pokemon ID for this version group
       // Use override if present (for remakes), otherwise use generation default
-      const maxPokemonId =
-        vg.maxPokemonId ?? numOfPokemonByGen[vg.generation];
+      const maxPokemonId = vg.maxPokemonId ?? numOfPokemonByGen[vg.generation];
 
       // Filter Pokemon that exist in this version group
       const validPokemon = allPokemon.filter((p) => p.id <= maxPokemonId);
@@ -221,7 +223,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
       // Generate national dex URLs for all valid Pokemon
       validPokemon.forEach((pokemon) => {
-        const isPriority = PRIORITY_POKEMON_SET.has(pokemon.name);
+        const isPriority = PRIORITY_POKEMON_SET.has(
+          pokemon.name as (typeof PRIORITY_POKEMON)[number]
+        );
 
         urls.push({
           url: `${baseUrl}/pokemon/${pokemon.name}/${vg.name}/national`,
@@ -234,7 +238,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       // Generate regional dex URLs for all valid Pokemon
       vg.pokedexes.forEach((dexName) => {
         validPokemon.forEach((pokemon) => {
-          const isPriority = PRIORITY_POKEMON_SET.has(pokemon.name);
+          const isPriority = PRIORITY_POKEMON_SET.has(
+            pokemon.name as (typeof PRIORITY_POKEMON)[number]
+          );
 
           urls.push({
             url: `${baseUrl}/pokemon/${pokemon.name}/${vg.name}/${dexName}`,
