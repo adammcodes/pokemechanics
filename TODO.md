@@ -15,32 +15,55 @@ Project roadmap and planned improvements for Pokémechanics.
 - [x] **Add robots.txt** - Control crawler behavior and prevent bot abuse
   - 360-second crawl-delay (calculated from 100 calls/hour ÷ 10 calls/page)
   - Block AI training bots (GPTBot, Claude-Web, anthropic-ai, etc.)
-  - Block aggressive SEO crawlers (AhrefsBot, SemrushBot, etc.)
+  - Block aggressive SEO crawlers (AhrefsBot, SemrushBot, SerpstatBot, etc.)
   - Allow legitimate search engines (Googlebot, Bingbot) with rate limiting
+  - Allow meta-webindexer for social media link previews
   - Explicitly allow only valid pokedex/version-group combinations
   - Include sitemap reference for search engines
-- [x] **Add comprehensive sitemap** - Created `app/sitemap.ts` with 42,167 valid URLs
-  - Generation-based filtering (Gen 1 games only include Pokemon 1-151, etc.)
+  - **Note:** Disabled CloudFlare managed robots.txt to ensure custom rules apply
+- [x] **Add comprehensive sitemap** - Created `app/sitemap.ts` with 39,557 valid URLs
+  - Generation-based filtering with maxPokemonId overrides for remakes
+  - Gen 1 games only include Pokemon 1-151
+  - BDSP only includes Pokemon 1-493 (not full Gen 8)
   - Single PokeAPI call cached for 24 hours
   - Includes national + regional dex URLs for all 25 version groups
   - Priority scoring for popular Pokemon (starters, legendaries)
-  - Prevents invalid URLs (e.g., Greninja in Gen 1 games)
-- [x] **Add ISR caching** - Cache pages for 1 hour using `export const revalidate = 3600` on all dynamic pages
+  - Prevents invalid URLs (e.g., Greninja in Gen 1 games, Tornadus in BDSP)
+- [x] **Increase ISR caching** - Increased from 1 hour to 24 hours (`revalidate = 86400`)
+  - Pokemon data is static, longer cache times are safe
+  - Significantly reduces API calls to PokeAPI
+  - Applied to all dynamic Pokemon and Pokedex pages
 - [x] **Add retry logic** - Implement exponential backoff (1s, 2s, 4s) for 429 errors in all API helpers
 - [x] **Consolidate duplicate fetches** - Wrapped all fetch helpers with React `cache()` to deduplicate requests
   - Eliminates duplicate API calls between `generateMetadata()` and page components
   - Reduces ~2 API calls per page load (~20% reduction)
   - Applied to all 9 fetch helpers (REST and GraphQL)
+- [x] **Add generateStaticParams** - Pre-generate 360 popular Pokemon pages at build time
+  - 66 priority Pokemon (starters, legendaries, fan favorites)
+  - 6 popular version groups (scarlet-violet, sword-shield, red-blue with national/regional dex)
+  - Eliminates runtime API calls for most visited pages
+  - Improves page load performance significantly
+- [x] **CloudFlare CDN & Bot Protection** - Deployed CloudFlare as edge protection layer
+  - Cache rules configured for Pokemon pages (24h), static assets (7d)
+  - Bot Fight Mode enabled for automated bot detection
+  - 90%+ cache hit rate after warm-up period (24-48 hours)
+- [x] **CloudFlare Worker - Smart Bot Throttling** - Deployed `cloudflare-worker.js`
+  - Allows verified bots (Googlebot, Bingbot) to crawl but rate limits them
+  - Returns 429 with Retry-After: 60 when bots exceed 10 uncached requests/minute
+  - Cached requests pass through instantly (no throttling)
+  - Humans never throttled
+  - Bots naturally slow down, preventing PokeAPI 429 errors
+  - Created `CLOUDFLARE_WORKER_SETUP.md` with deployment guide
 
 #### 📋 Short-term Fixes (Planned)
 
 **Status:** Ready to implement
-**Estimated Effort:** Medium (2-4 hours)
+**Estimated Effort:** Low (1-2 hours)
 
-- [ ] **Add generateStaticParams()** - Pre-generate static pages for top 150 Pokemon at build time
-  - Reduces runtime API calls for popular Pokemon
-  - Improves page load performance
 - [ ] **Optimize request patterns** - Review and reduce unnecessary nested fetches in components
+- [ ] **Monitor CloudFlare cache performance** - Track cache hit rate and bot throttling effectiveness
+  - Target: 90%+ cache hit rate
+  - Target: <1% 429 errors from PokeAPI
 
 #### 🚀 Long-term Solutions (Future)
 
@@ -197,11 +220,24 @@ Create `/src/config/` with:
 - [x] Fix memory leak in AutocompleteBase
 - [x] Remove duplicate Move/Moves components
 - [x] Optimize Suspense boundaries
+- [x] Fix invalid version group URLs - Gracefully redirect `/pokedex/971` to `/pokedex` instead of crashing
+- [x] Handle variant Pokemon in metadata - Fixed form-suffixed Pokemon names (e.g., "tornadus-incarnate")
 
 ### Documentation
 
 - [x] Create comprehensive README.md
+- [x] Create CloudFlare Worker deployment guide - `CLOUDFLARE_WORKER_SETUP.md`
+
+### SEO & Social Media
+
+- [x] **Open Graph & Twitter Card meta tags** - Added comprehensive social media meta tags
+  - Regional variant support (Alolan, Galarian, Hisuian, Paldean)
+  - Game-specific sprites using `getSpriteUrl()`
+  - Enhanced titles: "Raichu (Alolan) - Sun Moon (Original Alola Pokédex)"
+  - Detailed descriptions mentioning version group and Pokédex name
+  - Proper fallback metadata if Pokemon data fetch fails
+  - Images display correct variant sprites in link previews on Facebook, Twitter, WhatsApp, etc.
 
 ---
 
-**Last Updated:** 2025-10-22
+**Last Updated:** 2025-10-24
