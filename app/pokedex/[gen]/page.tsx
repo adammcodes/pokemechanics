@@ -5,6 +5,7 @@ import NationalDex from "./_components/NationalDex";
 import { getVersionGroup } from "@/app/helpers/graphql/getVersionGroup";
 import { Metadata } from "next";
 import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
+import { redirect } from "next/navigation";
 
 // Enable ISR - revalidate every 24 hours (86400 seconds)
 // Pokemon data is static, so long cache times are safe
@@ -47,13 +48,9 @@ export default async function Page({ params }: PageProps) {
 
   const versionGroup = await getVersionGroup(gen);
 
+  // If version group not found (e.g., /pokedex/971), redirect to main pokedex page
   if (versionGroup.error) {
-    return (
-      <main>
-        <h1>There was an error</h1>
-        <p>{versionGroup.error.message || ""}</p>
-      </main>
-    );
+    redirect("/pokedex");
   }
 
   // generationString is a string "generation" and the number roman numeral as a string e.g. "generation-i"
