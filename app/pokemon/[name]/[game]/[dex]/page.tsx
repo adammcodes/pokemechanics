@@ -10,6 +10,9 @@ import { romanToNumber } from "@/utils/romanToNumber";
 import { fetchGenerationById } from "@/app/helpers/rest/fetchGenerationById";
 import { numOfPokemonByGen } from "@/constants/numOfPokemonByGen";
 import { PRIORITY_POKEMON } from "@/constants/priorityPokemon";
+import getSpriteUrl from "@/constants/spriteUrlTemplates";
+import findVarietyForRegion from "@/lib/findVarietyForRegion";
+import { fetchPokemonById } from "@/app/helpers/rest/fetchPokemonById";
 
 // Enable ISR - revalidate every 24 hours (86400 seconds)
 // Pokemon data is static, so long cache times are safe
@@ -64,21 +67,70 @@ export async function generateMetadata({
   const { name, game, dex } = params;
 
   try {
-    const [speciesData, versionData] = await Promise.all([
+    const [pokemonData, speciesData, versionData, dexData] = await Promise.all([
+      fetchPokemonByName(name),
       fetchPokemonSpeciesByName(name),
       getVersionGroup(game),
+      fetchPokedexByName(dex),
     ]);
 
     const pokemonName = speciesData?.name ?? "";
+    const displayName =
+      pokemonName.charAt(0).toUpperCase() + pokemonName.slice(1);
     const versionName = convertKebabCaseToTitleCase(versionData?.name ?? "");
+    const dexDisplayName = convertKebabCaseToTitleCase(dex);
 
-    const title = `${
-      pokemonName.charAt(0).toUpperCase() + pokemonName.slice(1)
-    } | ${versionName}`;
-    const description = `Learn about ${
-      pokemonName.charAt(0).toUpperCase() + pokemonName.slice(1)
-    } | Pokémechanics - Complete stats, moves, abilities, and evolution information.`;
+    // Check for regional variants (e.g., Alolan Raichu in sun-moon)
+    const region = versionData?.regions?.[0] ?? null;
+    const dexRegion = dexData?.region?.name || "";
+    const regionName = dex === "national" ? region?.name || "" : dexRegion;
+
+    // Find variety for region if there are multiple varieties
+    const pokemonVarietyForRegion = findVarietyForRegion(
+      speciesData.varieties,
+      regionName
+    );
+
+    // Fetch variant Pokemon data if needed
+    let variantPokemonData = null;
+    let isVariant = false;
+    let variantDisplayName = displayName;
+
+    if (pokemonVarietyForRegion && speciesData.varieties.length > 1) {
+      const pokemonVarietyId = Number(
+        pokemonVarietyForRegion.pokemon.url.split("/").at(-2)
+      );
+
+      try {
+        variantPokemonData = await fetchPokemonById(pokemonVarietyId);
+        isVariant = true;
+        const variantRegionName = convertKebabCaseToTitleCase(
+          variantPokemonData.name.split("-")[1]
+        );
+        variantDisplayName = `${displayName} (${variantRegionName})`;
+      } catch (error) {
+        console.error("Failed to fetch variant Pokemon data:", error);
+        // Fall back to default Pokemon data
+      }
+    }
+
+    const displayPokemonData =
+      isVariant && variantPokemonData ? variantPokemonData : pokemonData;
+
+    const title = `${variantDisplayName} - ${versionName} (${dexDisplayName} Pokédex)`;
+    const description = `Explore ${variantDisplayName} in ${versionName}. View complete stats, moves, abilities, types, and evolution information for the ${dexDisplayName} Pokédex.`;
     const canonicalUrl = `https://www.pokemechanics.app/pokemon/${name}/${game}/${dex}`;
+
+    // Get game-specific Pokemon sprite for social media preview
+    // Extract generation roman numeral from "generation-i" -> "i"
+    const generationString = versionData?.generation?.name ?? "generation-i";
+    const genRomanNumeral = generationString.replace("generation-", "");
+
+    const spriteUrl = getSpriteUrl({
+      versionGroup: game,
+      pokemonId: displayPokemonData.id,
+      generation: genRomanNumeral,
+    });
 
     return {
       title,
@@ -89,6 +141,28 @@ export async function generateMetadata({
       robots: {
         index: true,
         follow: true,
+      },
+      openGraph: {
+        title,
+        description,
+        url: canonicalUrl,
+        siteName: "Pokémechanics",
+        images: [
+          {
+            url: spriteUrl,
+            width: 200,
+            height: 200,
+            alt: `${variantDisplayName} sprite from ${versionName}`,
+          },
+        ],
+        locale: "en_US",
+        type: "website",
+      },
+      twitter: {
+        card: "summary",
+        title,
+        description,
+        images: [spriteUrl],
       },
     };
   } catch (error) {
@@ -101,6 +175,21 @@ export async function generateMetadata({
         "Complete Pokémon information, stats, moves, abilities, and evolution details.",
       alternates: {
         canonical: `https://www.pokemechanics.app/pokemon/${name}/${game}/${dex}`,
+      },
+      openGraph: {
+        title: "Pokémon | Pokémechanics",
+        description:
+          "Complete Pokémon information, stats, moves, abilities, and evolution details.",
+        url: `https://www.pokemechanics.app/pokemon/${name}/${game}/${dex}`,
+        siteName: "Pokémechanics",
+        locale: "en_US",
+        type: "website",
+      },
+      twitter: {
+        card: "summary",
+        title: "Pokémon | Pokémechanics",
+        description:
+          "Complete Pokémon information, stats, moves, abilities, and evolution details.",
       },
     };
   }
