@@ -82,6 +82,9 @@ Disallow: /
 User-agent: Screaming Frog SEO Spider
 Disallow: /
 
+User-agent: SerpstatBot
+Disallow: /
+
 # ============================================================
 # ALLOW: Legitimate Search Engines (help users find our site)
 # ============================================================
