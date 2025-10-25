@@ -13,9 +13,9 @@
  */
 
 // Configuration
-const BOT_RATE_LIMIT = 10;    // Max uncached requests per minute for bots
-const BOT_RETRY_AFTER = 60;   // Seconds for bot to wait when rate limited
-const RATE_WINDOW = 60;        // Rate limit window in seconds
+const BOT_RATE_LIMIT = 2; // Max uncached requests per minute for bots
+const BOT_RETRY_AFTER = 60; // Seconds for bot to wait when rate limited
+const RATE_WINDOW = 60; // Rate limit window in seconds
 
 export default {
   async fetch(request, env, ctx) {
@@ -24,8 +24,7 @@ export default {
     // Only apply rate limiting to Pokemon/Pokedex pages
     // Static assets, homepage, etc. pass through freely
     const needsRateLimit =
-      url.pathname.includes('/pokemon/') ||
-      url.pathname.includes('/pokedex/');
+      url.pathname.includes("/pokemon/") || url.pathname.includes("/pokedex/");
 
     if (!needsRateLimit) {
       return fetch(request);
@@ -42,7 +41,7 @@ export default {
     // Check if this request is cached at CloudFlare
     const cache = caches.default;
     const cacheKey = new Request(url.toString(), {
-      method: 'GET',
+      method: "GET",
       headers: request.headers,
     });
 
@@ -56,7 +55,7 @@ export default {
 
     // Not cached - this will hit the origin (Vercel)
     // Check if bot is within rate limit
-    const ip = request.headers.get('cf-connecting-ip') || 'unknown';
+    const ip = request.headers.get("cf-connecting-ip") || "unknown";
     const rateLimitCheck = await checkBotRateLimit(ip);
 
     if (!rateLimitCheck.allowed) {
@@ -67,19 +66,22 @@ export default {
       // Return 429 with Retry-After header
       return new Response(
         JSON.stringify({
-          error: 'Too Many Requests',
-          message: 'Please slow down your crawl rate. This helps us maintain service quality.',
+          error: "Too Many Requests",
+          message:
+            "Please slow down your crawl rate. This helps us maintain service quality.",
           retryAfter: BOT_RETRY_AFTER,
-          hint: 'Most pages are cached and can be accessed without delay. Uncached pages are rate-limited.',
+          hint: "Most pages are cached and can be accessed without delay. Uncached pages are rate-limited.",
         }),
         {
           status: 429,
           headers: {
-            'Content-Type': 'application/json',
-            'Retry-After': BOT_RETRY_AFTER.toString(),
-            'X-RateLimit-Limit': BOT_RATE_LIMIT.toString(),
-            'X-RateLimit-Remaining': '0',
-            'X-RateLimit-Reset': new Date(Date.now() + BOT_RETRY_AFTER * 1000).toISOString(),
+            "Content-Type": "application/json",
+            "Retry-After": BOT_RETRY_AFTER.toString(),
+            "X-RateLimit-Limit": BOT_RATE_LIMIT.toString(),
+            "X-RateLimit-Remaining": "0",
+            "X-RateLimit-Reset": new Date(
+              Date.now() + BOT_RETRY_AFTER * 1000
+            ).toISOString(),
           },
         }
       );
@@ -94,27 +96,40 @@ export default {
 
     // Handle error responses with selective caching strategy
     if (!response.ok) {
-      console.log(`[Error Response] ${url.pathname} - Status: ${response.status}`);
+      console.log(
+        `[Error Response] ${url.pathname} - Status: ${response.status}`
+      );
 
       const newResponse = new Response(response.body, response);
 
       // 429 Rate Limit: Cache briefly (60s) to prevent API hammering
       // This matches the Retry-After header and protects PokeAPI
       if (response.status === 429) {
-        newResponse.headers.set('Cache-Control', 'public, max-age=60, must-revalidate');
-        newResponse.headers.set('CDN-Cache-Control', 'max-age=60');
-        console.log(`[429 Cached] ${url.pathname} - Cached for 60s to protect API`);
+        newResponse.headers.set(
+          "Cache-Control",
+          "public, max-age=60, must-revalidate"
+        );
+        newResponse.headers.set("CDN-Cache-Control", "max-age=60");
+        console.log(
+          `[429 Cached] ${url.pathname} - Cached for 60s to protect API`
+        );
       }
       // 5xx Server Errors: Never cache so fixes are immediately visible
       else if (response.status >= 500) {
-        newResponse.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
-        newResponse.headers.set('CDN-Cache-Control', 'no-store');
+        newResponse.headers.set(
+          "Cache-Control",
+          "no-store, no-cache, must-revalidate, max-age=0"
+        );
+        newResponse.headers.set("CDN-Cache-Control", "no-store");
         console.log(`[5xx No Cache] ${url.pathname} - Server error not cached`);
       }
       // Other 4xx Client Errors: Never cache so fixes are immediate
       else {
-        newResponse.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
-        newResponse.headers.set('CDN-Cache-Control', 'no-store');
+        newResponse.headers.set(
+          "Cache-Control",
+          "no-store, no-cache, must-revalidate, max-age=0"
+        );
+        newResponse.headers.set("CDN-Cache-Control", "no-store");
         console.log(`[4xx No Cache] ${url.pathname} - Client error not cached`);
       }
 
@@ -132,10 +147,10 @@ export default {
  * Detect if the request is from a verified bot
  */
 async function detectBot(request) {
-  const userAgent = request.headers.get('user-agent') || '';
+  const userAgent = request.headers.get("user-agent") || "";
 
   // Check CloudFlare's bot detection (if available)
-  const cfBotManagement = request.headers.get('cf-bot-management');
+  const cfBotManagement = request.headers.get("cf-bot-management");
   if (cfBotManagement) {
     try {
       const botData = JSON.parse(cfBotManagement);
@@ -149,17 +164,17 @@ async function detectBot(request) {
 
   // Check for common verified bot user-agents
   const verifiedBots = [
-    'Googlebot',
-    'bingbot',
-    'Slurp',           // Yahoo
-    'DuckDuckBot',
-    'Baiduspider',
-    'YandexBot',
-    'facebot',         // Facebook
-    'ia_archiver',     // Alexa
+    "Googlebot",
+    "bingbot",
+    "Slurp", // Yahoo
+    "DuckDuckBot",
+    "Baiduspider",
+    "YandexBot",
+    "facebot", // Facebook
+    "ia_archiver", // Alexa
   ];
 
-  return verifiedBots.some(bot =>
+  return verifiedBots.some((bot) =>
     userAgent.toLowerCase().includes(bot.toLowerCase())
   );
 }
@@ -195,7 +210,7 @@ async function checkBotRateLimit(ip) {
   const newData = { count, timestamp: Date.now() };
   const response = new Response(JSON.stringify(newData), {
     headers: {
-      'Cache-Control': `max-age=${RATE_WINDOW}`,
+      "Cache-Control": `max-age=${RATE_WINDOW}`,
     },
   });
 
