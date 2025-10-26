@@ -1,9 +1,11 @@
 import {
+  PokemonMoveVersion,
   SpeciesVariety,
   Pokedex,
   Pokemon,
   PokemonSpecies,
 } from "@/types/index";
+import { GraphQLPokemon } from "@/types/graphql";
 import { PokemonType } from "pokenode-ts";
 import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
 import toTitleCase from "@/utils/toTitleCase";
@@ -33,6 +35,7 @@ type PokemonCardProps = {
   dexData: Pokedex;
   dexName: string; // e.g. "national"
   game: string; // e.g. "red-blue"
+  graphqlPokemonData: GraphQLPokemon | null;
 };
 
 export default async function PokemonCard({
@@ -42,6 +45,7 @@ export default async function PokemonCard({
   dexData,
   dexName,
   game,
+  graphqlPokemonData,
 }: PokemonCardProps) {
   const region = versionData.regions.length > 0 ? versionData.regions[0] : null;
   const dexRegion = dexData.region?.name || "";
@@ -84,8 +88,10 @@ export default async function PokemonCard({
   }
 
   // Use variant data if available, otherwise use default Pokemon data
-  const displayPokemonData =
+  const displayPokemonData: Pokemon =
     isVariant && variantPokemonData ? variantPokemonData : pokemonData;
+
+  console.log("pokemonId", displayPokemonData.id);
 
   // // Merge species data with Pokemon data for context compatibility
   // const mergedData = {
@@ -95,7 +101,7 @@ export default async function PokemonCard({
   // };
 
   // Get version group data
-  const versionId: number = versionData?.id || 1;
+  // const versionId: number = versionData?.id || 1;
   const genName: string = versionData?.generation.name || "generation-i";
   const genNumber: string = genName.split("-")[1] || "i";
   const generationId: number = romanToNumber(genNumber || "i");
@@ -119,7 +125,7 @@ export default async function PokemonCard({
   const sprites = displayPokemonData.sprites;
   const pokemonHeight = displayPokemonData.height;
   const pokemonWeight = displayPokemonData.weight;
-  const pokemonMoves = displayPokemonData.moves;
+  const pokemonMoves: PokemonMoveVersion[] = displayPokemonData.moves;
   //const pokemonEvolveChainUrl: string = speciesData.evolution_chain.url;
 
   // Handle flavor text
@@ -230,7 +236,13 @@ export default async function PokemonCard({
       </section>
 
       {/* Moves */}
-      <Moves moves={pokemonMoves} game={game} generationString={genName} />
+      {graphqlPokemonData?.pokemonmoves && (
+        <Moves
+          moves={graphqlPokemonData.pokemonmoves}
+          game={game}
+          generationString={genName}
+        />
+      )}
     </div>
   );
 }

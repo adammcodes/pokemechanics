@@ -1,20 +1,18 @@
-import { Move } from "./Move";
-import filterMovesForGen from "@/lib/filterMovesForGen";
-import mapMoves from "@/lib/mapMoves";
+import { GraphQLPokemonMove } from "@/types/graphql";
 import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
-import { PokemonMoveByMethod, PokemonMoveVersion } from "@/types/index";
 import styles from "./Moves.module.css";
+import { Move } from "./Move";
 
-const filterMovesByMethod = (moves: PokemonMoveByMethod[], method: string) => {
-  return moves.filter((m: PokemonMoveByMethod) => {
-    return m.move_learn_method === method;
+const filterMovesByMethod = (moves: GraphQLPokemonMove[], method: string) => {
+  return moves.filter((m: GraphQLPokemonMove) => {
+    return m.movelearnmethod.name === method;
   });
 };
 
 // Create an array of unique move_learn_methods for this gen
-const getLearnMethods = (moves: PokemonMoveByMethod[]) => {
+const getLearnMethods = (moves: GraphQLPokemonMove[]) => {
   return moves
-    .map((m) => m.move_learn_method)
+    .map((m) => m.movelearnmethod.name)
     .filter((el, i, arr) => arr.indexOf(el) === i);
 };
 
@@ -36,29 +34,34 @@ const sortMoveMethods = (a: string, b: string) => {
   return 0;
 };
 
-type MovesProps = {
-  moves: PokemonMoveVersion[];
-  game: string;
-  generationString: string;
+const sortMachinesByMachineNumber = (
+  moveA: GraphQLPokemonMove,
+  moveB: GraphQLPokemonMove
+) => {
+  // If the moves are not machine moves, return 0
+  if (
+    moveA.movelearnmethod.name !== "machine" ||
+    moveB.movelearnmethod.name !== "machine"
+  ) {
+    return 0;
+  }
+  // If the moves are machine moves, sort by machine number
+  const machineNumberA = moveA.move.machines[0].machine_number;
+  const machineNumberB = moveB.move.machines[0].machine_number;
+  return machineNumberA - machineNumberB; // ascending order
 };
 
-export const Moves: React.FC<MovesProps> = ({
+export const Moves = ({
   moves,
   game,
   generationString,
+}: {
+  moves: GraphQLPokemonMove[];
+  game: string;
+  generationString: string;
 }) => {
   const formatName = convertKebabCaseToTitleCase;
-
-  // Filter out moves that do not exist in the game
-  const movesForGen = filterMovesForGen(moves, game);
-
-  // Map only moves for the game into custom type PokemonMoveByMethod[]
-  const allMoves: PokemonMoveByMethod[] = mapMoves(movesForGen, game).sort(
-    (a, b) => a.level_learned_at - b.level_learned_at
-  );
-  // Create an array of unique move_learn_methods for this gen
-  const moveLearnMethods = getLearnMethods(allMoves).sort(sortMoveMethods);
-
+  const moveLearnMethods = getLearnMethods(moves).sort(sortMoveMethods);
   return (
     <div className={`mt-10 w-full ${styles.container}`}>
       {moveLearnMethods
@@ -110,17 +113,19 @@ export const Moves: React.FC<MovesProps> = ({
                     </tr>
                   </thead>
                   <tbody>
-                    {filterMovesByMethod(allMoves, method).map((m, index) => {
-                      return (
-                        <Move
-                          key={index}
-                          m={m}
-                          method={method}
-                          game={game}
-                          generationString={generationString}
-                        />
-                      );
-                    })}
+                    {filterMovesByMethod(moves, method)
+                      .sort(sortMachinesByMachineNumber)
+                      .map((m, index) => {
+                        return (
+                          <Move
+                            key={index}
+                            m={m}
+                            method={method}
+                            game={game}
+                            generationString={generationString}
+                          />
+                        );
+                      })}
                   </tbody>
                 </table>
               </figure>

@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { getVersionGroup } from "@/app/helpers/graphql/getVersionGroup";
+import { getPokemonComplete } from "@/app/helpers/graphql/getPokemonComplete";
 import { fetchPokemonSpeciesByName } from "@/app/helpers/rest/fetchPokemonSpeciesByName";
 import { fetchPokemonByName } from "@/app/helpers/rest/fetchPokemonByName";
 import { fetchPokedexByName } from "@/app/helpers/rest/fetchPokedexByName";
@@ -21,36 +22,36 @@ export const revalidate = 86400;
 
 // Generate static pages for popular Pokemon at build time
 // This eliminates runtime API calls for these pages
-export async function generateStaticParams() {
-  // Pre-render top Pokemon for the most popular version groups
-  const popularVersionGroups = [
-    { game: "scarlet-violet", dex: "paldea" },
-    { game: "scarlet-violet", dex: "national" },
-    { game: "sword-shield", dex: "galar" },
-    { game: "sword-shield", dex: "national" },
-    { game: "red-blue", dex: "kanto" },
-    { game: "red-blue", dex: "national" },
-  ];
+// export async function generateStaticParams() {
+//   // Pre-render top Pokemon for the most popular version groups
+//   const popularVersionGroups = [
+//     { game: "scarlet-violet", dex: "paldea" },
+//     { game: "scarlet-violet", dex: "national" },
+//     { game: "sword-shield", dex: "galar" },
+//     { game: "sword-shield", dex: "national" },
+//     { game: "red-blue", dex: "kanto" },
+//     { game: "red-blue", dex: "national" },
+//   ];
 
-  const params = [];
+//   const params = [];
 
-  // Generate all combinations of priority Pokemon + popular version groups
-  for (const pokemon of PRIORITY_POKEMON) {
-    for (const vg of popularVersionGroups) {
-      params.push({
-        name: pokemon,
-        game: vg.game,
-        dex: vg.dex,
-      });
-    }
-  }
+//   // Generate all combinations of priority Pokemon + popular version groups
+//   for (const pokemon of PRIORITY_POKEMON) {
+//     for (const vg of popularVersionGroups) {
+//       params.push({
+//         name: pokemon,
+//         game: vg.game,
+//         dex: vg.dex,
+//       });
+//     }
+//   }
 
-  console.log(
-    `[StaticGen] Pre-rendering ${params.length} popular Pokemon pages`
-  );
+//   console.log(
+//     `[StaticGen] Pre-rendering ${params.length} popular Pokemon pages`
+//   );
 
-  return params;
-}
+//   return params;
+// }
 
 type PageProps = {
   params: {
@@ -67,11 +68,12 @@ export async function generateMetadata({
   const { name, game, dex } = params;
 
   try {
-    const [pokemonData, speciesData, versionData, dexData] = await Promise.all([
+    // Fetch all base data in parallel
+    const [pokemonData, versionData, dexData, speciesData] = await Promise.all([
       fetchPokemonByName(name),
-      fetchPokemonSpeciesByName(name),
       getVersionGroup(game),
       fetchPokedexByName(dex),
+      fetchPokemonSpeciesByName(name),
     ]);
 
     const pokemonName = speciesData?.name ?? "";
@@ -203,13 +205,24 @@ export default async function Pokemon({ params }: PageProps) {
   }
 
   try {
-    // Fetch all data on the server
-    const [pokemonData, speciesData, versionData, dexData] = await Promise.all([
+    // Fetch base Pokemon data using REST (for compatibility with existing components)
+    // And fetch version group, pokedex, and species data in parallel
+    const [pokemonData, versionData, dexData, speciesData] = await Promise.all([
       fetchPokemonByName(name),
-      fetchPokemonSpeciesByName(name),
       getVersionGroup(game),
       fetchPokedexByName(dex),
+      fetchPokemonSpeciesByName(name),
     ]);
+
+    // Extract version names for GraphQL query
+    const versions = versionData.versions.map((v) => v.name);
+
+    // Fetch Pokemon moves from GraphQL (this replaces 56+ individual move REST calls)
+    const graphqlPokemonData = await getPokemonComplete({
+      pokemonName: name,
+      versionGroup: game,
+      versions,
+    });
 
     // Check if we have the required data
     if (!pokemonData || !speciesData || !versionData || !dexData) {
@@ -258,6 +271,7 @@ export default async function Pokemon({ params }: PageProps) {
           dexData={dexData}
           dexName={dex}
           game={game}
+          graphqlPokemonData={graphqlPokemonData}
         />
       </main>
     );

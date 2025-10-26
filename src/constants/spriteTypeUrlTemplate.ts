@@ -67,21 +67,20 @@ export default function getSpriteTypeUrl({
   }
 
   if (!validVersionGroups.includes(versionGroup)) {
-    // console.warn(
-    //   `Invalid version group: "${versionGroup}" for generation "${generationString}".\n
-    //   Must be one of: ${validVersionGroups.join(", ")}.`
-    // );
+    console.warn(
+      `Invalid version group: "${versionGroup}" for generation "${generationString}".\n
+      Must be one of: ${validVersionGroups.join(", ")}.`
+    );
     return null;
   }
 
   const genRomanNumeral: string = generationString.split("-")[1];
   const generationNumber: number = romanToNumber(genRomanNumeral);
 
+  let validType = type;
   if (type === 18 && generationNumber < 6) {
-    throw new Error(
-      `Fairy type (type id 18) only exists from generation-vi onwards.
-      Generation ${genRomanNumeral} is not valid.`
-    );
+    // Fairy type (type id 18) only exists from generation-vi onwards. Changing type id to 1 (Normal).
+    validType = 1;
   }
 
   if (
@@ -91,6 +90,6 @@ export default function getSpriteTypeUrl({
     return `${POKEAPI_TYPE_SPRITE_BASE_URL}/generation-viii/sword-shield/${type}.png`;
   }
 
-  let spriteTypeUrlTemplate: string = `${POKEAPI_TYPE_SPRITE_BASE_URL}/${generationString}/${versionGroup}/${type}.png`;
+  let spriteTypeUrlTemplate: string = `${POKEAPI_TYPE_SPRITE_BASE_URL}/${generationString}/${versionGroup}/${validType}.png`;
   return spriteTypeUrlTemplate;
 }

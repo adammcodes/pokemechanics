@@ -1,31 +1,13 @@
-import { PokemonMoveByMethod } from "@/types/index";
+import { GraphQLPokemonMove } from "@/types/graphql";
 import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
 import replaceNewlinesAndFeeds from "@/utils/replaceNewlinesAndFeeds";
 import { MoveMachine } from "./MoveMachine";
 import PokemonTypeChip from "@/components/common/PokemonTypeChip";
-import { POKEAPI_REST_ENDPOINT } from "@/constants/apiConfig";
-
-// Server-side data fetching function
-async function fetchMoveById(id: number) {
-  const response = await fetch(`${POKEAPI_REST_ENDPOINT}/move/${id}`, {
-    headers: {
-      Accept: "application/json",
-      "User-Agent": "Pokemechanics/1.0",
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error(`Failed to fetch move data: ${response.status}`);
-  }
-
-  return response.json();
-}
 
 type MoveProps = {
-  m: PokemonMoveByMethod;
+  m: GraphQLPokemonMove;
   method: string;
   game: string;
-  moveData?: any; // Pre-fetched move data
   generationString: string;
 };
 
@@ -33,42 +15,63 @@ export const Move: React.FC<MoveProps> = async ({
   m,
   method,
   game,
-  moveData,
   generationString,
 }) => {
   const formatName = convertKebabCaseToTitleCase;
 
-  const level =
-    m.level_learned_at === 1 || m.level_learned_at === 0
-      ? "--"
-      : m.level_learned_at;
+  const isStartingMove = m.level === 1 || m.level === 0;
+  const level = isStartingMove ? "--" : m.level;
 
-  const moveId = Number(m.move.url.split("/").at(-2));
+  const move = {
+    name: m.move.name,
+    type: {
+      name: m.move.type.name,
+      id: m.move.type.id,
+    },
+    damage_class: m.move.movedamageclass
+      ? { name: m.move.movedamageclass.name }
+      : null,
+    power: m.move.power,
+    accuracy: m.move.accuracy,
+    pp: m.move.pp,
+    effect_chance: m.move.move_effect_chance,
+    machines: m.move.machines.map((machine) => ({
+      item_name: machine.item.name,
+      machine_number: machine.machine_number,
+    })),
+  };
+  // Use short_effect as the move description
+  // The full effect text can be shown on hover
+  const moveEffectTexts = m.move.moveeffect?.moveeffecteffecttexts;
+  const moveTypeId = m.move.type.id;
+  const { short_effect, effect } =
+    moveEffectTexts && moveEffectTexts.length > 0
+      ? moveEffectTexts[0]
+      : { short_effect: null, effect: null };
+  // Find and replace all the instance of the substring $effect_chance% with the value of effect_chance
+  const effectTextsWithEffectChance = [short_effect, effect].map((effect) => {
+    return effect
+      ? effect.replace(
+          /\$effect_chance%/g,
+          move.effect_chance ? `${move.effect_chance}%` : ""
+        )
+      : "";
+  });
+  const processedEffectTexts = effectTextsWithEffectChance
+    .filter((effect) => effect !== "")
+    .map((effect) => replaceNewlinesAndFeeds(effect));
 
-  // Use pre-fetched data if available, otherwise fetch it
-  const move = moveData || (await fetchMoveById(moveId));
-
-  const moveTextForGame = move?.flavor_text_entries.find((entry: any) => {
-    return entry.version_group.name === game && entry.language.name === "en";
-  })?.flavor_text;
-
-  const backupMoveText = move?.flavor_text_entries.find((entry: any) => {
-    return entry.language.name === "en";
-  })?.flavor_text;
-
-  const moveText = moveTextForGame || backupMoveText;
-
-  if (!move) return null;
-
-  const moveTypeId = move.type.url.split("type/")[1].split("/")[0];
+  // On the pokemon page, we will only show the short effect text
+  // The full effect text we can show on a dedicated page for the move, in the future.
+  const [shortEffectText, fullEffectText] = processedEffectTexts;
 
   return (
     <>
       <tr>
         <td rowSpan={2}>
           <div className="px-2 py-2 flex items-center">
-            {method === "machine" && (
-              <MoveMachine machines={move.machines} game={game} />
+            {method === "machine" && move.machines.length > 0 && (
+              <MoveMachine item_name={move.machines[0].item_name} />
             )}
             {method !== "machine" && <>{level}</>}
           </div>
@@ -116,10 +119,9 @@ export const Move: React.FC<MoveProps> = async ({
       </tr>
       <tr>
         <td colSpan={7}>
-          {moveText && (
+          {processedEffectTexts.length > 0 && (
             <div className="px-2 py-1 rounded-md bg-[#a7bcb9]">
-              {typeof moveText === "string" &&
-                replaceNewlinesAndFeeds(moveText)}
+              {replaceNewlinesAndFeeds(shortEffectText)}
             </div>
           )}
         </td>
