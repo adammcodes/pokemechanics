@@ -133,6 +133,7 @@ export default async function TypeEfficacy({
       <div
         key={e.typeId}
         className={`flex flex-col items-center justify-center`}
+        data-testid={`type-efficacy-${e.typeName.toLowerCase()}`}
       >
         <PokemonTypeChip
           typeId={e.typeId}
@@ -140,7 +141,10 @@ export default async function TypeEfficacy({
           versionGroup={versionGroup}
           generationString={generationString}
         />
-        <span className={`text-sm font-bold ${fontColor}`}>
+        <span
+          className={`text-sm font-bold ${fontColor}`}
+          data-testid={`type-efficacy-${e.typeName.toLowerCase()}-damage`}
+        >
           x{(df / 100).toFixed(dfFixed)}
         </span>
       </div>
@@ -148,7 +152,7 @@ export default async function TypeEfficacy({
   });
 
   return (
-    <Box headingText="Damage:">
+    <Box headingText="Damage:" dataTestId="type-efficacy-box">
       <article className="w-full grid grid-cols-3 gap-x-4">
         {mappedEfficacies}
       </article>

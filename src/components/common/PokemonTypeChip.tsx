@@ -26,6 +26,7 @@ export default function PokemonTypeChip({
       <div
         className={`shadow-lg min-w-[3em] text-center rounded-sm uppercase px-2 flex justify-center items-center`}
         style={{ background: typeColour }}
+        data-testid={`type-chip-${typeName.toLowerCase()}`}
       >
         <span className="text-[1rem] text-white">{typeName}</span>
       </div>
@@ -50,7 +51,12 @@ export default function PokemonTypeChip({
 
   return (
     <div className={`p-[0.15rem] h-auto`} style={{ width: width }}>
-      <img src={typeSpriteUrl} alt={typeName} className="w-full h-auto" />
+      <img
+        src={typeSpriteUrl}
+        alt={typeName}
+        className="w-full h-auto"
+        data-testid={`type-chip-${typeName.toLowerCase()}`}
+      />
     </div>
   );
 }
