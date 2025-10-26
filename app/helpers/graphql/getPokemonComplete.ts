@@ -25,19 +25,6 @@ const query = `
       base_experience
       height
       weight
-      pokemonspecy {
-        gender_rate
-        generation_id
-        hatch_counter
-        is_baby
-        forms_switchable
-        base_happiness
-        is_legendary
-        is_mythical
-        capture_rate
-        evolves_from_species_id
-        evolution_chain_id
-      }
       pokemonsprites { sprites }
       pokemonabilities {
         pokemon_id
@@ -117,14 +104,6 @@ const query = `
               id
               generation_id
             }
-          }
-          typeefficacypasts {
-            damage_factor
-            damage_type_id
-            target_type_id
-            generation_id
-            generation { name id }
-            type { name id generation_id }
           }
         }
       }
