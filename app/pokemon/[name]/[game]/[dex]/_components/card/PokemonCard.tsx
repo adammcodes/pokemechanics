@@ -1,5 +1,4 @@
 import {
-  PokemonMoveVersion,
   SpeciesVariety,
   Pokedex,
   Pokemon,
@@ -93,13 +92,6 @@ export default async function PokemonCard({
 
   console.log("pokemonId", displayPokemonData.id);
 
-  // // Merge species data with Pokemon data for context compatibility
-  // const mergedData = {
-  //   ...pokemonData,
-  //   ...speciesData,
-  //   regions: versionData.regions,
-  // };
-
   // Get version group data
   // const versionId: number = versionData?.id || 1;
   const genName: string = versionData?.generation.name || "generation-i";
@@ -125,7 +117,6 @@ export default async function PokemonCard({
   const sprites = displayPokemonData.sprites;
   const pokemonHeight = displayPokemonData.height;
   const pokemonWeight = displayPokemonData.weight;
-  const pokemonMoves: PokemonMoveVersion[] = displayPokemonData.moves;
   //const pokemonEvolveChainUrl: string = speciesData.evolution_chain.url;
 
   // Handle flavor text
@@ -225,14 +216,16 @@ export default async function PokemonCard({
           />
         )}
         {/* Type Efficacy */}
-        {typeIds && typeIds.length > 0 && (
-          <TypeEfficacy
-            typeIds={typeIds}
-            generationId={generationId}
-            versionGroup={game}
-            generationString={genName}
-          />
-        )}
+        {graphqlPokemonData?.pokemontypes &&
+          graphqlPokemonData.pokemontypes.length > 0 && (
+            <TypeEfficacy
+              pokemonTypes={graphqlPokemonData.pokemontypes}
+              pokemonTypePasts={graphqlPokemonData.pokemontypepasts}
+              generationId={generationId}
+              versionGroup={game}
+              generationString={genName}
+            />
+          )}
       </section>
 
       {/* Moves */}

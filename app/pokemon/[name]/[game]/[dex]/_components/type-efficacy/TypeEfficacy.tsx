@@ -1,60 +1,7 @@
 import Box from "@/components/common/Box";
 import PokemonTypeChip from "@/components/common/PokemonTypeChip";
-import { POKEAPI_GRAPHQL_ENDPOINT } from "@/constants/apiConfig";
+import { GraphQLPokemonType } from "@/types/graphql";
 import "./TypeEfficacy.css";
-
-// Server-side data fetching function
-async function fetchTypeEfficacies() {
-  const response = await fetch(POKEAPI_GRAPHQL_ENDPOINT, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      query: `
-        query GetAllTypeEfficacies {
-          type {
-            name
-            id
-            generation_id
-            TypeefficaciesByTargetTypeId {
-              damage_factor
-              damage_type_id
-              target_type_id
-              type {
-                name
-                id
-                generation_id
-              }
-            }
-            typeefficacypasts {
-              damage_factor
-              damage_type_id
-              target_type_id
-              generation_id
-              generation {
-                name
-                id
-              }
-              type {
-                name
-                id
-                generation_id
-              }
-            }
-          }
-        }
-      `,
-    }),
-  });
-
-  if (!response.ok) {
-    console.log(response);
-    throw new Error(`Failed to fetch type efficacies: ${response.status}`);
-  }
-
-  return response.json();
-}
 
 type Efficacy = {
   type: {
@@ -83,54 +30,52 @@ type EfficacyPast = {
   };
 };
 
-type PokemonType = {
-  name: string;
-  id: number;
-  generation_id: number;
-  TypeefficaciesByTargetTypeId: Efficacy[];
-  typeefficacypasts: EfficacyPast[];
-};
-
-type EfficacyData = {
-  type: PokemonType[];
-};
-
 interface TypeEfficacyProps {
-  typeIds: number[];
+  pokemonTypes: GraphQLPokemonType[];
+  pokemonTypePasts: GraphQLPokemonType[];
   generationId: number;
   versionGroup: string;
   generationString: string;
 }
 
 export default async function TypeEfficacy({
-  typeIds,
+  pokemonTypes,
+  pokemonTypePasts,
   generationId,
   versionGroup,
   generationString,
 }: TypeEfficacyProps) {
-  // Fetch type efficacies data
-  const response = await fetchTypeEfficacies();
-  const data: EfficacyData | undefined = response?.data;
-
-  if (!data || !data.type) return null;
-
   const pokemonTypeEfficacies: {
     typeId: number;
     typeName: string;
     damage_factor: number;
   }[] = [];
 
-  const pokemonTypes: PokemonType[] = data.type.filter((type: PokemonType) =>
-    typeIds.includes(type.id)
+  const validTypesForGeneration = pokemonTypes.filter(
+    (t) => t.type.generation_id <= generationId
   );
 
+  const typesWithPastEfficacies: GraphQLPokemonType[] =
+    validTypesForGeneration.map((t) => {
+      return {
+        ...t,
+        typeefficacypasts: pokemonTypePasts,
+      };
+    });
+  // Determine which types to use based on the generation id and the pokemon type pasts
+  let typesForGen: GraphQLPokemonType[] = [];
+  if (pokemonTypePasts.length > 0 && validTypesForGeneration.length === 0) {
+    typesForGen = pokemonTypePasts;
+  } else {
+    typesForGen = typesWithPastEfficacies;
+  }
   // Multiply the damage factor of the type efficacy of the first type by the damage factor of the type efficacy of the second type,
   // for each type in the pokemonV2TypeByTargetTypeId array
   // If there is only one type, return the damage factor of the type efficacy of the first type only
   // Store the result in the multipliedEfficacies array
-  pokemonTypes.forEach((type) => {
-    const efficacies = type.TypeefficaciesByTargetTypeId;
-    const pastEfficacies = type.typeefficacypasts;
+  typesForGen.forEach((t: GraphQLPokemonType) => {
+    const efficacies = t.type.TypeefficaciesByTargetTypeId;
+    const pastEfficacies = t.type.typeefficacypasts;
 
     // Use past efficacies if they exist for the generation of the pokemon
     const pastEfficacy = pastEfficacies.filter(

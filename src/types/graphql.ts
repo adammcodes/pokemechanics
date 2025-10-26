@@ -21,7 +21,7 @@ export type GraphQLPokemon = {
   pokemonstats: GraphQLPokemonStat[];
   encounters: GraphQLEncounter[];
   pokemontypes: GraphQLPokemonType[];
-  pokemontypepasts: GraphQLPokemonTypePast[];
+  pokemontypepasts: GraphQLPokemonType[];
   pokemoncries: GraphQLPokemonCries[];
   pokemonforms: GraphQLPokemonForm[];
   pokemonmoves: GraphQLPokemonMove[];
@@ -127,13 +127,6 @@ export type GraphQLPokemonType = {
         generation_id: number;
       };
     }[];
-  };
-};
-
-export type GraphQLPokemonTypePast = {
-  type: {
-    generation_id: number;
-    name: string;
   };
 };
 

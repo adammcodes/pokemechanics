@@ -105,8 +105,27 @@ const query = `
       }
       pokemontypepasts {
         type {
-          generation_id
           name
+          id
+          generation_id
+          TypeefficaciesByTargetTypeId {
+            damage_factor
+            damage_type_id
+            target_type_id
+            type {
+              name
+              id
+              generation_id
+            }
+          }
+          typeefficacypasts {
+            damage_factor
+            damage_type_id
+            target_type_id
+            generation_id
+            generation { name id }
+            type { name id generation_id }
+          }
         }
       }
       pokemoncries { cries }
