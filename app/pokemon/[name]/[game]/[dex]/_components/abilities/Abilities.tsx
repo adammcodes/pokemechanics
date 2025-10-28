@@ -1,30 +1,23 @@
 import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
 import Box from "@/components/common/Box";
-import {
-  getAbilitiesByPokemon,
-  AbilitiesData,
-} from "@/app/helpers/graphql/getAbilitiesByPokemon";
+import { GraphQLPokemon, GraphQLPokemonAbility } from "@/types/graphql";
 
 type AbilitiesProps = {
-  pokemonName: string;
+  graphqlPokemonData: GraphQLPokemon | null;
 };
 
-const Abilities: React.FC<AbilitiesProps> = async ({ pokemonName }) => {
+const Abilities: React.FC<AbilitiesProps> = async ({ graphqlPokemonData }) => {
   const formatName = convertKebabCaseToTitleCase;
 
-  const abilitiesData: AbilitiesData | undefined = await getAbilitiesByPokemon(
-    pokemonName
-  );
+  const abilitiesData = graphqlPokemonData?.pokemonabilities;
 
-  if (!abilitiesData) {
+  if (!abilitiesData || abilitiesData.length === 0) {
     return <Box headingText="Abilities:">Could not find abilities.</Box>;
   }
 
-  const { pokemonabilities } = abilitiesData;
-
-  const abilities = pokemonabilities.map((ability) => {
-    const { is_hidden, ability: abilityData } = ability;
-    const { name, abilityeffecttexts } = abilityData;
+  const abilities = abilitiesData.map((a: GraphQLPokemonAbility) => {
+    const { is_hidden, ability } = a;
+    const { name, abilityeffecttexts } = ability;
     const { effect, short_effect } = abilityeffecttexts.length
       ? abilityeffecttexts[0]
       : { effect: "", short_effect: "" };

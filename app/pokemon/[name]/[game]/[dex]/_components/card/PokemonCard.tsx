@@ -198,7 +198,9 @@ export default async function PokemonCard({
           flavorTextForVersions={flavorTextForVersions}
         />
         {/* Abilities */}
-        {!isGenOneOrTwo && <Abilities pokemonName={variantName} />}
+        {!isGenOneOrTwo && (
+          <Abilities graphqlPokemonData={graphqlPokemonData} />
+        )}
         {/* Stats */}
         <Stats pokemonName={variantName} />
         {/* Encounters */}
