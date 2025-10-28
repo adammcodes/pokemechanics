@@ -11,6 +11,72 @@ type VersionGroupConfig = {
   pokedexes: string[];
   generation: string;
   maxPokemonId?: number; // Optional override for remakes
+  region?: string; // Region for regional variants (e.g., "alola", "galar", "hisui")
+};
+
+// Regional variant Pokemon by region
+// These Pokemon have regional forms that should be included in sitemap
+const REGIONAL_VARIANTS: Record<string, string[]> = {
+  alola: [
+    "rattata",
+    "raticate",
+    "raichu",
+    "sandshrew",
+    "sandslash",
+    "vulpix",
+    "ninetales",
+    "diglett",
+    "dugtrio",
+    "meowth",
+    "persian",
+    "geodude",
+    "graveler",
+    "golem",
+    "grimer",
+    "muk",
+    "exeggutor",
+    "marowak",
+  ],
+  galar: [
+    "meowth",
+    "ponyta",
+    "rapidash",
+    "slowpoke",
+    "slowbro",
+    "farfetchd",
+    "weezing",
+    "mr-mime",
+    "articuno",
+    "zapdos",
+    "moltres",
+    "slowking",
+    "corsola",
+    "zigzagoon",
+    "linoone",
+    "darumaka",
+    "darmanitan",
+    "yamask",
+    "stunfisk",
+  ],
+  hisui: [
+    "growlithe",
+    "arcanine",
+    "voltorb",
+    "electrode",
+    "typhlosion",
+    "qwilfish",
+    "sneasel",
+    "samurott",
+    "lilligant",
+    "zorua",
+    "zoroark",
+    "braviary",
+    "sliggoo",
+    "goodra",
+    "avalugg",
+    "decidueye",
+  ],
+  paldea: ["tauros", "wooper"],
 };
 
 // Version groups with their valid pokedexes and generation
@@ -88,6 +154,7 @@ const VERSION_GROUPS: VersionGroupConfig[] = [
       "original-poni",
     ],
     generation: "generation-vii",
+    region: "alola",
   },
   {
     name: "ultra-sun-ultra-moon",
@@ -99,6 +166,7 @@ const VERSION_GROUPS: VersionGroupConfig[] = [
       "updated-poni",
     ],
     generation: "generation-vii",
+    region: "alola",
   },
   {
     name: "lets-go-pikachu-lets-go-eevee",
@@ -111,16 +179,19 @@ const VERSION_GROUPS: VersionGroupConfig[] = [
     name: "sword-shield",
     pokedexes: ["galar", "isle-of-armor", "crown-tundra"],
     generation: "generation-viii",
+    region: "galar",
   },
   {
     name: "the-isle-of-armor",
     pokedexes: ["isle-of-armor"],
     generation: "generation-viii",
+    region: "galar",
   },
   {
     name: "the-crown-tundra",
     pokedexes: ["crown-tundra"],
     generation: "generation-viii",
+    region: "galar",
   },
   {
     name: "brilliant-diamond-and-shining-pearl",
@@ -132,22 +203,26 @@ const VERSION_GROUPS: VersionGroupConfig[] = [
     name: "legends-arceus",
     pokedexes: ["hisui"],
     generation: "generation-viii",
+    region: "hisui",
   },
   // Gen 9
   {
     name: "scarlet-violet",
     pokedexes: ["paldea"],
     generation: "generation-ix",
+    region: "paldea",
   },
   {
     name: "the-teal-mask",
     pokedexes: ["kitakami"],
     generation: "generation-ix",
+    region: "paldea",
   },
   {
     name: "the-indigo-disk",
     pokedexes: ["blueberry"],
     generation: "generation-ix",
+    region: "paldea",
   },
 ];
 
@@ -227,8 +302,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           pokemon.name as (typeof PRIORITY_POKEMON)[number]
         );
 
+        // Check if this Pokemon has a regional variant for this version group
+        const hasVariant =
+          vg.region && REGIONAL_VARIANTS[vg.region]?.includes(pokemon.name);
+        const pokemonName = hasVariant
+          ? `${pokemon.name}-${vg.region}`
+          : pokemon.name;
+
         urls.push({
-          url: `${baseUrl}/pokemon/${pokemon.name}/${vg.name}/national`,
+          url: `${baseUrl}/pokemon/${pokemonName}/${vg.name}/national`,
           lastModified: currentDate,
           changeFrequency: "monthly",
           priority: isPriority ? 0.8 : 0.6,
@@ -242,8 +324,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             pokemon.name as (typeof PRIORITY_POKEMON)[number]
           );
 
+          // Check if this Pokemon has a regional variant for this version group
+          const hasVariant =
+            vg.region && REGIONAL_VARIANTS[vg.region]?.includes(pokemon.name);
+          const pokemonName = hasVariant
+            ? `${pokemon.name}-${vg.region}`
+            : pokemon.name;
+
           urls.push({
-            url: `${baseUrl}/pokemon/${pokemon.name}/${vg.name}/${dexName}`,
+            url: `${baseUrl}/pokemon/${pokemonName}/${vg.name}/${dexName}`,
             lastModified: currentDate,
             changeFrequency: "monthly",
             priority: isPriority ? 0.7 : 0.5,

@@ -14,6 +14,8 @@ import { PRIORITY_POKEMON } from "@/constants/priorityPokemon";
 import getSpriteUrl from "@/constants/spriteUrlTemplates";
 import findVarietyForRegion from "@/lib/findVarietyForRegion";
 import { fetchPokemonById } from "@/app/helpers/rest/fetchPokemonById";
+import { getBasePokemonName } from "@/lib/getBasePokemonName";
+import { getVariantPokemonName } from "@/lib/getVariantPokemonName";
 
 // Enable ISR - revalidate every 24 hours (86400 seconds)
 // Pokemon data is static, so long cache times are safe
@@ -68,24 +70,32 @@ export async function generateMetadata({
   const { name, game, dex } = params;
 
   try {
-    // Fetch all base data in parallel
-    const [pokemonData, versionData, dexData, speciesData] = await Promise.all([
-      fetchPokemonByName(name),
+    // Extract base Pokemon name (strip regional suffix like "-alola")
+    const baseName = getBasePokemonName(name);
+
+    // Fetch version, dex, and species data first
+    // IMPORTANT: fetchPokemonSpeciesByName must use base name (no regional suffix)
+    const [versionData, dexData, speciesData] = await Promise.all([
       getVersionGroup(game),
       fetchPokedexByName(dex),
-      fetchPokemonSpeciesByName(name),
+      fetchPokemonSpeciesByName(baseName), // ✅ Use base name
     ]);
+
+    // Determine region and find correct variant name
+    const region = versionData.regions?.[0];
+    const dexRegion = dexData.region?.name || "";
+    const regionName = dex === "national" ? region?.name || "" : dexRegion;
+
+    const actualPokemonName = getVariantPokemonName(speciesData, regionName);
+
+    // Fetch Pokemon data using the correct variant name
+    const pokemonData = await fetchPokemonByName(actualPokemonName);
 
     const pokemonName = speciesData?.name ?? "";
     const displayName =
       pokemonName.charAt(0).toUpperCase() + pokemonName.slice(1);
     const versionName = convertKebabCaseToTitleCase(versionData?.name ?? "");
     const dexDisplayName = convertKebabCaseToTitleCase(dex);
-
-    // Check for regional variants (e.g., Alolan Raichu in sun-moon)
-    const region = versionData?.regions?.[0] ?? null;
-    const dexRegion = dexData?.region?.name || "";
-    const regionName = dex === "national" ? region?.name || "" : dexRegion;
 
     // Find variety for region if there are multiple varieties
     const pokemonVarietyForRegion = findVarietyForRegion(
@@ -205,21 +215,34 @@ export default async function Pokemon({ params }: PageProps) {
   }
 
   try {
-    // Fetch base Pokemon data using REST (for compatibility with existing components)
-    // And fetch version group, pokedex, and species data in parallel
-    const [pokemonData, versionData, dexData, speciesData] = await Promise.all([
-      fetchPokemonByName(name),
+    // Extract base Pokemon name (strip regional suffix like "-alola")
+    const baseName = getBasePokemonName(name);
+
+    // Fetch version, dex, and species data first
+    // IMPORTANT: fetchPokemonSpeciesByName must use base name (no regional suffix)
+    const [versionData, dexData, speciesData] = await Promise.all([
       getVersionGroup(game),
       fetchPokedexByName(dex),
-      fetchPokemonSpeciesByName(name),
+      fetchPokemonSpeciesByName(baseName),
     ]);
+
+    // Determine region and find correct variant name
+    const region = versionData.regions?.[0];
+    const dexRegion = dexData.region?.name || "";
+    const regionName = dex === "national" ? region?.name || "" : dexRegion;
+
+    const actualPokemonName = getVariantPokemonName(speciesData, regionName);
+
+    // Fetch Pokemon data using the correct variant name
+    const pokemonData = await fetchPokemonByName(actualPokemonName);
 
     // Extract version names for GraphQL query
     const versions = versionData.versions.map((v) => v.name);
 
-    // Fetch Pokemon moves from GraphQL (this replaces 56+ individual move REST calls)
+    // Fetch Pokemon moves from GraphQL using the correct variant name
+    // This ensures encounters are fetched for the correct variant (e.g., "rattata-alola")
     const graphqlPokemonData = await getPokemonComplete({
-      pokemonName: name,
+      pokemonName: actualPokemonName,
       versionGroup: game,
       versions,
     });

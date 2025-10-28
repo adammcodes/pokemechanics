@@ -1,330 +1,77 @@
-"use client";
 import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
-import { useQuery } from "@tanstack/react-query";
-import VersionChip from "@/components/common/VersionChip";
-import { groupEncountersByLocation } from "./groupEncountersByLocation";
-import Tooltip from "@/components/common/Tooltip";
-import {
-  LocationAreaEncounters,
-  EncounterDetails,
-} from "./LocationsForVersionGroup";
 import toTitleCase from "@/utils/toTitleCase";
-import { fetchFromGraphQL } from "@/utils/api";
+import VersionChip from "@/components/common/VersionChip";
+import Tooltip from "@/components/common/Tooltip";
+import { GraphQLEncounter } from "@/types/graphql";
+import { groupGraphQLEncountersByLocation } from "./groupGraphQLEncountersByLocation";
+import { PokemonSpecies } from "@/types/index";
 
-const GRAPHQL_QUERY = `
-  query GetPokemonLocationsForVersion(
-    $version: String!
-    $pokemonSpeciesId: Int!
-    $evolutionChainId: Int!
-  ) {
-    version(where: { name: { _eq: $version } }) {
-      name
-      versiongroup {
-        id
-        name
-        generation {
-          id
-          name
-          versiongroups {
-            name
-            generation_id
-            versions {
-              name
-              version_group_id
-              encounters(
-                where: {
-                  pokemon: {
-                    pokemon_species_id: { _eq: $pokemonSpeciesId }
-                  }
-                }
-              ) {
-                locationarea {
-                  name
-                  location_id
-                  location {
-                    name
-                    id
-                    region_id
-                    region {
-                      name
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-    encounter(
-      where: {
-        version: { name: { _eq: $version } }
-        pokemon: { pokemon_species_id: { _eq: $pokemonSpeciesId } }
-      }
-    ) {
-      id
-      version_id
-      location_area_id
-      min_level
-      max_level
-      pokemon_id
-      encounter_slot_id
-      locationarea {
-        name
-        location_id
-        location {
-          name
-          id
-          region_id
-          region {
-            name
-          }
-        }
-      }
-      encounterslot {
-        rarity
-        slot
-        version_group_id
-      }
-      pokemon {
-        pokemon_species_id
-        id
-        name
-      }
-      encounterconditionvaluemaps {
-        encounter_condition_value_id
-        encounterconditionvalue {
-          name
-          is_default
-          encountercondition {
-            name
-            id
-          }
-        }
-      }
-    }
-    evolutionchain(where: { id: { _eq: $evolutionChainId } }) {
-      id
-      baby_trigger_item_id
-      item {
-        name
-      }
-      pokemonspecies {
-        id
-        name
-        evolves_from_species_id
-        generation_id
-        is_baby
-        is_legendary
-        is_mythical
-      }
-    }
-  }
-`;
-
-type EncountersProps = {
+type EncountersNewProps = {
   version: string; // e.g. "ruby"
-  pokemonSpeciesId: number; // national dex number
-  evolutionData: any;
-  locationAreaEncounters: LocationAreaEncounters[];
+  encounters: GraphQLEncounter[]; // Pre-fetched GraphQL encounters
+  speciesData: PokemonSpecies;
 };
 
-type PokemonV2Species = {
-  evolves_from_species_id: number;
-  generation_id: number;
-  id: number;
-  is_baby: boolean;
-  is_legendary: boolean;
-  is_mythical: boolean;
-  name: string;
-};
-
-type PokemonV2EvolutionChain = {
-  baby_trigger_item_id: number | null;
-  id: number;
-  item: any;
-  pokemonspecies: PokemonV2Species[];
-};
-
-type PokemonV2LocationArea = {
-  name: string;
-  location_id: number;
-  location: {
-    name: string; // e.g. "kanto-route-24"
-    id: number;
-    region_id: number;
-    region: {
-      name: string;
-    };
-  };
-};
-
-type PokemonV2EncounterSlot = {
-  rarity: number;
-  slot: number | null;
-  version_group_id: number;
-};
-
-type PokemonV2 = {
-  pokemon_species_id: number;
-  id: number;
-  name: string;
-};
-
-type EncounterConditionalValue = {
-  encounter_condition_value_id: number;
-  encounterconditionvalue: {
-    name: string;
-    is_default: boolean;
-    encountercondition: {
-      name: string;
-      id: number;
-    };
-  };
-};
-
-export type Encounter = {
-  id: number;
-  version_id: number;
-  location_area_id: number;
-  min_level: number;
-  max_level: number;
-  pokemon_id: number;
-  encounter_slot_id: number;
-  locationarea: PokemonV2LocationArea;
-  encounterslot: PokemonV2EncounterSlot;
-  pokemon: PokemonV2;
-  encounterconditionvaluemaps: EncounterConditionalValue[];
-};
-
-type Version = {
-  name: string;
-  versiongroup: {
-    name: string;
-    generation: {
-      id: number;
-      name: string;
-      versiongroups: {
-        name: string;
-        generation_id: number;
-        versions: {
-          __typename: string;
-          name: string;
-          version_group_id: number;
-          encounters: {
-            locationarea: PokemonV2LocationArea;
-          }[];
-        }[];
-      }[];
-    };
-  };
-};
-
-type EncountersData = {
-  version: Version[];
-  encounter: Encounter[];
-  evolutionchain: PokemonV2EvolutionChain[];
-};
-
-const Encounters: React.FC<EncountersProps> = ({
+/**
+ * Server component that displays Pokemon encounters for a specific version
+ * Uses pre-fetched GraphQL encounter data from getPokemonComplete query
+ */
+const EncountersNew: React.FC<EncountersNewProps> = ({
   version,
-  pokemonSpeciesId,
-  locationAreaEncounters,
-  evolutionData,
+  encounters,
+  speciesData,
 }) => {
   const formatName = convertKebabCaseToTitleCase;
 
-  const { isLoading, error, data } = useQuery<EncountersData>({
-    queryKey: ["pokemonLocations", version, pokemonSpeciesId, evolutionData.id],
-    queryFn: async () => {
-      const result = await fetchFromGraphQL<EncountersData>({
-        query: GRAPHQL_QUERY,
-        variables: {
-          version: version.toLowerCase(),
-          pokemonSpeciesId,
-          evolutionChainId: evolutionData.id,
-        },
-        endpoint: "/api/graphql", // Use Next.js API route to avoid CORS in client component
-      });
-      return result.data!;
-    },
-    staleTime: 1000 * 60 * 60, // 1 hour
-    gcTime: 1000 * 60 * 60 * 24, // 24 hours (garbage collection time)
-  });
-
-  if (isLoading) return null;
-  if (error) {
-    console.error(error);
-    return null;
-  }
-
-  if (!data) return null;
-
-  const { encounter, version: versionData } = data;
-
-  const locationEncounters = groupEncountersByLocation(
-    encounter,
-    locationAreaEncounters,
+  // Group encounters by location for this version
+  const locationEncounters = groupGraphQLEncountersByLocation(
+    encounters,
     version.toLowerCase()
   );
 
-  // console.log(locationEncounters, "locationEncounters");
-  // console.log(encounter, "encounter");
-
-  // const generationId =
-  //   versionData[0].versiongroup.generation.id;
-
-  const evolutionChainData = data.evolutionchain[0];
-
-  const thisPokemon: PokemonV2Species | undefined =
-    evolutionChainData?.pokemonspecies.find(
-      (pokemon: PokemonV2Species) => pokemon.id === pokemonSpeciesId
-    );
-
-  if (!thisPokemon) return null;
-
-  const evolvesFromPokemonSpeciesId = thisPokemon?.evolves_from_species_id;
-
-  const evolvesFromPokemon = evolutionChainData.pokemonspecies.find(
-    (p: PokemonV2Species) => p.id === evolvesFromPokemonSpeciesId
+  // Get other versions in the same generation that have encounters for this Pokemon
+  const otherVersionsWithEncounters = getOtherVersionsWithEncounters(
+    encounters,
+    version
   );
 
-  const versionGroups = versionData[0].versiongroup.generation.versiongroups;
-
-  // Filter the other versions in this generation that have encounters for this pokemon
-  const otherVersionsWithEncounters = versionGroups
-    .flatMap((group) => group.versions)
-    .filter((v) => {
-      const isSameVersion = v.name === version;
-      return !isSameVersion && v.encounters.length > 0;
-    });
-
-  // We assuming if there are no encounters and no evolutions, the pokemon is obtainable only by an event
-  const isMythical = thisPokemon?.is_mythical;
-
-  const dedupeEncounterMethods = (encounterMethods: EncounterDetails[]) => {
-    return encounterMethods.filter(
+  // Deduplicate encounter methods by name
+  const dedupeEncounterMethods = (methods: { methodName: string }[]) => {
+    return methods.filter(
       (method, index, self) =>
-        index === self.findIndex((t) => t.method.name === method.method.name)
+        index === self.findIndex((t) => t.methodName === method.methodName)
     );
   };
+
+  const isMythical = speciesData.is_mythical;
+  const evolvesFromSpecies = speciesData.evolves_from_species;
+  const isBaby = speciesData.is_baby;
 
   return (
     <>
       <VersionChip versionName={version} />
+
+      {/* Show message when no encounters exist */}
       {locationEncounters.length === 0 && (
         <p className="text-base leading-none">
-          {evolvesFromPokemon &&
-            `Evolve ${formatName(evolvesFromPokemon.name)}`}
-          {!evolvesFromPokemon &&
-            !isMythical &&
+          {otherVersionsWithEncounters.length > 0 &&
             `Trade from ${otherVersionsWithEncounters
-              .map((v) => formatName(v.name))
+              .map((v) => formatName(v))
               .join(", ")}`}
+          {evolvesFromSpecies &&
+            otherVersionsWithEncounters.length === 0 &&
+            `Evolve ${formatName(evolvesFromSpecies.name)}`}
+          {isBaby && `Breed from evolved species`}
           {isMythical && `Event Only`}
+          {!evolvesFromSpecies &&
+            !isBaby &&
+            !isMythical &&
+            otherVersionsWithEncounters.length === 0 &&
+            `Not available in this version`}
         </p>
       )}
 
+      {/* Display location encounters with tooltips */}
       <div className="flex flex-wrap">
         {locationEncounters.length > 0 &&
           locationEncounters.map((location, i, arr) => (
@@ -342,7 +89,7 @@ const Encounters: React.FC<EncountersProps> = ({
                     <p>
                       Method:{" "}
                       {dedupeEncounterMethods(location.encounterMethods)
-                        .map((method) => toTitleCase(method.method.name))
+                        .map((method) => toTitleCase(method.methodName))
                         .join(", ")}
                     </p>
                   </div>
@@ -360,4 +107,23 @@ const Encounters: React.FC<EncountersProps> = ({
   );
 };
 
-export default Encounters;
+/**
+ * Helper function to get other versions that have encounters for this Pokemon
+ */
+function getOtherVersionsWithEncounters(
+  encounters: GraphQLEncounter[],
+  currentVersion: string
+): string[] {
+  const versions = new Set<string>();
+
+  encounters.forEach((encounter) => {
+    const versionName = encounter.version.name;
+    if (versionName !== currentVersion.toLowerCase()) {
+      versions.add(versionName);
+    }
+  });
+
+  return Array.from(versions);
+}
+
+export default EncountersNew;

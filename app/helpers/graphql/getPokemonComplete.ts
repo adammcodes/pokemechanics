@@ -8,7 +8,6 @@ import { GraphQLPokemonComplete, GraphQLPokemon } from "@/types/graphql";
  *
  * Includes:
  * - Pokemon base data (id, name, height, weight, etc.)
- * - Species data (gender_rate, capture_rate, evolution_chain_id)
  * - Sprites, abilities with effect texts
  * - Stats, encounters with location/version details
  * - Types with type efficacy (current and past)

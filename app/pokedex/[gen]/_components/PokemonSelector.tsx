@@ -49,10 +49,15 @@ const PokemonSelector: React.FC<PokemonSelectorProps> =
       }
       const dexNumber: number = p.pokemon_species_id; // this is the national dex number
       const pokemonId: number = p.pokedex_number; // this is the regional dex number
-      const pokemonName: string = p.pokemonspecy.name;
+      const pokemonName: string = p.pokemonspecy.name; // make sure we use the variant pokemon name if it exists for the current region
+      const variantForRegion =
+        p.pokemonspecy?.pokemons?.find(
+          (variant) =>
+            variant.is_default === false && variant.name.includes(regionName)
+        ) || undefined;
       return {
         label: toTitleCase(pokemonName),
-        name: pokemonName,
+        name: variantForRegion ? variantForRegion.name : pokemonName,
         value: dexNumber, // the value property we use as [id] in pokemon page dynamic routes
         pokemonId: pokemonId, // this is the regional dex number
         variantId: variantId, // for variant forms of pokemon we use this as the [id] in pokemon page dynamic routes

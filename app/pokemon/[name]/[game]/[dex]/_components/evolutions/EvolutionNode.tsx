@@ -29,6 +29,7 @@ const EvolutionNode = async ({
 
   // Initialize the pokemonVarietyId
   let pokemonVarietyId: number | undefined;
+  let pokemonVariantName: string | undefined;
 
   // If there is no sprite for the current generation, use the official artwork
   let sprite = `${POKEAPI_SPRITE_BASE_URL}/other/official-artwork/${pokemonDexNumber}.png`;
@@ -45,6 +46,8 @@ const EvolutionNode = async ({
       pokemonVarietyForRegion?.pokemon.url.split("/").at(-2)
     );
 
+    pokemonVariantName = pokemonVarietyForRegion?.pokemon.name;
+
     sprite = getSpriteUrl({
       versionGroup: game,
       pokemonId: pokemonVarietyId || pokemonDexNumber,
@@ -53,10 +56,10 @@ const EvolutionNode = async ({
   }
 
   // If there is a pokemonVarietyId, use the PokemonSpriteById component to render the regional variant sprite
-  if (pokemonVarietyId) {
+  if (pokemonVarietyId && pokemonVariantName) {
     return (
       <PokemonSpriteVariety
-        pokemonName={species.name}
+        pokemonName={pokemonVariantName}
         pokemonVarietyId={Number(pokemonVarietyId)}
         game={game}
         dexName={dexName}

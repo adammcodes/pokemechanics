@@ -22,10 +22,11 @@ import ForwardBack from "../navigation/ForwardBack";
 import { Moves } from "../moves/Moves";
 import Abilities from "../abilities/Abilities";
 import Stats from "../stats/Stats";
-import LocationsForVersionGroup from "../encounters/LocationsForVersionGroup";
+// import LocationsForVersionGroup from "../encounters/LocationsForVersionGroup";
 import TypeEfficacy from "../type-efficacy/TypeEfficacy";
 import HeaderSelect from "@/components/header/HeaderSelect";
 import { romanToNumber } from "@/utils/romanToNumber";
+import LocationsForVersionGroupNew from "../encounters/LocationsForVersionGroupNew";
 
 type PokemonCardProps = {
   pokemonData: Pokemon;
@@ -135,10 +136,6 @@ export default async function PokemonCard({
       })
     : null;
 
-  const typeIds = types?.map((t: PokemonType) =>
-    Number(t.type.url.split("type/")[1].split("/")[0])
-  );
-
   return (
     <div className={`w-full flex flex-col items-center justify-center px-4`}>
       <div className="relative w-full">
@@ -206,13 +203,18 @@ export default async function PokemonCard({
         <Stats pokemonName={variantName} />
         {/* Encounters */}
         {versionData && (
-          <LocationsForVersionGroup
-            locationAreaEncountersUrl={
-              displayPokemonData.location_area_encounters
-            }
-            pokemonSpeciesId={pokemonId}
+          // <LocationsForVersionGroup
+          //   locationAreaEncountersUrl={
+          //     displayPokemonData.location_area_encounters
+          //   }
+          //   pokemonSpeciesId={pokemonId}
+          //   versions={versionData.versions.map((v) => v.name)}
+          //   evolutionData={evolutionChainData}
+          // />
+          <LocationsForVersionGroupNew
+            speciesData={speciesData}
+            encounters={graphqlPokemonData?.encounters || []}
             versions={versionData.versions.map((v) => v.name)}
-            evolutionData={evolutionChainData}
           />
         )}
         {/* Type Efficacy */}
