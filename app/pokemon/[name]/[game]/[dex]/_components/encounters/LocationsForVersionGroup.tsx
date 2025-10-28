@@ -1,69 +1,31 @@
 import Encounters from "./Encounters";
 import Box from "@/components/common/Box";
+import { GraphQLEncounter } from "@/types/graphql";
+import { PokemonSpecies } from "@/types/index";
 
 type LocationsForVersionGroupProps = {
+  speciesData: PokemonSpecies;
   versions: string[]; // e.g. ["red", "blue"]
-  pokemonSpeciesId: number; // national dex number
-  evolutionData: any;
-  locationAreaEncountersUrl: string;
+  encounters: GraphQLEncounter[]; // Pre-fetched GraphQL encounters
 };
 
-export type LocationAreaEncounters = {
-  location_area: {
-    name: string;
-    url: string;
-  };
-  version_details: VersionDetails[];
-};
-
-export type VersionDetails = {
-  encounter_details: EncounterDetails[];
-  max_chance: number;
-  version: { name: string; url: string };
-};
-
-export type EncounterDetails = {
-  chance: number;
-  condition_values: any[];
-  max_level: number;
-  method: {
-    name: string;
-    url: string;
-  };
-  min_level: number;
-};
-
-const fetchLocationAreaEncounters = async (url: string) => {
-  const response = await fetch(url);
-  return response.json();
-};
-
+/**
+ * Server component that displays Pokemon encounters for each version in a version group
+ * Uses pre-fetched GraphQL encounter data from getPokemonComplete query
+ */
 const LocationsForVersionGroup: React.FC<
   LocationsForVersionGroupProps
-> = async ({
-  versions,
-  pokemonSpeciesId,
-  evolutionData,
-  locationAreaEncountersUrl,
-}) => {
-  const locationAreaEncounters = await fetchLocationAreaEncounters(
-    locationAreaEncountersUrl
-  );
-  if (!evolutionData) return <div className="p-5">Loading...</div>;
-
+> = async ({ speciesData, versions, encounters }) => {
   return (
     <Box headingText="Encounters:">
-      {evolutionData &&
-        versions.length &&
-        versions.map((version) => (
-          <Encounters
-            key={version}
-            version={version}
-            pokemonSpeciesId={pokemonSpeciesId}
-            locationAreaEncounters={locationAreaEncounters}
-            evolutionData={evolutionData}
-          />
-        ))}
+      {versions.map((version) => (
+        <Encounters
+          key={version}
+          version={version}
+          encounters={encounters}
+          speciesData={speciesData}
+        />
+      ))}
     </Box>
   );
 };

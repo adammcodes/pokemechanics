@@ -26,7 +26,7 @@ import Stats from "../stats/Stats";
 import TypeEfficacy from "../type-efficacy/TypeEfficacy";
 import HeaderSelect from "@/components/header/HeaderSelect";
 import { romanToNumber } from "@/utils/romanToNumber";
-import LocationsForVersionGroupNew from "../encounters/LocationsForVersionGroupNew";
+import LocationsForVersionGroup from "../encounters/LocationsForVersionGroup";
 
 type PokemonCardProps = {
   pokemonData: Pokemon;
@@ -203,15 +203,7 @@ export default async function PokemonCard({
         <Stats pokemonName={variantName} />
         {/* Encounters */}
         {versionData && (
-          // <LocationsForVersionGroup
-          //   locationAreaEncountersUrl={
-          //     displayPokemonData.location_area_encounters
-          //   }
-          //   pokemonSpeciesId={pokemonId}
-          //   versions={versionData.versions.map((v) => v.name)}
-          //   evolutionData={evolutionChainData}
-          // />
-          <LocationsForVersionGroupNew
+          <LocationsForVersionGroup
             speciesData={speciesData}
             encounters={graphqlPokemonData?.encounters || []}
             versions={versionData.versions.map((v) => v.name)}
