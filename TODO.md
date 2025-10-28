@@ -214,6 +214,12 @@ Create `/src/config/` with:
 - [x] **API Configuration** - Centralized all endpoints in `src/constants/apiConfig.ts`
 - [x] **State Management** - Improved cookie and local storage state handling
 - [x] **Remove Apollo Client** - Consolidated on React Query for all data fetching
+- [x] **Pokemon Page GraphQL Refactor** - Migrated all Pokemon detail page data to use GraphQL where available
+  - Refactored TypesNew component to use GraphQL types and pokemontypepasts data
+  - Fixed TypeEfficacy component to handle missing typeefficacypasts gracefully
+  - All Pokemon-specific data (moves, encounters, abilities, stats, types, type efficacies) now fetched via single `getPokemonComplete()` GraphQL query
+  - REST API calls retained only for necessary data: species (flavor text, genera), pokedex entries, and evolution chains
+  - Significantly reduced API calls per Pokemon page load
 
 ### Bug Fixes & Optimization
 
@@ -247,4 +253,4 @@ Create `/src/config/` with:
 
 ---
 
-**Last Updated:** 2025-10-27
+**Last Updated:** 2025-10-28
