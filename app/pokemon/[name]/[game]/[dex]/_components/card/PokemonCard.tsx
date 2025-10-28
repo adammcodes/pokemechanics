@@ -27,6 +27,7 @@ import TypeEfficacy from "../type-efficacy/TypeEfficacy";
 import HeaderSelect from "@/components/header/HeaderSelect";
 import { romanToNumber } from "@/utils/romanToNumber";
 import LocationsForVersionGroup from "../encounters/LocationsForVersionGroup";
+import { GraphQLPokemonType } from "@/types/graphql";
 
 type PokemonCardProps = {
   pokemonData: Pokemon;
@@ -164,7 +165,16 @@ export default async function PokemonCard({
           name={name}
           pokemonId={pokemonId}
           is_variant={isVariant}
-          types={types}
+          types={
+            graphqlPokemonData?.pokemontypes.map(
+              (t: GraphQLPokemonType) => t.type
+            ) || []
+          }
+          pokemontypepasts={
+            graphqlPokemonData?.pokemontypepasts.map(
+              (t: GraphQLPokemonType) => t.type
+            ) || []
+          }
           sprites={sprites}
           height={pokemonHeight}
           weight={pokemonWeight}
@@ -202,7 +212,7 @@ export default async function PokemonCard({
           <Abilities graphqlPokemonData={graphqlPokemonData} />
         )}
         {/* Stats */}
-        <Stats pokemonName={variantName} />
+        <Stats graphqlPokemonData={graphqlPokemonData} />
         {/* Encounters */}
         {versionData && (
           <LocationsForVersionGroup

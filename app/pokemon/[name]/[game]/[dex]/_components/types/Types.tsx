@@ -1,75 +1,68 @@
-import PokemonTypes from "./PokemonTypes";
-import { getTypesByPokemonId } from "@/app/helpers/graphql/getTypesByPokemonId";
+import { GraphQLPokemonType } from "@/types/graphql";
+import PokemonTypes, { PokemonType } from "./PokemonTypes";
 
 type TypesProps = {
-  generationId: number; // 1
-  pokemonId: number; // 35 (clefairy)
+  types: GraphQLPokemonType["type"][];
+  pokemontypepasts: GraphQLPokemonType["type"][];
   versionGroup: string; // e.g. "red-blue", "x-y", "omega-ruby-alpha-sapphire"
   generationString: string; // e.g. "generation-i", "generation-ii", "generation-iii", "generation-iv", "generation-v", "generation-vi", "generation-vii", "generation-viii"
+  generationId: number;
 };
 
 /**
- * @param generationId = number e.g. if versionGroup is "red-blue", generationId is 1
- * @param pokemonId = number e.g. 35 (clefairy)
+ * Determines which types to display based on GraphQL data and current generation
+ * @param types - array of current types from GraphQL pokemontypes
+ * @param pokemontypepasts - array of past types from GraphQL pokemontypepasts
+ * @param versionGroup - string e.g. "red-blue", "x-y", "omega-ruby-alpha-sapphire"
+ * @param generationString - string e.g. "generation-i", "generation-ii", etc.
+ * @param generationId - numeric generation ID (1-9)
  * @returns Component displaying type chips for a pokemon
  */
-const Types: React.FC<TypesProps> = async ({
-  generationId,
-  pokemonId,
+const Types: React.FC<TypesProps> = ({
+  types,
+  pokemontypepasts,
   versionGroup,
   generationString,
+  generationId,
 }) => {
-  const typesData = await getTypesByPokemonId(pokemonId);
+  // Convert GraphQL type data to PokemonTypes component format
+  const formatTypes = (
+    typeArray: GraphQLPokemonType["type"][]
+  ): PokemonType[] => {
+    return typeArray.map((t) => ({ type: t }));
+  };
 
-  if (!typesData) {
-    return <span>Could not find types data.</span>;
+  // If no past types exist, use current types
+  if (pokemontypepasts.length === 0) {
+    return (
+      <PokemonTypes
+        types={formatTypes(types)}
+        versionGroup={versionGroup}
+        generationString={generationString}
+      />
+    );
   }
-
-  const pokemonTypes = typesData.pokemontype;
-
-  if (pokemonTypes.length === 0) {
-    return <span>Could not find pokemon types.</span>;
-  }
-
-  const { pokemon } = pokemonTypes[0];
-
-  // past and present types
-  const pastTypes = pokemon.pokemontypepasts;
-  const presentTypes = pokemon.pokemontypes;
 
   // Find the highest generation among past types
-  const maxPastTypeGeneration =
-    pastTypes.length > 0
-      ? Math.max(...pastTypes.map((t) => t.type.generation_id))
-      : 0;
+  const maxPastTypeGeneration = Math.max(
+    ...pokemontypepasts.map((t) => t.generation_id)
+  );
 
   // Find the lowest generation among present types
   const minPresentTypeGeneration =
-    presentTypes.length > 0
-      ? Math.min(...presentTypes.map((t) => t.type.generation_id))
+    types.length > 0
+      ? Math.min(...types.map((t) => t.generation_id))
       : Infinity;
 
-  // Use past types if current generation is greater than past types generation
-  // AND less than present types generation
+  // Use past types if current generation is in the range where past types were valid
+  // (at or after past types were introduced, but before present types)
   const shouldUsePastTypes =
     generationId >= maxPastTypeGeneration &&
     generationId < minPresentTypeGeneration;
 
-  let typesForGen;
+  const typesToDisplay = shouldUsePastTypes ? pokemontypepasts : types;
 
-  if (shouldUsePastTypes) {
-    // Use past types when generation is between past and present
-    typesForGen = pastTypes;
-  } else {
-    // Use present types for current generation and beyond
-    const presentTypesForGen = presentTypes.filter(
-      (t) => t.type.generation_id <= generationId
-    );
-    typesForGen =
-      presentTypesForGen.length > 0 ? presentTypesForGen : presentTypes;
-  }
-
-  if (typesForGen.length === 0) {
+  if (typesToDisplay.length === 0) {
     return (
       <span>Something went wrong: could not find types for generation.</span>
     );
@@ -77,7 +70,7 @@ const Types: React.FC<TypesProps> = async ({
 
   return (
     <PokemonTypes
-      types={typesForGen}
+      types={formatTypes(typesToDisplay)}
       versionGroup={versionGroup}
       generationString={generationString}
     />

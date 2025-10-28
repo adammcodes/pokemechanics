@@ -75,7 +75,7 @@ export default async function TypeEfficacy({
   // Store the result in the multipliedEfficacies array
   typesForGen.forEach((t: GraphQLPokemonType) => {
     const efficacies = t.type.TypeefficaciesByTargetTypeId;
-    const pastEfficacies = t.type.typeefficacypasts;
+    const pastEfficacies = t.type.typeefficacypasts || [];
 
     // Use past efficacies if they exist for the generation of the pokemon
     const pastEfficacy = pastEfficacies.filter(

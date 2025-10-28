@@ -1,26 +1,19 @@
 import StatBars from "./StatsBar";
 import Box from "@/components/common/Box";
-import {
-  getStatsByPokemon,
-  PokemonStats,
-} from "@/app/helpers/graphql/getStatsByPokemon";
+import { GraphQLPokemon, GraphQLPokemonStat } from "@/types/graphql";
 
 type StatsProps = {
-  pokemonName: string;
+  graphqlPokemonData: GraphQLPokemon | null;
 };
 
-const Stats: React.FC<StatsProps> = async ({ pokemonName }) => {
-  const statsData: PokemonStats | undefined = await getStatsByPokemon(
-    pokemonName
-  );
+const Stats: React.FC<StatsProps> = async ({ graphqlPokemonData }) => {
+  const statsData = graphqlPokemonData?.pokemonstats;
 
-  if (!statsData)
+  if (!statsData || statsData.length === 0)
     return <Box headingText="Base Stats:">Could not find stats.</Box>;
 
-  const { pokemonstats } = statsData;
-
-  const stats = pokemonstats.map((stats) => {
-    const { base_stat, effort, stat } = stats;
+  const stats = statsData.map((s: GraphQLPokemonStat) => {
+    const { base_stat, effort, stat } = s;
     const { name } = stat;
     return {
       name,

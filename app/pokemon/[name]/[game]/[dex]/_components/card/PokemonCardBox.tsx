@@ -7,13 +7,15 @@ import getSpriteUrl from "@/constants/spriteUrlTemplates";
 import DynamicImage from "@/components/common/DynamicImage";
 import DualDynamicImages from "../sprites/DualDynamicImages";
 import Types from "../types/Types";
-import { Genus, PokemonSprites, PokemonType } from "pokenode-ts";
+import { Genus, PokemonSprites } from "pokenode-ts";
+import { GraphQLPokemonType } from "@/types/graphql";
 
 type PokemonCardBoxProps = {
   name: string;
   pokemonId: number;
   is_variant: boolean;
-  types: PokemonType[];
+  types: GraphQLPokemonType["type"][];
+  pokemontypepasts: GraphQLPokemonType["type"][];
   sprites: PokemonSprites;
   height: number;
   weight: number;
@@ -103,10 +105,11 @@ const PokemonCardBox: React.FC<PokemonCardBoxProps> = (props) => {
               </div>
               <div className="mx-auto flex justify-around items-center mb-2">
                 <Types
-                  generationId={generationId}
-                  pokemonId={props.pokemonId}
+                  types={props.types}
+                  pokemontypepasts={props.pokemontypepasts}
                   versionGroup={selectedGame}
                   generationString={props.generationString}
+                  generationId={generationId}
                 />
               </div>
             </td>
