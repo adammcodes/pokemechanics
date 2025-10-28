@@ -30,14 +30,19 @@ This project follows Next.js 14 App Router conventions with a clear separation b
 ```
 pokemechanics/
 ├── app/                      # Route-specific components & pages
-│   ├── pokemon/[id]/         # Pokemon detail route
+│   ├── pokemon/[name]/[game]/[dex]/  # Pokemon detail route
 │   │   ├── _components/     # Route-specific components (not a route)
+│   │   │   ├── abilities/   # Ability display components
+│   │   │   ├── card/        # Pokemon card components
 │   │   │   ├── encounters/  # Encounter location components
 │   │   │   ├── evolutions/  # Evolution chain components
+│   │   │   ├── flavor-text/ # Flavor text components
+│   │   │   ├── moves/       # Move-related components
+│   │   │   ├── navigation/  # Navigation components
 │   │   │   ├── sprites/     # Sprite display components
 │   │   │   ├── stats/       # Stats display components
+│   │   │   ├── type-efficacy/ # Type effectiveness components
 │   │   │   └── types/       # Type display components
-│   │   │   └── moves/       # Move-related components
 │   │   ├── page.tsx         # Pokemon detail page
 │   │   └── *.tsx            # Route components
 │   │
@@ -65,6 +70,9 @@ pokemechanics/
     ├── hooks/              # Custom React hooks
     ├── utils/              # Utility functions
     ├── lib/                # Business logic & helpers
+    │   ├── getBasePokemonName.ts      # Strip regional suffixes from Pokemon names
+    │   ├── getVariantPokemonName.ts   # Determine correct variant based on region
+    │   └── findVarietyForRegion.ts    # Find variety matching a region
     ├── types/              # TypeScript type definitions
     ├── constants/          # App-wide constants
     └── styles/             # Global styles & CSS modules
@@ -89,7 +97,7 @@ pokemechanics/
 **Component Colocation Example**
 
 ```
-app/pokemon/[id]/
+app/pokemon/[name]/[game]/[dex]/
 ├── _components/              # Private components (underscore prevents routing)
 │   ├── encounters/
 │   │   ├── Encounters.tsx    # Only used by LocationsForVersionGroup
@@ -120,7 +128,7 @@ app/pokemon/[id]/
 
 - You need all data across generations for a resource
 - The REST endpoint provides complete, well-structured data
-- Example: `fetchPokemonById()` - returns complete Pokemon object with all game data
+- Example: `fetchPokemonByName()` - returns complete Pokemon object with all game data
 
 **Use GraphQL (`/app/helpers/graphql/`) when:**
 
@@ -161,6 +169,36 @@ const { data } = useQuery(["key"], async () => {
   });
 });
 ```
+
+### Regional Variant Pokemon Handling
+
+**Context:** Regional variants (Alolan, Galarian, Hisuian, Paldean) require special handling to ensure correct data fetching and URL structure.
+
+**Key Helper Functions:**
+
+- `getBasePokemonName(name)` - Strips regional suffixes (e.g., "rattata-alola" → "rattata")
+
+  - Required for `fetchPokemonSpeciesByName()` API calls (only accepts base names)
+  - Prevents 404 errors when fetching species data
+
+- `getVariantPokemonName(speciesData, regionName)` - Determines correct variant name
+  - Returns variant name (e.g., "rattata-alola") if Pokemon has regional form for that region
+  - Returns base name if no variant exists for the region
+  - Used for Pokemon data and GraphQL queries to get correct encounters/moves
+
+**Implementation Flow:**
+
+1. Extract base name from URL parameter using `getBasePokemonName(name)`
+2. Fetch species data with base name: `fetchPokemonSpeciesByName(baseName)`
+3. Determine region from version group and pokedex data
+4. Get actual variant name: `getVariantPokemonName(speciesData, regionName)`
+5. Fetch Pokemon data and GraphQL with variant name for correct encounters
+
+**URL Structure:**
+
+- Sitemap generates variant URLs: `/pokemon/rattata-alola/sun-moon/original-melemele`
+- Navigation can use base names, variant detection happens server-side
+- Ensures correct data for encounters (e.g., Alolan Rattata encounters in Sun/Moon)
 
 ### Path Aliases
 
@@ -211,12 +249,15 @@ import type { Pokemon } from "@/types"; // src/types/index
 - `npm run dev` - Start development server (port 3000)
 - `npm run build` - Build production bundle
 - `npm start` - Start production server (after build)
+- `npm test` - vitest
+- `npm run test:e2e:ui` - Playwright e2e testing locally
 
 ## 🧩 Key Technologies & Patterns
 
 ### State Management
 
-- **URL Search Params** - Primary source of truth for game selection (`?game=red-blue`)
+- Selected Version Group is referred to as `game` around the codebase
+- **URL Search Params** - /[name]/[version-group]/[dex]
 - **Cookies** - Persist user preferences (selected game, theme)
 - **React Context** - Share game selection across components (`GameContext`)
 - **React Query** - Client-side data fetching, caching, and synchronization
@@ -230,16 +271,6 @@ import type { Pokemon } from "@/types"; // src/types/index
 ### Type Safety
 
 - Comprehensive TypeScript types in `src/types/index.ts`
-- Strict mode enabled in `tsconfig.json`
-- Generic utilities for type-safe API calls
-
-### Performance Optimizations
-
-- Server-side rendering for initial page load
-- Parallel data fetching with `Promise.all()`
-- Suspense boundaries to prevent layout shift
-- Image optimization with Next.js Image component
-- Route-based code splitting (automatic with App Router)
 
 ## 🌐 API Usage
 
@@ -252,12 +283,7 @@ API routes in `/app/api/` act as proxies to handle CORS for client-side requests
 
 ## 📝 Contributing
 
-Contributions are welcome! Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines on:
-
-- Adding new features
-- Code conventions
-- Git workflow
-- Pull request process
+Contributions are welcome! Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
 
 ## 📄 License
 
@@ -266,5 +292,4 @@ This project is open source and available under the MIT License.
 ## 🙏 Acknowledgments
 
 - [PokéAPI](https://pokeapi.co/) - Pokémon data source
-- [pokenode-ts](https://github.com/Gabb-c/pokenode-ts) - TypeScript PokéAPI wrapper
 - Pokémon © Nintendo/Game Freak/Creatures Inc.

@@ -222,6 +222,13 @@ Create `/src/config/` with:
 - [x] Optimize Suspense boundaries
 - [x] Fix invalid version group URLs - Gracefully redirect `/pokedex/971` to `/pokedex` instead of crashing
 - [x] Handle variant Pokemon in metadata - Fixed form-suffixed Pokemon names (e.g., "tornadus-incarnate")
+- [x] **Regional Variant Pokemon Fixes** - Comprehensive fix for Alolan, Galarian, Hisuian, and Paldean forms
+  - Created `getBasePokemonName()` helper to strip regional suffixes before species API calls (fixes 404 errors)
+  - Created `getVariantPokemonName()` helper to determine correct variant based on region
+  - Updated `page.tsx` to detect and use correct variant names for Pokemon data and GraphQL queries
+  - Fixed encounters for regional variants (e.g., Alolan Rattata now shows encounters in Sun/Moon)
+  - Updated sitemap generation to include variant URLs (e.g., `/pokemon/rattata-alola/sun-moon/original-melemele`)
+  - Added region mapping for all version groups with regional variants (Gen 7-9)
 
 ### Documentation
 
@@ -240,4 +247,4 @@ Create `/src/config/` with:
 
 ---
 
-**Last Updated:** 2025-10-24
+**Last Updated:** 2025-10-27
