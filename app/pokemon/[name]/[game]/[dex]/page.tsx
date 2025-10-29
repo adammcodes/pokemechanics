@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { getVersionGroup } from "@/app/helpers/graphql/getVersionGroup";
 import { getPokemonComplete } from "@/app/helpers/graphql/getPokemonComplete";
@@ -209,6 +210,11 @@ export async function generateMetadata({
 
 export default async function Pokemon({ params }: PageProps) {
   const { name, game, dex } = params;
+
+  // Log User-Agent for monitoring bot traffic and API usage patterns
+  const headersList = headers();
+  const userAgent = headersList.get("user-agent") || "Unknown";
+  console.log(`[Request] /pokemon/${name}/${game}/${dex} | User-Agent: ${userAgent}`);
 
   if (!name || !game || !dex) {
     redirect("/pokedex");

@@ -46,8 +46,16 @@ npx wrangler tail pokemechanics | grep -E "PokeAPI|429"
 ### Bot-Specific Monitoring
 
 ```bash
-# Filter logs by user agent (if logging added)
+# Filter logs by user agent
+npx wrangler tail pokemechanics | grep -i "User-Agent"
+
+# Filter for specific bots
 npx wrangler tail pokemechanics | grep -i "googlebot"
+npx wrangler tail pokemechanics | grep -i "bingbot"
+npx wrangler tail pokemechanics | grep -i "bot"
+
+# See both requests and User-Agents together
+npx wrangler tail pokemechanics | grep -E "\[Request\]|\[PokeAPI"
 ```
 
 ## 🧪 Testing Bot Crawling

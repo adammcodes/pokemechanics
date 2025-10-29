@@ -4,6 +4,7 @@ import PokedexById from "./_components/PokedexById";
 import NationalDex from "./_components/NationalDex";
 import { getVersionGroup } from "@/app/helpers/graphql/getVersionGroup";
 import { Metadata } from "next";
+import { headers } from "next/headers";
 import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
 import { redirect } from "next/navigation";
 
@@ -45,6 +46,11 @@ export default async function Page({ params }: PageProps) {
   // e.g. /pokedex/red-blue
   // gen = red-blue
   const { gen } = params;
+
+  // Log User-Agent for monitoring bot traffic and API usage patterns
+  const headersList = headers();
+  const userAgent = headersList.get("user-agent") || "Unknown";
+  console.log(`[Request] /pokedex/${gen} | User-Agent: ${userAgent}`);
 
   const versionGroup = await getVersionGroup(gen);
 
