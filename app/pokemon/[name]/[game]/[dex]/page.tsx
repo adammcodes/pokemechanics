@@ -7,10 +7,10 @@ import { fetchPokemonByName } from "@/app/helpers/rest/fetchPokemonByName";
 import { fetchPokedexByName } from "@/app/helpers/rest/fetchPokedexByName";
 import PokemonCard from "./_components/card/PokemonCard";
 import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
-import { romanToNumber } from "@/utils/romanToNumber";
-import { fetchGenerationById } from "@/app/helpers/rest/fetchGenerationById";
+// import { romanToNumber } from "@/utils/romanToNumber";
+// import { fetchGenerationById } from "@/app/helpers/rest/fetchGenerationById";
 import { numOfPokemonByGen } from "@/constants/numOfPokemonByGen";
-import { PRIORITY_POKEMON } from "@/constants/priorityPokemon";
+// import { PRIORITY_POKEMON } from "@/constants/priorityPokemon";
 import getSpriteUrl from "@/constants/spriteUrlTemplates";
 import findVarietyForRegion from "@/lib/findVarietyForRegion";
 import { fetchPokemonById } from "@/app/helpers/rest/fetchPokemonById";
@@ -131,7 +131,7 @@ export async function generateMetadata({
 
     const title = `${variantDisplayName} - ${versionName} (${dexDisplayName} Pokédex)`;
     const description = `Explore ${variantDisplayName} in ${versionName}. View complete stats, moves, abilities, types, and evolution information for the ${dexDisplayName} Pokédex.`;
-    const canonicalUrl = `https://www.pokemechanics.app/pokemon/${name}/${game}/${dex}`;
+    const canonicalUrl = `https://www.pokemechanics.app/pokemon/${actualPokemonName}/${game}/${dex}`;
 
     // Get game-specific Pokemon sprite for social media preview
     // Extract generation roman numeral from "generation-i" -> "i"

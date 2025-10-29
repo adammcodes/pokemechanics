@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { fetchPokemonSpeciesByName } from "@/app/helpers/rest/fetchPokemonSpeciesByName";
 import { fetchPokemonByName } from "@/app/helpers/rest/fetchPokemonByName";
+import { getBasePokemonName } from "@/lib/getBasePokemonName";
 import { fetchFromGraphQL } from "@/utils/api";
 import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
 import Link from "next/link";
@@ -77,8 +78,10 @@ export async function generateMetadata({
 }: PageProps): Promise<Metadata> {
   const { name } = params;
 
+  const baseName = getBasePokemonName(name);
+
   try {
-    const speciesData = await fetchPokemonSpeciesByName(name);
+    const speciesData = await fetchPokemonSpeciesByName(baseName);
     const pokemonName = speciesData.name;
     const displayName =
       pokemonName.charAt(0).toUpperCase() + pokemonName.slice(1);
@@ -101,10 +104,12 @@ export async function generateMetadata({
 export default async function PokemonGameSelector({ params }: PageProps) {
   const { name } = params;
 
+  const baseName = getBasePokemonName(name);
+
   try {
     // Fetch Pokemon data to get available versions
     const [speciesData, pokemonData, allVersionGroups] = await Promise.all([
-      fetchPokemonSpeciesByName(name),
+      fetchPokemonSpeciesByName(baseName),
       fetchPokemonByName(name),
       getAllVersionGroups(),
     ]);

@@ -21,6 +21,7 @@ export function getBasePokemonName(pokemonName: string): string {
     "-galar",
     "-hisui",
     "-paldea",
+    "-kalos-cap", // for pikachu-kalos-cap
   ];
 
   // Check if name has a regional suffix
