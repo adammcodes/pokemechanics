@@ -56,9 +56,9 @@ export default function getSpriteTypeUrl({
     case "generation-ix":
       validVersionGroups = [
         "scarlet-violet",
-        // "the-indigo-disk",
-        // "the-teal-mask",
-        // "legends-za",
+        "the-indigo-disk",
+        "the-teal-mask",
+        "legends-za",
       ];
       break;
     default:
