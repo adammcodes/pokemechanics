@@ -247,10 +247,12 @@ import type { Pokemon } from "@/types"; // src/types/index
 ### Available Scripts
 
 #### Development
+
 - `npm run dev` - Start Next.js development server (port 3000)
 - `npm run preview` - Build and preview locally in Cloudflare Workers runtime (port 8787)
 
 #### Testing
+
 - `npm test` - Run unit tests with Vitest
 - `npm run test:ui` - Run Vitest with UI
 - `npm run test:coverage` - Run tests with coverage report
@@ -258,10 +260,12 @@ import type { Pokemon } from "@/types"; // src/types/index
 - `npm run test:e2e:ui` - Run Playwright E2E tests with UI
 
 #### Deployment
+
 - `npm run deploy` - Build and deploy to Cloudflare Workers
 - `npm run cf-typegen` - Generate TypeScript types for Cloudflare environment
 
 #### Legacy (deprecated)
+
 - `npm run build` - Build Next.js (now handled by `deploy`)
 - `npm start` - Start production server (not used with Cloudflare Workers)
 
@@ -300,10 +304,6 @@ API routes in `/app/api/` act as proxies to handle CORS for client-side requests
 
 This app is deployed on [Cloudflare Workers](https://workers.cloudflare.com/) using [@opennextjs/cloudflare](https://opennext.js.org/cloudflare), which provides:
 
-- **Global edge deployment** - Runs in 300+ cities worldwide
-- **Zero cold starts** - Instant response times
-- **Automatic scaling** - Handles traffic spikes seamlessly
-- **ISR support** - Incremental Static Regeneration with 24-hour revalidation
 - **Free tier** - 100,000 requests/day included
 
 ### Deployment Commands
@@ -329,8 +329,8 @@ npm run preview
 ### Custom Domain Setup
 
 The app is accessible at:
-- **Production:** https://pokemechanics.app
-- **WWW:** https://www.pokemechanics.app
+
+- **Production:** https://pokemechanics.app OR https://www.pokemechanics.app
 - **Workers.dev:** https://pokemechanics.adammarsala.workers.dev
 
 Custom domains are configured in the Cloudflare dashboard under **Workers & Pages** → **pokemechanics** → **Settings** → **Domains & Routes**.
@@ -356,6 +356,7 @@ npx wrangler tail pokemechanics --status ok     # Only successful requests
 
 1. Go to **Cloudflare Dashboard** → **Workers & Pages** → **pokemechanics**
 2. Click **Metrics** tab to view:
+
    - Request volume (requests per minute/hour)
    - Error rates (4xx, 5xx errors)
    - CPU time and execution duration
@@ -369,9 +370,9 @@ Add logging anywhere in your code - logs will appear in `wrangler tail`:
 
 ```typescript
 // In Pokemon pages or API routes
-console.log('Fetching Pokemon:', pokemonId);
-console.error('API error:', error);
-console.warn('Rate limit approaching');
+console.log("Fetching Pokemon:", pokemonId);
+console.error("API error:", error);
+console.warn("Rate limit approaching");
 ```
 
 ### Deployment Management
@@ -392,14 +393,10 @@ npx wrangler whoami
 For production monitoring, consider adding:
 
 **Free Tier:**
+
 - Use `wrangler tail` for active debugging
 - Cloudflare dashboard metrics for overview
 - `console.log()` statements in critical paths
-
-**Enhanced Monitoring (Optional):**
-- [Sentry](https://sentry.io/) - Error tracking with stack traces ($0-26/month)
-- [Cloudflare Web Analytics](https://www.cloudflare.com/web-analytics/) - Privacy-friendly analytics (free)
-- [Logpush](https://developers.cloudflare.com/logs/about/) - Long-term log storage to R2/S3 (Workers Paid plan required)
 
 ## 📝 Contributing
 
