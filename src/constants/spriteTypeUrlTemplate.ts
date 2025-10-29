@@ -56,9 +56,9 @@ export default function getSpriteTypeUrl({
     case "generation-ix":
       validVersionGroups = [
         "scarlet-violet",
-        "the-indigo-disk",
-        "the-teal-mask",
-        "legends-za",
+        // "the-indigo-disk",
+        // "the-teal-mask",
+        // "legends-za",
       ];
       break;
     default:
@@ -67,10 +67,10 @@ export default function getSpriteTypeUrl({
   }
 
   if (!validVersionGroups.includes(versionGroup)) {
-    console.warn(
-      `Invalid version group: "${versionGroup}" for generation "${generationString}".\n
-      Must be one of: ${validVersionGroups.join(", ")}.`
-    );
+    // console.warn(
+    //   `Invalid version group: "${versionGroup}" for generation "${generationString}".\n
+    //   Must be one of: ${validVersionGroups.join(", ")}.`
+    // );
     return null;
   }
 
