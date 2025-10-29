@@ -3,6 +3,7 @@
 ## Overview
 
 This Worker implements intelligent bot rate limiting that:
+
 - ✅ Allows bots to crawl the site
 - ✅ Sends 429 signals when bots hit too many uncached pages
 - ✅ Respects Retry-After headers (Googlebot compliant)
@@ -32,6 +33,7 @@ This Worker implements intelligent bot rate limiting that:
 ### 3. Add Route to Your Domain
 
 **Option A: From Worker Overview Page**
+
 1. After deploying, you should see your Worker overview page
 2. Look for a **Triggers** section (may be in the middle of the page, not a tab)
 3. Click **Add route** button
@@ -41,6 +43,7 @@ This Worker implements intelligent bot rate limiting that:
 5. Click **Add route** or **Save**
 
 **Option B: If you don't see Triggers section**
+
 1. Go back to **Workers & Pages** in the left sidebar
 2. Click on your `bot-throttler` worker name from the list
 3. Scroll down on the overview page to find **Triggers** section
@@ -48,6 +51,7 @@ This Worker implements intelligent bot rate limiting that:
 5. Enter route pattern and zone as above
 
 **Option C: Via Settings Tab**
+
 1. In the Worker page, click **Settings** tab (if available)
 2. Look for **Triggers** or **Domains & Routes** section
 3. Click **Add route** button
@@ -78,31 +82,35 @@ This Worker implements intelligent bot rate limiting that:
 You can adjust these values in `cloudflare-worker.js`:
 
 ```javascript
-const BOT_RATE_LIMIT = 10;    // Max uncached requests per minute
-const BOT_RETRY_AFTER = 60;   // Seconds to wait when throttled
+const BOT_RATE_LIMIT = 10; // Max uncached requests per minute
+const BOT_RETRY_AFTER = 60; // Seconds to wait when throttled
 ```
 
 ### Recommended Settings by Traffic Level:
 
 **Low traffic (< 1k visitors/day):**
+
 ```javascript
 const BOT_RATE_LIMIT = 20;
 const BOT_RETRY_AFTER = 30;
 ```
 
 **Medium traffic (1k-10k visitors/day) - Recommended:**
+
 ```javascript
 const BOT_RATE_LIMIT = 10;
 const BOT_RETRY_AFTER = 60;
 ```
 
 **High traffic (> 10k visitors/day):**
+
 ```javascript
 const BOT_RATE_LIMIT = 5;
 const BOT_RETRY_AFTER = 120;
 ```
 
 **During crawler surge (temporary):**
+
 ```javascript
 const BOT_RATE_LIMIT = 3;
 const BOT_RETRY_AFTER = 180;
@@ -138,11 +146,12 @@ Bot → CloudFlare Worker
       ↓
       Checks rate limit
       ↓
-      Under limit (≤10/min) → Pass to Vercel → Return page
+      Under limit (≤10/min) → Pass to pokemechanics worker → Return page
       Over limit (>10/min)  → Return 429 with Retry-After: 60
 ```
 
 **Result:**
+
 - First 10 uncached pages/min: Allowed through
 - Pages 11+: Get 429, bot waits 60 seconds
 - Bot naturally slows down
@@ -163,6 +172,7 @@ Human → CloudFlare Worker
 ### For Error Responses - Selective Caching:
 
 **429 Rate Limit Errors (cached for 60s):**
+
 ```
 Request → CloudFlare Worker
         ↓
@@ -178,6 +188,7 @@ Request → CloudFlare Worker
 **Result:** Protects PokeAPI from being hammered. Subsequent requests in 60s window get cached error.
 
 **5xx Server Errors (never cached):**
+
 ```
 Request → CloudFlare Worker
         ↓
@@ -193,6 +204,7 @@ Request → CloudFlare Worker
 **Result:** Bug fixes are immediately visible. No cache purge needed.
 
 **Other 4xx Errors (never cached):**
+
 ```
 Request → CloudFlare Worker
         ↓
@@ -208,6 +220,7 @@ Request → CloudFlare Worker
 **Result:** Client errors (bad requests, not found) aren't cached, fixes show immediately.
 
 **Why this selective approach matters:**
+
 - **429s cached briefly** - Prevents thundering herd on PokeAPI during rate limits
 - **5xx never cached** - Deploy a bug fix, users see it instantly
 - **4xx never cached** - Fix routing/validation bugs without cache purge
@@ -236,6 +249,7 @@ done
 ```
 
 **Expected:**
+
 - First 10: `200 OK` or `304 Not Modified`
 - Requests 11-15: `429 Too Many Requests` with `Retry-After: 60` header
 
@@ -259,6 +273,7 @@ curl -I https://pokemechanics.app/pokemon/pikachu/red-blue/kanto
 3. Click **Metrics** tab
 
 **Watch for:**
+
 - **Requests:** Should be handling all traffic to your site
 - **Errors:** Should be 0% or very low
 - **CPU time:** Should be < 5ms per request
@@ -271,6 +286,7 @@ curl -I https://pokemechanics.app/pokemon/pikachu/red-blue/kanto
 4. See live logs of Worker decisions
 
 **Log messages you'll see:**
+
 - `[Bot Cache Hit]` - Bot hit cached page (good!)
 - `[Bot Allowed]` - Bot under limit, request passed through
 - `[Bot Throttled]` - Bot over limit, returned 429
@@ -290,6 +306,7 @@ curl -I https://pokemechanics.app/pokemon/pikachu/red-blue/kanto
 ### Problem: Worker not running
 
 **Check:**
+
 1. Worker is deployed (green checkmark)
 2. Route is configured: `pokemechanics.app/*`
 3. No other Worker on same route
@@ -313,6 +330,7 @@ curl -I https://pokemechanics.app/pokemon/pikachu/red-blue/kanto
 ## When to Disable This Worker
 
 You can disable this Worker when:
+
 - ✅ CloudFlare cache hit rate reaches 90%+ sustained
 - ✅ 429 errors drop to < 1% of requests
 - ✅ PokeAPI usage is consistently under 50 calls/hour
@@ -324,16 +342,19 @@ At that point, the cache alone provides sufficient protection and the Worker bec
 ## Summary
 
 **This Worker solves:**
+
 - ❌ Aggressive bot crawling overwhelming your API
 - ❌ Googlebot causing PokeAPI rate limits
 - ❌ 429 errors during cache warm-up
 
 **While maintaining:**
+
 - ✅ SEO (Googlebot can still crawl)
 - ✅ User experience (humans never throttled)
 - ✅ Site availability (bots slow down naturally)
 
 **Estimated time to stable state:** 2-4 hours after deployment
+
 - Cache warms up
 - Bots see 429s and slow down
 - Traffic normalizes
