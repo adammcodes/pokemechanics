@@ -14,12 +14,23 @@ export async function fetchWithRetry(
 ): Promise<Response> {
   let lastError: Error;
 
+  // Log PokeAPI requests for monitoring
+  const isPokeAPIRequest = url.includes('pokeapi.co');
+  if (isPokeAPIRequest) {
+    console.log('[PokeAPI Request]', url);
+  }
+
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     try {
       const response = await fetch(url, options);
 
       // If we get a 429, wait and retry
       if (response.status === 429) {
+        // Log rate limits for monitoring
+        if (isPokeAPIRequest) {
+          console.error('[PokeAPI 429] Rate limited!', url);
+        }
+
         if (attempt < maxRetries) {
           // Exponential backoff: 1s, 2s, 4s, 8s
           const delayMs = Math.pow(2, attempt) * 1000;
@@ -34,6 +45,11 @@ export async function fetchWithRetry(
         throw new Error(
           `Rate limited by API after ${maxRetries} retries. Please try again later.`
         );
+      }
+
+      // Log successful PokeAPI calls for monitoring
+      if (response.ok && isPokeAPIRequest) {
+        console.log('[PokeAPI Success]', response.status);
       }
 
       // If successful or other error, return the response
