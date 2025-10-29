@@ -174,6 +174,8 @@ export const getPokemonComplete = cache(
           versionGroup,
           versions,
         },
+        // Cache Pokemon stats/moves for 7 days - only changes with new game releases
+        next: { revalidate: 604800 }, // 7 days
       });
 
       if (!response.data?.pokemon?.[0]) {

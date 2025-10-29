@@ -312,12 +312,12 @@ This app is deployed on [Cloudflare Workers](https://workers.cloudflare.com/) us
 # First time setup - Login to Cloudflare
 npx wrangler login
 
-# Deploy to production
-npm run deploy
-
 # Preview locally before deploying (recommended)
 npm run preview
 # Opens at http://localhost:8787
+
+# Deploy to production
+npm run deploy
 ```
 
 ### Configuration Files

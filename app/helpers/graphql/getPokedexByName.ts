@@ -36,6 +36,8 @@ export async function getPokedexByName(dexName: string) {
     const gqlResponse = await fetchFromGraphQL({
       query,
       variables: { dexName },
+      // Cache Pokedex data for 7 days - only changes with new game releases
+      next: { revalidate: 604800 }, // 7 days
     });
 
     // Optional: fetch Pokedex data from the REST API where its easier to access the region name

@@ -5,8 +5,15 @@
 
 import { POKEAPI_GRAPHQL_ENDPOINT } from "@/constants/apiConfig";
 
+// Next.js fetch options type
+type NextFetchRequestConfig = {
+  revalidate?: number | false;
+  tags?: string[];
+};
+
 // Fetch function with retry logic and exponential backoff
 // Deduplication is handled by React's cache() in the fetch helpers
+// Supports Next.js fetch caching via options.next
 export async function fetchWithRetry(
   url: string,
   options: RequestInit = {},
@@ -100,12 +107,20 @@ export async function fetchFromGraphQL<
   query,
   variables,
   endpoint = POKEAPI_GRAPHQL_ENDPOINT,
+  next,
 }: {
   query: string;
   variables?: TVariables;
   endpoint?: string;
+  next?: NextFetchRequestConfig;
 }): Promise<GraphQLResponse<TData>> {
   const url = endpoint;
+
+  // Get the query name from the query
+  const queryName = query.match(/query\s+(\w+)\s*\{/)?.[1];
+  if (queryName) {
+    console.log("[GraphQL Query]", queryName);
+  }
 
   try {
     const response = await fetchWithRetry(url, {
@@ -117,6 +132,7 @@ export async function fetchFromGraphQL<
         query,
         variables,
       }),
+      next, // Pass Next.js fetch options (revalidate, tags, etc.)
     });
 
     if (!response.ok) {

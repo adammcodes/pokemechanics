@@ -31,6 +31,8 @@ export const getNationalDexByLimit = async (limit: number) => {
     const response = await fetchFromGraphQL({
       query,
       variables: { limit },
+      // Cache National Pokedex data for 7 days - only changes with new Pokemon releases
+      next: { revalidate: 604800 }, // 7 days
     });
 
     if (!response.data?.pokedex?.[0]) {
