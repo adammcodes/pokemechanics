@@ -1,8 +1,6 @@
 import "@/styles/globals.css";
 import Client from "app/Client";
 import { cookies } from "next/headers";
-import { Analytics } from "@vercel/analytics/next";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata = {
   title: "Pokémechanics",
@@ -52,8 +50,6 @@ export default function RootLayout({
       </head>
       <body>
         <Client initialGame={game}>{children}</Client>
-        <Analytics />
-        <SpeedInsights />
       </body>
     </html>
   );

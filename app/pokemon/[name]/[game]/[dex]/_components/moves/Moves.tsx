@@ -46,6 +46,10 @@ const sortMachinesByMachineNumber = (
     return 0;
   }
   // If the moves are machine moves, sort by machine number
+  // Safety check: ensure machines array has items
+  if (!moveA.move.machines || !moveA.move.machines[0] || !moveB.move.machines || !moveB.move.machines[0]) {
+    return 0;
+  }
   const machineNumberA = moveA.move.machines[0].machine_number;
   const machineNumberB = moveB.move.machines[0].machine_number;
   return machineNumberA - machineNumberB; // ascending order

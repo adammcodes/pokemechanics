@@ -4,6 +4,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
+    "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",
@@ -11,9 +14,8 @@
     "test:e2e:ui": "playwright test --ui"
   },
   "dependencies": {
+    "@opennextjs/cloudflare": "^1.11.0",
     "@tanstack/react-query": "^5.90.2",
-    "@vercel/analytics": "^1.5.0",
-    "@vercel/speed-insights": "^1.2.0",
     "next": "^14.0.4",
     "pokenode-ts": "^1.20.0",
     "postcss-import": "^16.1.0",
@@ -35,6 +37,7 @@
     "postcss": "^8.4.23",
     "tailwindcss": "^3.4.4",
     "typescript": "^5.7.2",
-    "vitest": "^3.2.4"
+    "vitest": "^3.2.4",
+    "wrangler": "^4.45.1"
   }
 }
