@@ -170,6 +170,7 @@ export default async function PokemonGameSelector({ params }: PageProps) {
                 return (
                   <Link
                     key={vg.id}
+                    prefetch={false}
                     href={`/pokemon/${name}/${vg.name}/${pokedex.name}`}
                     className="pokeball-box game-selector-link border rounded-lg p-4 transition-colors"
                   >
@@ -198,6 +199,7 @@ export default async function PokemonGameSelector({ params }: PageProps) {
                   <Link
                     key={vg.url}
                     href={`/pokedex/${vg.name}`}
+                    prefetch={false}
                     className="pokeball-box game-selector-link border text-center rounded-lg p-4 transition-colors"
                   >
                     <PokeballBox />

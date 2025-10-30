@@ -142,6 +142,7 @@ const AutocompleteBase: React.FC<AutocompleteProps> = ({
               <li key={option.value}>
                 <Link
                   href={href}
+                  prefetch={false}
                   className={`${styles.autocomplete__li__btn} border-0 px-2 py-1 m-0 w-full text-left flex justify-between items-center block`}
                   onClick={() => {
                     if (onSelect) {

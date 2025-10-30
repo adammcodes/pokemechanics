@@ -36,7 +36,7 @@ const NavLink = ({
 }) => {
   return (
     <li>
-      <Link onClick={closeNav} href={href}>
+      <Link onClick={closeNav} href={href} prefetch={false}>
         {children}
       </Link>
       <i></i>

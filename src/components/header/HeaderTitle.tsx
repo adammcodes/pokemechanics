@@ -15,7 +15,7 @@ export default function HeaderTitle() {
 
   return (
     <div className="hidden lg:flex flex flex-row justify-center items-center">
-      <Link href="/">
+      <Link href="/" prefetch={false}>
         <Image
           src="/images/dudelax.webp"
           width={logoSize}
@@ -27,7 +27,7 @@ export default function HeaderTitle() {
       <div>
         {game && genNumber && (
           <>
-            <Link href="/">
+            <Link href="/" prefetch={false}>
               <span className="block text-2xl font-bold">POKEMECHANICS</span>
             </Link>
             <span className="text-[0.9em] lg:text-[1em]">

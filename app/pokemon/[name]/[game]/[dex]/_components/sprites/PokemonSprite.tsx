@@ -21,6 +21,7 @@ export const PokemonSprite = ({
   return (
     <Link
       href={`/pokemon/${pokemonName}/${game}/${dexName}`}
+      prefetch={false}
       className="mt-auto"
     >
       <figure className="flex flex-col items-center cursor-pointer">
