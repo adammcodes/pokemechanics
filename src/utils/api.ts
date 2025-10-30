@@ -75,12 +75,13 @@ export async function fetchFromGraphQL<
 
   // Get the query name from the query
   const queryName = query.match(/query\s+(\w+)\s*\{/)?.[1];
-  if (queryName) {
-    console.log("[GraphQL Query]", queryName);
-  }
+
+  // Log GraphQL request with query name for better debugging
+  console.log(`[PokeAPI Request] ${url}${queryName ? ` (GraphQL: ${queryName})` : ' (GraphQL)'}`);
 
   try {
-    const response = await fetchWithRetry(url, {
+    // Bypass fetchWithRetry to avoid duplicate logging
+    const response = await fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -89,8 +90,16 @@ export async function fetchFromGraphQL<
         query,
         variables,
       }),
-      next, // Pass Next.js fetch options (revalidate, tags, etc.)
+      // Note: GraphQL endpoint doesn't support Next.js fetch options
     });
+
+    // Handle 429 rate limiting
+    if (response.status === 429) {
+      console.error("[PokeAPI 429] Rate limited!", url);
+      throw new Error(
+        "Rate limited by API. Please try again in a few minutes."
+      );
+    }
 
     if (!response.ok) {
       throw new Error(`GraphQL request failed with status: ${response.status}`);
