@@ -210,11 +210,13 @@ export async function generateMetadata({
 
 export default async function Pokemon({ params }: PageProps) {
   const { name, game, dex } = params;
+  const startTime = Date.now();
 
   // Log User-Agent for monitoring bot traffic and API usage patterns
   const headersList = headers();
   const userAgent = headersList.get("user-agent") || "Unknown";
   console.log(`[Request] /pokemon/${name}/${game}/${dex} | User-Agent: ${userAgent}`);
+  console.log(`[Perf] Request start time: ${startTime}`);
 
   if (!name || !game || !dex) {
     redirect("/pokedex");
@@ -223,14 +225,17 @@ export default async function Pokemon({ params }: PageProps) {
   try {
     // Extract base Pokemon name (strip regional suffix like "-alola")
     const baseName = getBasePokemonName(name);
+    console.log(`[Perf] Base name extracted: ${baseName} (${Date.now() - startTime}ms)`);
 
     // Fetch version, dex, and species data first
     // IMPORTANT: fetchPokemonSpeciesByName must use base name (no regional suffix)
+    const fetchStart = Date.now();
     const [versionData, dexData, speciesData] = await Promise.all([
       getVersionGroup(game),
       fetchPokedexByName(dex),
       fetchPokemonSpeciesByName(baseName),
     ]);
+    console.log(`[Perf] Initial data fetched (${Date.now() - fetchStart}ms) | Total: ${Date.now() - startTime}ms`);
 
     // Determine region and find correct variant name
     const region = versionData.regions?.[0];
@@ -238,20 +243,25 @@ export default async function Pokemon({ params }: PageProps) {
     const regionName = dex === "national" ? region?.name || "" : dexRegion;
 
     const actualPokemonName = getVariantPokemonName(speciesData, regionName);
+    console.log(`[Perf] Variant name determined: ${actualPokemonName} (${Date.now() - startTime}ms)`);
 
     // Fetch Pokemon data using the correct variant name
+    const pokemonFetchStart = Date.now();
     const pokemonData = await fetchPokemonByName(actualPokemonName);
+    console.log(`[Perf] Pokemon data fetched (${Date.now() - pokemonFetchStart}ms) | Total: ${Date.now() - startTime}ms`);
 
     // Extract version names for GraphQL query
     const versions = versionData.versions.map((v) => v.name);
 
     // Fetch Pokemon moves from GraphQL using the correct variant name
     // This ensures encounters are fetched for the correct variant (e.g., "rattata-alola")
+    const graphqlFetchStart = Date.now();
     const graphqlPokemonData = await getPokemonComplete({
       pokemonName: actualPokemonName,
       versionGroup: game,
       versions,
     });
+    console.log(`[Perf] GraphQL data fetched (${Date.now() - graphqlFetchStart}ms) | Total: ${Date.now() - startTime}ms`);
 
     // Check if we have the required data
     if (!pokemonData || !speciesData || !versionData || !dexData) {
@@ -291,6 +301,8 @@ export default async function Pokemon({ params }: PageProps) {
       );
     }
 
+    console.log(`[Perf] Rendering PokemonCard | Total time: ${Date.now() - startTime}ms`);
+
     return (
       <main className="w-full">
         <PokemonCard
@@ -306,6 +318,7 @@ export default async function Pokemon({ params }: PageProps) {
     );
   } catch (error) {
     console.error("Error loading Pokémon data:", error);
+    console.log(`[Perf] Error occurred at ${Date.now() - startTime}ms`);
 
     // Handle specific error types
     if (error instanceof Error) {
