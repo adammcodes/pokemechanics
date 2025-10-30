@@ -11,76 +11,33 @@ type NextFetchRequestConfig = {
   tags?: string[];
 };
 
-// Fetch function with retry logic and exponential backoff
+// Fetch function without retry logic to avoid CPU timeouts on Cloudflare Workers
 // Deduplication is handled by React's cache() in the fetch helpers
 // Supports Next.js fetch caching via options.next
 export async function fetchWithRetry(
   url: string,
-  options: RequestInit = {},
-  maxRetries = 3
+  options: RequestInit = {}
 ): Promise<Response> {
-  let lastError: Error;
-
   // Log PokeAPI requests for monitoring
   const isPokeAPIRequest = url.includes("pokeapi.co");
   if (isPokeAPIRequest) {
     console.log("[PokeAPI Request]", url);
   }
 
-  for (let attempt = 0; attempt <= maxRetries; attempt++) {
-    try {
-      const response = await fetch(url, options);
+  const response = await fetch(url, options);
 
-      // If we get a 429, wait and retry
-      if (response.status === 429) {
-        // Log rate limits for monitoring
-        if (isPokeAPIRequest) {
-          console.error("[PokeAPI 429] Rate limited!", url);
-        }
-
-        if (attempt < maxRetries) {
-          // Exponential backoff: 1s, 2s, 4s, 8s
-          const delayMs = Math.pow(2, attempt) * 1000;
-          console.warn(
-            `Rate limited (429). Retrying in ${delayMs}ms... (attempt ${
-              attempt + 1
-            }/${maxRetries})`
-          );
-          await new Promise((resolve) => setTimeout(resolve, delayMs));
-          continue;
-        }
-        throw new Error(
-          `Rate limited by API after ${maxRetries} retries. Please try again later.`
-        );
-      }
-
-      // If successful or other error, return the response
-      return response;
-    } catch (error) {
-      lastError = error as Error;
-
-      // Only retry on network errors, not on other types of errors
-      if (
-        attempt < maxRetries &&
-        (error instanceof TypeError || // Network errors in fetch
-          (error as any).code === "ECONNRESET" ||
-          (error as any).code === "ETIMEDOUT")
-      ) {
-        const delayMs = Math.pow(2, attempt) * 1000;
-        console.warn(
-          `Network error. Retrying in ${delayMs}ms... (attempt ${
-            attempt + 1
-          }/${maxRetries})`
-        );
-        await new Promise((resolve) => setTimeout(resolve, delayMs));
-        continue;
-      }
-
-      throw error;
+  // If we get a 429, throw an error immediately (no retries)
+  // This prevents CPU timeout from setTimeout delays
+  if (response.status === 429) {
+    if (isPokeAPIRequest) {
+      console.error("[PokeAPI 429] Rate limited!", url);
     }
+    throw new Error(
+      "Rate limited by API. Please try again in a few minutes."
+    );
   }
 
-  throw lastError!;
+  return response;
 }
 
 // GraphQL response types

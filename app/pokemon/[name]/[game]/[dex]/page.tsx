@@ -313,17 +313,17 @@ export default async function Pokemon({ params }: PageProps) {
       if (error.message.includes("Rate limited")) {
         return (
           <main className="w-full max-w-screen-sm mx-auto text-center p-8">
-            <h1 className="text-2xl font-bold mb-4">Temporarily Unavailable</h1>
+            <h1 className="text-2xl font-bold mb-4">Please Try Again</h1>
             <p className="mb-4">
-              We're experiencing high traffic right now. Our database is
+              We're experiencing high traffic right now. The Pokémon database is
               temporarily rate-limited.
             </p>
             <p className="mb-4">
-              This page will be cached soon. Please refresh in a few seconds.
+              Please refresh this page in a few minutes.
             </p>
             <p className="text-sm text-gray-600">
-              Most pages load instantly once cached. This is a temporary issue
-              during high crawler activity.
+              Once cached, this page will load instantly. This is a temporary issue
+              during high traffic periods.
             </p>
           </main>
         );
