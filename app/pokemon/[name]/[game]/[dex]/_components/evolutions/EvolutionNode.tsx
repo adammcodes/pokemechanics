@@ -1,10 +1,8 @@
 import PokemonSpriteForGen from "../sprites/PokemonSpriteForGen";
 import { SpeciesVariety } from "@/types/index";
 import findVarietyForRegion from "@/lib/findVarietyForRegion";
-import PokemonSpriteVariety from "../sprites/PokemonSpriteVariety";
 import getSpriteUrl from "@/constants/spriteUrlTemplates";
 import { fetchPokemonSpeciesById } from "@/app/helpers/rest/fetchPokemonSpeciesById";
-import { POKEAPI_SPRITE_BASE_URL } from "@/constants/apiConfig";
 import { Pokemon } from "@/types/index";
 
 const EvolutionNode = async ({
@@ -89,25 +87,13 @@ const EvolutionNode = async ({
     });
   }
 
-  // If there is a pokemonVarietyId, use the PokemonSpriteById component to render the regional variant sprite
-  if (nodeSpeciesId && nodeSpeciesName) {
-    return (
-      <PokemonSpriteVariety
-        pokemonName={nodeSpeciesName}
-        pokemonVarietyId={Number(nodeSpeciesId)}
-        game={game}
-        dexName={dexName}
-      />
-    );
-  }
-
   return (
     <PokemonSpriteForGen
-      pokemonName={species.name}
+      pokemonName={nodeSpeciesName || species.name}
       sprite={sprite}
       game={game}
       dexName={dexName}
-      speciesName={species.name}
+      speciesName={nodeSpeciesName || species.name}
     />
   );
 };
