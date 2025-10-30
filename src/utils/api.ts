@@ -20,7 +20,6 @@ export async function fetchWithRetry(
   maxRetries = 3
 ): Promise<Response> {
   let lastError: Error;
-  const requestStart = Date.now();
 
   // Log PokeAPI requests for monitoring
   const isPokeAPIRequest = url.includes("pokeapi.co");
@@ -43,12 +42,11 @@ export async function fetchWithRetry(
           // Exponential backoff: 1s, 2s, 4s, 8s
           const delayMs = Math.pow(2, attempt) * 1000;
           console.warn(
-            `[Perf] Rate limited (429). Retrying in ${delayMs}ms... (attempt ${
+            `Rate limited (429). Retrying in ${delayMs}ms... (attempt ${
               attempt + 1
-            }/${maxRetries}) | Elapsed: ${Date.now() - requestStart}ms`
+            }/${maxRetries})`
           );
           await new Promise((resolve) => setTimeout(resolve, delayMs));
-          console.log(`[Perf] Retry delay completed. Total elapsed: ${Date.now() - requestStart}ms`);
           continue;
         }
         throw new Error(
@@ -57,9 +55,6 @@ export async function fetchWithRetry(
       }
 
       // If successful or other error, return the response
-      if (isPokeAPIRequest && response.ok) {
-        console.log(`[Perf] ${url} completed in ${Date.now() - requestStart}ms`);
-      }
       return response;
     } catch (error) {
       lastError = error as Error;
@@ -73,12 +68,11 @@ export async function fetchWithRetry(
       ) {
         const delayMs = Math.pow(2, attempt) * 1000;
         console.warn(
-          `[Perf] Network error. Retrying in ${delayMs}ms... (attempt ${
+          `Network error. Retrying in ${delayMs}ms... (attempt ${
             attempt + 1
-          }/${maxRetries}) | Elapsed: ${Date.now() - requestStart}ms`
+          }/${maxRetries})`
         );
         await new Promise((resolve) => setTimeout(resolve, delayMs));
-        console.log(`[Perf] Retry delay completed. Total elapsed: ${Date.now() - requestStart}ms`);
         continue;
       }
 
