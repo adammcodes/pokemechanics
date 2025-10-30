@@ -66,13 +66,23 @@ export default async function PokemonCard({
       pokemonVarietyForRegion.pokemon.url.split("/").at(-2)
     );
 
-    try {
-      variantPokemonData = await fetchPokemonById(pokemonVarietyId);
+    // Check if the pokemonData prop already has the correct variant
+    // This avoids a duplicate fetch when the parent already fetched the variant
+    if (pokemonData.id === pokemonVarietyId) {
+      // We already have the correct variant data from the parent!
+      variantPokemonData = pokemonData;
       isVariant = true;
-      variantName = variantPokemonData.name;
-    } catch (error) {
-      console.error("Failed to fetch variant Pokemon data:", error);
-      // Fall back to default Pokemon data
+      variantName = pokemonData.name;
+    } else {
+      // The parent fetched a different form, so we need to fetch the variant
+      try {
+        variantPokemonData = await fetchPokemonById(pokemonVarietyId);
+        isVariant = true;
+        variantName = variantPokemonData.name;
+      } catch (error) {
+        console.error("Failed to fetch variant Pokemon data:", error);
+        // Fall back to default Pokemon data
+      }
     }
   }
 
