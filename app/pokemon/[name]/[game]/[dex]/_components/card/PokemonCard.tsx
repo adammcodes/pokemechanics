@@ -102,7 +102,9 @@ export default async function PokemonCard({
   const displayPokemonData: Pokemon =
     isVariant && variantPokemonData ? variantPokemonData : pokemonData;
 
-  console.log("pokemonId", displayPokemonData.id);
+  console.log("name (id): ", displayPokemonData.name, displayPokemonData.id);
+
+  const nameSplitByDash = displayPokemonData.name.split("-");
 
   // Get version group data
   // const versionId: number = versionData?.id || 1;
@@ -116,7 +118,7 @@ export default async function PokemonCard({
   const pokemonName = toTitleCase(speciesData.name);
   const pokemonId = displayPokemonData.id;
   const variantRegionName: string = isVariant
-    ? formatName(displayPokemonData.name.split("-")[1])
+    ? formatName(nameSplitByDash[nameSplitByDash.length - 1])
     : regionName;
   const name =
     isVariant && variantRegionName
