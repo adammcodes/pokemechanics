@@ -19,6 +19,7 @@ function onlyEvolutionsForGen(evolution, generation) {
  *   evolves_to: Chain[],
  *   evolution_details: EvolutionDetail[]
  * }
+ * @param {*} pagePokemonData {Pokemon}
  * @param {*} gameInfo {
  *   game: string,
  *   generation: string,
@@ -28,7 +29,12 @@ function onlyEvolutionsForGen(evolution, generation) {
  * @param {*} prevEvolutionInGen {boolean}
  * @returns {React.ReactNode}
  */
-const renderEvolutionNode = (node, gameInfo, prevEvolutionInGen) => {
+const renderEvolutionNode = (
+  node,
+  pagePokemonData,
+  gameInfo,
+  prevEvolutionInGen
+) => {
   const { species, evolves_to, evolution_details } = node;
   const { game, generation, regionName } = gameInfo;
 
@@ -56,6 +62,7 @@ const renderEvolutionNode = (node, gameInfo, prevEvolutionInGen) => {
           )}
           <EvolutionNode
             pokemonDexNumber={pokemonDexNumber}
+            pagePokemonData={pagePokemonData}
             dexName={dexName}
             game={game}
             regionName={regionName}
@@ -74,7 +81,12 @@ const renderEvolutionNode = (node, gameInfo, prevEvolutionInGen) => {
             .filter((evolution) => onlyEvolutionsForGen(evolution, generation))
             .map((evolution, index) => (
               <div key={index}>
-                {renderEvolutionNode(evolution, gameInfo, isPokemonInGen)}
+                {renderEvolutionNode(
+                  evolution,
+                  pagePokemonData,
+                  gameInfo,
+                  isPokemonInGen
+                )}
               </div>
             ))}
         </div>
@@ -98,10 +110,10 @@ const renderEvolutionNode = (node, gameInfo, prevEvolutionInGen) => {
  * - gameInfo.regionName e.g. "Alola", "Galar", etc.
  * @returns {React.ReactNode}
  */
-const PokemonEvolutionChain = (chain, gameInfo) => {
+const PokemonEvolutionChain = (chain, pagePokemonData, gameInfo) => {
   return (
     <div className="flex justify-center">
-      {renderEvolutionNode(chain, gameInfo, false)}
+      {renderEvolutionNode(chain, pagePokemonData, gameInfo, false)}
     </div>
   );
 };

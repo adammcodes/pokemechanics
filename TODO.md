@@ -6,6 +6,11 @@ Project roadmap and planned improvements for Pokémechanics.
 
 ## 🔥 High Priority
 
+Next: Fix Open Graph metadata
+
+- Since migrating to cloudflare these previews no longer work:
+  https://opengraph.dev/panel?url=https%3A%2F%2Fwww.pokemechanics.app%2Fpokemon%2Fpikachu-kalos-cap%2Fx-y%2Fkalos-central
+
 ### Rate Limiting & API Optimization
 
 **Context:** PokeAPI has a 100 calls/hour per IP rate limit. Each page requires ~10 API calls. Bot/crawler traffic was causing 429 (Too Many Requests) errors.

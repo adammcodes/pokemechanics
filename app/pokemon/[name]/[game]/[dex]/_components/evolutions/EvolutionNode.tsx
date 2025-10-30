@@ -5,9 +5,11 @@ import PokemonSpriteVariety from "../sprites/PokemonSpriteVariety";
 import getSpriteUrl from "@/constants/spriteUrlTemplates";
 import { fetchPokemonSpeciesById } from "@/app/helpers/rest/fetchPokemonSpeciesById";
 import { POKEAPI_SPRITE_BASE_URL } from "@/constants/apiConfig";
+import { Pokemon } from "@/types/index";
 
 const EvolutionNode = async ({
   pokemonDexNumber,
+  pagePokemonData,
   dexName,
   game,
   regionName,
@@ -15,6 +17,7 @@ const EvolutionNode = async ({
   species,
 }: {
   pokemonDexNumber: number;
+  pagePokemonData: Pokemon;
   dexName: string;
   game: string;
   regionName: string;
@@ -23,44 +26,75 @@ const EvolutionNode = async ({
 }) => {
   // If there is no pokemonId, return a message
   if (!pokemonDexNumber) return <p>Sprite not available</p>;
-  const pokemonSpecies = await fetchPokemonSpeciesById(
-    Number(pokemonDexNumber)
+  let nodeSpeciesData = null;
+
+  const pagePokemonSprite = pagePokemonData.sprites.front_default;
+  const pagePokemonSpeciesId =
+    pagePokemonData.species.url.split("/").at(-2) ?? "";
+  const pagePokemonIsVariant = !pagePokemonData.is_default;
+  const pagePokemonNameContainsRegion = pagePokemonData.name.includes(
+    regionName.toLowerCase()
   );
 
+  // If this evolution node is the same as the page pokemon, use the page pokemon sprite
+  if (pokemonDexNumber.toString() === pagePokemonSpeciesId) {
+    return (
+      <PokemonSpriteForGen
+        pokemonName={species.name}
+        sprite={pagePokemonSprite}
+        game={game}
+        dexName={dexName}
+        speciesName={species.name}
+      />
+    );
+  }
+
+  // Default sprite for the node species
+  let sprite = getSpriteUrl({
+    versionGroup: game,
+    pokemonId: pokemonDexNumber,
+    generation: generation.split("-")[1],
+  });
+
+  // This node is not the page pokemon, and it is a variant, so fetch the species data
+  if (
+    pagePokemonIsVariant &&
+    pagePokemonNameContainsRegion &&
+    pokemonDexNumber.toString() !== pagePokemonSpeciesId
+  ) {
+    nodeSpeciesData = await fetchPokemonSpeciesById(Number(pokemonDexNumber));
+  }
+
   // Initialize the pokemonVarietyId
-  let pokemonVarietyId: number | undefined;
-  let pokemonVariantName: string | undefined;
+  let nodeSpeciesId: number | undefined;
+  let nodeSpeciesName: string | undefined;
+  const varieties = nodeSpeciesData?.varieties;
 
-  // If there is no sprite for the current generation, use the official artwork
-  let sprite = `${POKEAPI_SPRITE_BASE_URL}/other/official-artwork/${pokemonDexNumber}.png`;
-
-  const varieties = pokemonSpecies.varieties;
-
-  if (pokemonSpecies && varieties) {
+  if (nodeSpeciesData && varieties) {
     // Figure out which version of the sprite to use based on the game region
     const pokemonVarietyForRegion: SpeciesVariety | undefined =
       findVarietyForRegion(varieties, regionName);
 
     // If there is a matching pokemon variety for this game region, use that pokemon variety's id
-    pokemonVarietyId = Number(
+    nodeSpeciesId = Number(
       pokemonVarietyForRegion?.pokemon.url.split("/").at(-2)
     );
 
-    pokemonVariantName = pokemonVarietyForRegion?.pokemon.name;
+    nodeSpeciesName = pokemonVarietyForRegion?.pokemon.name;
 
     sprite = getSpriteUrl({
       versionGroup: game,
-      pokemonId: pokemonVarietyId || pokemonDexNumber,
+      pokemonId: nodeSpeciesId || pokemonDexNumber,
       generation: generation.split("-")[1],
     });
   }
 
   // If there is a pokemonVarietyId, use the PokemonSpriteById component to render the regional variant sprite
-  if (pokemonVarietyId && pokemonVariantName) {
+  if (nodeSpeciesId && nodeSpeciesName) {
     return (
       <PokemonSpriteVariety
-        pokemonName={pokemonVariantName}
-        pokemonVarietyId={Number(pokemonVarietyId)}
+        pokemonName={nodeSpeciesName}
+        pokemonVarietyId={Number(nodeSpeciesId)}
         game={game}
         dexName={dexName}
       />

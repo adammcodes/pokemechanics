@@ -115,7 +115,7 @@ export default async function PokemonCard({
   const versions = splitKebabCase(game ?? "red-blue");
 
   // Extract data from the Pokemon object
-  const types: PokemonType[] = displayPokemonData.types;
+  // const types: PokemonType[] = displayPokemonData.types;
   const sprites = displayPokemonData.sprites;
   const pokemonHeight = displayPokemonData.height;
   const pokemonWeight = displayPokemonData.weight;
@@ -189,11 +189,11 @@ export default async function PokemonCard({
       {/* Evolutions */}
       <Evolutions
         evolutionChainData={evolutionChainData}
+        pagePokemonData={displayPokemonData}
         game={game}
         generation={genName}
         dexName={dexName}
         regionName={variantRegionName}
-        pokemonHeight={pokemonHeight}
       />
       <section
         className={`grid grid-cols-1 md:grid-cols-2 ${
