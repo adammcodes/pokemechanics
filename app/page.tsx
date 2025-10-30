@@ -5,6 +5,10 @@ import { fetchFromGraphQL } from "@/utils/api";
 // Styles
 import styles from "@/styles/TypingText.module.css";
 
+// Enable ISR - revalidate every 7 days (604800 seconds)
+// Version groups never change, so long cache time is safe
+export const revalidate = 604800;
+
 type Gen = {
   name: string;
   url: string;
@@ -22,7 +26,11 @@ async function getVersionGroups(): Promise<Gen[]> {
   `;
 
   try {
-    const data = await fetchFromGraphQL({ query });
+    const data = await fetchFromGraphQL({
+      query,
+      // Cache version groups for 7 days - they never change
+      next: { revalidate: 604800 },
+    });
 
     // Transform the GraphQL response to match the expected Gen[] format
     return data.data.versiongroup.map((versionGroup: any) => {
