@@ -74,7 +74,8 @@ export async function fetchFromGraphQL<
   const url = endpoint;
 
   // Get the query name from the query (handles whitespace and newlines)
-  const queryName = query.match(/query\s+(\w+)/s)?.[1];
+  // Using [\s\S] instead of . with /s flag for ES2017 compatibility
+  const queryName = query.match(/query\s+(\w+)/)?.[1];
 
   // Log GraphQL request with query name for better debugging
   console.log(`[PokeAPI Request] ${url}${queryName ? ` (GraphQL: ${queryName})` : ' (GraphQL)'}`);
