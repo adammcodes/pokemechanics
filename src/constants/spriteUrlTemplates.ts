@@ -27,7 +27,11 @@ export default function getSpriteUrl({
   const genNumber = romanToNumber(generation);
 
   // after sun-moon the sprite url template changes
-  if (genNumber >= 8 || Number(pokemonId) >= 722) {
+  if (
+    genNumber >= 8 ||
+    Number(pokemonId) >= 722 ||
+    versionGroup === "lets-go-pikachu-lets-go-eevee"
+  ) {
     return `${POKEAPI_SPRITE_BASE_URL}/${pokemonId}.png`;
   }
 
