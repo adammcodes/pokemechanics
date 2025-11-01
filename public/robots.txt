@@ -141,6 +141,30 @@ Crawl-delay: 360
 Allow: /
 
 # ============================================================
+# ALLOW: Social Media & Link Preview Scrapers
+# ============================================================
+
+# Reddit link previews
+User-agent: Redditbot
+Crawl-delay: 360
+Allow: /
+
+# Discord link embeds
+User-agent: Discordbot
+Crawl-delay: 360
+Allow: /
+
+# Telegram link previews
+User-agent: TelegramBot
+Crawl-delay: 360
+Allow: /
+
+# Mastodon link previews
+User-agent: Mastodon
+Crawl-delay: 360
+Allow: /
+
+# ============================================================
 # DEFAULT: Block all other bots
 # ============================================================
 
