@@ -15,8 +15,18 @@ export default function VerifyPage() {
   const redirectPath = searchParams.get("redirect") || "/";
 
   useEffect(() => {
-    // Get site key from environment variable
-    const key = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+    // Turnstile site key - this is public and visible in client-side code
+    // Use test key for localhost, production key for deployed site
+    const isLocalhost = typeof window !== 'undefined' &&
+                       (window.location.hostname === 'localhost' ||
+                        window.location.hostname === '127.0.0.1');
+
+    // Cloudflare test key that always passes (for local development)
+    // Production key for actual deployment
+    const key = isLocalhost
+      ? "1x00000000000000000000AA"  // Test key - always passes
+      : "0x4AAAAAAB-D_9a3IgkAdbX6";   // Production key
+
     if (!key) {
       setError("Turnstile configuration error. Please contact support.");
       console.error("NEXT_PUBLIC_TURNSTILE_SITE_KEY not set");
