@@ -4,10 +4,45 @@ import GenSelector from "app/GenSelector";
 import { fetchFromGraphQL } from "@/utils/api";
 // Styles
 import styles from "@/styles/TypingText.module.css";
+import { Metadata } from "next";
 
 // Enable ISR - revalidate every 7 days (604800 seconds)
 // Version groups never change, so long cache time is safe
 export const revalidate = 604800;
+
+// SEO metadata for homepage
+export const metadata: Metadata = {
+  title: "Pokémechanics - Complete Pokédex Database for All Pokémon Games",
+  description:
+    "Comprehensive Pokémon database with detailed stats, moves, abilities, evolution chains, and regional Pokédex entries for every game from Gen 1 (Red/Blue) to Gen 9 (Scarlet/Violet). Explore all 1025 Pokémon across 25+ game versions.",
+  alternates: {
+    canonical: "https://www.pokemechanics.app",
+  },
+  openGraph: {
+    title: "Pokémechanics - Complete Pokédex Database for All Pokémon Games",
+    description:
+      "Comprehensive Pokémon database with detailed stats, moves, abilities, evolution chains, and regional Pokédex entries for every game from Gen 1 (Red/Blue) to Gen 9 (Scarlet/Violet). Explore all 1025 Pokémon across 25+ game versions.",
+    url: "https://www.pokemechanics.app",
+    siteName: "Pokémechanics",
+    images: [
+      {
+        url: "https://www.pokemechanics.app/images/dudelax.webp",
+        width: 400,
+        height: 400,
+        alt: "Pokémechanics mascot - Munchlax",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "Pokémechanics - Complete Pokédex Database",
+    description:
+      "Comprehensive Pokémon database with stats, moves, abilities, and evolution data for all 1025 Pokémon across every game generation.",
+    images: ["https://www.pokemechanics.app/images/dudelax.webp"],
+  },
+};
 
 type Gen = {
   name: string;
