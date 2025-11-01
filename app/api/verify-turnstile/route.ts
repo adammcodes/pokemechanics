@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { validateTurnstile } from "@/utils/validateTurnstile";
 
-export const runtime = "edge";
-
 export async function POST(request: NextRequest) {
   try {
     const { token } = await request.json();
