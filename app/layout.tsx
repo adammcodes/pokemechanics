@@ -27,6 +27,11 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://raw.githubusercontent.com" />
         <link rel="dns-prefetch" href="https://raw.githubusercontent.com" />
+        <script
+          src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
+          async
+          defer
+        ></script>
         <link
           rel="icon"
           type="image/png"
