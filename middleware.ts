@@ -1,10 +1,11 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
 /**
  * Edge middleware to:
  * 1. Block vulnerability scanners and invalid paths
- * 2. Enforce Turnstile verification for Pokemon pages
+ * 2. Allow verified search engine crawlers (Googlebot, Bingbot, etc.)
+ * 3. Enforce Turnstile verification for Pokemon pages (human users only)
  * This runs before the Next.js router, preventing CPU-intensive processing
  */
 export function middleware(request: NextRequest) {
@@ -13,41 +14,41 @@ export function middleware(request: NextRequest) {
   // Block common vulnerability scan patterns
   // These patterns are never valid routes in our app
   const blockedPatterns = [
-    /\.env$/i,              // .env files
-    /\.env\./i,             // .env.backup, .env.local, etc.
-    /\.dev\.vars$/i,        // Wrangler development secrets
-    /\.git/i,               // .git directory
-    /\.sql$/i,              // SQL dump files
-    /\.bak$/i,              // Backup files
-    /phpinfo\.php$/i,       // PHP info pages
-    /config\.(php|inc)$/i,  // PHP config files
-    /\.log$/i,              // Log files
-    /web\.config$/i,        // IIS config
-    /\.htaccess$/i,         // Apache config
-    /composer\.json$/i,     // PHP composer
-    /package\.json$/i,      // npm package (only at root is valid)
-    /\.yml$/i,              // YAML config files
-    /\.yaml$/i,             // YAML config files
+    /\.env$/i, // .env files
+    /\.env\./i, // .env.backup, .env.local, etc.
+    /\.dev\.vars$/i, // Wrangler development secrets
+    /\.git/i, // .git directory
+    /\.sql$/i, // SQL dump files
+    /\.bak$/i, // Backup files
+    /phpinfo\.php$/i, // PHP info pages
+    /config\.(php|inc)$/i, // PHP config files
+    /\.log$/i, // Log files
+    /web\.config$/i, // IIS config
+    /\.htaccess$/i, // Apache config
+    /composer\.json$/i, // PHP composer
+    /package\.json$/i, // npm package (only at root is valid)
+    /\.yml$/i, // YAML config files
+    /\.yaml$/i, // YAML config files
   ];
 
   // Check if path matches any blocked pattern
-  if (blockedPatterns.some(pattern => pattern.test(path))) {
+  if (blockedPatterns.some((pattern) => pattern.test(path))) {
     // Return 404 immediately without going through Next.js router
-    return new NextResponse('Not Found', { status: 404 });
+    return new NextResponse("Not Found", { status: 404 });
   }
 
   // Paths that don't require Turnstile verification
   const excludedPaths = [
-    '/verify',              // The verification page itself
-    '/api/verify-turnstile', // The verification API endpoint
-    '/favicon.ico',         // Favicon
+    "/verify", // The verification page itself
+    "/api/verify-turnstile", // The verification API endpoint
+    "/favicon.ico", // Favicon
   ];
 
   // Check if this path is excluded from verification
   const isExcluded =
-    excludedPaths.some(excluded => path.startsWith(excluded)) ||
-    path.startsWith('/_next/') ||  // Next.js internal routes
-    path.startsWith('/api/') && path !== '/api/verify-turnstile'; // Other API routes
+    excludedPaths.some((excluded) => path.startsWith(excluded)) ||
+    path.startsWith("/_next/") || // Next.js internal routes
+    (path.startsWith("/api/") && path !== "/api/verify-turnstile"); // Other API routes
 
   // If path is excluded, allow it through
   if (isExcluded) {
@@ -55,17 +56,29 @@ export function middleware(request: NextRequest) {
   }
 
   // Check if path is a Pokemon page (these require verification)
-  const requiresVerification = path.startsWith('/pokemon/');
+  const requiresVerification = path.startsWith("/pokemon/");
 
   if (requiresVerification) {
-    // Check for Turnstile verification cookie
-    const verifiedCookie = request.cookies.get('turnstile_verified');
+    // Allow known search engine crawlers and verified bots
+    const userAgent = request.headers.get("user-agent") || "";
+    const isKnownBot =
+      /googlebot|bingbot|slurp|duckduckbot|baiduspider|facebookexternalhit|twitterbot|rogerbot|linkedinbot|embedly|showyoubot|outbrain|pinterest|slackbot|vkshare|w3c_validator|applebot|whatsapp/i.test(
+        userAgent
+      );
 
-    if (!verifiedCookie || verifiedCookie.value !== 'true') {
+    if (isKnownBot) {
+      // Allow verified search crawlers to access Pokemon pages without Turnstile
+      return NextResponse.next();
+    }
+
+    // Check for Turnstile verification cookie
+    const verifiedCookie = request.cookies.get("turnstile_verified");
+
+    if (!verifiedCookie || verifiedCookie.value !== "true") {
       // No valid verification - redirect to verification page
       const url = request.nextUrl.clone();
-      url.pathname = '/verify';
-      url.searchParams.set('redirect', path);
+      url.pathname = "/verify";
+      url.searchParams.set("redirect", path);
       return NextResponse.redirect(url);
     }
   }
@@ -84,6 +97,6 @@ export const config = {
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
      */
-    '/((?!_next/static|_next/image|favicon.ico).*)',
+    "/((?!_next/static|_next/image|favicon.ico).*)",
   ],
 };
