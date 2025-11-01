@@ -9,28 +9,10 @@
 # engines that help users find our content are allowed.
 
 # ============================================================
-# BLOCK: AI Training Bots (don't help users find our content)
+# BLOCK: Data Harvesting & Commercial Bots
 # ============================================================
 
-User-agent: GPTBot
-Disallow: /
-
-User-agent: ChatGPT-User
-Disallow: /
-
 User-agent: CCBot
-Disallow: /
-
-User-agent: anthropic-ai
-Disallow: /
-
-User-agent: Claude-Web
-Disallow: /
-
-User-agent: Google-Extended
-Disallow: /
-
-User-agent: PerplexityBot
 Disallow: /
 
 User-agent: Bytespider
@@ -43,9 +25,6 @@ User-agent: FacebookBot
 Disallow: /
 
 User-agent: Applebot-Extended
-Disallow: /
-
-User-agent: cohere-ai
 Disallow: /
 
 User-agent: Omgilibot
@@ -85,6 +64,9 @@ Disallow: /
 User-agent: SerpstatBot
 Disallow: /
 
+User-agent: YandexBot
+Disallow: /
+
 # ============================================================
 # ALLOW: Legitimate Search Engines (help users find our site)
 # ============================================================
@@ -114,13 +96,47 @@ User-agent: Applebot
 Crawl-delay: 360
 Allow: /
 
-# Yandex (Russian search engine)
-User-agent: YandexBot
+# Baidu (Chinese search engine)
+User-agent: Baiduspider
 Crawl-delay: 360
 Allow: /
 
-# Baidu (Chinese search engine) - only if you want Chinese traffic
-User-agent: Baiduspider
+# ============================================================
+# ALLOW: AI Assistants (for citations & referrals)
+# ============================================================
+
+# OpenAI ChatGPT - 300M+ weekly users
+User-agent: GPTBot
+Crawl-delay: 360
+Allow: /
+
+# OpenAI ChatGPT User Queries
+User-agent: ChatGPT-User
+Crawl-delay: 360
+Allow: /
+
+# Anthropic Claude
+User-agent: anthropic-ai
+Crawl-delay: 360
+Allow: /
+
+# Claude Web Crawler
+User-agent: Claude-Web
+Crawl-delay: 360
+Allow: /
+
+# Google AI (Bard/Gemini)
+User-agent: Google-Extended
+Crawl-delay: 360
+Allow: /
+
+# Perplexity AI Search
+User-agent: PerplexityBot
+Crawl-delay: 360
+Allow: /
+
+# Cohere AI
+User-agent: cohere-ai
 Crawl-delay: 360
 Allow: /
 

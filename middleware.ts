@@ -5,7 +5,8 @@ import type { NextRequest } from "next/server";
  * Edge middleware to:
  * 1. Block vulnerability scanners and invalid paths
  * 2. Allow verified search engine crawlers (Googlebot, Bingbot, etc.)
- * 3. Enforce Turnstile verification for Pokemon pages (human users only)
+ * 3. Allow AI assistants (GPTBot, ClaudeBot, etc.) for citations & referrals
+ * 4. Enforce Turnstile verification for Pokemon pages (human users only)
  * This runs before the Next.js router, preventing CPU-intensive processing
  */
 export function middleware(request: NextRequest) {
@@ -59,15 +60,15 @@ export function middleware(request: NextRequest) {
   const requiresVerification = path.startsWith("/pokemon/");
 
   if (requiresVerification) {
-    // Allow known search engine crawlers and verified bots
+    // Allow known search engine crawlers, AI assistants, and verified bots
     const userAgent = request.headers.get("user-agent") || "";
     const isKnownBot =
-      /googlebot|bingbot|slurp|duckduckbot|baiduspider|facebookexternalhit|twitterbot|rogerbot|linkedinbot|embedly|showyoubot|outbrain|pinterest|slackbot|vkshare|w3c_validator|applebot|whatsapp/i.test(
+      /googlebot|bingbot|slurp|duckduckbot|baiduspider|yandexbot|facebookexternalhit|twitterbot|rogerbot|linkedinbot|embedly|showyoubot|outbrain|pinterest|slackbot|vkshare|w3c_validator|applebot|whatsapp|gptbot|chatgpt-user|anthropic-ai|claude-web|google-extended|perplexitybot|cohere-ai/i.test(
         userAgent
       );
 
     if (isKnownBot) {
-      // Allow verified search crawlers to access Pokemon pages without Turnstile
+      // Allow verified search crawlers and AI assistants to access Pokemon pages without Turnstile
       return NextResponse.next();
     }
 
