@@ -5,6 +5,7 @@ import { fetchFromGraphQL } from "@/utils/api";
 // Styles
 import styles from "@/styles/TypingText.module.css";
 import { Metadata } from "next";
+import { EXCLUDED_VERSION_GROUPS } from "@/constants/excludedVersionGroups";
 
 // Enable ISR - revalidate every 7 days (604800 seconds)
 // Version groups never change, so long cache time is safe
@@ -49,10 +50,16 @@ type Gen = {
   url: string;
 };
 
+type VersionGroup = {
+  id: number;
+  name: string;
+  generation_id: number;
+};
+
 async function getVersionGroups(): Promise<Gen[]> {
   const query = `
     query GetVersionGroups {
-      versiongroup(order_by: {generation_id: asc}) {
+      versiongroup {
         id
         name
         generation_id
@@ -61,19 +68,27 @@ async function getVersionGroups(): Promise<Gen[]> {
   `;
 
   try {
-    const data = await fetchFromGraphQL({
+    const { data } = await fetchFromGraphQL({
       query,
       // Cache version groups for 7 days - they never change
       next: { revalidate: 604800 },
     });
 
     // Transform the GraphQL response to match the expected Gen[] format
-    return data.data.versiongroup.map((versionGroup: any) => {
-      return {
-        name: versionGroup.name,
-        url: `/pokedex/${versionGroup.generation_id}`,
-      };
-    });
+    return data.versiongroup
+      .filter(
+        (versionGroup: VersionGroup) =>
+          !EXCLUDED_VERSION_GROUPS.includes(versionGroup.name)
+      )
+      .sort(
+        (a: VersionGroup, b: VersionGroup) => a.generation_id - b.generation_id
+      )
+      .map((versionGroup: VersionGroup) => {
+        return {
+          name: versionGroup.name,
+          url: `/pokedex/${versionGroup.generation_id}`,
+        };
+      });
   } catch (error) {
     console.error("Error fetching version groups:", error);
     throw error;
