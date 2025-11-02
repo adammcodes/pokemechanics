@@ -2,6 +2,49 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 /**
+ * Known bot patterns for fast lookup
+ * Using a Set for O(1) lookup instead of regex O(n) alternation
+ */
+const KNOWN_BOT_PATTERNS = new Set([
+  "googlebot",
+  "bingbot",
+  "slurp",
+  "duckduckbot",
+  "baiduspider",
+  "yandexbot",
+  "facebookexternalhit",
+  "twitterbot",
+  "rogerbot",
+  "linkedinbot",
+  "embedly",
+  "showyoubot",
+  "outbrain",
+  "pinterest",
+  "slackbot",
+  "vkshare",
+  "w3c_validator",
+  "applebot",
+  "whatsapp",
+  "redditbot",
+  "discordbot",
+  "telegrambot",
+  "mastodon",
+  "opengraph",
+  "linkpreview",
+  "previewbot",
+  "unfurl",
+  "meta-scraper",
+  "card-scraper",
+  "gptbot",
+  "chatgpt-user",
+  "anthropic-ai",
+  "claude-web",
+  "google-extended",
+  "perplexitybot",
+  "cohere-ai",
+]);
+
+/**
  * Edge middleware to:
  * 1. Block vulnerability scanners and invalid paths
  * 2. Allow verified search engine crawlers (Googlebot, Bingbot, etc.)
@@ -64,10 +107,12 @@ export function middleware(request: NextRequest) {
   if (requiresVerification) {
     // Allow known search engine crawlers, AI assistants, verified bots, social media scrapers, and link preview tools
     const userAgent = request.headers.get("user-agent") || "";
-    const isKnownBot =
-      /googlebot|bingbot|slurp|duckduckbot|baiduspider|yandexbot|facebookexternalhit|twitterbot|rogerbot|linkedinbot|embedly|showyoubot|outbrain|pinterest|slackbot|vkshare|w3c_validator|applebot|whatsapp|redditbot|discordbot|telegrambot|mastodon|opengraph|linkpreview|previewbot|unfurl|meta-scraper|card-scraper|gptbot|chatgpt-user|anthropic-ai|claude-web|google-extended|perplexitybot|cohere-ai/i.test(
-        userAgent
-      );
+    const userAgentLower = userAgent.toLowerCase();
+
+    // Fast O(1) Set lookup instead of O(n) regex
+    const isKnownBot = Array.from(KNOWN_BOT_PATTERNS).some(
+      (pattern) => userAgentLower.includes(pattern)
+    );
 
     if (isKnownBot) {
       // Allow verified search crawlers, AI assistants, social media scrapers, and link preview tools to access Pokemon pages without Turnstile

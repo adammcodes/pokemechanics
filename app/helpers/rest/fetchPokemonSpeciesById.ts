@@ -18,6 +18,8 @@ export const fetchPokemonSpeciesById = cache(async (id: number) => {
         Accept: "application/json",
         "User-Agent": "Pokemechanics/1.0",
       },
+      // Cache Pokemon species for 7 days - this is static data
+      next: { revalidate: 604800 },
     }
   );
 

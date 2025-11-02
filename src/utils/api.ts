@@ -32,9 +32,7 @@ export async function fetchWithRetry(
     if (isPokeAPIRequest) {
       console.error("[PokeAPI 429] Rate limited!", url);
     }
-    throw new Error(
-      "Rate limited by API. Please try again in a few minutes."
-    );
+    throw new Error("Rate limited by API. Please try again in a few minutes.");
   }
 
   return response;
@@ -78,10 +76,13 @@ export async function fetchFromGraphQL<
   const queryName = query.match(/query\s+(\w+)/)?.[1];
 
   // Log GraphQL request with query name for better debugging
-  console.log(`[PokeAPI Request] ${url}${queryName ? ` (GraphQL: ${queryName})` : ' (GraphQL)'}`);
+  console.log(
+    `[PokeAPI Request] ${url}${
+      queryName ? ` (GraphQL: ${queryName})` : " (GraphQL)"
+    }`
+  );
 
   try {
-    // Bypass fetchWithRetry to avoid duplicate logging
     const response = await fetch(url, {
       method: "POST",
       headers: {

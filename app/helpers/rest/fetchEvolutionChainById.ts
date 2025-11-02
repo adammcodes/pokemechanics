@@ -11,6 +11,8 @@ export const fetchEvolutionChainById = cache(async (id: number) => {
         Accept: "application/json",
         "User-Agent": "Pokemechanics/1.0",
       },
+      // Cache evolution chain for 7 days - this is static data
+      next: { revalidate: 604800 },
     }
   );
 

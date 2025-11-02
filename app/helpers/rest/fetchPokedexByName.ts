@@ -12,6 +12,8 @@ export const fetchPokedexByName = cache(async (name: string): Promise<Pokedex> =
         Accept: "application/json",
         "User-Agent": "Pokemechanics/1.0",
       },
+      // Cache Pokedex data for 7 days - this is static data
+      next: { revalidate: 604800 },
     }
   );
 

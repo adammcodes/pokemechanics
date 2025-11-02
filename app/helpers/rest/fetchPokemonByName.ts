@@ -12,6 +12,8 @@ export const fetchPokemonByName = cache(async (name: string) => {
         Accept: "application/json",
         "User-Agent": "Pokemechanics/1.0",
       },
+      // Cache Pokemon data for 7 days - this is static data
+      next: { revalidate: 604800 },
     }
   );
 
@@ -26,6 +28,7 @@ export const fetchPokemonByName = cache(async (name: string) => {
             Accept: "application/json",
             "User-Agent": "Pokemechanics/1.0",
           },
+          next: { revalidate: 604800 },
         }
       );
 
@@ -46,6 +49,7 @@ export const fetchPokemonByName = cache(async (name: string) => {
                 Accept: "application/json",
                 "User-Agent": "Pokemechanics/1.0",
               },
+              next: { revalidate: 604800 },
             }
           );
         }
