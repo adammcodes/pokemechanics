@@ -139,20 +139,11 @@ export default function VerifyPage() {
           </div>
         )}
 
-        <div className="relative">
-          <TurnstileChallenge
-            sitekey={siteKey}
-            onSuccess={handleSuccess}
-            onError={handleError}
-          />
-
-          {isVerifying && (
-            <div className="absolute inset-0 bg-white bg-opacity-90 flex flex-col items-center justify-center gap-4 rounded">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-              <p className="text-gray-600">Verifying...</p>
-            </div>
-          )}
-        </div>
+        <TurnstileChallenge
+          sitekey={siteKey}
+          onSuccess={handleSuccess}
+          onError={handleError}
+        />
 
         <p className="text-sm text-gray-500 mt-8">
           This verification helps protect the site from automated abuse.
