@@ -4,6 +4,20 @@ import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import TurnstileChallenge from "@/components/TurnstileChallenge";
 
+// Helper function to add timeout to fetch requests
+const fetchWithTimeout = (
+  url: string,
+  options: RequestInit,
+  timeout = 10000
+): Promise<Response> => {
+  return Promise.race([
+    fetch(url, options),
+    new Promise<Response>((_, reject) =>
+      setTimeout(() => reject(new Error("Request timeout")), timeout)
+    ),
+  ]);
+};
+
 export default function VerifyPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -35,19 +49,37 @@ export default function VerifyPage() {
     setSiteKey(key);
   }, []);
 
+  // Add verification timeout - reset if verification takes too long
+  useEffect(() => {
+    if (isVerifying) {
+      const timeoutId = setTimeout(() => {
+        setError(
+          "Verification is taking too long. Please refresh the page and try again."
+        );
+        setIsVerifying(false);
+      }, 15000); // 15 second timeout
+
+      return () => clearTimeout(timeoutId);
+    }
+  }, [isVerifying]);
+
   const handleSuccess = async (token: string) => {
     setIsVerifying(true);
     setError(null);
 
     try {
-      // Send token to our API for verification
-      const response = await fetch("/api/verify-turnstile", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      // Send token to our API for verification with 10 second timeout
+      const response = await fetchWithTimeout(
+        "/api/verify-turnstile",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ token }),
         },
-        body: JSON.stringify({ token }),
-      });
+        10000 // 10 second timeout
+      );
 
       const data = await response.json();
 
@@ -62,7 +94,13 @@ export default function VerifyPage() {
       }
     } catch (err) {
       console.error("Verification error:", err);
-      setError("Network error. Please check your connection and try again.");
+      if (err instanceof Error && err.message === "Request timeout") {
+        setError(
+          "Verification request timed out. Please check your connection and try again."
+        );
+      } else {
+        setError("Network error. Please check your connection and try again.");
+      }
       setIsVerifying(false);
     }
   };
@@ -101,18 +139,20 @@ export default function VerifyPage() {
           </div>
         )}
 
-        {isVerifying ? (
-          <div className="flex flex-col items-center gap-4">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-            <p className="text-gray-600">Verifying...</p>
-          </div>
-        ) : (
+        <div className="relative">
           <TurnstileChallenge
             sitekey={siteKey}
             onSuccess={handleSuccess}
             onError={handleError}
           />
-        )}
+
+          {isVerifying && (
+            <div className="absolute inset-0 bg-white bg-opacity-90 flex flex-col items-center justify-center gap-4 rounded">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+              <p className="text-gray-600">Verifying...</p>
+            </div>
+          )}
+        </div>
 
         <p className="text-sm text-gray-500 mt-8">
           This verification helps protect the site from automated abuse.
