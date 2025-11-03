@@ -51,7 +51,7 @@ const KNOWN_BOT_PATTERNS = new Set([
  * 3. Allow AI assistants (GPTBot, ClaudeBot, etc.) for citations & referrals
  * 4. Allow social media scrapers (Reddit, Discord, Telegram, etc.) for link previews
  * 5. Allow link preview tools (OpenGraph, LinkPreview, etc.) for metadata display
- * 6. Enforce Turnstile verification for Pokemon pages (human users only)
+ * 6. Enforce Turnstile verification for ALL routes (human users only)
  * This runs before the Next.js router, preventing CPU-intensive processing
  */
 export function middleware(request: NextRequest) {
@@ -88,12 +88,19 @@ export function middleware(request: NextRequest) {
     "/verify", // The verification page itself
     "/api/verify-turnstile", // The verification API endpoint
     "/favicon.ico", // Favicon
+    "/favicon.svg", // SVG Favicon
+    "/favicon-96x96.png", // PNG Favicon
+    "/apple-touch-icon.png", // Apple touch icon
+    "/site.webmanifest", // PWA manifest
+    "/sitemap.xml", // Sitemap for search engines
+    "/robots.txt", // Robots.txt for search engines
   ];
 
   // Check if this path is excluded from verification
   const isExcluded =
     excludedPaths.some((excluded) => path.startsWith(excluded)) ||
     path.startsWith("/_next/") || // Next.js internal routes
+    path.startsWith("/images/") || // Static images
     (path.startsWith("/api/") && path !== "/api/verify-turnstile"); // Other API routes
 
   // If path is excluded, allow it through
@@ -101,34 +108,32 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Check if path is a Pokemon page (these require verification)
-  const requiresVerification = path.startsWith("/pokemon/");
+  // Require verification for ALL routes (not just /pokemon/*)
+  // This blocks vulnerability scanners while allowing legitimate bots
 
-  if (requiresVerification) {
-    // Allow known search engine crawlers, AI assistants, verified bots, social media scrapers, and link preview tools
-    const userAgent = request.headers.get("user-agent") || "";
-    const userAgentLower = userAgent.toLowerCase();
+  // Allow known search engine crawlers, AI assistants, verified bots, social media scrapers, and link preview tools
+  const userAgent = request.headers.get("user-agent") || "";
+  const userAgentLower = userAgent.toLowerCase();
 
-    // Fast O(1) Set lookup instead of O(n) regex
-    const isKnownBot = Array.from(KNOWN_BOT_PATTERNS).some(
-      (pattern) => userAgentLower.includes(pattern)
-    );
+  // Fast O(1) Set lookup instead of O(n) regex
+  const isKnownBot = Array.from(KNOWN_BOT_PATTERNS).some(
+    (pattern) => userAgentLower.includes(pattern)
+  );
 
-    if (isKnownBot) {
-      // Allow verified search crawlers, AI assistants, social media scrapers, and link preview tools to access Pokemon pages without Turnstile
-      return NextResponse.next();
-    }
+  if (isKnownBot) {
+    // Allow verified search crawlers, AI assistants, social media scrapers, and link preview tools to access all pages without Turnstile
+    return NextResponse.next();
+  }
 
-    // Check for Turnstile verification cookie
-    const verifiedCookie = request.cookies.get("turnstile_verified");
+  // Check for Turnstile verification cookie
+  const verifiedCookie = request.cookies.get("turnstile_verified");
 
-    if (!verifiedCookie || verifiedCookie.value !== "true") {
-      // No valid verification - redirect to verification page
-      const url = request.nextUrl.clone();
-      url.pathname = "/verify";
-      url.searchParams.set("redirect", path);
-      return NextResponse.redirect(url);
-    }
+  if (!verifiedCookie || verifiedCookie.value !== "true") {
+    // No valid verification - redirect to verification page
+    const url = request.nextUrl.clone();
+    url.pathname = "/verify";
+    url.searchParams.set("redirect", path);
+    return NextResponse.redirect(url);
   }
 
   // Allow request to proceed to Next.js router
