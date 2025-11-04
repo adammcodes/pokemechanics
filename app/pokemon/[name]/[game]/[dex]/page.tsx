@@ -11,7 +11,6 @@ import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
 // import { romanToNumber } from "@/utils/romanToNumber";
 // import { fetchGenerationById } from "@/app/helpers/rest/fetchGenerationById";
 import { numOfPokemonByGen } from "@/constants/numOfPokemonByGen";
-// import { PRIORITY_POKEMON } from "@/constants/priorityPokemon";
 import getSpriteUrl from "@/constants/spriteUrlTemplates";
 import findVarietyForRegion from "@/lib/findVarietyForRegion";
 import { fetchPokemonById } from "@/app/helpers/rest/fetchPokemonById";
@@ -22,39 +21,6 @@ import { getVariantPokemonName } from "@/lib/getVariantPokemonName";
 // Pokemon data is static, so long cache times are safe
 // Reduces API calls to PokeAPI significantly
 export const revalidate = 86400;
-
-// Generate static pages for popular Pokemon at build time
-// This eliminates runtime API calls for these pages
-// export async function generateStaticParams() {
-//   // Pre-render top Pokemon for the most popular version groups
-//   const popularVersionGroups = [
-//     { game: "scarlet-violet", dex: "paldea" },
-//     { game: "scarlet-violet", dex: "national" },
-//     { game: "sword-shield", dex: "galar" },
-//     { game: "sword-shield", dex: "national" },
-//     { game: "red-blue", dex: "kanto" },
-//     { game: "red-blue", dex: "national" },
-//   ];
-
-//   const params = [];
-
-//   // Generate all combinations of priority Pokemon + popular version groups
-//   for (const pokemon of PRIORITY_POKEMON) {
-//     for (const vg of popularVersionGroups) {
-//       params.push({
-//         name: pokemon,
-//         game: vg.game,
-//         dex: vg.dex,
-//       });
-//     }
-//   }
-
-//   console.log(
-//     `[StaticGen] Pre-rendering ${params.length} popular Pokemon pages`
-//   );
-
-//   return params;
-// }
 
 type PageProps = {
   params: {
@@ -214,7 +180,9 @@ export default async function Pokemon({ params }: PageProps) {
   // Log User-Agent for monitoring bot traffic and API usage patterns
   const headersList = headers();
   const userAgent = headersList.get("user-agent") || "Unknown";
-  console.log(`[Request] /pokemon/${name}/${game}/${dex} | User-Agent: ${userAgent}`);
+  console.log(
+    `[Request] /pokemon/${name}/${game}/${dex} | User-Agent: ${userAgent}`
+  );
 
   if (!name || !game || !dex) {
     redirect("/pokedex");
@@ -318,12 +286,10 @@ export default async function Pokemon({ params }: PageProps) {
               We're experiencing high traffic right now. The Pokémon database is
               temporarily rate-limited.
             </p>
-            <p className="mb-4">
-              Please refresh this page in a few minutes.
-            </p>
+            <p className="mb-4">Please refresh this page in a few minutes.</p>
             <p className="text-sm text-gray-600">
-              Once cached, this page will load instantly. This is a temporary issue
-              during high traffic periods.
+              Once cached, this page will load instantly. This is a temporary
+              issue during high traffic periods.
             </p>
           </main>
         );

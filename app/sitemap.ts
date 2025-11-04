@@ -1,9 +1,8 @@
 import { MetadataRoute } from "next";
-import { numOfPokemonByGen } from "@/constants/numOfPokemonByGen";
 import {
-  PRIORITY_POKEMON,
-  PRIORITY_POKEMON_SET,
-} from "@/constants/priorityPokemon";
+  POKEAPI_GRAPHQL_ENDPOINT,
+  POKEAPI_REST_ENDPOINT,
+} from "@/constants/apiConfig";
 
 // Type for version group configuration
 type VersionGroupConfig = {
@@ -12,6 +11,27 @@ type VersionGroupConfig = {
   generation: string;
   maxPokemonId?: number; // Optional override for remakes
   region?: string; // Region for regional variants (e.g., "alola", "galar", "hisui")
+};
+
+type PokedexVersionGroup = {
+  pokedex: {
+    id: number;
+    name: string;
+    region: {
+      name: string;
+    };
+    pokemondexnumbers: {
+      pokemon_species_id: number;
+      pokedex_number: number;
+    }[];
+  };
+};
+
+type VersionGroupPokedexes = {
+  id: number;
+  name: string;
+  generation_id: number;
+  pokedexversiongroups: PokedexVersionGroup[];
 };
 
 // Regional variant Pokemon by region
@@ -266,7 +286,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Fetch all 1025 Pokemon species with IDs for generation-based filtering
   try {
     const response = await fetch(
-      "https://pokeapi.co/api/v2/pokemon-species?limit=1025&offset=0",
+      `${POKEAPI_REST_ENDPOINT}/pokemon?limit=1025&offset=0`,
       {
         next: { revalidate: 86400 }, // Cache for 24 hours
       }
@@ -279,66 +299,65 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       })
     );
 
-    console.log(
-      `Generating sitemap for ${allPokemon.length} Pokemon across ${VERSION_GROUPS.length} version groups...`
+    const versionGroupPokedexes = await fetch(
+      `${POKEAPI_GRAPHQL_ENDPOINT}/query`,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          query: `
+          query GetVersionGroupsAndPokedexes {
+            versiongroup {
+              id
+              name
+              generation_id
+              pokedexversiongroups {
+                pokedex {
+                  id
+                  name
+                  region {
+                    name
+                  }
+                  pokemondexnumbers {
+                    pokemon_species_id
+                    pokedex_number
+                  }
+                }
+              }
+            }
+          }`,
+        }),
+      }
     );
+
+    const { data: pokedexData } = await versionGroupPokedexes.json();
+
+    const vgPokedexes: VersionGroupPokedexes[] = pokedexData.versiongroup;
 
     // For each version group, generate URLs for all valid Pokemon
     VERSION_GROUPS.forEach((vg) => {
-      // Get max Pokemon ID for this version group
-      // Use override if present (for remakes), otherwise use generation default
-      const maxPokemonId = vg.maxPokemonId ?? numOfPokemonByGen[vg.generation];
-
-      // Filter Pokemon that exist in this version group
-      const validPokemon = allPokemon.filter((p) => p.id <= maxPokemonId);
-
-      console.log(
-        `${vg.name} (${vg.generation}): ${validPokemon.length}/${allPokemon.length} Pokemon`
-      );
-
-      // Generate national dex URLs for all valid Pokemon
-      validPokemon.forEach((pokemon) => {
-        const isPriority = PRIORITY_POKEMON_SET.has(
-          pokemon.name as (typeof PRIORITY_POKEMON)[number]
-        );
-
-        // Check if this Pokemon has a regional variant for this version group
-        const hasVariant =
-          vg.region && REGIONAL_VARIANTS[vg.region]?.includes(pokemon.name);
-        const pokemonName = hasVariant
-          ? `${pokemon.name}-${vg.region}`
-          : pokemon.name;
-
-        urls.push({
-          url: `${baseUrl}/pokemon/${pokemonName}/${vg.name}/national`,
-          lastModified: currentDate,
-          changeFrequency: "monthly",
-          priority: isPriority ? 0.8 : 0.6,
-        });
-      });
-
-      // Generate regional dex URLs for all valid Pokemon
-      vg.pokedexes.forEach((dexName) => {
-        validPokemon.forEach((pokemon) => {
-          const isPriority = PRIORITY_POKEMON_SET.has(
-            pokemon.name as (typeof PRIORITY_POKEMON)[number]
-          );
-
-          // Check if this Pokemon has a regional variant for this version group
-          const hasVariant =
-            vg.region && REGIONAL_VARIANTS[vg.region]?.includes(pokemon.name);
-          const pokemonName = hasVariant
-            ? `${pokemon.name}-${vg.region}`
-            : pokemon.name;
-
-          urls.push({
-            url: `${baseUrl}/pokemon/${pokemonName}/${vg.name}/${dexName}`,
-            lastModified: currentDate,
-            changeFrequency: "monthly",
-            priority: isPriority ? 0.7 : 0.5,
+      const vgPokedex = vgPokedexes.find((v) => v.name === vg.name);
+      if (vgPokedex) {
+        const pokedexes = vgPokedex.pokedexversiongroups.map((p) => p.pokedex);
+        pokedexes.forEach((dex) => {
+          const regionName = dex.region.name;
+          dex.pokemondexnumbers.forEach((dexNumber) => {
+            const pokemonSpeciesId = dexNumber.pokemon_species_id;
+            const pokemonSpecies = allPokemon[pokemonSpeciesId - 1];
+            const isVariant = REGIONAL_VARIANTS[regionName]?.includes(
+              pokemonSpecies.name
+            );
+            const pokemonName = isVariant
+              ? `${pokemonSpecies.name}-${regionName}`
+              : pokemonSpecies.name;
+            urls.push({
+              url: `${baseUrl}/pokemon/${pokemonName}/${vg.name}/${dex.name}`,
+              lastModified: currentDate,
+              changeFrequency: "monthly",
+              priority: 0.7,
+            });
           });
         });
-      });
+      }
     });
 
     console.log(`Total sitemap URLs generated: ${urls.length}`);
