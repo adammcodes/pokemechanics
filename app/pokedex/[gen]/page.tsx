@@ -14,19 +14,19 @@ export const revalidate = 86400;
 
 // fetch the game version for the selected generation
 type PageProps = {
-  params: {
+  params: Promise<{
     gen: string;
-  };
-  searchParams?: {
+  }>;
+  searchParams?: Promise<{
     [key: string]: string | string[] | undefined;
-  };
+  }>;
 };
 
 // Generate metadata for SEO
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
-  const { gen } = params;
+  const { gen } = await params;
   const canonicalUrl = `https://www.pokemechanics.app/pokedex/${gen}`;
   const formattedGen = convertKebabCaseToTitleCase(gen);
 
@@ -45,10 +45,10 @@ export default async function Page({ params }: PageProps) {
   // Get the selected generation from the dynamic route params of the URL
   // e.g. /pokedex/red-blue
   // gen = red-blue
-  const { gen } = params;
+  const { gen } = await params;
 
   // Log User-Agent for monitoring bot traffic and API usage patterns
-  const headersList = headers();
+  const headersList = await headers();
   const userAgent = headersList.get("user-agent") || "Unknown";
   console.log(`[Request] /pokedex/${gen} | User-Agent: ${userAgent}`);
 

@@ -1,3 +1,4 @@
+"use client";
 import DynamicImage from "@/components/common/DynamicImage";
 import getSpriteIconUrl from "@/constants/spriteIconUrlTemplate";
 

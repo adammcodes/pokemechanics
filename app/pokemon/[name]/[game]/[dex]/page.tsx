@@ -23,18 +23,18 @@ import { getVariantPokemonName } from "@/lib/getVariantPokemonName";
 export const revalidate = 86400;
 
 type PageProps = {
-  params: {
+  params: Promise<{
     name: string;
     game: string;
     dex: string;
-  };
+  }>;
 };
 
 // Generate metadata for SEO
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
-  const { name, game, dex } = params;
+  const { name, game, dex } = await params;
 
   try {
     // Extract base Pokemon name (strip regional suffix like "-alola")
@@ -175,10 +175,10 @@ export async function generateMetadata({
 }
 
 export default async function Pokemon({ params }: PageProps) {
-  const { name, game, dex } = params;
+  const { name, game, dex } = await params;
 
   // Log User-Agent for monitoring bot traffic and API usage patterns
-  const headersList = headers();
+  const headersList = await headers();
   const userAgent = headersList.get("user-agent") || "Unknown";
   console.log(
     `[Request] /pokemon/${name}/${game}/${dex} | User-Agent: ${userAgent}`

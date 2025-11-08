@@ -14,9 +14,9 @@ import { fetchGenerationById } from "@/app/helpers/rest/fetchGenerationById";
 export const revalidate = 86400;
 
 type PageProps = {
-  params: {
+  params: Promise<{
     name: string;
-  };
+  }>;
 };
 
 type VersionGroup = {
@@ -76,7 +76,7 @@ async function getAllVersionGroups(): Promise<VersionGroup[]> {
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
-  const { name } = params;
+  const { name } = await params;
 
   const baseName = getBasePokemonName(name);
 
@@ -102,7 +102,7 @@ export async function generateMetadata({
 }
 
 export default async function PokemonGameSelector({ params }: PageProps) {
-  const { name } = params;
+  const { name } = await params;
 
   const baseName = getBasePokemonName(name);
 
