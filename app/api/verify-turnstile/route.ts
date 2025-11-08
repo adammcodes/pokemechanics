@@ -12,6 +12,27 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Development mode bypass - auto-succeed without Cloudflare validation
+    if (process.env.NODE_ENV === "development") {
+      console.log("[DEV] Turnstile verification bypassed in development mode");
+      const response = NextResponse.json({
+        success: true,
+        message: "Challenge passed (development mode)",
+      });
+
+      response.cookies.set({
+        name: "turnstile_verified",
+        value: "true",
+        httpOnly: true,
+        secure: false, // Allow non-HTTPS in development
+        sameSite: "lax",
+        maxAge: 86400, // 24 hours
+        path: "/",
+      });
+
+      return response;
+    }
+
     // Get secret key from environment
     const secretKey = process.env.TURNSTILE_SECRET_KEY;
 

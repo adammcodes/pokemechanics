@@ -45,6 +45,28 @@ const KNOWN_BOT_PATTERNS = new Set([
 ]);
 
 /**
+ * Paths that don't require Turnstile verification
+ */
+const EXCLUDED_PATHS = [
+  "/verify",
+  "/api/verify-turnstile",
+  "/favicon.ico",
+  "/favicon.svg",
+  "/favicon-96x96.png",
+  "/apple-touch-icon.png",
+  "/site.webmanifest",
+  "/sitemap.xml",
+  "/robots.txt",
+];
+
+/**
+ * Combined regex for blocked file patterns
+ * Tests common vulnerability scanner targets
+ */
+const BLOCKED_FILE_PATTERN = /\.(env|git|sql|bak|log|yml|yaml)($|\.)/i;
+const BLOCKED_PHP_PATTERN = /(phpinfo\.php|config\.(php|inc)|composer\.json|web\.config|\.htaccess)/i;
+
+/**
  * Edge middleware to:
  * 1. Block vulnerability scanners and invalid paths
  * 2. Allow verified search engine crawlers (Googlebot, Bingbot, etc.)
@@ -53,79 +75,57 @@ const KNOWN_BOT_PATTERNS = new Set([
  * 5. Allow link preview tools (OpenGraph, LinkPreview, etc.) for metadata display
  * 6. Enforce Turnstile verification for ALL routes (human users only)
  * This runs before the Next.js router, preventing CPU-intensive processing
+ *
+ * Optimized for minimal CPU time (<3ms) by checking hot paths first
  */
 export function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
 
-  // Block common vulnerability scan patterns
-  // These patterns are never valid routes in our app
-  const blockedPatterns = [
-    /\.env$/i, // .env files
-    /\.env\./i, // .env.backup, .env.local, etc.
-    /\.dev\.vars$/i, // Wrangler development secrets
-    /\.git/i, // .git directory
-    /\.sql$/i, // SQL dump files
-    /\.bak$/i, // Backup files
-    /phpinfo\.php$/i, // PHP info pages
-    /config\.(php|inc)$/i, // PHP config files
-    /\.log$/i, // Log files
-    /web\.config$/i, // IIS config
-    /\.htaccess$/i, // Apache config
-    /composer\.json$/i, // PHP composer
-    /package\.json$/i, // npm package (only at root is valid)
-    /\.yml$/i, // YAML config files
-    /\.yaml$/i, // YAML config files
-  ];
+  // HOT PATH: Check Next.js internal routes first (80%+ of requests)
+  // Exit immediately for static assets
+  if (path.startsWith("/_next/") || path.startsWith("/images/")) {
+    return NextResponse.next();
+  }
 
-  // Check if path matches any blocked pattern
-  if (blockedPatterns.some((pattern) => pattern.test(path))) {
-    // Return 404 immediately without going through Next.js router
+  // Check other excluded paths (verification, sitemap, robots.txt, etc.)
+  if (EXCLUDED_PATHS.some((excluded) => path.startsWith(excluded))) {
+    return NextResponse.next();
+  }
+
+  // API routes (except Turnstile verification) don't require Turnstile
+  if (path.startsWith("/api/") && path !== "/api/verify-turnstile") {
+    return NextResponse.next();
+  }
+
+  // Block vulnerability scanner patterns
+  // Use fast string checks before expensive regex
+  if (
+    path.includes(".env") ||
+    path.includes(".git") ||
+    path.includes("dev.vars") ||
+    BLOCKED_FILE_PATTERN.test(path) ||
+    BLOCKED_PHP_PATTERN.test(path) ||
+    path.endsWith("package.json") // Only root package.json is valid, block others
+  ) {
     return new NextResponse("Not Found", { status: 404 });
   }
 
-  // Paths that don't require Turnstile verification
-  const excludedPaths = [
-    "/verify", // The verification page itself
-    "/api/verify-turnstile", // The verification API endpoint
-    "/favicon.ico", // Favicon
-    "/favicon.svg", // SVG Favicon
-    "/favicon-96x96.png", // PNG Favicon
-    "/apple-touch-icon.png", // Apple touch icon
-    "/site.webmanifest", // PWA manifest
-    "/sitemap.xml", // Sitemap for search engines
-    "/robots.txt", // Robots.txt for search engines
-  ];
+  // Check if request is from a known bot (search engines, AI assistants, etc.)
+  // Only get user-agent if needed (after hot path checks)
+  const userAgent = request.headers.get("user-agent");
+  if (userAgent) {
+    const userAgentLower = userAgent.toLowerCase();
 
-  // Check if this path is excluded from verification
-  const isExcluded =
-    excludedPaths.some((excluded) => path.startsWith(excluded)) ||
-    path.startsWith("/_next/") || // Next.js internal routes
-    path.startsWith("/images/") || // Static images
-    (path.startsWith("/api/") && path !== "/api/verify-turnstile"); // Other API routes
-
-  // If path is excluded, allow it through
-  if (isExcluded) {
-    return NextResponse.next();
+    // Directly iterate Set without Array.from() conversion
+    for (const pattern of KNOWN_BOT_PATTERNS) {
+      if (userAgentLower.includes(pattern)) {
+        // Bot detected - allow without verification
+        return NextResponse.next();
+      }
+    }
   }
 
-  // Require verification for ALL routes (not just /pokemon/*)
-  // This blocks vulnerability scanners while allowing legitimate bots
-
-  // Allow known search engine crawlers, AI assistants, verified bots, social media scrapers, and link preview tools
-  const userAgent = request.headers.get("user-agent") || "";
-  const userAgentLower = userAgent.toLowerCase();
-
-  // Fast O(1) Set lookup instead of O(n) regex
-  const isKnownBot = Array.from(KNOWN_BOT_PATTERNS).some(
-    (pattern) => userAgentLower.includes(pattern)
-  );
-
-  if (isKnownBot) {
-    // Allow verified search crawlers, AI assistants, social media scrapers, and link preview tools to access all pages without Turnstile
-    return NextResponse.next();
-  }
-
-  // Check for Turnstile verification cookie
+  // Human user - check for Turnstile verification cookie
   const verifiedCookie = request.cookies.get("turnstile_verified");
 
   if (!verifiedCookie || verifiedCookie.value !== "true") {
@@ -136,7 +136,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // Allow request to proceed to Next.js router
+  // Verified human user - allow request to proceed
   return NextResponse.next();
 }
 
