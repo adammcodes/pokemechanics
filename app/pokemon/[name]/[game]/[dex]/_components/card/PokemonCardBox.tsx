@@ -7,22 +7,22 @@ import getSpriteUrl from "@/constants/spriteUrlTemplates";
 import DynamicImage from "@/components/common/DynamicImage";
 import DualDynamicImages from "../sprites/DualDynamicImages";
 import Types from "../types/Types";
-import { Genus, PokemonSprites } from "pokenode-ts";
 import { GraphQLPokemonType } from "@/types/graphql";
+import { PokemonSpecies } from "@/types/index";
 
 type PokemonCardBoxProps = {
+  frontDefaultSpriteSrc: string;
   name: string;
   pokemonId: number;
   is_variant: boolean;
   types: GraphQLPokemonType["type"][];
   pokemontypepasts: GraphQLPokemonType["type"][];
-  sprites: PokemonSprites;
   height: number;
   weight: number;
   genNumber: string;
   generationString: string;
   game: string;
-  genera: Genus[];
+  genera: PokemonSpecies["genera"];
   nationalId: number;
 };
 
@@ -36,7 +36,7 @@ const PokemonCardBox: React.FC<PokemonCardBoxProps> = (props) => {
       : spriteSizesByVersion[selectedGame];
 
   const pokemonGenus: string | undefined = props.genera
-    ? props.genera.find((g: Genus) => {
+    ? props.genera.find((g: PokemonSpecies["genera"][number]) => {
         return g.language.name === "en";
       })?.genus
     : "";
@@ -91,11 +91,7 @@ const PokemonCardBox: React.FC<PokemonCardBoxProps> = (props) => {
                 {selectedGame !== "gold-silver" && (
                   <DynamicImage
                     game={selectedGame}
-                    src={getSpriteUrl({
-                      versionGroup: selectedGame,
-                      pokemonId: props.pokemonId,
-                      generation: props.genNumber,
-                    })}
+                    src={props.frontDefaultSpriteSrc}
                     width={spriteSize}
                     height={spriteSize}
                     alt={pokemonName || "Pokemon sprite"}

@@ -15,19 +15,30 @@
  * getBasePokemonName("pikachu") // Returns "pikachu"
  */
 export function getBasePokemonName(pokemonName: string): string {
-  // Regional variant suffixes
-  const regionalSuffixes = [
+  // variant substrings
+  const suffixes = [
     "-alola",
     "-galar",
     "-hisui",
     "-paldea",
     "-kalos-cap", // for pikachu-kalos-cap
+    "-land", // for shaymin-land
+    "-sky", // for shaymin-sky
+    "-attack", // for deoxys-attack
+    "-defense", // for deoxys-defense
+    "-speed", // for deoxys-speed
+    "-normal", // for deoxys-normal
+    "-special", // for deoxys-special
+    "-gmax", // for gmax pokemon
+    "-mega", // for mega pokemon
+    "-primal", // for primal pokemon
+    "-totem", // for totem pokemon
   ];
 
   // Check if name has a regional suffix
-  for (const suffix of regionalSuffixes) {
-    if (pokemonName.endsWith(suffix)) {
-      return pokemonName.replace(suffix, "");
+  for (const suffix of suffixes) {
+    if (pokemonName.includes(suffix)) {
+      return pokemonName.split(suffix)[0];
     }
   }
 

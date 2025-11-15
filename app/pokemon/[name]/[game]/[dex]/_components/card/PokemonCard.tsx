@@ -5,7 +5,6 @@ import {
   PokemonSpecies,
 } from "@/types/index";
 import { GraphQLPokemon } from "@/types/graphql";
-import { PokemonType } from "pokenode-ts";
 import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
 import toTitleCase from "@/utils/toTitleCase";
 import splitKebabCase from "@/utils/splitKebabCase";
@@ -28,6 +27,7 @@ import HeaderSelect from "@/components/header/HeaderSelect";
 import { romanToNumber } from "@/utils/romanToNumber";
 import LocationsForVersionGroup from "../encounters/LocationsForVersionGroup";
 import { GraphQLPokemonType } from "@/types/graphql";
+import getSpriteUrl from "@/constants/spriteUrlTemplates";
 
 type PokemonCardProps = {
   pokemonData: Pokemon;
@@ -128,7 +128,6 @@ export default async function PokemonCard({
 
   // Extract data from the Pokemon object
   // const types: PokemonType[] = displayPokemonData.types;
-  const sprites = displayPokemonData.sprites;
   const pokemonHeight = displayPokemonData.height;
   const pokemonWeight = displayPokemonData.weight;
   //const pokemonEvolveChainUrl: string = speciesData.evolution_chain.url;
@@ -148,6 +147,22 @@ export default async function PokemonCard({
         return versions.includes(entry.version.name);
       })
     : null;
+
+  const graphqlSpritesArray = graphqlPokemonData?.pokemonsprites;
+  const graphqlSprites =
+    graphqlSpritesArray && graphqlSpritesArray.length > 0
+      ? graphqlSpritesArray[0].sprites
+      : null;
+  const graphqlSpritesForVersion =
+    graphqlSprites && graphqlSprites.versions[genName][game];
+
+  const frontDefaultSpriteSrc = graphqlSpritesForVersion
+    ? graphqlSpritesForVersion.front_default
+    : getSpriteUrl({
+        versionGroup: game,
+        pokemonId: pokemonId,
+        generation: genNumber,
+      });
 
   return (
     <div className={`w-full flex flex-col items-center justify-center px-4`}>
@@ -174,6 +189,7 @@ export default async function PokemonCard({
         />
         {/* Sprite + Types */}
         <PokemonCardBox
+          frontDefaultSpriteSrc={frontDefaultSpriteSrc}
           name={name}
           pokemonId={pokemonId}
           is_variant={isVariant}
@@ -187,7 +203,6 @@ export default async function PokemonCard({
               (t: GraphQLPokemonType) => t.type
             ) || []
           }
-          sprites={sprites}
           height={pokemonHeight}
           weight={pokemonWeight}
           generationString={genName}

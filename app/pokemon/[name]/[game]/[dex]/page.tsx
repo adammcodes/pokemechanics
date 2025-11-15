@@ -61,7 +61,11 @@ export async function generateMetadata({
     const dexRegion = dexData.region?.name || "";
     const regionName = dex === "national" ? region?.name || "" : dexRegion;
 
-    const actualPokemonName = getVariantPokemonName(speciesData, regionName);
+    const actualPokemonName = getVariantPokemonName(
+      speciesData,
+      regionName,
+      name
+    );
 
     // Fetch Pokemon data using the correct variant name
     const pokemonData = await fetchPokemonByName(actualPokemonName);
@@ -199,6 +203,7 @@ export default async function Pokemon({ params }: PageProps) {
   try {
     // Extract base Pokemon name (strip regional suffix like "-alola")
     const baseName = getBasePokemonName(name);
+    console.log("baseName", baseName);
 
     // Fetch version, dex, and species data first
     // IMPORTANT: fetchPokemonSpeciesByName must use base name (no regional suffix)
@@ -213,10 +218,11 @@ export default async function Pokemon({ params }: PageProps) {
     const dexRegion = dexData.region?.name || "";
     const regionName = dex === "national" ? region?.name || "" : dexRegion;
 
-    const actualPokemonName = getVariantPokemonName(speciesData, regionName);
+    // Including regional suffix
+    const variantName = getVariantPokemonName(speciesData, regionName, name);
 
     // Fetch Pokemon data using the correct variant name
-    const pokemonData = await fetchPokemonByName(actualPokemonName);
+    const pokemonData = await fetchPokemonByName(variantName);
 
     // Extract version names for GraphQL query
     const versions = versionData.versions.map((v) => v.name);
@@ -224,7 +230,7 @@ export default async function Pokemon({ params }: PageProps) {
     // Fetch Pokemon moves from GraphQL using the correct variant name
     // This ensures encounters are fetched for the correct variant (e.g., "rattata-alola")
     const graphqlPokemonData = await getPokemonComplete({
-      pokemonName: actualPokemonName,
+      pokemonName: variantName,
       versionGroup: game,
       versions,
     });
