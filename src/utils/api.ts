@@ -4,6 +4,7 @@
  */
 
 import { POKEAPI_GRAPHQL_ENDPOINT } from "@/constants/apiConfig";
+import { apiLimiter } from "./rateLimiter";
 
 // Next.js fetch options type
 type NextFetchRequestConfig = {
@@ -24,7 +25,7 @@ export async function fetchWithRetry(
     console.log("[PokeAPI Request]", url);
   }
 
-  const response = await fetch(url, options);
+  const response = await apiLimiter(() => fetch(url, options));
 
   // If we get a 429, throw an error immediately (no retries)
   // This prevents CPU timeout from setTimeout delays
@@ -83,17 +84,19 @@ export async function fetchFromGraphQL<
   );
 
   try {
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        query,
-        variables,
-      }),
-      // Note: GraphQL endpoint doesn't support Next.js fetch options
-    });
+    const response = await apiLimiter(() =>
+      fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          query,
+          variables,
+        }),
+        // Note: GraphQL endpoint doesn't support Next.js fetch options
+      })
+    );
 
     // Handle 429 rate limiting
     if (response.status === 429) {

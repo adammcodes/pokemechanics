@@ -1,4 +1,9 @@
 module.exports = {
+  // Throttle static page generation to prevent overwhelming local API
+  experimental: {
+    staticGenerationMaxConcurrency: 4, // Max 4 concurrent page builds
+    staticGenerationRetryCount: 1,      // Retry failed pages once
+  },
   images: {
     unoptimized: true,
     remotePatterns: [

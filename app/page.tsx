@@ -7,9 +7,8 @@ import styles from "@/styles/TypingText.module.css";
 import { Metadata } from "next";
 import { EXCLUDED_VERSION_GROUPS } from "@/constants/excludedVersionGroups";
 
-// Enable ISR - revalidate every 7 days (604800 seconds)
-// Version groups never change, so long cache time is safe
-export const revalidate = 604800;
+// Force static generation - version groups are static data
+export const dynamic = "force-static";
 
 // SEO metadata for homepage
 export const metadata: Metadata = {

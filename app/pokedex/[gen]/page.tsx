@@ -7,10 +7,10 @@ import { Metadata } from "next";
 import { headers } from "next/headers";
 import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
 import { redirect } from "next/navigation";
+import { getAllVersionGroups } from "@/app/helpers/getPokemonRoutes";
 
-// Enable ISR - revalidate every 24 hours (86400 seconds)
-// Pokemon data is static, so long cache times are safe
-export const revalidate = 86400;
+// Force static generation
+export const dynamic = "force-static";
 
 // fetch the game version for the selected generation
 type PageProps = {
@@ -21,6 +21,12 @@ type PageProps = {
     [key: string]: string | string[] | undefined;
   }>;
 };
+
+// Generate static params for all version groups
+export async function generateStaticParams() {
+  const versionGroups = getAllVersionGroups();
+  return versionGroups.map((gen) => ({ gen }));
+}
 
 // Generate metadata for SEO
 export async function generateMetadata({

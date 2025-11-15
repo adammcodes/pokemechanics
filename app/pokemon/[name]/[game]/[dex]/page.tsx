@@ -16,11 +16,11 @@ import findVarietyForRegion from "@/lib/findVarietyForRegion";
 import { fetchPokemonById } from "@/app/helpers/rest/fetchPokemonById";
 import { getBasePokemonName } from "@/lib/getBasePokemonName";
 import { getVariantPokemonName } from "@/lib/getVariantPokemonName";
+import { getAllPokemonRoutes } from "@/app/helpers/getPokemonRoutes";
 
-// Enable ISR - revalidate every 24 hours (86400 seconds)
-// Pokemon data is static, so long cache times are safe
-// Reduces API calls to PokeAPI significantly
-export const revalidate = 86400;
+// Force static generation for all pages
+// Pokemon data is static, perfect for pre-rendering
+export const dynamic = "force-static";
 
 type PageProps = {
   params: Promise<{
@@ -29,6 +29,14 @@ type PageProps = {
     dex: string;
   }>;
 };
+
+// Generate static paths for all Pokemon at build time
+export async function generateStaticParams() {
+  console.log("Generating static params for Pokemon pages...");
+  const routes = await getAllPokemonRoutes();
+  console.log(`Total routes to generate: ${routes.length}`);
+  return routes;
+}
 
 // Generate metadata for SEO
 export async function generateMetadata({

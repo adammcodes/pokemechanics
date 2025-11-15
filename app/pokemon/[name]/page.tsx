@@ -8,16 +8,24 @@ import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
 import Link from "next/link";
 import { romanToNumber } from "@/utils/romanToNumber";
 import { fetchGenerationById } from "@/app/helpers/rest/fetchGenerationById";
+import { getAllPokemonRoutes } from "@/app/helpers/getPokemonRoutes";
 
-// Enable ISR - revalidate every 24 hours (86400 seconds)
-// Pokemon data is static, so long cache times are safe
-export const revalidate = 86400;
+// Force static generation
+export const dynamic = "force-static";
 
 type PageProps = {
   params: Promise<{
     name: string;
   }>;
 };
+
+// Generate static params for all unique Pokemon names
+export async function generateStaticParams() {
+  const routes = await getAllPokemonRoutes();
+  // Get unique Pokemon names (remove duplicates)
+  const uniqueNames = [...new Set(routes.map((route) => route.name))];
+  return uniqueNames.map((name) => ({ name }));
+}
 
 type VersionGroup = {
   id: number;
