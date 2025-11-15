@@ -331,9 +331,11 @@ export const VERSION_GROUPS = [
    - Consider hardcoding static data
 
 3. **If seeing 429 errors:**
-   - Keep rate limiting worker
+   - Turnstile middleware already protects against bot traffic (see `TURNSTILE_SETUP.md`)
+   - For local builds: Use self-hosted PokeAPI instance (see `README.md` "Building Locally with Self-Hosted PokeAPI")
+   - Adjust build throttling in `next.config.js` and `src/utils/rateLimiter.ts`
    - Implement exponential backoff (already done ✅)
-   - Contact PokeAPI for rate limit increase
+   - Contact PokeAPI for rate limit increase if using public API
 
 ---
 
@@ -355,7 +357,7 @@ curl -I https://pokemechanics.app/pokemon/pikachu/red-blue/kanto | grep cf-cache
 # Monitor API calls
 npx wrangler tail pokemechanics | grep "PokeAPI"
 
-# Test caching locally (requires multiple visits)
-npm run preview
-# Visit http://localhost:8787/pokemon/pikachu/red-blue/kanto twice
+# Test caching locally with static build preview (requires multiple visits)
+npm run build && npx next start -p 3001
+# Visit http://localhost:3001/pokemon/pikachu/red-blue/kanto twice
 ```

@@ -31,8 +31,8 @@ const Abilities: React.FC<AbilitiesProps> = async ({ graphqlPokemonData }) => {
 
   return (
     <Box headingText="Abilities:">
-      {abilities.map((ability) => (
-        <div key={ability.name}>
+      {abilities.map((ability, index) => (
+        <div key={index}>
           <h3 className="border-b-2">
             {formatName(ability.name)}{" "}
             {ability.is_hidden ? <small>(hidden)</small> : ""}

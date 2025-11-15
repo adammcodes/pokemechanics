@@ -27,7 +27,8 @@ import HeaderSelect from "@/components/header/HeaderSelect";
 import { romanToNumber } from "@/utils/romanToNumber";
 import LocationsForVersionGroup from "../encounters/LocationsForVersionGroup";
 import { GraphQLPokemonType } from "@/types/graphql";
-import getSpriteUrl from "@/constants/spriteUrlTemplates";
+// import getSpriteUrl from "@/constants/spriteUrlTemplates";
+import findSpriteFromPokemonData from "@/lib/findSpriteFromPokemonData";
 
 type PokemonCardProps = {
   pokemonData: RestPokemon;
@@ -148,27 +149,32 @@ export default async function PokemonCard({
       })
     : null;
 
-  const graphqlSpritesArray = graphqlPokemonData?.pokemonsprites;
-  const graphqlSprites =
-    graphqlSpritesArray && graphqlSpritesArray.length > 0
-      ? graphqlSpritesArray[0].sprites
-      : null;
+  const frontDefaultSpriteSrc = findSpriteFromPokemonData({
+    pokemonData: displayPokemonData,
+    generationName: genName,
+    versionGroup: game,
+  });
+  // const graphqlSpritesArray = graphqlPokemonData?.pokemonsprites;
+  // const graphqlSprites =
+  //   graphqlSpritesArray && graphqlSpritesArray.length > 0
+  //     ? graphqlSpritesArray[0].sprites
+  //     : null;
 
-  const graphqlSpritesForGen =
-    graphqlSprites && graphqlSprites.versions[genName];
+  // const graphqlSpritesForGen =
+  //   graphqlSprites && graphqlSprites.versions[genName];
 
-  const graphqlSpritesForVersion =
-    graphqlSpritesForGen && graphqlSpritesForGen[game];
+  // const graphqlSpritesForVersion =
+  //   graphqlSpritesForGen && graphqlSpritesForGen[game];
 
-  // The first two generations need transparent sprites, so use the getSpriteUrl function to get the sprite url
-  const frontDefaultSpriteSrc =
-    graphqlSpritesForVersion && generationId >= 3 && generationId < 9
-      ? graphqlSpritesForVersion.front_default
-      : getSpriteUrl({
-          versionGroup: game,
-          pokemonId: pokemonId,
-          generation: genNumber,
-        });
+  // // The first two generations need transparent sprites, so use the getSpriteUrl function to get the sprite url
+  // const frontDefaultSpriteSrc =
+  //   graphqlSpritesForVersion && generationId >= 3 && generationId < 9
+  //     ? graphqlSpritesForVersion.front_default
+  //     : getSpriteUrl({
+  //         versionGroup: game,
+  //         pokemonId: pokemonId,
+  //         generation: genNumber,
+  //       });
 
   return (
     <div className={`w-full flex flex-col items-center justify-center px-4`}>

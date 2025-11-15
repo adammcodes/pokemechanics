@@ -12,7 +12,6 @@ A comprehensive Pokémon resource web application for the video game series, bui
 - **Evolution Chains** - Visual evolution paths with trigger conditions
 - **Encounter Locations** - Where to find Pokémon in specific game versions
 - **Type Effectiveness** - Offensive and defensive type matchups
-- **Sprite Galleries** - Generation-accurate sprites with shiny variants
 
 ## 🛠 Tech Stack
 
@@ -21,7 +20,7 @@ A comprehensive Pokémon resource web application for the video game series, bui
 - **Styling:** [Tailwind CSS](https://tailwindcss.com/) + CSS Modules
 - **State Management:** React Query + React Context
 - **Data Source:** [PokéAPI](https://pokeapi.co/) (REST & GraphQL)
-- **Deployment:** [Cloudflare Workers](https://workers.cloudflare.com/) via [@opennextjs/cloudflare](https://opennext.js.org/cloudflare)
+- **Deployment:** [Cloudflare Pages](https://pages.cloudflare.com/) via [@cloudflare/next-on-pages](https://github.com/cloudflare/next-on-pages)
 
 ## 📂 Project Architecture
 
@@ -70,7 +69,6 @@ pokemechanics/
     ├── hooks/              # Custom React hooks
     ├── utils/              # Utility functions
     ├── lib/                # Business logic & helpers
-    │   ├── getBasePokemonName.ts      # Strip regional suffixes from Pokemon names
     │   ├── getVariantPokemonName.ts   # Determine correct variant based on region
     │   └── findVarietyForRegion.ts    # Find variety matching a region
     ├── types/              # TypeScript type definitions
@@ -93,22 +91,6 @@ pokemechanics/
 - Shared utilities, hooks, types, and constants
 - Business logic that isn't tied to a specific route
 - If a component is only used in one place, it should live in `/app` near that route
-
-**Component Colocation Example**
-
-```
-app/pokemon/[name]/[game]/[dex]/
-├── _components/              # Private components (underscore prevents routing)
-│   ├── encounters/
-│   │   ├── Encounters.tsx    # Only used by LocationsForVersionGroup
-│   │   └── groupEncountersByLocation.ts
-│   ├── evolutions/
-│   │   ├── EvolutionNode.tsx
-│   │   └── PokemonEvolutionChain.js
-│   └── stats/
-│       └── Stats.tsx
-├── page.tsx                  # Main route page
-```
 
 **File Naming Conventions**
 
@@ -176,20 +158,22 @@ const { data } = useQuery(["key"], async () => {
 
 **Key Helper Functions:**
 
-- `getBasePokemonName(name)` - Strips regional suffixes (e.g., "rattata-alola" → "rattata")
-
-  - Required for `fetchPokemonSpeciesByName()` API calls (only accepts base names)
-  - Prevents 404 errors when fetching species data
-
 - `getVariantPokemonName(speciesData, regionName)` - Determines correct variant name
+
   - Returns variant name (e.g., "rattata-alola") if Pokemon has regional form for that region
   - Returns base name if no variant exists for the region
   - Used for Pokemon data and GraphQL queries to get correct encounters/moves
 
+- `findSpriteFromPokemonData` - Determines the correct sprite url to use given:
+
+  - pokemonData = The response data from the pokeapi REST endpoint /pokemon/:name
+  - generationName e.g. "generation-i"
+  - versionGroup e.g. "red-blue"
+
 **Implementation Flow:**
 
-1. Extract base name from URL parameter using `getBasePokemonName(name)`
-2. Fetch species data with base name: `fetchPokemonSpeciesByName(baseName)`
+1. Extract name from URL parameter then use it in the `/pokemon/:name` REST endpoint
+2. Fetch species data with species name: `fetchPokemonSpeciesByName(speciesName)`
 3. Determine region from version group and pokedex data
 4. Get actual variant name: `getVariantPokemonName(speciesData, regionName)`
 5. Fetch Pokemon data and GraphQL with variant name for correct encounters
@@ -269,6 +253,124 @@ import type { Pokemon } from "@/types"; // src/types/index
 - `npm run build` - Build Next.js (now handled by `deploy`)
 - `npm start` - Start production server (not used with Cloudflare Workers)
 
+## 🏗️ Building Locally with Self-Hosted PokeAPI
+
+For local static generation of all ~8,500+ Pokemon pages, you'll need a self-hosted instance of PokeAPI to handle the high volume of requests during the build process.
+
+### Prerequisites
+
+1. **Self-Hosted PokeAPI** - Set up a local PokeAPI instance following the [official setup guide](https://github.com/PokeAPI/pokeapi)
+
+   - **GraphQL endpoint:** `http://localhost:8080/v1/graphql`
+   - **REST endpoint:** `http://localhost/api/v2`
+
+2. **Sufficient Server Resources** - The build process makes thousands of API requests. Ensure your local PokeAPI instance has adequate resources to handle the load.
+
+### Environment Configuration
+
+Create or update your `.env.local` file to point to your local PokeAPI instance:
+
+```bash
+# Local PokeAPI endpoints
+NEXT_PUBLIC_POKEAPI_REST_ENDPOINT=http://localhost/api/v2
+NEXT_PUBLIC_POKEAPI_GRAPHQL_ENDPOINT=http://localhost:8080/v1/graphql
+POKEAPI_REST_ENDPOINT=http://localhost/api/v2
+POKEAPI_GRAPHQL_ENDPOINT=http://localhost:8080/v1/graphql
+```
+
+### Build Throttling Configuration
+
+To prevent overwhelming the local PokeAPI server, the build uses two levels of throttling:
+
+**1. Next.js Static Generation Concurrency** (`next.config.js`)
+
+```javascript
+experimental: {
+  staticGenerationMaxConcurrency: 4; // Max 4 pages building simultaneously
+}
+```
+
+**2. API Request Concurrency** (`src/utils/rateLimiter.ts`)
+
+```javascript
+const API_CONCURRENCY_LIMIT = 10; // Max 10 concurrent API requests
+```
+
+You can adjust these values based on your server's capacity. Higher concurrency = faster builds but more server load.
+
+### Running a Monitored Build
+
+Use the monitoring script to track build progress and identify any 503 errors:
+
+```bash
+node scripts/monitored-build.js
+```
+
+This script:
+
+- Runs the standard `npm run build` process
+- Monitors output for 503 errors and route failures
+- Logs all errors to `build-errors.log`
+- Reports build statistics when complete
+
+### Build Output
+
+A successful build will show:
+
+```
+============================================================
+BUILD COMPLETE - SUMMARY
+============================================================
+
+Build exit code: 0 (SUCCESS)
+
+Total routes generated: 8,617
+Pokemon routes generated: 8,590
+
+✅ No 503 errors detected in build output!
+
+============================================================
+```
+
+### Troubleshooting Build Errors
+
+**503 Service Unavailable Errors:**
+
+- Indicates your local PokeAPI server is overwhelmed
+- Solutions:
+  - Reduce `staticGenerationMaxConcurrency` in `next.config.js`
+  - Reduce `API_CONCURRENCY_LIMIT` in `src/utils/rateLimiter.ts`
+  - Increase resources allocated to your PokeAPI instance
+  - Check `build-errors.log` to identify which Pokemon are failing
+
+**Build Hangs or Times Out:**
+
+- Verify your local PokeAPI instance is running and accessible
+- Check that environment variables are correctly set in `.env.local`
+- Ensure no firewall is blocking local API requests
+
+**Missing Routes in Build:**
+
+- Check the prerender manifest: `.next/prerender-manifest.json`
+- Look for errors in the build output related to specific Pokemon
+- Review `build-errors.log` for detailed error messages
+
+### Preview the Built Site
+
+After a successful build, preview the static site locally:
+
+```bash
+npx next start -p 3001
+```
+
+Then test specific Pokemon pages to verify the build:
+
+- http://localhost:3001/pokemon/pikachu/red-blue/kanto
+- http://localhost:3001/pokemon/charizard/red-blue/kanto
+- http://localhost:3001/pokemon/arceus/platinum/extended-sinnoh
+
+All pages should return 200 OK and display complete Pokemon data.
+
 ## 🧩 Key Technologies & Patterns
 
 ### State Management
@@ -324,7 +426,6 @@ npm run deploy
 
 - **`wrangler.jsonc`** - Cloudflare Worker configuration
 - **`open-next.config.ts`** - OpenNext adapter configuration for Cloudflare
-- **`.gitignore`** - Excludes `.open-next/` and `.wrangler/` build artifacts
 
 ### Custom Domain Setup
 
@@ -332,8 +433,6 @@ The app is accessible at:
 
 - **Production:** https://pokemechanics.app OR https://www.pokemechanics.app
 - **Workers.dev:** https://pokemechanics.adammarsala.workers.dev
-
-Custom domains are configured in the Cloudflare dashboard under **Workers & Pages** → **pokemechanics** → **Settings** → **Domains & Routes**.
 
 ## 📊 Monitoring & Observability
 
@@ -350,30 +449,9 @@ npx wrangler tail pokemechanics --status error  # Only errors
 npx wrangler tail pokemechanics --status ok     # Only successful requests
 ```
 
-**Tip:** Keep a terminal running `wrangler tail` while testing to see logs instantly.
-
-### Dashboard Analytics
-
-1. Go to **Cloudflare Dashboard** → **Workers & Pages** → **pokemechanics**
-2. Click **Metrics** tab to view:
-
-   - Request volume (requests per minute/hour)
-   - Error rates (4xx, 5xx errors)
-   - CPU time and execution duration
-   - Success rate percentage
-
-3. Click **Logs** tab → **Begin log stream** for real-time browser logs
-
 ### Adding Custom Logs
 
 Add logging anywhere in your code - logs will appear in `wrangler tail`:
-
-```typescript
-// In Pokemon pages or API routes
-console.log("Fetching Pokemon:", pokemonId);
-console.error("API error:", error);
-console.warn("Rate limit approaching");
-```
 
 ### Deployment Management
 
@@ -388,23 +466,7 @@ npx wrangler rollback <version-id>
 npx wrangler whoami
 ```
 
-### Recommended Monitoring Setup
-
 For production monitoring, consider adding:
-
-**Free Tier:**
-
-- Use `wrangler tail` for active debugging
-- Cloudflare dashboard metrics for overview
-- `console.log()` statements in critical paths
-
-## 📝 Contributing
-
-Contributions are welcome! Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
-
-## 📄 License
-
-This project is open source and available under the MIT License.
 
 ## 🙏 Acknowledgments
 

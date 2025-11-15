@@ -22,7 +22,7 @@ export async function fetchWithRetry(
   // Log PokeAPI requests for monitoring
   const isPokeAPIRequest = url.includes("pokeapi.co");
   if (isPokeAPIRequest) {
-    console.log("[PokeAPI Request]", url);
+    //console.log("[PokeAPI Request]", url);
   }
 
   const response = await apiLimiter(() => fetch(url, options));
@@ -74,14 +74,14 @@ export async function fetchFromGraphQL<
 
   // Get the query name from the query (handles whitespace and newlines)
   // Using [\s\S] instead of . with /s flag for ES2017 compatibility
-  const queryName = query.match(/query\s+(\w+)/)?.[1];
+  //const queryName = query.match(/query\s+(\w+)/)?.[1];
 
   // Log GraphQL request with query name for better debugging
-  console.log(
-    `[PokeAPI Request] ${url}${
-      queryName ? ` (GraphQL: ${queryName})` : " (GraphQL)"
-    }`
-  );
+  // console.log(
+  //   `[PokeAPI Request] ${url}${
+  //     queryName ? ` (GraphQL: ${queryName})` : " (GraphQL)"
+  //   }`
+  // );
 
   try {
     const response = await apiLimiter(() =>

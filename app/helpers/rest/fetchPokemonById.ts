@@ -17,7 +17,9 @@ export const fetchPokemonById = cache(async (id: number) => {
   );
 
   if (!response.ok) {
-    throw new Error(`Failed to fetch Pokemon data: ${response.status}`);
+    throw new Error(
+      `Failed to fetch Pokemon data for id: ${id}: ${response.status}`
+    );
   }
 
   return response.json();

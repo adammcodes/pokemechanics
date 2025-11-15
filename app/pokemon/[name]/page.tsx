@@ -2,13 +2,13 @@ import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { fetchPokemonSpeciesByName } from "@/app/helpers/rest/fetchPokemonSpeciesByName";
 import { fetchPokemonByName } from "@/app/helpers/rest/fetchPokemonByName";
-import { getBasePokemonName } from "@/lib/getBasePokemonName";
 import { fetchFromGraphQL } from "@/utils/api";
 import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
 import Link from "next/link";
 import { romanToNumber } from "@/utils/romanToNumber";
 import { fetchGenerationById } from "@/app/helpers/rest/fetchGenerationById";
 import { getAllPokemonRoutes } from "@/app/helpers/getPokemonRoutes";
+import { RestPokemon } from "@/types/index";
 
 // Force static generation
 export const dynamic = "force-static";
@@ -86,10 +86,19 @@ export async function generateMetadata({
 }: PageProps): Promise<Metadata> {
   const { name } = await params;
 
-  const baseName = getBasePokemonName(name);
+  let pokemonData: RestPokemon | null = null;
+  let speciesName = name;
+  try {
+    // Fetch Pokemon data from REST API using the name from the URL
+    // This works with either the pokemon id (6), species name (charizard), or variant name (charizard-mega-y)
+    pokemonData = await fetchPokemonByName(name);
+    speciesName = pokemonData ? pokemonData.species.name : name;
+  } catch (error) {
+    console.error("Error fetching Pokemon data for name:", name, error);
+  }
 
   try {
-    const speciesData = await fetchPokemonSpeciesByName(baseName);
+    const speciesData = await fetchPokemonSpeciesByName(speciesName); // ✅ Use species name (no variant names)
     const pokemonName = speciesData.name;
     const displayName =
       pokemonName.charAt(0).toUpperCase() + pokemonName.slice(1);
@@ -112,15 +121,33 @@ export async function generateMetadata({
 export default async function PokemonGameSelector({ params }: PageProps) {
   const { name } = await params;
 
-  const baseName = getBasePokemonName(name);
+  let pokemonData: RestPokemon | null = null;
+  let speciesName = name;
+  try {
+    // Fetch Pokemon data from REST API using the name from the URL
+    // This works with either the pokemon id (6), species name (charizard), or variant name (charizard-mega-y)
+    pokemonData = await fetchPokemonByName(name);
+    speciesName = pokemonData ? pokemonData.species.name : name;
+  } catch (error) {
+    console.error("Error fetching Pokemon data for name:", name, error);
+  }
 
   try {
     // Fetch Pokemon data to get available versions
-    const [speciesData, pokemonData, allVersionGroups] = await Promise.all([
-      fetchPokemonSpeciesByName(baseName),
-      fetchPokemonByName(name),
+    const [speciesData, allVersionGroups] = await Promise.all([
+      fetchPokemonSpeciesByName(speciesName), // ✅ Use species name (no variant names)
       getAllVersionGroups(),
     ]);
+
+    // Check if we have the required data
+    if (!pokemonData || !speciesData) {
+      return (
+        <main className="w-full">
+          <h1>Data Not Found</h1>
+          <p>The requested Pokémon data could not be found.</p>
+        </main>
+      );
+    }
 
     const pokemonName = speciesData.name;
     const displayName =
@@ -129,7 +156,7 @@ export default async function PokemonGameSelector({ params }: PageProps) {
 
     // Get list of versions where this Pokemon exists
     const availableVersions = new Set(
-      pokemonData.game_indices.map((gi: any) => gi.version.name)
+      pokemonData.game_indices.map((gi: any) => gi.version.name) || []
     );
 
     // Filter version groups to only show those where Pokemon exists
@@ -150,7 +177,7 @@ export default async function PokemonGameSelector({ params }: PageProps) {
       <main className="w-full h-full flex flex-col justify-start items-center p-8">
         <h1 className="text-3xl font-bold mb-4">{formattedDisplayName}</h1>
         <img
-          src={pokemonSprite}
+          src={pokemonSprite || ""}
           alt={formattedDisplayName}
           className="w-32 h-32"
         />

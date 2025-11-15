@@ -1,5 +1,13 @@
 # CloudFlare Worker Setup: Smart Bot Throttling
 
+> **⚠️ DEPRECATED:** This documentation describes a separate Cloudflare Worker for bot throttling that is **no longer used** in the current production setup.
+>
+> **Current Approach:** The project now uses **Cloudflare Pages** with **Turnstile middleware** (see `middleware.ts` and `TURNSTILE_SETUP.md`) for bot protection instead of a separate worker.
+>
+> This file is kept for historical reference and may be useful if you want to implement additional bot rate limiting in the future.
+
+---
+
 ## Overview
 
 This Worker implements intelligent bot rate limiting that:

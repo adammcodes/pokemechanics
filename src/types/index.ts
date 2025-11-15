@@ -183,6 +183,7 @@ export type PokemonSpecies = {
   }[];
 };
 
+// data type from the /pokemon/:name endpoint from the pokeapi REST endpoint
 export type RestPokemon = {
   abilities: {
     ability: NamedAPIResource;

@@ -37,6 +37,14 @@ export function getVariantPokemonName(
     return speciesData.name;
   }
 
+  // If the url pokemon name exists in the varieties, return it
+  const variety = speciesData.varieties.find(
+    (variety) => variety.pokemon.name === pokemonName
+  );
+  if (variety) {
+    return variety.pokemon.name;
+  }
+
   // Find variant for this region
   const regionalVariant = findVarietyForRegion(
     speciesData.varieties,
@@ -46,14 +54,6 @@ export function getVariantPokemonName(
   if (regionalVariant) {
     // Return the variant Pokemon name (e.g., "rattata-alola")
     return regionalVariant.pokemon.name;
-  }
-
-  // If the url pokemon name exists in the varieties, return it
-  const variety = speciesData.varieties.find(
-    (variety) => variety.pokemon.name === pokemonName
-  );
-  if (variety) {
-    return variety.pokemon.name;
   }
 
   // If the url pokemon name is included in the default variety name, return the default variety name

@@ -18,7 +18,9 @@ export const fetchPokemonSpeciesByName = cache(async (name: string) => {
   );
 
   if (!response.ok) {
-    throw new Error(`Failed to fetch Pokemon species data: ${response.status}`);
+    throw new Error(
+      `Failed to fetch Pokemon species data for name: ${name}: ${response.status}`
+    );
   }
 
   return response.json();

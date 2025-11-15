@@ -15,20 +15,31 @@ Next: Fix Open Graph metadata
 
 **Context:** PokeAPI has a 100 calls/hour per IP rate limit. Each page requires ~10 API calls. Bot/crawler traffic was causing 429 (Too Many Requests) errors.
 
-#### 📋 Short-term Fixes (Planned)
+#### ✅ Completed Solutions
 
-#### 🚀 Long-term Solutions (Future)
+- [x] **Self-hosted PokeAPI instance** - Using local PokeAPI for static builds
+  - Eliminates rate limits during build process
+  - GraphQL endpoint: `http://localhost:8080/v1/graphql`
+  - REST endpoint: `http://localhost/api/v2`
+  - See `README.md` "Building Locally with Self-Hosted PokeAPI" section
+- [x] **Build throttling** - Implemented request limiting
+  - `staticGenerationMaxConcurrency: 4` in `next.config.js`
+  - `API_CONCURRENCY_LIMIT: 10` in `src/utils/rateLimiter.ts`
+  - Prevents overwhelming local API server during builds
+- [x] **Turnstile bot protection** - Implemented in `middleware.ts`
+  - Protects against aggressive bot traffic in production
+  - Allows verified search engines and social media crawlers
+  - See `TURNSTILE_SETUP.md` for details
 
-**Status:** Research phase
-**Estimated Effort:** High (20-40 hours)
+#### 🚀 Future Enhancements (Optional)
 
-- [ ] **Local PokeAPI cache** - Download and cache PokeAPI data locally in a database
-  - Eliminates external API dependency for static data
-  - Options: PostgreSQL, SQLite, or JSON files
-  - Requires sync strategy for PokeAPI updates
-- [ ] **Redis/KV caching layer** - Add distributed cache for API responses
-  - Reduces duplicate API calls across deployments
-  - Options: Vercel KV, Upstash Redis, or self-hosted
+**Status:** Not currently needed, but could optimize further
+**Estimated Effort:** Medium (10-20 hours)
+
+- [ ] **Redis/KV caching layer** - Add distributed cache for runtime API responses
+  - Could reduce duplicate API calls for dynamic requests
+  - Options: Cloudflare KV, Upstash Redis, or self-hosted
+  - Note: Most pages are statically generated, so benefit would be minimal
 
 ---
 
@@ -95,10 +106,10 @@ Create `/src/config/` with:
 
 ### 5. Performance Improvements
 
-- Add bundle analyzer
-- Optimize image loading strategies
-- Implement incremental static regeneration (ISR) for Pokémon pages
-- Add service worker for offline support
+- [ ] Add bundle analyzer
+- [ ] Optimize image loading strategies
+- [x] Implement incremental static regeneration (ISR) for Pokémon pages _(Completed - See CACHING_STRATEGY.md)_
+- [ ] Add service worker for offline support
 
 ### 6. New Features (Not all accessible via current PokeAPI)
 
@@ -129,4 +140,4 @@ Create `/src/config/` with:
 
 ---
 
-**Last Updated:** 2025-11-07
+**Last Updated:** 2025-11-15

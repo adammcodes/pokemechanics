@@ -1,7 +1,4 @@
-import {
-  POKEAPI_GRAPHQL_ENDPOINT,
-  POKEAPI_REST_ENDPOINT,
-} from "@/constants/apiConfig";
+import { POKEAPI_GRAPHQL_ENDPOINT } from "@/constants/apiConfig";
 
 // Type for version group configuration
 type VersionGroupConfig = {
@@ -16,9 +13,6 @@ type PokedexVersionGroup = {
   pokedex: {
     id: number;
     name: string;
-    region: {
-      name: string;
-    };
     pokemondexnumbers: {
       pokemon_species_id: number;
       pokedex_number: number;
@@ -31,70 +25,6 @@ type VersionGroupPokedexes = {
   name: string;
   generation_id: number;
   pokedexversiongroups: PokedexVersionGroup[];
-};
-
-// Regional variant Pokemon by region
-const REGIONAL_VARIANTS: Record<string, string[]> = {
-  alola: [
-    "rattata",
-    "raticate",
-    "raichu",
-    "sandshrew",
-    "sandslash",
-    "vulpix",
-    "ninetales",
-    "diglett",
-    "dugtrio",
-    "meowth",
-    "persian",
-    "geodude",
-    "graveler",
-    "golem",
-    "grimer",
-    "muk",
-    "exeggutor",
-    "marowak",
-  ],
-  galar: [
-    "meowth",
-    "ponyta",
-    "rapidash",
-    "slowpoke",
-    "slowbro",
-    "farfetchd",
-    "weezing",
-    "mr-mime",
-    "articuno",
-    "zapdos",
-    "moltres",
-    "slowking",
-    "corsola",
-    "zigzagoon",
-    "linoone",
-    "darumaka",
-    "darmanitan",
-    "yamask",
-    "stunfisk",
-  ],
-  hisui: [
-    "growlithe",
-    "arcanine",
-    "voltorb",
-    "electrode",
-    "typhlosion",
-    "qwilfish",
-    "sneasel",
-    "samurott",
-    "lilligant",
-    "zorua",
-    "zoroark",
-    "braviary",
-    "sliggoo",
-    "goodra",
-    "avalugg",
-    "decidueye",
-  ],
-  paldea: ["tauros", "wooper"],
 };
 
 // Version groups with their valid pokedexes and generation
@@ -243,15 +173,19 @@ const VERSION_GROUPS: VersionGroupConfig[] = [
   },
 ];
 
-type PokemonSpecies = {
-  name: string;
-  id: number;
-};
-
 export type PokemonRoute = {
   name: string;
   game: string;
   dex: string;
+};
+
+export type PokemonSpeciesVariety = {
+  name: string;
+  id: number;
+  pokemons: {
+    is_default: boolean;
+    pokemonforms: { name: string; id: number; form_name: string }[];
+  }[];
 };
 
 /**
@@ -262,28 +196,48 @@ export async function getAllPokemonRoutes(): Promise<PokemonRoute[]> {
   const routes: PokemonRoute[] = [];
 
   try {
-    // Fetch all 1025 Pokemon species
-    const response = await fetch(
-      `${POKEAPI_REST_ENDPOINT}/pokemon?limit=1025&offset=0`
-    );
-    const data = await response.json();
-    const allPokemon: PokemonSpecies[] = data.results.map(
-      (p: { name: string; url: string }, index: number) => ({
-        name: p.name,
-        id: index + 1,
-      })
-    );
+    // Fetch all 1025 Pokemon species and their varieties
+    const pokemonResponse = await fetch(POKEAPI_GRAPHQL_ENDPOINT, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        query: `
+          query SpeciesVarieties {
+            pokemonspecies(
+              limit: 1025
+              order_by: [ {
+              id: asc
+            }]) {
+              name
+              id
+              pokemons {
+                is_default
+                pokemonforms {
+                  name
+                  id
+                  form_name
+                }
+              }
+            }
+          }
+          `,
+      }),
+    });
+
+    const { data: speciesVarietiesData } = await pokemonResponse.json();
+    const allPokemon: PokemonSpeciesVariety[] =
+      speciesVarietiesData.pokemonspecies;
 
     // Fetch version group/pokedex mappings
-    const versionGroupPokedexes = await fetch(
-      POKEAPI_GRAPHQL_ENDPOINT,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          query: `
+    const versionGroupPokedexes = await fetch(POKEAPI_GRAPHQL_ENDPOINT, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        query: `
           query GetVersionGroupsAndPokedexes {
             versiongroup {
               id
@@ -293,9 +247,6 @@ export async function getAllPokemonRoutes(): Promise<PokemonRoute[]> {
                 pokedex {
                   id
                   name
-                  region {
-                    name
-                  }
                   pokemondexnumbers {
                     pokemon_species_id
                     pokedex_number
@@ -304,9 +255,8 @@ export async function getAllPokemonRoutes(): Promise<PokemonRoute[]> {
               }
             }
           }`,
-        }),
-      }
-    );
+      }),
+    });
 
     const { data: pokedexData } = await versionGroupPokedexes.json();
     const vgPokedexes: VersionGroupPokedexes[] = pokedexData.versiongroup;
@@ -317,22 +267,28 @@ export async function getAllPokemonRoutes(): Promise<PokemonRoute[]> {
       if (vgPokedex) {
         const pokedexes = vgPokedex.pokedexversiongroups.map((p) => p.pokedex);
         pokedexes.forEach((dex) => {
-          const regionName = dex.region.name;
           dex.pokemondexnumbers.forEach((dexNumber) => {
             const pokemonSpeciesId = dexNumber.pokemon_species_id;
             const pokemonSpecies = allPokemon[pokemonSpeciesId - 1];
-            const isVariant = REGIONAL_VARIANTS[regionName]?.includes(
-              pokemonSpecies.name
-            );
-            const pokemonName = isVariant
-              ? `${pokemonSpecies.name}-${regionName}`
-              : pokemonSpecies.name;
+            const forms = pokemonSpecies.pokemons;
 
-            routes.push({
-              name: pokemonName,
-              game: vg.name,
-              dex: dex.name,
-            });
+            if (forms.length > 1) {
+              forms.forEach((form) => {
+                form.pokemonforms.forEach((f) => {
+                  routes.push({
+                    name: f.name,
+                    game: vg.name,
+                    dex: dex.name,
+                  });
+                });
+              });
+            } else {
+              routes.push({
+                name: pokemonSpecies.name,
+                game: vg.name,
+                dex: dex.name,
+              });
+            }
           });
         });
       }

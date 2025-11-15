@@ -54,9 +54,9 @@ export default async function Page({ params }: PageProps) {
   const { gen } = await params;
 
   // Log User-Agent for monitoring bot traffic and API usage patterns
-  const headersList = await headers();
-  const userAgent = headersList.get("user-agent") || "Unknown";
-  console.log(`[Request] /pokedex/${gen} | User-Agent: ${userAgent}`);
+  //const headersList = await headers();
+  //const userAgent = headersList.get("user-agent") || "Unknown";
+  //console.log(`[Request] /pokedex/${gen} | User-Agent: ${userAgent}`);
 
   const versionGroup = await getVersionGroup(gen);
 

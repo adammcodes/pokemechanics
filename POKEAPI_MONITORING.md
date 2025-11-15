@@ -121,72 +121,61 @@ grep "PokeAPI Request" /tmp/logs.txt | wc -l
 
 ## 🚦 Decision Matrix
 
-### ✅ No Rate Limit Worker Needed
+### ✅ Current Bot Protection (Turnstile Middleware)
+
+The app currently uses **Turnstile middleware** for bot protection (see `middleware.ts` and `TURNSTILE_SETUP.md`):
+- ✅ Verifies human users with Cloudflare Turnstile
+- ✅ Allows verified search engines (Googlebot, Bingbot, etc.)
+- ✅ Allows social media crawlers for link previews
+- ✅ Blocks vulnerability scanners and malicious bots
+- ✅ Pages are statically generated, minimizing API calls
+
+**Note:** The old separate "rate limiting worker" is **deprecated** and no longer used. See `CLOUDFLARE_WORKER_SETUP.md` for historical reference.
+
+### 📊 Monitoring Guidelines
 
 If monitoring shows:
-- ✅ < 100 PokeAPI requests/hour
-- ✅ Zero 429 errors
-- ✅ Most requests served from cache
 
-**Action:** Remove old rate limit worker, ISR is working perfectly.
+**✅ Healthy (< 100 PokeAPI requests/hour)**
+- Zero 429 errors
+- Most requests served from cache
+- **Action:** Current setup is working well
 
-### ⚠️ Keep Rate Limit Worker
+**⚠️ Moderate Traffic (100-200 requests/hour)**
+- Occasional 429s (1-5/hour)
+- Moderate cache hit rate (70-90%)
+- **Action:** Monitor for 48 hours. Consider increasing ISR `revalidate` time
 
-If monitoring shows:
-- ❌ > 200 PokeAPI requests/hour
-- ❌ Frequent 429 errors (> 5/hour)
-- ❌ Low cache hit rate (< 70%)
+**❌ High Traffic (> 200 requests/hour)**
+- Frequent 429 errors (> 5/hour)
+- Low cache hit rate (< 70%)
+- **Action:**
+  - Check for bot traffic bypassing Turnstile
+  - Review Turnstile logs in Cloudflare dashboard
+  - Consider stricter Turnstile challenge mode
+  - For local builds: Use self-hosted PokeAPI (see `README.md`)
 
-**Action:** Keep rate limit worker active to protect PokeAPI.
+## 🛠 Bot Protection Status
 
-### 🔄 Monitor & Decide
+### Current Protection: Turnstile Middleware
 
-If monitoring shows:
-- 🟡 100-200 requests/hour
-- 🟡 Occasional 429s (1-5/hour)
-- 🟡 Moderate cache hit rate (70-90%)
-
-**Action:** Monitor for 48 hours, then decide. Consider bot traffic patterns.
-
-## 🛠 Rate Limit Worker Status
-
-### Check if Worker is Active
+Check if Turnstile is active:
 
 ```bash
-# List all workers
-npx wrangler deployments list
+# Check middleware.ts exists
+ls -la middleware.ts
 
-# Check for bot throttling worker
-# Look for worker named: bot-throttler, rate-limiter, or similar
+# View Turnstile analytics
+# Cloudflare Dashboard → Security → Turnstile
 ```
 
-### Remove Rate Limit Worker (if not needed)
+### Turnstile Configuration
 
-```bash
-# Delete the worker
-npx wrangler delete <worker-name>
-```
-
-Or in Cloudflare Dashboard:
-1. Go to **Workers & Pages**
-2. Find the old bot throttling worker
-3. **Settings** → **Delete**
-
-### Keep Rate Limit Worker (if needed)
-
-If you decide to keep it:
-
-1. Verify route configuration:
-   - Dashboard → **Workers & Pages** → worker → **Settings** → **Triggers**
-   - Ensure route is: `pokemechanics.app/*` or `*pokemechanics.app/*`
-
-2. Update worker settings in `cloudflare-worker.js` if needed:
-   ```javascript
-   const BOT_RATE_LIMIT = 10;    // Adjust based on monitoring
-   const BOT_RETRY_AFTER = 60;
-   ```
-
-3. Ensure only ONE worker handles the route (your app OR the rate limiter, not both)
+See `TURNSTILE_SETUP.md` for:
+- Production vs development setup
+- Environment variables required
+- Testing and troubleshooting
+- Analytics and monitoring
 
 ## 📝 Monitoring Schedule
 

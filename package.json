@@ -3,6 +3,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build:monitored": "node scripts/monitored-build.js",
+    "build:clean": "rm -rf .next && node scripts/monitored-build.js",
     "pages:build": "npx @cloudflare/next-on-pages",
     "pages:preview": "npm run pages:build && wrangler pages dev .vercel/output/static",
     "pages:deploy": "npm run pages:build && wrangler pages deploy .vercel/output/static",
@@ -37,7 +39,6 @@
     "postcss": "^8.4.23",
     "tailwindcss": "^3.4.4",
     "typescript": "^5.7.2",
-    "vercel": "^39",
     "vitest": "^3.2.4",
     "wrangler": "^4.46.0"
   }
