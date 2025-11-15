@@ -19,6 +19,7 @@ import { getAllPokemonRoutes } from "@/app/helpers/getPokemonRoutes";
 import { RestPokemon } from "@/types/index";
 import findSpriteFromPokemonData from "@/lib/findSpriteFromPokemonData";
 import { romanToNumber } from "@/utils/romanToNumber";
+import { getBaseSpeciesName } from "@/constants/unsupportedVariants";
 
 // Force static generation for all pages
 // Pokemon data is static, perfect for pre-rendering
@@ -46,15 +47,18 @@ export async function generateMetadata({
 }: PageProps): Promise<Metadata> {
   const { name, game, dex } = await params;
 
+  // Handle unsupported variants - use base species name instead
+  const effectiveName = getBaseSpeciesName(name);
+
   let pokemonData: RestPokemon | null = null;
-  let speciesName = name;
+  let speciesName = effectiveName;
   try {
     // Fetch Pokemon data from REST API using the name from the URL
-    // This works with either the pokemon id (6), species name (charizard), or variant name (charizard-mega-y)
-    pokemonData = await fetchPokemonByName(name);
-    speciesName = pokemonData ? pokemonData.species.name : name;
+    // For unsupported variants, this will use the base species name
+    pokemonData = await fetchPokemonByName(effectiveName);
+    speciesName = pokemonData ? pokemonData.species.name : effectiveName;
   } catch (error) {
-    console.error("Error fetching Pokemon data for name:", name, error);
+    console.error("Error fetching Pokemon data for name:", effectiveName, error);
   }
 
   try {
@@ -77,7 +81,7 @@ export async function generateMetadata({
     const actualPokemonName = getVariantPokemonName(
       speciesData,
       regionName,
-      name
+      effectiveName
     );
 
     // const displayName =
@@ -209,15 +213,18 @@ export default async function Pokemon({ params }: PageProps) {
     redirect("/pokedex");
   }
 
+  // Handle unsupported variants - use base species name instead
+  const effectiveName = getBaseSpeciesName(name);
+
   let pokemonData: RestPokemon | null = null;
-  let speciesName = name;
+  let speciesName = effectiveName;
   try {
     // Fetch Pokemon data from REST API using the name from the URL
-    // This works with either the pokemon id (6), species name (charizard), or variant name (charizard-mega-y)
-    pokemonData = await fetchPokemonByName(name);
-    speciesName = pokemonData ? pokemonData.species.name : name;
+    // For unsupported variants, this will use the base species name
+    pokemonData = await fetchPokemonByName(effectiveName);
+    speciesName = pokemonData ? pokemonData.species.name : effectiveName;
   } catch (error) {
-    console.error("Error fetching Pokemon data for name:", name, error);
+    console.error("Error fetching Pokemon data for name:", effectiveName, error);
   }
 
   try {
@@ -234,7 +241,7 @@ export default async function Pokemon({ params }: PageProps) {
     const regionName = dex === "national" ? region?.name || "" : dexRegion;
 
     // Including regional suffix
-    const variantName = getVariantPokemonName(speciesData, regionName, name);
+    const variantName = getVariantPokemonName(speciesData, regionName, effectiveName);
 
     // Extract version names for GraphQL query
     const versions = versionData.versions.map((v) => v.name);

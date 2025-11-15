@@ -9,6 +9,7 @@ import { romanToNumber } from "@/utils/romanToNumber";
 import { fetchGenerationById } from "@/app/helpers/rest/fetchGenerationById";
 import { getAllPokemonRoutes } from "@/app/helpers/getPokemonRoutes";
 import { RestPokemon } from "@/types/index";
+import { getBaseSpeciesName } from "@/constants/unsupportedVariants";
 
 // Force static generation
 export const dynamic = "force-static";
@@ -86,15 +87,18 @@ export async function generateMetadata({
 }: PageProps): Promise<Metadata> {
   const { name } = await params;
 
+  // Handle unsupported variants - use base species name instead
+  const effectiveName = getBaseSpeciesName(name);
+
   let pokemonData: RestPokemon | null = null;
-  let speciesName = name;
+  let speciesName = effectiveName;
   try {
     // Fetch Pokemon data from REST API using the name from the URL
-    // This works with either the pokemon id (6), species name (charizard), or variant name (charizard-mega-y)
-    pokemonData = await fetchPokemonByName(name);
-    speciesName = pokemonData ? pokemonData.species.name : name;
+    // For unsupported variants, this will use the base species name
+    pokemonData = await fetchPokemonByName(effectiveName);
+    speciesName = pokemonData ? pokemonData.species.name : effectiveName;
   } catch (error) {
-    console.error("Error fetching Pokemon data for name:", name, error);
+    console.error("Error fetching Pokemon data for name:", effectiveName, error);
   }
 
   try {
@@ -121,15 +125,18 @@ export async function generateMetadata({
 export default async function PokemonGameSelector({ params }: PageProps) {
   const { name } = await params;
 
+  // Handle unsupported variants - use base species name instead
+  const effectiveName = getBaseSpeciesName(name);
+
   let pokemonData: RestPokemon | null = null;
-  let speciesName = name;
+  let speciesName = effectiveName;
   try {
     // Fetch Pokemon data from REST API using the name from the URL
-    // This works with either the pokemon id (6), species name (charizard), or variant name (charizard-mega-y)
-    pokemonData = await fetchPokemonByName(name);
-    speciesName = pokemonData ? pokemonData.species.name : name;
+    // For unsupported variants, this will use the base species name
+    pokemonData = await fetchPokemonByName(effectiveName);
+    speciesName = pokemonData ? pokemonData.species.name : effectiveName;
   } catch (error) {
-    console.error("Error fetching Pokemon data for name:", name, error);
+    console.error("Error fetching Pokemon data for name:", effectiveName, error);
   }
 
   try {

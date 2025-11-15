@@ -1,4 +1,5 @@
 import { POKEAPI_GRAPHQL_ENDPOINT } from "@/constants/apiConfig";
+import { isUnsupportedVariant } from "@/constants/unsupportedVariants";
 
 // Type for version group configuration
 type VersionGroupConfig = {
@@ -275,11 +276,14 @@ export async function getAllPokemonRoutes(): Promise<PokemonRoute[]> {
             if (forms.length > 1) {
               forms.forEach((form) => {
                 form.pokemonforms.forEach((f) => {
-                  routes.push({
-                    name: f.name,
-                    game: vg.name,
-                    dex: dex.name,
-                  });
+                  // Skip unsupported variants
+                  if (!isUnsupportedVariant(f.name)) {
+                    routes.push({
+                      name: f.name,
+                      game: vg.name,
+                      dex: dex.name,
+                    });
+                  }
                 });
               });
             } else {
