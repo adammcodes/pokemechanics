@@ -1,10 +1,7 @@
-import {
-  Language,
-  Version,
-  MoveLearnMethod,
-  NamedAPIResource,
-  EvolutionDetail,
-} from "pokenode-ts";
+export type NamedAPIResource = {
+  name: string;
+  url: string;
+};
 
 // Option types are used for Autocomplete and Select components
 export type GameOption = {
@@ -15,17 +12,33 @@ export type GameOption = {
   variantId?: number;
 };
 
-// export type PokemonOption = {
-//   label: string;
-//   name: string;
-//   value: number | string;
-//   number: number;
-// }
+export type EvolutionDetail = {
+  item: NamedAPIResource | null;
+  trigger: NamedAPIResource;
+  gender: 1 | 2 | null; // 1 = female, 2 = male, null = no gender
+  held_item: NamedAPIResource | null;
+  known_move: NamedAPIResource | null;
+  known_move_type: NamedAPIResource | null;
+  location: NamedAPIResource | null;
+  min_level: number;
+  min_happiness: number | null;
+  min_beauty: number | null;
+  min_affection: number | null;
+  needs_overworld_rain: boolean;
+  party_species: NamedAPIResource | null;
+  party_type: NamedAPIResource | null;
+  relative_physical_stats: number | null;
+  time_of_day: "";
+  trade_species: NamedAPIResource | null;
+  turn_upside_down: boolean;
+  region_id: null;
+  base_form_id: number | null;
+};
 
 export type FlavorTextForVersion = {
   flavor_text: string;
-  language: Language;
-  version: Version;
+  language: NamedAPIResource;
+  version: NamedAPIResource;
 };
 
 export type PokemonMove = {
@@ -53,27 +66,9 @@ export type MachineVersion = {
   version_group: VersionGroup;
 };
 
-export type VersionGroupDetails = {
-  level_learned_at: number;
-  move_learn_method: MoveLearnMethod;
-  version_group: VersionGroup;
-};
-
-export type PokemonMoveVersion = {
-  move: PokemonMove;
-  version_group_details: VersionGroupDetails[];
-};
-
 export type Gen = {
   name: string;
   url: string;
-};
-
-export type Chain = {
-  is_baby: boolean;
-  species: NamedAPIResource;
-  evolves_to: Chain[];
-  evolution_details: EvolutionDetail[];
 };
 
 export type SpeciesVariety = {
@@ -145,74 +140,6 @@ export type Pokedex = {
   version_groups: { name: string; url: string }[];
 };
 
-export type Pokemon = {
-  abilities: {
-    ability: NamedAPIResource;
-    is_hidden: boolean;
-    slot: number;
-  }[];
-  base_experience: number;
-  cries: {
-    latest: string; // url for audio file .ogg
-    legacy: string; // url for audio file .ogg
-  };
-  forms: {
-    name: string;
-    url: string;
-  }[];
-  game_indices: {
-    game_index: number;
-    version: NamedAPIResource;
-  }[];
-  height: number;
-  held_items: any[];
-  id: number;
-  is_default: boolean;
-  location_area_encounters: string; // url
-  moves: PokemonMoveVersion[];
-  name: string;
-  order: number;
-  past_abilities: any[];
-  past_types: any[];
-  species: NamedAPIResource;
-  sprites: {
-    back_default: string; // url
-    back_female: string | null; // url
-    back_shiny: string; // url
-    back_shiny_female: string | null; // url
-    front_default: string; // url
-    front_female: string | null; // url
-    front_shiny: string;
-    front_shiny_female: string | null; // url
-    other: {
-      dream_world: any;
-      home: any;
-      "official-artwork": any;
-      showdown: any;
-    };
-    versions: {
-      "generation-i": any;
-      "generation-ii": any;
-      "generation-iii": any;
-      "generation-iv": any;
-      "generation-v": any;
-      "generation-vi": any;
-      "generation-vii": any;
-      "generation-viii": any;
-    };
-  };
-  stats: {
-    base_stat: number;
-    effort: number;
-    stat: NamedAPIResource;
-  }[];
-  types: {
-    slot: number;
-    type: NamedAPIResource;
-  }[];
-  weight: number;
-};
-
 export type PokemonSpecies = {
   id: number;
   base_happiness: number;
@@ -254,4 +181,256 @@ export type PokemonSpecies = {
     is_default: boolean;
     pokemon: { name: string; url: string };
   }[];
+};
+
+export type RestPokemon = {
+  abilities: {
+    ability: NamedAPIResource;
+    is_hidden: boolean;
+    slot: number;
+  }[];
+  base_experience: number;
+  cries: {
+    latest: string; // url
+    legacy: string; // url
+  };
+  forms: NamedAPIResource[];
+  game_indices: {
+    game_index: number;
+    version: NamedAPIResource;
+  }[];
+  height: number;
+  held_items: {
+    item: NamedAPIResource;
+    version_details: {
+      rarity: number;
+      version: NamedAPIResource;
+    }[];
+  }[];
+  id: number;
+  is_default: boolean;
+  location_area_encounters: string; // url
+  moves: {
+    move: NamedAPIResource;
+    version_group_details: {
+      level_learned_at: number;
+      move_learn_method: NamedAPIResource;
+      order: number | null;
+      version_group: NamedAPIResource;
+    }[];
+  }[];
+  name: string;
+  order: number;
+  past_abilities: {
+    abilities: {
+      ability: null;
+      is_hidden: boolean;
+      slot: number;
+    }[];
+    generation: NamedAPIResource;
+  }[];
+  past_types: {
+    generation: NamedAPIResource;
+    types: {
+      slot: number;
+      type: NamedAPIResource;
+    }[];
+  }[];
+  species: NamedAPIResource;
+  sprites: {
+    back_default: string | null;
+    back_female: string | null;
+    back_shiny: string | null;
+    back_shiny_female: string | null;
+    front_default: string | null;
+    front_female: string | null;
+    front_shiny: string | null;
+    front_shiny_female: string | null;
+    other: {
+      dream_world: {
+        front_default: string | null;
+        front_female: string | null;
+      };
+      home: {
+        front_default: string | null;
+        front_female: string | null;
+        front_shiny: string | null;
+        front_shiny_female: string | null;
+      };
+      "official-artwork": {
+        front_default: string | null;
+        front_shiny: string | null;
+      };
+      showdown: {
+        back_default: string | null;
+        back_female: string | null;
+        back_shiny: string | null;
+        back_shiny_female: string | null;
+        front_default: string | null;
+        front_female: string | null;
+        front_shiny: string | null;
+        front_shiny_female: string | null;
+      };
+    };
+    versions: {
+      "generation-i": {
+        "red-blue": {
+          back_default: string | null;
+          back_gray: string | null;
+          back_transparent: string | null;
+          front_default: string | null;
+          front_gray: string | null;
+          front_transparent: string | null;
+        };
+        yellow: {
+          back_default: string | null;
+          back_gray: string | null;
+          back_transparent: string | null;
+          front_default: string | null;
+          front_gray: string | null;
+          front_transparent: string | null;
+        };
+      };
+      "generation-ii": {
+        crystal: {
+          back_default: string | null;
+          back_shiny: string | null;
+          back_shiny_transparent: string | null;
+          back_transparent: string | null;
+          front_default: string | null;
+          front_shiny: string | null;
+          front_shiny_transparent: string | null;
+          front_transparent: string | null;
+        };
+        gold: {
+          back_default: string | null;
+          back_shiny: string | null;
+          front_default: string | null;
+          front_shiny: string | null;
+          front_transparent: string | null;
+        };
+        silver: {
+          back_default: string | null;
+          back_shiny: string | null;
+          front_default: string | null;
+          front_shiny: string | null;
+          front_transparent: string | null;
+        };
+      };
+      "generation-iii": {
+        emerald: {
+          front_default: string | null;
+          front_shiny: string | null;
+        };
+        "firered-leafgreen": {
+          back_default: string | null;
+          back_shiny: string | null;
+          front_default: string | null;
+          front_shiny: string | null;
+        };
+        "ruby-sapphire": {
+          back_default: string | null;
+          back_shiny: string | null;
+          front_default: string | null;
+          front_shiny: string | null;
+        };
+      };
+      "generation-iv": {
+        "diamond-pearl": {
+          back_default: string | null;
+          back_female: string | null;
+          back_shiny: string | null;
+          back_shiny_female: string | null;
+          front_default: string | null;
+          front_female: string | null;
+          front_shiny: string | null;
+          front_shiny_female: string | null;
+        };
+        "heartgold-soulsilver": {
+          back_default: string | null;
+          back_female: string | null;
+          back_shiny: string | null;
+          back_shiny_female: string | null;
+          front_default: string | null;
+          front_female: string | null;
+          front_shiny: string | null;
+          front_shiny_female: string | null;
+        };
+        platinum: {
+          back_default: string | null;
+          back_female: string | null;
+          back_shiny: string | null;
+          back_shiny_female: string | null;
+          front_default: string | null;
+          front_female: string | null;
+          front_shiny: string | null;
+          front_shiny_female: string | null;
+        };
+      };
+      "generation-v": {
+        "black-white": {
+          animated: {
+            back_default: string | null;
+            back_female: string | null;
+            back_shiny: string | null;
+            back_shiny_female: string | null;
+            front_default: string | null;
+            front_female: string | null;
+            front_shiny: string | null;
+            front_shiny_female: string | null;
+          };
+          back_default: string | null;
+          back_female: string | null;
+          back_shiny: string | null;
+          back_shiny_female: string | null;
+          front_default: string | null;
+          front_female: string | null;
+          front_shiny: string | null;
+          front_shiny_female: string | null;
+        };
+      };
+      "generation-vi": {
+        "omegaruby-alphasapphire": {
+          front_default: string | null;
+          front_female: string | null;
+          front_shiny: string | null;
+          front_shiny_female: string | null;
+        };
+        "x-y": {
+          front_default: string | null;
+          front_female: string | null;
+          front_shiny: string | null;
+          front_shiny_female: string | null;
+        };
+      };
+      "generation-vii": {
+        icons: {
+          front_default: string | null;
+          front_female: string | null;
+        };
+        "ultra-sun-ultra-moon": {
+          front_default: string | null;
+          front_female: string | null;
+          front_shiny: string | null;
+          front_shiny_female: string | null;
+        };
+      };
+      "generation-viii": {
+        icons: {
+          front_default: string | null;
+          front_female: string | null;
+        };
+      };
+    };
+  };
+  stats: {
+    base_stat: number;
+    effort: number;
+    stat: NamedAPIResource;
+  }[];
+  types: {
+    slot: number;
+    type: NamedAPIResource;
+  }[];
+  weight: number;
 };

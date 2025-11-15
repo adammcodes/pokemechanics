@@ -1,7 +1,7 @@
 import {
   SpeciesVariety,
   Pokedex,
-  Pokemon,
+  RestPokemon,
   PokemonSpecies,
 } from "@/types/index";
 import { GraphQLPokemon } from "@/types/graphql";
@@ -30,7 +30,7 @@ import { GraphQLPokemonType } from "@/types/graphql";
 import getSpriteUrl from "@/constants/spriteUrlTemplates";
 
 type PokemonCardProps = {
-  pokemonData: Pokemon;
+  pokemonData: RestPokemon;
   speciesData: PokemonSpecies;
   versionData: VersionGroup;
   dexData: Pokedex;
@@ -99,7 +99,7 @@ export default async function PokemonCard({
   }
 
   // Use variant data if available, otherwise use default Pokemon data
-  const displayPokemonData: Pokemon =
+  const displayPokemonData: RestPokemon =
     isVariant && variantPokemonData ? variantPokemonData : pokemonData;
 
   console.log("name (id): ", displayPokemonData.name, displayPokemonData.id);
@@ -153,16 +153,22 @@ export default async function PokemonCard({
     graphqlSpritesArray && graphqlSpritesArray.length > 0
       ? graphqlSpritesArray[0].sprites
       : null;
-  const graphqlSpritesForVersion =
-    graphqlSprites && graphqlSprites.versions[genName][game];
 
-  const frontDefaultSpriteSrc = graphqlSpritesForVersion
-    ? graphqlSpritesForVersion.front_default
-    : getSpriteUrl({
-        versionGroup: game,
-        pokemonId: pokemonId,
-        generation: genNumber,
-      });
+  const graphqlSpritesForGen =
+    graphqlSprites && graphqlSprites.versions[genName];
+
+  const graphqlSpritesForVersion =
+    graphqlSpritesForGen && graphqlSpritesForGen[game];
+
+  // The first two generations need transparent sprites, so use the getSpriteUrl function to get the sprite url
+  const frontDefaultSpriteSrc =
+    graphqlSpritesForVersion && generationId >= 3 && generationId < 9
+      ? graphqlSpritesForVersion.front_default
+      : getSpriteUrl({
+          versionGroup: game,
+          pokemonId: pokemonId,
+          generation: genNumber,
+        });
 
   return (
     <div className={`w-full flex flex-col items-center justify-center px-4`}>

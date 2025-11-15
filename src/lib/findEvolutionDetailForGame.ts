@@ -1,4 +1,4 @@
-import { EvolutionDetail } from "pokenode-ts";
+import { EvolutionDetail } from "@/types/index";
 import { numOfPokemonByGen } from "@/constants/numOfPokemonByGen";
 
 // This function recieves an array of evolution details and a generation name and returns the evolution detail for that game

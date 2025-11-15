@@ -1,4 +1,4 @@
-import { EvolutionDetail } from "pokenode-ts";
+import { EvolutionDetail } from "@/types/index";
 import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
 import relativeAttackAndDefense from "@/lib/relativeAttackAndDefence";
 

@@ -16,7 +16,7 @@ function onlyEvolutionsForGen(evolution, generation) {
  *     name: string,
  *     url: string
  *   },
- *   evolves_to: Chain[],
+ *   evolves_to: recursive object,
  *   evolution_details: EvolutionDetail[]
  * }
  * @param {*} pagePokemonData {Pokemon}

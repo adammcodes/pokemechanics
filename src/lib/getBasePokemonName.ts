@@ -31,6 +31,7 @@ export function getBasePokemonName(pokemonName: string): string {
     "-special", // for deoxys-special
     "-gmax", // for gmax pokemon
     "-mega", // for mega pokemon
+    "-unbound", // for hoopa-unbound
     "-primal", // for primal pokemon
     "-totem", // for totem pokemon
   ];

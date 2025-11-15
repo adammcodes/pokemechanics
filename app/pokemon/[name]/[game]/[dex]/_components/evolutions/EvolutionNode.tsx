@@ -3,7 +3,7 @@ import PokemonSpriteForGen from "../sprites/PokemonSpriteForGen";
 // import findVarietyForRegion from "@/lib/findVarietyForRegion";
 import getSpriteUrl from "@/constants/spriteUrlTemplates";
 // import { fetchPokemonSpeciesById } from "@/app/helpers/rest/fetchPokemonSpeciesById";
-import { Pokemon } from "@/types/index";
+import { RestPokemon } from "@/types/index";
 
 const EvolutionNode = async ({
   pokemonDexNumber,
@@ -15,7 +15,7 @@ const EvolutionNode = async ({
   species,
 }: {
   pokemonDexNumber: number;
-  pagePokemonData: Pokemon;
+  pagePokemonData: RestPokemon;
   dexName: string;
   game: string;
   regionName: string;

@@ -1,10 +1,10 @@
 import styles from "./Evolutions.module.css";
 import PokemonEvolutionChain from "./PokemonEvolutionChain";
-import { Pokemon } from "@/types/index";
+import { RestPokemon } from "@/types/index";
 
 type EvolutionsProps = {
   evolutionChainData: any;
-  pagePokemonData: Pokemon;
+  pagePokemonData: RestPokemon;
   game: string;
   generation: string;
   dexName: string;
@@ -21,13 +21,13 @@ export default function Evolutions({
 }: EvolutionsProps) {
   if (!evolutionChainData) return <div className="p-5">Loading...</div>;
 
-  const pagePokemonSprite = pagePokemonData.sprites.front_default;
-  const pagePokemonSpeciesId =
-    pagePokemonData.species.url.split("/").at(-2) ?? "";
-  const pagePokemonIsVariant = !pagePokemonData.is_default;
-  const pagePokemonNameContainsRegion = pagePokemonData.name.includes(
-    regionName.toLowerCase()
-  );
+  // const pagePokemonSprite = pagePokemonData.sprites.front_default;
+  // const pagePokemonSpeciesId =
+  //   pagePokemonData.species.url.split("/").at(-2) ?? "";
+  // const pagePokemonIsVariant = !pagePokemonData.is_default;
+  // const pagePokemonNameContainsRegion = pagePokemonData.name.includes(
+  //   regionName.toLowerCase()
+  // );
 
   return (
     <div className={`${styles.evolutions} py-5`}>
