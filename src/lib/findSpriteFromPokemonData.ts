@@ -16,6 +16,8 @@ export default function findSpriteFromPokemonData({
     "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201-question.png";
 
   if (!pokemonData) {
+    console.warn("No pokemon data found in findSpriteFromPokemonData");
+    console.warn("Using default sprite");
     return defaultSprite;
   }
 
@@ -45,5 +47,10 @@ export default function findSpriteFromPokemonData({
     return spriteUrlFromTemplate;
   }
 
-  return spritesForVersionGroup.front_default ?? defaultSprite;
+  if (!spritesForVersionGroup.front_default) {
+    // return sprites.front_default if it exists
+    return pokemonData.sprites.front_default ?? defaultSprite;
+  }
+
+  return spritesForVersionGroup.front_default;
 }

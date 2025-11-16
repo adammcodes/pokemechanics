@@ -98,14 +98,18 @@ export async function generateMetadata({
     pokemonData = await fetchPokemonByName(effectiveName);
     speciesName = pokemonData ? pokemonData.species.name : effectiveName;
   } catch (error) {
-    console.error("Error fetching Pokemon data for name:", effectiveName, error);
+    console.error(
+      "Error fetching Pokemon data for name:",
+      effectiveName,
+      error
+    );
   }
 
   try {
     const speciesData = await fetchPokemonSpeciesByName(speciesName); // ✅ Use species name (no variant names)
     const pokemonName = speciesData.name;
     const displayName =
-      pokemonName.charAt(0).toUpperCase() + pokemonName.slice(1);
+      speciesName.charAt(0).toUpperCase() + pokemonName.slice(1);
 
     return {
       title: `Select Game Version for ${displayName} | Pokémechanics`,
@@ -136,7 +140,11 @@ export default async function PokemonGameSelector({ params }: PageProps) {
     pokemonData = await fetchPokemonByName(effectiveName);
     speciesName = pokemonData ? pokemonData.species.name : effectiveName;
   } catch (error) {
-    console.error("Error fetching Pokemon data for name:", effectiveName, error);
+    console.error(
+      "Error fetching Pokemon data for name:",
+      effectiveName,
+      error
+    );
   }
 
   try {

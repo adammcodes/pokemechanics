@@ -58,7 +58,21 @@ export async function generateMetadata({
     pokemonData = await fetchPokemonByName(effectiveName);
     speciesName = pokemonData ? pokemonData.species.name : effectiveName;
   } catch (error) {
-    console.error("Error fetching Pokemon data for name:", effectiveName, error);
+    console.error(
+      "Error fetching Pokemon data for name:",
+      effectiveName,
+      error
+    );
+  }
+
+  if (!pokemonData) {
+    return {
+      title: "Pokémon Not Found | Pokémechanics",
+      description: "The requested Pokémon could not be found.",
+      alternates: {
+        canonical: `https://www.pokemechanics.app/pokemon/${name}/${game}/${dex}`,
+      },
+    };
   }
 
   try {
@@ -84,10 +98,18 @@ export async function generateMetadata({
       effectiveName
     );
 
-    // const displayName =
-    //   speciesName.charAt(0).toUpperCase() + speciesName.slice(1);
     const versionName = convertKebabCaseToTitleCase(versionData?.name ?? "");
     const dexDisplayName = convertKebabCaseToTitleCase(dex);
+    const speciesDisplayName =
+      speciesName.charAt(0).toUpperCase() + speciesName.slice(1);
+    const isDefaultForm = pokemonData.is_default;
+    const variantNames = convertKebabCaseToTitleCase(
+      actualPokemonName.slice(speciesName.length + 1) ?? ""
+    );
+    const displayName =
+      isDefaultForm && effectiveName === actualPokemonName
+        ? speciesDisplayName
+        : `${speciesDisplayName} (${variantNames})`;
 
     // // Find variety for region if there are multiple varieties
     // const pokemonVarietyForRegion = findVarietyForRegion(
@@ -124,8 +146,8 @@ export async function generateMetadata({
     // Get game-specific Pokemon sprite for social media preview
     const pokemonGenus = findGenusForLanguage(speciesData);
 
-    const title = `${actualPokemonName} - ${versionName} (${dexDisplayName} Pokédex) - Gen ${generationId} - Pokémechanics`;
-    const description = `Explore ${actualPokemonName} ${
+    const title = `${displayName} - ${versionName} (${dexDisplayName} Pokédex) - Gen ${generationId} - Pokémechanics`;
+    const description = `Explore ${displayName} ${
       pokemonGenus ? `the ${pokemonGenus}` : ""
     } in ${versionName}. View Gen ${generationId} complete stats, moves, abilities, types, encounters, and evolution information for the ${dexDisplayName} Pokédex.`;
     const canonicalUrl = `https://www.pokemechanics.app/pokemon/${actualPokemonName}/${game}/${dex}`;
@@ -224,7 +246,11 @@ export default async function Pokemon({ params }: PageProps) {
     pokemonData = await fetchPokemonByName(effectiveName);
     speciesName = pokemonData ? pokemonData.species.name : effectiveName;
   } catch (error) {
-    console.error("Error fetching Pokemon data for name:", effectiveName, error);
+    console.error(
+      "Error fetching Pokemon data for name:",
+      effectiveName,
+      error
+    );
   }
 
   try {
@@ -241,7 +267,11 @@ export default async function Pokemon({ params }: PageProps) {
     const regionName = dex === "national" ? region?.name || "" : dexRegion;
 
     // Including regional suffix
-    const variantName = getVariantPokemonName(speciesData, regionName, effectiveName);
+    const variantName = getVariantPokemonName(
+      speciesData,
+      regionName,
+      effectiveName
+    );
 
     // Extract version names for GraphQL query
     const versions = versionData.versions.map((v) => v.name);

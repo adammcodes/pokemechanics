@@ -154,15 +154,17 @@ export default async function PokemonCard({
     generationName: genName,
     versionGroup: game,
   });
+
   // const graphqlSpritesArray = graphqlPokemonData?.pokemonsprites;
   // const graphqlSprites =
   //   graphqlSpritesArray && graphqlSpritesArray.length > 0
   //     ? graphqlSpritesArray[0].sprites
   //     : null;
+  // // console.log("graphqlSprites", graphqlSprites);
 
   // const graphqlSpritesForGen =
   //   graphqlSprites && graphqlSprites.versions[genName];
-
+  // console.log("graphqlSpritesForGen", graphqlSpritesForGen);
   // const graphqlSpritesForVersion =
   //   graphqlSpritesForGen && graphqlSpritesForGen[game];
 
