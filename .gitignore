@@ -47,3 +47,7 @@ yarn-error.log*
 .open-next/
 .wrangler/
 cloudflare-env.d.ts
+
+# Build output
+.vercel/
+.next/
