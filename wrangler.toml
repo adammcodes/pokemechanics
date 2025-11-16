@@ -1,15 +1,4 @@
 name = "pokemechanics"
 compatibility_date = "2025-03-25"
 pages_build_output_dir = ".vercel/output/static"
-
-# Node.js compatibility for Pages Functions
 compatibility_flags = ["nodejs_compat"]
-
-# Observability settings
-[observability]
-enabled = true
-
-[observability.logs]
-enabled = true
-head_sampling_rate = 1
-invocation_logs = true
