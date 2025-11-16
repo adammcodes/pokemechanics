@@ -8,6 +8,8 @@
     "pages:build": "npx @cloudflare/next-on-pages",
     "pages:preview": "npm run pages:build && wrangler pages dev .vercel/output/static",
     "pages:deploy": "npm run pages:build && wrangler pages deploy .vercel/output/static",
+    "preview": "wrangler pages dev .vercel/output/static --port 8788",
+    "deploy": "wrangler pages deploy .vercel/output/static --project-name=newbarktown",
     "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
     "test": "vitest",
     "test:ui": "vitest --ui",

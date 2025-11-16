@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 
 // This page must be dynamic because it reads cookies
+export const runtime = 'edge';
 export const dynamic = "force-dynamic";
 
 export default async function Pokedex() {

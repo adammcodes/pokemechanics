@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { validateTurnstile } from "@/utils/validateTurnstile";
 
-// API routes must be dynamic
+// API routes must be dynamic and use edge runtime for Cloudflare Pages
+export const runtime = 'edge';
 export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
