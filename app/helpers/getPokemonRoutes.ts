@@ -1,4 +1,5 @@
 import { POKEAPI_GRAPHQL_ENDPOINT } from "@/constants/apiConfig";
+import { numOfPokemonByGen } from "@/constants/numOfPokemonByGen";
 import { isUnsupportedVariant } from "@/constants/unsupportedVariants";
 
 // Type for version group configuration
@@ -185,8 +186,19 @@ export type PokemonSpeciesVariety = {
   id: number;
   pokemons: {
     is_default: boolean;
-    pokemonforms: { name: string; id: number; form_name: string }[];
+    pokemonforms: {
+      name: string;
+      id: number;
+      form_name: string;
+      pokemonformgenerations: PokemonFormGeneration[];
+    }[];
   }[];
+};
+
+export type PokemonFormGeneration = {
+  generation: {
+    name: string;
+  };
 };
 
 /**
@@ -219,6 +231,11 @@ export async function getAllPokemonRoutes(): Promise<PokemonRoute[]> {
                   name
                   id
                   form_name
+                  pokemonformgenerations {
+                    generation {
+                      name
+                    }
+                  }
                 }
               }
             }
@@ -265,8 +282,18 @@ export async function getAllPokemonRoutes(): Promise<PokemonRoute[]> {
     // Generate routes for all version groups
     VERSION_GROUPS.forEach((vg) => {
       const vgPokedex = vgPokedexes.find((v) => v.name === vg.name);
+      const nationalDexLimit = numOfPokemonByGen[vg.generation];
       if (vgPokedex) {
         const pokedexes = vgPokedex.pokedexversiongroups.map((p) => p.pokedex);
+        pokedexes.push({
+          id: 1,
+          name: "national",
+          pokemondexnumbers: allPokemon.slice(0, nationalDexLimit).map((p) => ({
+            pokemon_species_id: p.id,
+            pokedex_number: p.id,
+          })),
+        });
+        // For each pokedex in the version group, generate routes for all the pokemon in the pokedex
         pokedexes.forEach((dex) => {
           dex.pokemondexnumbers.forEach((dexNumber) => {
             const pokemonSpeciesId = dexNumber.pokemon_species_id;
@@ -276,8 +303,14 @@ export async function getAllPokemonRoutes(): Promise<PokemonRoute[]> {
             if (forms.length > 1) {
               forms.forEach((form) => {
                 form.pokemonforms.forEach((f) => {
-                  // Skip unsupported variants
-                  if (!isUnsupportedVariant(f.name)) {
+                  const formGenerations = f.pokemonformgenerations.map(
+                    (fg) => fg.generation.name
+                  );
+                  // Skip unsupported variants and forms that do not exist in the version group generation
+                  if (
+                    !isUnsupportedVariant(f.name) &&
+                    formGenerations.includes(vg.generation)
+                  ) {
                     routes.push({
                       name: f.name,
                       game: vg.name,

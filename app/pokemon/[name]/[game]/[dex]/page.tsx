@@ -36,6 +36,7 @@ type PageProps = {
 // Generate static paths for all Pokemon at build time
 export async function generateStaticParams() {
   console.log("Generating static params for Pokemon pages...");
+  // Return just a handful of test routes instead of all 9993
   const routes = await getAllPokemonRoutes();
   console.log(`Total routes to generate: ${routes.length}`);
   return routes;

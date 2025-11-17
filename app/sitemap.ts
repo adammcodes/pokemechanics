@@ -5,7 +5,7 @@ import {
 } from "@/app/helpers/getPokemonRoutes";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = "https://www.pokemechanics.app";
+  const baseUrl = "https://www.newbarktown.ca";
   const currentDate = new Date();
 
   const urls: MetadataRoute.Sitemap = [

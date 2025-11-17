@@ -24,6 +24,7 @@ type PageProps = {
 
 // Generate static params for all version groups
 export async function generateStaticParams() {
+  // return [{ gen: "red-blue" }, { gen: "gold-silver" }];
   const versionGroups = getAllVersionGroups();
   return versionGroups.map((gen) => ({ gen }));
 }

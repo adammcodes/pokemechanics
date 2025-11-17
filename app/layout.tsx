@@ -1,6 +1,5 @@
 import "@/styles/globals.css";
 import Client from "app/Client";
-import { cookies } from "next/headers";
 
 export const metadata = {
   title: "Pokémechanics",
@@ -13,25 +12,16 @@ export const metadata = {
   },
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const cookieStore = await cookies();
-  const theme = cookieStore.get("theme")?.value || "light";
-  const game = cookieStore.get("game")?.value || "red-blue"; // Add game cookie
-
   return (
-    <html lang="en" data-theme={theme}>
+    <html lang="en" data-theme="dark">
       <head>
         <link rel="preconnect" href="https://raw.githubusercontent.com" />
         <link rel="dns-prefetch" href="https://raw.githubusercontent.com" />
-        <script
-          src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
-          async
-          defer
-        ></script>
         <link
           rel="icon"
           type="image/png"
@@ -47,14 +37,11 @@ export default async function RootLayout({
         />
         <meta name="apple-mobile-web-app-title" content="Pokémechanics" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta
-          name="apple-mobile-web-app-status-bar-style"
-          content="default"
-        />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <link rel="manifest" href="/site.webmanifest" />
       </head>
       <body>
-        <Client initialGame={game}>{children}</Client>
+        <Client initialGame="red-blue">{children}</Client>
       </body>
     </html>
   );
