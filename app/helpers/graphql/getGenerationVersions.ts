@@ -63,7 +63,7 @@ export type GenerationVersions = {
   versiongroups: VersionGroupPokedexes[];
 };
 
-type VersionGroupPokedexes = {
+export type VersionGroupPokedexes = {
   id: number;
   name: string;
   order: number;
@@ -78,10 +78,10 @@ type VersionGroupPokedexes = {
       pokedexdescriptions: { description: string }[];
       pokemondexnumbers: PokemonDexNumber[];
     };
-  };
+  }[];
 };
 
-type PokemonDexNumber = {
+export type PokemonDexNumber = {
   pokedex_number: number;
   pokemon_species_id: number;
   pokemonspecy: {
