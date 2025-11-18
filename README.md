@@ -378,7 +378,7 @@ All pages should return 200 OK and display complete Pokemon data.
 - Selected Version Group is referred to as `game` around the codebase
 - **URL Search Params** - /[name]/[version-group]/[dex]
 - **Cookies** - Persist user preferences (selected game, theme)
-- **React Context** - Share game selection across components (`GameContext`)
+- **React Context** - Share game selection across components (`GenerationContext`)
 - **React Query** - Client-side data fetching, caching, and synchronization
 
 ### Styling Approach

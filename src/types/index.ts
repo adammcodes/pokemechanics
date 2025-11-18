@@ -6,6 +6,7 @@ export type NamedAPIResource = {
 // Option types are used for Autocomplete and Select components
 export type GameOption = {
   label: string;
+  smallLabel?: string;
   name: string;
   value: string;
   number: number;

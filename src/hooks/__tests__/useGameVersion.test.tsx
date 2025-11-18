@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { renderHook } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React, { type ReactNode } from "react";
-import useGameVersion from "../useGameVersion";
+import useGameVersion from "../useGeneration";
 import type { VersionGroup } from "@/app/helpers/graphql/getVersionGroup";
 
 // Mock the getVersionGroup helper

@@ -44,25 +44,28 @@ export const metadata: Metadata = {
   },
 };
 
-type Gen = {
+export type Generation = {
+  id: number;
   name: string;
-  url: string;
+  versiongroups: VersionGroup[];
 };
 
 type VersionGroup = {
   id: number;
   name: string;
-  generation_id: number;
 };
 
-async function getVersionGroups(): Promise<Gen[]> {
+async function getGenerations(): Promise<Generation[]> {
   const query = `
-    query GetVersionGroups {
-      versiongroup {
+    query Gens {
+      generation {
         id
         name
-        generation_id
-      }
+        versiongroups {
+          id
+          name
+        }
+      }   
     }
   `;
 
@@ -73,21 +76,12 @@ async function getVersionGroups(): Promise<Gen[]> {
       next: { revalidate: 604800 },
     });
 
-    // Transform the GraphQL response to match the expected Gen[] format
-    return data.versiongroup
-      .filter(
-        (versionGroup: VersionGroup) =>
-          !EXCLUDED_VERSION_GROUPS.includes(versionGroup.name)
-      )
-      .sort(
-        (a: VersionGroup, b: VersionGroup) => a.generation_id - b.generation_id
-      )
-      .map((versionGroup: VersionGroup) => {
-        return {
-          name: versionGroup.name,
-          url: `/pokedex/${versionGroup.generation_id}`,
-        };
-      });
+    return data.generation.map((generation: Generation) => {
+      return {
+        ...generation,
+        url: `/pokedex/${generation.name}`,
+      };
+    });
   } catch (error) {
     console.error("Error fetching version groups:", error);
     throw error;
@@ -96,25 +90,36 @@ async function getVersionGroups(): Promise<Gen[]> {
 
 // This is the "/" route
 export default async function HomePage() {
-  const gens = await getVersionGroups();
+  const generations = await getGenerations();
 
   // if there is an error, show an error page
-  if (gens instanceof Error) {
+  if (generations instanceof Error) {
     return (
       <main>
         <h1>There was an error</h1>
-        <p>{gens.message}</p>
+        <p>{generations.message}</p>
       </main>
     );
   }
 
+  const filteredGenerations = generations.map((gen) => {
+    const filteredVersionGroups = gen.versiongroups.filter(
+      (vg) => !EXCLUDED_VERSION_GROUPS.includes(vg.name)
+    );
+    return {
+      ...gen,
+      versiongroups: filteredVersionGroups,
+    };
+  });
+
   return (
     <main className="w-full h-full flex flex-col justify-start items-center">
       <h2 className={styles.typing}>
-        WHICH GAME ARE YOU PLAYING?<span className={styles.cursor}>_</span>
+        WHICH GEN ARE YOU PLAYING?
+        <span className={styles.cursor}>_</span>
       </h2>
       <div className="max-w-sm mx-auto">
-        {gens && <GenSelector gens={gens} />}
+        {filteredGenerations && <GenSelector gens={filteredGenerations} />}
       </div>
     </main>
   );

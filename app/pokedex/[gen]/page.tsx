@@ -8,6 +8,8 @@ import { headers } from "next/headers";
 import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
 import { redirect } from "next/navigation";
 import { getAllVersionGroups } from "@/app/helpers/getPokemonRoutes";
+import { getGenerationVersions } from "@/app/helpers/graphql/getGenerationVersions";
+import type { GenerationVersions } from "@/app/helpers/graphql/getGenerationVersions";
 
 // Force static generation
 export const dynamic = "force-static";
@@ -50,8 +52,8 @@ export async function generateMetadata({
 export default async function Page({ params }: PageProps) {
   // get the version group and pokedexes for the selected generation
   // Get the selected generation from the dynamic route params of the URL
-  // e.g. /pokedex/red-blue
-  // gen = red-blue
+  // e.g. /pokedex/generation-i
+  // gen e.g. "generation-i"
   const { gen } = await params;
 
   // Log User-Agent for monitoring bot traffic and API usage patterns
@@ -59,50 +61,55 @@ export default async function Page({ params }: PageProps) {
   //const userAgent = headersList.get("user-agent") || "Unknown";
   //console.log(`[Request] /pokedex/${gen} | User-Agent: ${userAgent}`);
 
-  const versionGroup = await getVersionGroup(gen);
+  // const versionGroup = await getVersionGroup(gen);
+  const genVersions = await getGenerationVersions(gen);
 
   // If version group not found (e.g., /pokedex/971), redirect to main pokedex page
-  if (versionGroup.error) {
+  if (genVersions.error) {
     redirect("/pokedex");
   }
 
-  // generationString is a string "generation" and the number roman numeral as a string e.g. "generation-i"
-  const generationString: string = versionGroup.generation.name;
-  // pokedexes is an array of pokedexes for the selected generation [{ name, id }]
-  const pokedexes = versionGroup.pokedexes;
+  const generation = genVersions as GenerationVersions;
 
-  const formattedGen = gen
-    .replace("-", " ")
-    .replace(/\b\w/g, (l) => l.toUpperCase());
+  return <div>{generation.name}</div>;
 
-  return (
-    <section className="flex flex-col w-full h-full px-2 lg:px-5">
-      {/* SEO-friendly header */}
-      <div className="px-2 lg:px-5 py-4">
-        <h1 className="text-2xl font-bold mb-2 text-center">
-          Pokédex - {formattedGen}
-        </h1>
-      </div>
+  // // generationString is a string "generation" and the number roman numeral as a string e.g. "generation-i"
+  // const generationString: string = generation.name;
+  // // pokedexes is an array of pokedexes for the selected generation [{ name, id }]
+  // const pokedexes = versionGroup.pokedexes;
 
-      <div className="flex flex-wrap gap-y-2 w-full justify-around items-start px-2 py-2 lg:px-5">
-        <div
-          className={`${styles.pokedexes} flex flex-wrap gap-4 w-full justify-around items-start px-5`}
-        >
-          {/* render each pokedex in the generation */}
-          {pokedexes.length > 0 &&
-            pokedexes.map((dex) => (
-              <PokedexById
-                key={dex.id.toString()}
-                dexId={dex.id}
-                dexName={dex.name}
-                game={gen}
-                generationString={generationString}
-              />
-            ))}
-        </div>
-        {/* render the national dex for the game/generation */}
-        <NationalDex game={gen} generationString={generationString} />
-      </div>
-    </section>
-  );
+  // const formattedGen = gen
+  //   .replace("-", " ")
+  //   .replace(/\b\w/g, (l) => l.toUpperCase());
+
+  // return (
+  //   <section className="flex flex-col w-full h-full px-2 lg:px-5">
+  //     {/* SEO-friendly header */}
+  //     <div className="px-2 lg:px-5 py-4">
+  //       <h1 className="text-2xl font-bold mb-2 text-center">
+  //         Pokédex - {formattedGen}
+  //       </h1>
+  //     </div>
+
+  //     <div className="flex flex-wrap gap-y-2 w-full justify-around items-start px-2 py-2 lg:px-5">
+  //       <div
+  //         className={`${styles.pokedexes} flex flex-wrap gap-4 w-full justify-around items-start px-5`}
+  //       >
+  //         {/* render each pokedex in the generation */}
+  //         {pokedexes.length > 0 &&
+  //           pokedexes.map((dex) => (
+  //             <PokedexById
+  //               key={dex.id.toString()}
+  //               dexId={dex.id}
+  //               dexName={dex.name}
+  //               game={gen}
+  //               generationString={generationString}
+  //             />
+  //           ))}
+  //       </div>
+  //       {/* render the national dex for the game/generation */}
+  //       {/* <NationalDex game={gen} generationString={generationString} /> */}
+  //     </div>
+  //   </section>
+  // );
 }

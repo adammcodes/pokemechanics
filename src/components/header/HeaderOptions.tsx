@@ -74,7 +74,7 @@ const Nav = ({
     { href: "/pokedex" + gamePath, text: "Pokédex" },
     // { href: "/bag" + gamePath, text: "Bag" },
     // { href: "/map" + gamePath, text: "Map" },
-    { href: "/", text: "Select Version" },
+    { href: "/", text: "Select Generation" },
   ];
 
   return (

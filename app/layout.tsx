@@ -41,7 +41,7 @@ export default function RootLayout({
         <link rel="manifest" href="/site.webmanifest" />
       </head>
       <body>
-        <Client initialGame="red-blue">{children}</Client>
+        <Client initialGeneration="generation-i">{children}</Client>
       </body>
     </html>
   );

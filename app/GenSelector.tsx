@@ -6,32 +6,35 @@ import AutocompleteBase from "@/components/common/AutocompleteBase";
 // Utils
 import convertKebabCaseToTitleCase from "../src/utils/convertKebabCaseToTitleCase";
 // Context
-import GameContext from "../src/context/GameContextProvider";
-
-type VersionGroup = {
-  name: string;
-  url: string;
-};
+import GenerationContext from "../src/context/GenerationProvider";
+import type { Generation } from "./page";
+import { romanToNumber } from "@/utils/romanToNumber";
 
 type GenSelectorProps = {
-  gens: VersionGroup[];
+  gens: Generation[];
 };
 
-// Component for selecting a Version Group: e.g. "Red/Blue", "Yellow", "Silver/Gold", etc
+// Component for selecting a Generation: e.g. "Generation I", "Generation II", "Generation III", etc
 const GenSelector: React.FC<GenSelectorProps> = function GenSelector({ gens }) {
-  const { setGame, game } = useContext(GameContext);
+  const { setGeneration, generation } = useContext(GenerationContext);
 
-  const genOptions: GameOption[] = gens.map((gen, index) => {
+  const genOptions: GameOption[] = gens.map((gen) => {
+    const versionGroups = gen.versiongroups
+      .map((vg) => convertKebabCaseToTitleCase(vg.name))
+      .join(", ");
+    const genNumberString = gen.name.split("-")[1];
+    const genNumber = romanToNumber(genNumberString);
     return {
-      label: convertKebabCaseToTitleCase(gen.name),
+      label: `${genNumber}`,
+      smallLabel: versionGroups,
       name: gen.name,
       value: gen.name,
-      number: index + 1,
+      number: gen.id,
     };
   });
 
   const handleSelect = (value: string | number) => {
-    setGame(value);
+    setGeneration(value);
     // Navigation will be handled by Link components in AutocompleteBase
   };
 
@@ -39,7 +42,7 @@ const GenSelector: React.FC<GenSelectorProps> = function GenSelector({ gens }) {
     <AutocompleteBase
       options={genOptions}
       onSelect={handleSelect}
-      defaultValue={convertKebabCaseToTitleCase(game || "red-blue")}
+      defaultValue={convertKebabCaseToTitleCase(generation || "generation-i")}
       hasImageOptions={false}
       linkTemplate="/pokedex/{value}"
     />

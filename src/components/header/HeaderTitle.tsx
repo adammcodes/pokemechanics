@@ -3,12 +3,12 @@ import Link from "next/link";
 import Image from "next/image";
 import { useContext } from "react";
 import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
-import { GameContext } from "@/context/_context";
+import { GenerationContext } from "@/context/_context";
 
 const logoSize: number = 80;
 
 export default function HeaderTitle() {
-  const { game, generationString } = useContext(GameContext);
+  const { game, generationString } = useContext(GenerationContext);
 
   const formatName = convertKebabCaseToTitleCase;
   const genNumber = generationString?.split("-")[1] || "i";
