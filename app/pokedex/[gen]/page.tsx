@@ -3,7 +3,10 @@ import { redirect } from "next/navigation";
 import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
 import { getAllVersionGroups } from "@/app/helpers/getPokemonRoutes";
 import { getGenerationVersions } from "@/app/helpers/graphql/getGenerationVersions";
-import type { GenerationVersions } from "@/app/helpers/graphql/getGenerationVersions";
+import type {
+  GenerationVersions,
+  Pokedex,
+} from "@/app/helpers/graphql/getGenerationVersions";
 import { getGenVersionsString } from "@/utils/getGenVersionsString";
 import { romanToNumber } from "@/utils/romanToNumber";
 import PokedexHeader from "./_components/PokedexHeader";
@@ -73,7 +76,7 @@ export default async function Page({ params }: PageProps) {
   // Build a map of pokedexes with their associated version groups
   const pokedexMap = new Map<
     number,
-    { pokedex: any; versionGroups: string[] }
+    { pokedex: Pokedex; versionGroups: string[] }
   >();
 
   generation.versiongroups.forEach((vg) => {

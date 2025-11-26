@@ -4,16 +4,7 @@ import { useState } from "react";
 import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
 import { EXCLUDED_VERSION_GROUPS } from "@/constants/excludedVersionGroups";
 import PokemonSpriteCarousel from "./PokemonSpriteCarousel";
-import { PokedexPokemon } from "./PokedexById";
-
-type Pokedex = {
-  id: number;
-  name: string;
-  region: { name: string };
-  pokemondexnumbers_aggregate: { aggregate: { count: number } };
-  pokedexdescriptions: { description: string }[];
-  pokemondexnumbers: PokedexPokemon[];
-};
+import type { Pokedex } from "@/app/helpers/graphql/getGenerationVersions";
 
 type PokedexCardProps = {
   pokedex: Pokedex;

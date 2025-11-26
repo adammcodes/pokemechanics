@@ -42,11 +42,9 @@ const query = `
               pokemonspecy {
                 name
                 pokemons(where: { is_default: { _eq: false } }) {
+                  id  
                   name
                   is_default
-                  pokemonsprites {
-                    id
-                  }
                 }
               }
             }
@@ -70,15 +68,17 @@ export type VersionGroupPokedexes = {
   versions: NamedAPIResource[];
   versiongroupregions: { region: NamedAPIResource }[];
   pokedexversiongroups: {
-    pokedex: {
-      id: number;
-      name: string;
-      region: { name: string };
-      pokemondexnumbers_aggregate: { aggregate: { count: number } };
-      pokedexdescriptions: { description: string }[];
-      pokemondexnumbers: PokemonDexNumber[];
-    };
+    pokedex: Pokedex;
   }[];
+};
+
+export type Pokedex = {
+  id: number;
+  name: string;
+  region: { name: string };
+  pokemondexnumbers_aggregate: { aggregate: { count: number } };
+  pokedexdescriptions: { description: string }[];
+  pokemondexnumbers: PokemonDexNumber[];
 };
 
 export type PokemonDexNumber = {
@@ -90,10 +90,10 @@ export type PokemonDexNumber = {
   };
 };
 
-type PokemonForms = {
+export type PokemonForms = {
+  id: number;
   name: string;
   is_default: boolean;
-  pokemonsprites: { id: number }[];
 };
 
 type NamedAPIResource = {

@@ -1,8 +1,9 @@
 import getSpriteUrl from "@/constants/spriteUrlTemplates";
-import { PokedexPokemon } from "./PokedexById";
+import type { PokemonDexNumber } from "@/app/helpers/graphql/getGenerationVersions";
+import Link from "next/link";
 
 type PokemonSpriteCarouselProps = {
-  pokemonList: PokedexPokemon[];
+  pokemonList: PokemonDexNumber[];
   versionGroups: string[];
   generation: string;
   genNumber: number;
@@ -21,12 +22,11 @@ export default function PokemonSpriteCarousel({
   return (
     <div className="overflow-x-auto">
       <div className="flex gap-3 pb-2">
-        {pokemonList.map((entry: PokedexPokemon) => {
+        {pokemonList.map((entry: PokemonDexNumber) => {
           const regionalVariant = entry.pokemonspecy.pokemons.find((variant) =>
             variant.name.includes(regionName.toLowerCase())
           );
-          const regionalVariantSprites = regionalVariant?.pokemonsprites;
-          const regionalVariantId = regionalVariantSprites?.[0]?.id;
+          const regionalVariantId = regionalVariant?.id || undefined;
 
           // Gen 6 uses 3D-rendered sprites that should be smooth
           const isPixelArt = genNumber !== 6;
@@ -38,7 +38,8 @@ export default function PokemonSpriteCarousel({
           });
 
           return (
-            <div
+            <Link
+              href={`/${generation}/${entry.pokemonspecy.name}`}
               key={`${dexId}-${entry.pokemon_species_id}`}
               className="flex flex-col items-center flex-shrink-0 group"
             >
@@ -64,7 +65,7 @@ export default function PokemonSpriteCarousel({
                   #{entry.pokedex_number}
                 </span>
               </div>
-            </div>
+            </Link>
           );
         })}
       </div>
