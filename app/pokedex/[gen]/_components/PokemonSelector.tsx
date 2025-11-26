@@ -79,7 +79,7 @@ const PokemonSelector: React.FC<PokemonSelectorProps> =
               ? `(#${defaultPokemonId}) ${toTitleCase(defaultPokemonName)}`
               : ""
           }
-          linkTemplate="/pokemon/{name}/{game}/{dexName}"
+          linkTemplate="/{generationString}/{name}"
         />
       </>
     );

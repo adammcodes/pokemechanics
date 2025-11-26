@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
-import { getAllVersionGroups } from "@/app/helpers/getPokemonRoutes";
+import { getAllGenerations } from "@/app/helpers/getPokemonRoutes";
 import { getGenerationVersions } from "@/app/helpers/graphql/getGenerationVersions";
 import type {
   GenerationVersions,
@@ -24,11 +24,11 @@ type PageProps = {
   }>;
 };
 
-// Generate static params for all version groups
+// Generate static params for all generations
 export async function generateStaticParams() {
-  // return [{ gen: "red-blue" }, { gen: "gold-silver" }];
-  const versionGroups = getAllVersionGroups();
-  return versionGroups.map((gen) => ({ gen }));
+  // return [{ gen: "generation-i" }, { gen: "generation-ii" }];
+  const generations = await getAllGenerations();
+  return generations.map((gen: string) => ({ gen }));
 }
 
 // Generate metadata for SEO

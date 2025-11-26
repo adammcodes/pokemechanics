@@ -20,12 +20,12 @@ type PageProps = {
   }>;
 };
 
-// Generate static params for all unique Pokemon names
+// Generate static params for all unique generation names
 export async function generateStaticParams() {
   const routes = await getAllPokemonRoutes();
-  // Get unique Pokemon names (remove duplicates)
-  const uniqueNames = [...new Set(routes.map((route) => route.name))];
-  return uniqueNames.map((name) => ({ name }));
+  // Get unique generation names (remove duplicates)
+  const uniqueGens = [...new Set(routes.map((route) => route.gen))];
+  return uniqueGens.map((gen) => ({ gen }));
 }
 
 type VersionGroup = {

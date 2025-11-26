@@ -1,353 +1,78 @@
-import { POKEAPI_GRAPHQL_ENDPOINT } from "@/constants/apiConfig";
-import { numOfPokemonByGen } from "@/constants/numOfPokemonByGen";
-import { isUnsupportedVariant } from "@/constants/unsupportedVariants";
-
-// Type for version group configuration
-type VersionGroupConfig = {
-  name: string;
-  pokedexes: string[];
-  generation: string;
-  maxPokemonId?: number;
-  region?: string;
-};
-
-type PokedexVersionGroup = {
-  pokedex: {
-    id: number;
-    name: string;
-    pokemondexnumbers: {
-      pokemon_species_id: number;
-      pokedex_number: number;
-    }[];
-  };
-};
-
-type VersionGroupPokedexes = {
-  id: number;
-  name: string;
-  generation_id: number;
-  pokedexversiongroups: PokedexVersionGroup[];
-};
-
-// Version groups with their valid pokedexes and generation
-const VERSION_GROUPS: VersionGroupConfig[] = [
-  // Gen 1
-  { name: "red-blue", pokedexes: ["kanto"], generation: "generation-i" },
-  { name: "yellow", pokedexes: ["kanto"], generation: "generation-i" },
-  // Gen 2
-  {
-    name: "gold-silver",
-    pokedexes: ["original-johto"],
-    generation: "generation-ii",
-  },
-  {
-    name: "crystal",
-    pokedexes: ["original-johto"],
-    generation: "generation-ii",
-  },
-  // Gen 3
-  { name: "ruby-sapphire", pokedexes: ["hoenn"], generation: "generation-iii" },
-  { name: "emerald", pokedexes: ["hoenn"], generation: "generation-iii" },
-  {
-    name: "firered-leafgreen",
-    pokedexes: ["kanto"],
-    generation: "generation-iii",
-    maxPokemonId: 151,
-  },
-  // Gen 4
-  {
-    name: "diamond-pearl",
-    pokedexes: ["original-sinnoh"],
-    generation: "generation-iv",
-  },
-  {
-    name: "platinum",
-    pokedexes: ["extended-sinnoh"],
-    generation: "generation-iv",
-  },
-  {
-    name: "heartgold-soulsilver",
-    pokedexes: ["updated-johto"],
-    generation: "generation-iv",
-  },
-  // Gen 5
-  {
-    name: "black-white",
-    pokedexes: ["original-unova"],
-    generation: "generation-v",
-  },
-  {
-    name: "black-2-white-2",
-    pokedexes: ["updated-unova"],
-    generation: "generation-v",
-  },
-  // Gen 6
-  {
-    name: "x-y",
-    pokedexes: ["kalos-central", "kalos-coastal", "kalos-mountain"],
-    generation: "generation-vi",
-  },
-  {
-    name: "omega-ruby-alpha-sapphire",
-    pokedexes: ["updated-hoenn"],
-    generation: "generation-vi",
-  },
-  // Gen 7
-  {
-    name: "sun-moon",
-    pokedexes: [
-      "original-melemele",
-      "original-alola",
-      "original-akala",
-      "original-ulaula",
-      "original-poni",
-    ],
-    generation: "generation-vii",
-    region: "alola",
-  },
-  {
-    name: "ultra-sun-ultra-moon",
-    pokedexes: [
-      "updated-alola",
-      "updated-melemele",
-      "updated-akala",
-      "updated-ulaula",
-      "updated-poni",
-    ],
-    generation: "generation-vii",
-    region: "alola",
-  },
-  {
-    name: "lets-go-pikachu-lets-go-eevee",
-    pokedexes: ["letsgo-kanto"],
-    generation: "generation-vii",
-    maxPokemonId: 151,
-  },
-  // Gen 8
-  {
-    name: "sword-shield",
-    pokedexes: ["galar", "isle-of-armor", "crown-tundra"],
-    generation: "generation-viii",
-    region: "galar",
-  },
-  {
-    name: "the-isle-of-armor",
-    pokedexes: ["isle-of-armor"],
-    generation: "generation-viii",
-    region: "galar",
-  },
-  {
-    name: "the-crown-tundra",
-    pokedexes: ["crown-tundra"],
-    generation: "generation-viii",
-    region: "galar",
-  },
-  {
-    name: "brilliant-diamond-and-shining-pearl",
-    pokedexes: ["original-sinnoh"],
-    generation: "generation-viii",
-    maxPokemonId: 493,
-  },
-  {
-    name: "legends-arceus",
-    pokedexes: ["hisui"],
-    generation: "generation-viii",
-    region: "hisui",
-  },
-  // Gen 9
-  {
-    name: "scarlet-violet",
-    pokedexes: ["paldea"],
-    generation: "generation-ix",
-    region: "paldea",
-  },
-  {
-    name: "the-teal-mask",
-    pokedexes: ["kitakami"],
-    generation: "generation-ix",
-    region: "paldea",
-  },
-  {
-    name: "the-indigo-disk",
-    pokedexes: ["blueberry"],
-    generation: "generation-ix",
-    region: "paldea",
-  },
-];
+import { cache } from "react";
+import { getGenerations, type Generation } from "@/app/helpers/graphql/getGenerations";
+import { getGenerationVersions, type GenerationVersions } from "@/app/helpers/graphql/getGenerationVersions";
 
 export type PokemonRoute = {
-  name: string;
-  game: string;
-  dex: string;
-};
-
-export type PokemonSpeciesVariety = {
-  name: string;
-  id: number;
-  pokemons: {
-    is_default: boolean;
-    pokemonforms: {
-      name: string;
-      id: number;
-      form_name: string;
-      pokemonformgenerations: PokemonFormGeneration[];
-    }[];
-  }[];
-};
-
-export type PokemonFormGeneration = {
-  generation: {
-    name: string;
-  };
+  gen: string;
+  pokemon: string;
 };
 
 /**
  * Fetches all valid Pokemon routes for static generation
- * Returns an array of { name, game, dex } objects
+ * New URL structure: /{gen}/{pokemon}
+ * Example: /generation-i/bulbasaur
+ *
+ * Each generation gets one URL per unique Pokemon that appears in any of its pokedexes.
+ * For example:
+ * - generation-i: 151 unique Pokemon
+ * - generation-ii: 251 unique Pokemon (all Gen I + Gen II Pokemon available in Gen II games)
+ * - etc.
  */
-export async function getAllPokemonRoutes(): Promise<PokemonRoute[]> {
+export const getAllPokemonRoutes = cache(async (): Promise<PokemonRoute[]> => {
   const routes: PokemonRoute[] = [];
 
   try {
-    // Fetch all 1025 Pokemon species and their varieties
-    const pokemonResponse = await fetch(POKEAPI_GRAPHQL_ENDPOINT, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        query: `
-          query SpeciesVarieties {
-            pokemonspecies(
-              limit: 1025
-              order_by: [ {
-              id: asc
-            }]) {
-              name
-              id
-              pokemons {
-                is_default
-                pokemonforms {
-                  name
-                  id
-                  form_name
-                  pokemonformgenerations {
-                    generation {
-                      name
-                    }
-                  }
-                }
-              }
-            }
-          }
-          `,
-      }),
-    });
+    // Get all generations with their version groups
+    const generations: Generation[] = await getGenerations();
 
-    const { data: speciesVarietiesData } = await pokemonResponse.json();
-    const allPokemon: PokemonSpeciesVariety[] =
-      speciesVarietiesData.pokemonspecies;
+    console.log(`Processing ${generations.length} generations...`);
 
-    // Fetch version group/pokedex mappings
-    const versionGroupPokedexes = await fetch(POKEAPI_GRAPHQL_ENDPOINT, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        query: `
-          query GetVersionGroupsAndPokedexes {
-            versiongroup {
-              id
-              name
-              generation_id
-              pokedexversiongroups {
-                pokedex {
-                  id
-                  name
-                  pokemondexnumbers {
-                    pokemon_species_id
-                    pokedex_number
-                  }
-                }
-              }
-            }
-          }`,
-      }),
-    });
+    // For each generation, get all unique Pokemon across all pokedexes
+    for (const generation of generations) {
+      const genName = generation.name;
 
-    const { data: pokedexData } = await versionGroupPokedexes.json();
-    const vgPokedexes: VersionGroupPokedexes[] = pokedexData.versiongroup;
+      // Fetch complete generation data including all pokedexes
+      const genData: GenerationVersions = await getGenerationVersions(genName);
 
-    // Generate routes for all version groups
-    VERSION_GROUPS.forEach((vg) => {
-      const vgPokedex = vgPokedexes.find((v) => v.name === vg.name);
-      const nationalDexLimit = numOfPokemonByGen[vg.generation];
-      if (vgPokedex) {
-        const pokedexes = vgPokedex.pokedexversiongroups.map((p) => p.pokedex);
-        pokedexes.push({
-          id: 1,
-          name: "national",
-          pokemondexnumbers: allPokemon.slice(0, nationalDexLimit).map((p) => ({
-            pokemon_species_id: p.id,
-            pokedex_number: p.id,
-          })),
-        });
-        // For each pokedex in the version group, generate routes for all the pokemon in the pokedex
-        pokedexes.forEach((dex) => {
-          dex.pokemondexnumbers.forEach((dexNumber) => {
-            const pokemonSpeciesId = dexNumber.pokemon_species_id;
-            const pokemonSpecies = allPokemon[pokemonSpeciesId - 1];
-            const forms = pokemonSpecies.pokemons;
+      // Collect all unique Pokemon species names across all pokedexes in this generation
+      const uniquePokemonNames = new Set<string>();
 
-            if (forms.length > 1) {
-              forms.forEach((form) => {
-                form.pokemonforms.forEach((f) => {
-                  const formGenerations = f.pokemonformgenerations.map(
-                    (fg) => fg.generation.name
-                  );
-                  // Skip unsupported variants and forms that do not exist in the version group generation
-                  if (
-                    !isUnsupportedVariant(f.name) &&
-                    formGenerations.includes(vg.generation)
-                  ) {
-                    routes.push({
-                      name: f.name,
-                      game: vg.name,
-                      dex: dex.name,
-                    });
-                  }
-                });
-              });
-            } else {
-              routes.push({
-                name: pokemonSpecies.name,
-                game: vg.name,
-                dex: dex.name,
-              });
-            }
+      // Iterate through version groups -> pokedexes -> Pokemon
+      genData.versiongroups.forEach((versionGroup) => {
+        versionGroup.pokedexversiongroups.forEach((pvg) => {
+          pvg.pokedex.pokemondexnumbers.forEach((dexNumber) => {
+            // Add the Pokemon species name
+            uniquePokemonNames.add(dexNumber.pokemonspecy.name);
           });
         });
-      }
-    });
+      });
+
+      // Create a route for each unique Pokemon in this generation
+      uniquePokemonNames.forEach((pokemonName) => {
+        routes.push({
+          gen: genName,
+          pokemon: pokemonName,
+        });
+      });
+
+      console.log(`${genName}: ${uniquePokemonNames.size} unique Pokemon`);
+    }
 
     console.log(`Generated ${routes.length} Pokemon routes for static build`);
+    console.log(`Breakdown: ${generations.length} generations`);
+
     return routes;
   } catch (error) {
     console.error("Error fetching Pokemon routes:", error);
     // Return empty array on error - build will fail gracefully
     return [];
   }
-}
+});
 
 /**
- * Get all version group names for static generation
+ * Get all generation names for static generation
  */
-export function getAllVersionGroups(): string[] {
-  return VERSION_GROUPS.map((vg) => vg.name);
+export async function getAllGenerations(): Promise<string[]> {
+  const generations = await getGenerations();
+  return generations.map((gen) => gen.name);
 }
-
-/**
- * Export VERSION_GROUPS for use in other modules
- */
-export { VERSION_GROUPS };
