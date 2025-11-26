@@ -1,11 +1,10 @@
 // Components
 import GenSelector from "app/GenSelector";
-// Utils
-import { fetchFromGraphQL } from "@/utils/api";
+// Helpers
+import { getGenerations } from "@/app/helpers/graphql/getGenerations";
 // Styles
 import styles from "@/styles/TypingText.module.css";
 import { Metadata } from "next";
-import { EXCLUDED_VERSION_GROUPS } from "@/constants/excludedVersionGroups";
 
 // Force static generation - version groups are static data
 export const dynamic = "force-static";
@@ -42,50 +41,6 @@ export const metadata: Metadata = {
       "Comprehensive Pokémon database with stats, moves, abilities, and evolution data for all 1025 Pokémon across every game generation.",
     images: ["https://www.pokemechanics.app/images/dudelax.webp"],
   },
-};
-
-export type Generation = {
-  id: number;
-  name: string;
-  versiongroups: VersionGroup[];
-};
-
-type VersionGroup = {
-  id: number;
-  name: string;
-};
-
-async function getGenerations(): Promise<Generation[]> {
-  const query = `
-    query Gens {
-      generation {
-        id
-        name
-        versiongroups {
-          id
-          name
-        }
-      }   
-    }
-  `;
-
-  try {
-    const { data } = await fetchFromGraphQL({
-      query,
-      // Cache version groups for 7 days - they never change
-      next: { revalidate: 604800 },
-    });
-
-    return data.generation.map((generation: Generation) => {
-      return {
-        ...generation,
-        url: `/pokedex/${generation.name}`,
-      };
-    });
-  } catch (error) {
-    console.error("Error fetching version groups:", error);
-    throw error;
-  }
 }
 
 // This is the "/" route
@@ -102,16 +57,6 @@ export default async function HomePage() {
     );
   }
 
-  const filteredGenerations = generations.map((gen) => {
-    const filteredVersionGroups = gen.versiongroups.filter(
-      (vg) => !EXCLUDED_VERSION_GROUPS.includes(vg.name)
-    );
-    return {
-      ...gen,
-      versiongroups: filteredVersionGroups,
-    };
-  });
-
   return (
     <main className="w-full h-full flex flex-col justify-start items-center">
       <h2 className={styles.typing}>
@@ -119,7 +64,7 @@ export default async function HomePage() {
         <span className={styles.cursor}>_</span>
       </h2>
       <div className="max-w-sm mx-auto">
-        {filteredGenerations && <GenSelector gens={filteredGenerations} />}
+        {generations && <GenSelector gens={generations} />}
       </div>
     </main>
   );

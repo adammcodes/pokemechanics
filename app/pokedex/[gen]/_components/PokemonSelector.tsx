@@ -45,7 +45,7 @@ const PokemonSelector: React.FC<PokemonSelectorProps> =
         const variantForRegion = p.pokemonspecy.pokemons.find((variant) =>
           variant.name.includes(regionName)
         );
-        variantId = variantForRegion?.pokemonsprites[0].id;
+        variantId = variantForRegion?.id;
       }
       const dexNumber: number = p.pokemon_species_id; // this is the national dex number
       const pokemonId: number = p.pokedex_number; // this is the regional dex number

@@ -7,7 +7,7 @@ import AutocompleteBase from "@/components/common/AutocompleteBase";
 import convertKebabCaseToTitleCase from "../src/utils/convertKebabCaseToTitleCase";
 // Context
 import GenerationContext from "../src/context/GenerationProvider";
-import type { Generation } from "./page";
+import type { Generation } from "@/app/helpers/graphql/getGenerations";
 import { romanToNumber } from "@/utils/romanToNumber";
 
 type GenSelectorProps = {

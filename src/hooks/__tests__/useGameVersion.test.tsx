@@ -206,7 +206,7 @@ describe("useGameVersion", () => {
       queryKey: ["version", "sun-moon"],
     });
 
-    expect(query?.options.refetchOnWindowFocus).toBe(false);
+    expect((query?.options as any).refetchOnWindowFocus).toBe(false);
   });
 
   /**
@@ -239,7 +239,7 @@ describe("useGameVersion", () => {
       queryKey: ["version", "legends-arceus"],
     });
 
-    expect(query?.options.refetchOnMount).toBe(false);
+    expect((query?.options as any).refetchOnMount).toBe(false);
   });
 
   /**
