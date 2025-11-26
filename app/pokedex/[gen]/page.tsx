@@ -1,21 +1,13 @@
-import styles from "./_components/Pokedexes.module.css";
-// components
-import PokedexById from "./_components/PokedexById";
-import NationalDex from "./_components/NationalDex";
-import { getVersionGroup } from "@/app/helpers/graphql/getVersionGroup";
 import { Metadata } from "next";
-import { headers } from "next/headers";
-import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
 import { redirect } from "next/navigation";
+import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
 import { getAllVersionGroups } from "@/app/helpers/getPokemonRoutes";
 import { getGenerationVersions } from "@/app/helpers/graphql/getGenerationVersions";
 import type { GenerationVersions } from "@/app/helpers/graphql/getGenerationVersions";
 import { getGenVersionsString } from "@/utils/getGenVersionsString";
 import { romanToNumber } from "@/utils/romanToNumber";
-import { EXCLUDED_VERSION_GROUPS } from "@/constants/excludedVersionGroups";
-import HeaderStarters from "@/components/header/HeaderStarters";
-import getSpriteUrl from "@/constants/spriteUrlTemplates";
-import { PokedexPokemon } from "./_components/PokedexById";
+import PokedexHeader from "./_components/PokedexHeader";
+import PokedexCard from "./_components/PokedexCard";
 // Force static generation
 export const dynamic = "force-static";
 
@@ -106,117 +98,21 @@ export default async function Page({ params }: PageProps) {
 
   return (
     <section className="flex flex-col w-full h-full px-4 lg:px-8 py-6">
-      {/* SEO-friendly header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-center">
-          Pokédexes - Gen {genNumber}
-        </h1>
-        <h2 className="text-2xl text-center">{genVersionsString}</h2>
-      </div>
+      <PokedexHeader
+        genNumber={genNumber}
+        genVersionsString={genVersionsString}
+      />
 
       {/* 2-column grid of pokedex cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-6xl mx-auto [&>*:only-child]:md:col-span-full [&>*:only-child]:md:max-w-2xl [&>*:only-child]:md:mx-auto [&>*:last-child:nth-child(odd)]:md:col-span-full [&>*:last-child:nth-child(odd)]:md:max-w-2xl [&>*:last-child:nth-child(odd)]:md:mx-auto">
-        {pokedexData.map(({ pokedex: dex, versionGroups }) => (
-          <div
-            key={dex.id}
-            className="flex flex-col bg-white dark:bg-gray-800/50 relative rounded-lg shadow-lg border border-gray-300 dark:border-gray-700 p-6 h-full min-h-[280px] hover:shadow-xl hover:border-gray-400 dark:hover:border-gray-600 transition-all duration-200"
-          >
-            <div className="flex flex-wrap gap-2 absolute top-0 left-0">
-              {versionGroups
-                .filter((vg) => !EXCLUDED_VERSION_GROUPS.includes(vg))
-                .map((vg: string) => (
-                  <span
-                    key={`${dex.id}-${vg}`}
-                    className="text-sm px-2 py-1 bg-gray-200 dark:bg-gray-700/50 rounded capitalize text-gray-700 dark:text-gray-300"
-                  >
-                    {convertKebabCaseToTitleCase(vg)}
-                  </span>
-                ))}
-            </div>
-            {/* Card header */}
-            <div className="flex flex-wrap justify-between gap-2 items-center mt-2">
-              <h3 className="font-semibold capitalize text-gray-900 dark:text-gray-100">
-                {convertKebabCaseToTitleCase(dex.name)}
-              </h3>
-              <div className="flex flex-col gap-2 text-sm">
-                <div className="flex items-center gap-4 text-gray-600 dark:text-gray-400">
-                  <span className="font-medium text-gray-800 dark:text-gray-300">
-                    {dex.pokemondexnumbers_aggregate.aggregate.count} Pokémon
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <hr className="my-4 border-gray-300 dark:border-gray-700" />
-
-            {/* Card content - description */}
-            <div className="flex flex-wrap gap-2 justify-between items-center overflow-auto">
-              <span className="text-gray-800 dark:text-gray-300 text-sm">
-                Region: {convertKebabCaseToTitleCase(dex.region.name)}
-              </span>
-              {dex.pokedexdescriptions.length > 0 && (
-                <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
-                  {dex.pokedexdescriptions[0].description}
-                </p>
-              )}
-            </div>
-
-            <hr className="my-4 border-gray-300 dark:border-gray-700" />
-
-            {/* Pokemon sprites carousel */}
-            <div className="overflow-x-auto">
-              <div className="flex gap-3 pb-2">
-                {dex.pokemondexnumbers.map((entry: PokedexPokemon) => {
-                  const regionalVariant = entry.pokemonspecy.pokemons.find(
-                    (variant) =>
-                      variant.name.includes(dex.region.name.toLowerCase())
-                  );
-                  const regionalVariantSprites =
-                    regionalVariant?.pokemonsprites;
-                  const regionalVariantId = regionalVariantSprites?.[0]?.id;
-
-                  // Gen 6 uses 3D-rendered sprites that should be smooth
-                  const isPixelArt = genNumber !== 6;
-
-                  const spriteUrl = getSpriteUrl({
-                    versionGroup: versionGroups[0],
-                    generation: gen.split("-")[1],
-                    pokemonId: regionalVariantId || entry.pokemon_species_id,
-                  });
-
-                  return (
-                    <div
-                      key={`${dex.id}-${entry.pokemon_species_id}`}
-                      className="flex flex-col items-center flex-shrink-0 group"
-                    >
-                      <div
-                        className={`${
-                          isPixelArt ? "w-16 h-16" : "w-24 h-24"
-                        } flex items-center justify-center bg-gray-100 dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-600 group-hover:border-gray-400 dark:group-hover:border-gray-500 transition-colors`}
-                      >
-                        <img
-                          src={spriteUrl}
-                          alt={entry.pokemonspecy.name}
-                          className={`object-contain ${
-                            isPixelArt ? "pixelated w-full h-full" : ""
-                          }`}
-                          loading="lazy"
-                        />
-                      </div>
-                      <div className="flex flex-col items-center mt-1">
-                        <span className="text-xs text-gray-600 dark:text-gray-400 capitalize">
-                          {entry.pokemonspecy.name}
-                        </span>
-                        <span className="text-xs text-gray-500 dark:text-gray-500 font-mono">
-                          #{entry.pokedex_number}
-                        </span>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
+        {pokedexData.map(({ pokedex, versionGroups }) => (
+          <PokedexCard
+            key={pokedex.id}
+            pokedex={pokedex}
+            versionGroups={versionGroups}
+            generation={gen}
+            genNumber={genNumber}
+          />
         ))}
       </div>
     </section>
