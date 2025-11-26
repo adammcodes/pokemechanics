@@ -3,11 +3,7 @@ import { useEffect } from "react";
 import { GenerationContext } from "./_context";
 import useCookieState from "@/hooks/useCookieState";
 import useGeneration from "@/hooks/useGeneration";
-import type { VersionGroupPokedexes } from "@/app/helpers/graphql/getGenerationVersions";
-import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
-import { EXCLUDED_VERSION_GROUPS } from "@/constants/excludedVersionGroups";
-
-type VersionGroup = VersionGroupPokedexes;
+import { getGenVersionsString } from "@/utils/getGenVersionsString";
 
 type GenerationContextProps = {
   children: React.ReactNode;
@@ -42,12 +38,7 @@ export const GenerationProvider: React.FC<GenerationContextProps> = ({
 
   const versionGroups = generationData ? generationData.versiongroups : [];
 
-  const genVersions = versionGroups
-    .filter((vg: VersionGroup) => !EXCLUDED_VERSION_GROUPS.includes(vg.name))
-    .map((vg: VersionGroup) => vg.versions.map((v: { name: string }) => v.name))
-    .flat()
-    .map((versionName: string) => convertKebabCaseToTitleCase(versionName))
-    .join(", ");
+  const genVersions = getGenVersionsString(versionGroups);
 
   return (
     <GenerationContext.Provider
