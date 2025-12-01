@@ -11,6 +11,7 @@ import { getGenVersionsString } from "@/utils/getGenVersionsString";
 import { romanToNumber } from "@/utils/romanToNumber";
 import PokedexHeader from "./_components/PokedexHeader";
 import PokedexCard from "./_components/PokedexCard";
+import { BASE_URL } from "@/constants/apiConfig";
 // Force static generation
 export const dynamic = "force-static";
 
@@ -36,11 +37,11 @@ export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { gen } = await params;
-  const canonicalUrl = `https://www.pokemechanics.app/pokedex/${gen}`;
+  const canonicalUrl = `${BASE_URL}/pokedex/${gen}`;
   const formattedGen = convertKebabCaseToTitleCase(gen);
 
   return {
-    title: `Pokédex - ${formattedGen} | Pokémechanics`,
+    title: `Pokedex - ${formattedGen} | New Bark Town`,
     description: `Browse the complete Pokédex for ${formattedGen} with detailed stats, types, abilities, evolution chains, and move lists for all Pokémon in this generation.`,
     alternates: {
       canonical: canonicalUrl,

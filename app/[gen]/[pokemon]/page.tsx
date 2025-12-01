@@ -19,7 +19,14 @@ import { getAllPokemonRoutes } from "@/app/helpers/getPokemonRoutes";
 import { RestPokemon } from "@/types/index";
 import findSpriteFromPokemonData from "@/lib/findSpriteFromPokemonData";
 import { romanToNumber } from "@/utils/romanToNumber";
+import { getGenVersionsString } from "@/utils/getGenVersionsString";
 import { getBaseSpeciesName } from "@/constants/unsupportedVariants";
+import {
+  GenerationVersions,
+  getGenerationVersions,
+} from "@/app/helpers/graphql/getGenerationVersions";
+import { PokemonSpecies } from "@/types/index";
+import { BASE_URL } from "@/constants/apiConfig";
 
 // Force static generation for all pages
 // Pokemon data is static, perfect for pre-rendering
@@ -27,9 +34,8 @@ export const dynamic = "force-static";
 
 type PageProps = {
   params: Promise<{
-    name: string;
-    game: string;
-    dex: string;
+    gen: string;
+    pokemon: string;
   }>;
 };
 
@@ -46,13 +52,13 @@ export async function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
-  const { name, game, dex } = await params;
+  const { gen, pokemon } = await params;
 
   // Handle unsupported variants - use base species name instead
-  const effectiveName = getBaseSpeciesName(name);
+  const effectiveName = getBaseSpeciesName(pokemon);
 
   let pokemonData: RestPokemon | null = null;
-  let speciesName = effectiveName;
+  let speciesName = pokemon;
   try {
     // Fetch Pokemon data from REST API using the name from the URL
     // For unsupported variants, this will use the base species name
@@ -68,10 +74,10 @@ export async function generateMetadata({
 
   if (!pokemonData) {
     return {
-      title: "Pokémon Not Found | Pokémechanics",
+      title: "Pokémon Not Found | New Bark Town",
       description: "The requested Pokémon could not be found.",
       alternates: {
-        canonical: `https://www.pokemechanics.app/pokemon/${name}/${game}/${dex}`,
+        canonical: `${BASE_URL}/${gen}/${pokemon}`,
       },
     };
   }
@@ -79,28 +85,27 @@ export async function generateMetadata({
   try {
     // Fetch version, dex, and species data first
     // IMPORTANT: fetchPokemonSpeciesByName must use base name (no regional suffix)
-    const [versionData, dexData, speciesData] = await Promise.all([
-      getVersionGroup(game),
-      fetchPokedexByName(dex),
-      fetchPokemonSpeciesByName(speciesName), // ✅ Use species name (no variant names)
-    ]);
+    const [genVersions, speciesData]: [GenerationVersions, PokemonSpecies] =
+      await Promise.all([
+        getGenerationVersions(gen),
+        fetchPokemonSpeciesByName(speciesName), // ✅ Use species name (no variant names)
+      ]);
 
     // Determine region and find correct variant name
-    const generationString = versionData?.generation?.name ?? "generation-i";
+    const generationString = genVersions?.name ?? "generation-i";
     const genNumber: string = generationString.split("-")[1] || "i";
     const generationId: number = romanToNumber(genNumber || "i");
-    const region = versionData.regions?.[0];
-    const dexRegion = dexData.region?.name || "";
-    const regionName = dex === "national" ? region?.name || "" : dexRegion;
+    const region = genVersions.versiongroups[0].versiongroupregions[0].region;
 
     const actualPokemonName = getVariantPokemonName(
       speciesData,
-      regionName,
+      region.name,
       effectiveName
     );
 
-    const versionName = convertKebabCaseToTitleCase(versionData?.name ?? "");
-    const dexDisplayName = convertKebabCaseToTitleCase(dex);
+    const versionGroupsString = getGenVersionsString(genVersions.versiongroups);
+
+    const firstVersionGroup = genVersions.versiongroups[0];
     const speciesDisplayName =
       speciesName.charAt(0).toUpperCase() + speciesName.slice(1);
     const isDefaultForm = pokemonData.is_default;
@@ -112,51 +117,19 @@ export async function generateMetadata({
         ? speciesDisplayName
         : `${speciesDisplayName} (${variantNames})`;
 
-    // // Find variety for region if there are multiple varieties
-    // const pokemonVarietyForRegion = findVarietyForRegion(
-    //   speciesData.varieties,
-    //   regionName
-    // );
-
-    // // Fetch variant Pokemon data if needed
-    // let variantPokemonData = null;
-    // let isVariant = false;
-    // let variantDisplayName = displayName;
-
-    // if (pokemonVarietyForRegion && speciesData.varieties.length > 1) {
-    //   const pokemonVarietyId = Number(
-    //     pokemonVarietyForRegion.pokemon.url.split("/").at(-2)
-    //   );
-
-    //   try {
-    //     variantPokemonData = await fetchPokemonById(pokemonVarietyId);
-    //     isVariant = true;
-    //     const variantRegionName = convertKebabCaseToTitleCase(
-    //       variantPokemonData.name.split("-")[1]
-    //     );
-    //     variantDisplayName = `${displayName} (${variantRegionName})`;
-    //   } catch (error) {
-    //     console.error("Failed to fetch variant Pokemon data:", error);
-    //     // Fall back to default Pokemon data
-    //   }
-    // }
-
-    // const displayPokemonData =
-    //   isVariant && variantPokemonData ? variantPokemonData : pokemonData;
-
     // Get game-specific Pokemon sprite for social media preview
     const pokemonGenus = findGenusForLanguage(speciesData);
 
-    const title = `${displayName} - ${versionName} (${dexDisplayName} Pokédex) - Gen ${generationId} - Pokémechanics`;
+    const title = `${displayName} - Gen ${generationId}`;
     const description = `Explore ${displayName} ${
       pokemonGenus ? `the ${pokemonGenus}` : ""
-    } in ${versionName}. View Gen ${generationId} complete stats, moves, abilities, types, encounters, and evolution information for the ${dexDisplayName} Pokédex.`;
-    const canonicalUrl = `https://www.pokemechanics.app/pokemon/${actualPokemonName}/${game}/${dex}`;
+    } in Gen ${generationId}. View Gen ${generationId} complete stats, moves, abilities, types, locations, and evolution information for the version groups: ${versionGroupsString}`;
+    const canonicalUrl = `${BASE_URL}/${gen}/${pokemon}`;
 
     const spriteUrl = findSpriteFromPokemonData({
       pokemonData,
       generationName: generationString,
-      versionGroup: game,
+      versionGroup: firstVersionGroup.name,
     });
 
     return {
@@ -173,13 +146,13 @@ export async function generateMetadata({
         title,
         description,
         url: canonicalUrl,
-        siteName: "Pokémechanics",
+        siteName: "New Bark Town",
         images: [
           {
             url: spriteUrl,
             width: 200,
             height: 200,
-            alt: `${speciesName} sprite from ${versionName}`,
+            alt: `${speciesName} sprite from Gen ${generationId}`,
           },
         ],
         locale: "en_US",
@@ -197,24 +170,24 @@ export async function generateMetadata({
 
     // Return fallback metadata
     return {
-      title: "Pokémon | Pokémechanics",
+      title: "Pokémon | New Bark Town",
       description:
         "Complete Pokémon information, stats, moves, abilities, and evolution details.",
       alternates: {
-        canonical: `https://www.pokemechanics.app/pokemon/${name}/${game}/${dex}`,
+        canonical: `${BASE_URL}/${gen}/${pokemon}`,
       },
       openGraph: {
-        title: "Pokémon | Pokémechanics",
+        title: "Pokémon | New Bark Town",
         description:
           "Complete Pokémon information, stats, moves, abilities, and evolution details.",
-        url: `https://www.pokemechanics.app/pokemon/${name}/${game}/${dex}`,
-        siteName: "Pokémechanics",
+        url: `${BASE_URL}/${gen}/${pokemon}`,
+        siteName: "New Bark Town",
         locale: "en_US",
         type: "website",
       },
       twitter: {
         card: "summary",
-        title: "Pokémon | Pokémechanics",
+        title: "Pokémon | New Bark Town",
         description:
           "Complete Pokémon information, stats, moves, abilities, and evolution details.",
       },
@@ -223,7 +196,7 @@ export async function generateMetadata({
 }
 
 export default async function Pokemon({ params }: PageProps) {
-  const { name, game, dex } = await params;
+  const { gen, pokemon } = await params;
 
   // Log User-Agent for monitoring bot traffic and API usage patterns
   // const headersList = await headers();
@@ -232,12 +205,12 @@ export default async function Pokemon({ params }: PageProps) {
   //   `[Request] /pokemon/${name}/${game}/${dex} | User-Agent: ${userAgent}`
   // );
 
-  if (!name || !game || !dex) {
+  if (!gen || !pokemon) {
     redirect("/pokedex");
   }
 
   // Handle unsupported variants - use base species name instead
-  const effectiveName = getBaseSpeciesName(name);
+  const effectiveName = getBaseSpeciesName(pokemon);
 
   let pokemonData: RestPokemon | null = null;
   let speciesName = effectiveName;
@@ -256,36 +229,33 @@ export default async function Pokemon({ params }: PageProps) {
 
   try {
     // Fetch version, dex, and species data
-    const [versionData, dexData, speciesData] = await Promise.all([
-      getVersionGroup(game),
-      fetchPokedexByName(dex),
-      fetchPokemonSpeciesByName(speciesName), // ✅ Use species name (no variant names)
-    ]);
+    const [genVersions, speciesData]: [GenerationVersions, PokemonSpecies] =
+      await Promise.all([
+        getGenerationVersions(gen),
+        fetchPokemonSpeciesByName(speciesName), // ✅ Use species name (no variant names)
+      ]);
 
+    const region = genVersions.versiongroups[0].versiongroupregions[0].region;
     // Determine region and find correct variant name
-    const region = versionData.regions?.[0];
-    const dexRegion = dexData.region?.name || "";
-    const regionName = dex === "national" ? region?.name || "" : dexRegion;
-
     // Including regional suffix
     const variantName = getVariantPokemonName(
       speciesData,
-      regionName,
+      region.name,
       effectiveName
     );
 
     // Extract version names for GraphQL query
-    const versions = versionData.versions.map((v) => v.name);
+    const versions = genVersions.versiongroups[0].versions.map((v) => v.name);
 
     // Fetch Pokemon moves from GraphQL using the correct variant name
     // This ensures encounters are fetched for the correct variant (e.g., "rattata-alola")
     const graphqlPokemonData = await getPokemonComplete({
       pokemonName: variantName,
-      versionGroup: game,
+      versionGroups: genVersions.versiongroups.map((vg) => vg.name),
       versions,
     });
 
-    const generation = versionData.generation.name;
+    const generation = genVersions.name;
     const pokemonNationalDexNumber = speciesData.id;
     const maxDexNumberForGen = numOfPokemonByGen[generation];
 
@@ -297,14 +267,14 @@ export default async function Pokemon({ params }: PageProps) {
           <h1 className="text-2xl font-bold mb-4">Pokémon Not Available</h1>
           <p className="mb-4">
             {displayName} does not exist in{" "}
-            {versionData.name
+            {genVersions.name
               .split("-")
               .map((w: string) => w.charAt(0).toUpperCase() + w.slice(1))
               .join(" ")}
             .
           </p>
           <a
-            href={`/pokemon/${name}`}
+            href={`/${gen}/${pokemon}`}
             className="inline-block bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded"
           >
             Choose a valid game version
@@ -314,7 +284,7 @@ export default async function Pokemon({ params }: PageProps) {
     }
 
     // Check if we have the required data
-    if (!pokemonData || !speciesData || !versionData || !dexData) {
+    if (!pokemonData || !speciesData || !genVersions) {
       return (
         <main className="w-full">
           <h1>Data Not Found</h1>
@@ -326,12 +296,15 @@ export default async function Pokemon({ params }: PageProps) {
     return (
       <main className="w-full">
         <PokemonCard
+          genVersions={genVersions}
           pokemonData={pokemonData}
           speciesData={speciesData}
-          versionData={versionData}
-          dexData={dexData}
-          dexName={dex}
-          game={game}
+          // versionData={
+          //   genVersions.versiongroups[0].pokedexversiongroups[0].pokedex
+          // }
+          // dexData={dexData}
+          dexName={genVersions.versiongroups[0].name}
+          game={genVersions.versiongroups[0].name}
           graphqlPokemonData={graphqlPokemonData}
         />
       </main>

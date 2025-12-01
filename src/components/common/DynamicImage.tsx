@@ -32,6 +32,7 @@ const DynamicImage: React.FC<Props> = ({
       src={src}
       alt={alt}
       data-testid={`${alt}-main-sprite`}
+      className="object-contain pixelated"
       width={width}
       height={height}
       priority={priority}

@@ -5,6 +5,7 @@ import { getGenerations } from "@/app/helpers/graphql/getGenerations";
 // Styles
 import styles from "@/styles/TypingText.module.css";
 import { Metadata } from "next";
+import { BASE_URL } from "@/constants/apiConfig";
 
 // Force static generation - version groups are static data
 export const dynamic = "force-static";
@@ -15,20 +16,20 @@ export const metadata: Metadata = {
   description:
     "Comprehensive Pokémon database with detailed stats, moves, abilities, evolution chains, and regional Pokédex entries for every game from Gen 1 (Red/Blue) to Gen 9 (Scarlet/Violet). Explore all 1025 Pokémon across 25+ game versions.",
   alternates: {
-    canonical: "https://www.pokemechanics.app",
+    canonical: BASE_URL,
   },
   openGraph: {
     title: "Pokémechanics - Complete Pokédex Database for All Pokémon Games",
     description:
       "Comprehensive Pokémon database with detailed stats, moves, abilities, evolution chains, and regional Pokédex entries for every game from Gen 1 (Red/Blue) to Gen 9 (Scarlet/Violet). Explore all 1025 Pokémon across 25+ game versions.",
-    url: "https://www.pokemechanics.app",
-    siteName: "Pokémechanics",
+    url: BASE_URL,
+    siteName: "New Bark Town",
     images: [
       {
-        url: "https://www.pokemechanics.app/images/dudelax.webp",
+        url: `${BASE_URL}/images/dudelax.webp`,
         width: 400,
         height: 400,
-        alt: "Pokémechanics mascot - Munchlax",
+        alt: "New Bark Town mascot - Munchlax",
       },
     ],
     locale: "en_US",
@@ -36,12 +37,12 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary",
-    title: "Pokémechanics - Complete Pokédex Database",
+    title: "New Bark Town - Complete Pokédex Database",
     description:
       "Comprehensive Pokémon database with stats, moves, abilities, and evolution data for all 1025 Pokémon across every game generation.",
-    images: ["https://www.pokemechanics.app/images/dudelax.webp"],
+    images: [`${BASE_URL}/images/dudelax.webp`],
   },
-}
+};
 
 // This is the "/" route
 export default async function HomePage() {

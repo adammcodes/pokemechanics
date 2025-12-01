@@ -10,6 +10,7 @@ import { fetchGenerationById } from "@/app/helpers/rest/fetchGenerationById";
 import { getAllPokemonRoutes } from "@/app/helpers/getPokemonRoutes";
 import { RestPokemon } from "@/types/index";
 import { getBaseSpeciesName } from "@/constants/unsupportedVariants";
+import { BASE_URL } from "@/constants/apiConfig";
 
 // Force static generation
 export const dynamic = "force-static";
@@ -112,15 +113,15 @@ export async function generateMetadata({
       speciesName.charAt(0).toUpperCase() + pokemonName.slice(1);
 
     return {
-      title: `Select Game Version for ${displayName} | Pokémechanics`,
+      title: `Select Game Version for ${displayName} | New Bark Town`,
       description: `Choose which game version to view ${displayName} information for.`,
       alternates: {
-        canonical: `https://www.pokemechanics.app/pokemon/${name}`,
+        canonical: `${BASE_URL}/pokemon/${name}`,
       },
     };
   } catch (error) {
     return {
-      title: "Select Game Version | Pokémechanics",
+      title: "Select Game Version | New Bark Town",
       description: "Choose which game version to view.",
     };
   }

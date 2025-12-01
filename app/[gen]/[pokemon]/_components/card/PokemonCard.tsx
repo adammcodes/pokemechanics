@@ -29,63 +29,68 @@ import LocationsForVersionGroup from "../encounters/LocationsForVersionGroup";
 import { GraphQLPokemonType } from "@/types/graphql";
 // import getSpriteUrl from "@/constants/spriteUrlTemplates";
 import findSpriteFromPokemonData from "@/lib/findSpriteFromPokemonData";
+import { GenerationVersions } from "@/app/helpers/graphql/getGenerationVersions";
 
 type PokemonCardProps = {
+  genVersions: GenerationVersions;
   pokemonData: RestPokemon;
   speciesData: PokemonSpecies;
-  versionData: VersionGroup;
-  dexData: Pokedex;
+  // versionData: VersionGroup;
+  // dexData: Pokedex;
   dexName: string; // e.g. "national"
   game: string; // e.g. "red-blue"
   graphqlPokemonData: GraphQLPokemon | null;
 };
 
 export default async function PokemonCard({
+  genVersions,
   pokemonData,
   speciesData,
-  versionData,
-  dexData,
+  // versionData,
+  // dexData,
   dexName,
   game,
   graphqlPokemonData,
 }: PokemonCardProps) {
-  const region = versionData.regions.length > 0 ? versionData.regions[0] : null;
-  const dexRegion = dexData.region?.name || "";
+  // const region = versionData.regions.length > 0 ? versionData.regions[0] : null;
+  // const dexRegion = dexData.region?.name || "";
   // Use region name of the Pokedex
-  const regionName = dexName === "national" ? region?.name || "" : dexRegion;
+  // const regionName = dexName === "national" ? region?.name || "" : dexRegion;
+  const regionName =
+    genVersions.versiongroups[0].versiongroupregions[0].region.name;
   // Find variety for region if there are multiple varieties
-  const pokemonVarietyForRegion: SpeciesVariety | undefined =
-    findVarietyForRegion(speciesData.varieties, regionName);
+  //const pokemonVarietyForRegion: SpeciesVariety | undefined =
+  //  findVarietyForRegion(speciesData.varieties, regionName);
 
   // Fetch variant Pokemon data if needed
   let variantPokemonData = null;
   let isVariant = false;
   let variantName = speciesData.name;
 
-  if (pokemonVarietyForRegion && speciesData.varieties.length > 1) {
-    const pokemonVarietyId = Number(
-      pokemonVarietyForRegion.pokemon.url.split("/").at(-2)
-    );
+  // if (pokemonVarietyForRegion && speciesData.varieties.length > 1) {
+  //   const pokemonVarietyId = Number(
+  //     pokemonVarietyForRegion.pokemon.url.split("/").at(-2)
+  //   );
 
-    // Check if the pokemonData prop already has the correct variant
-    // This avoids a duplicate fetch when the parent already fetched the variant
-    if (pokemonData.id === pokemonVarietyId) {
-      // We already have the correct variant data from the parent!
-      variantPokemonData = pokemonData;
-      isVariant = true;
-      variantName = pokemonData.name;
-    } else {
-      // The parent fetched a different form, so we need to fetch the variant
-      try {
-        variantPokemonData = await fetchPokemonById(pokemonVarietyId);
-        isVariant = true;
-        variantName = variantPokemonData.name;
-      } catch (error) {
-        console.error("Failed to fetch variant Pokemon data:", error);
-        // Fall back to default Pokemon data
-      }
-    }
-  }
+  //   // Check if the pokemonData prop already has the correct variant
+  //   // This avoids a duplicate fetch when the parent already fetched the variant
+  //   if (pokemonData.id === pokemonVarietyId) {
+  //     // We already have the correct variant data from the parent!
+  //     variantPokemonData = pokemonData;
+  //     isVariant = true;
+  //     variantName = pokemonData.name;
+  //   } else {
+  //     // The parent fetched a different form, so we need to fetch the variant
+  //     try {
+  //       variantPokemonData = await fetchPokemonById(pokemonVarietyId);
+  //       isVariant = true;
+  //       variantName = variantPokemonData.name;
+  //     } catch (error) {
+  //       console.error("Failed to fetch variant Pokemon data:", error);
+  //       // Fall back to default Pokemon data
+  //     }
+  //   }
+  // }
 
   // Fetch evolution chain data
   const evolutionChainId = Number(
@@ -109,10 +114,9 @@ export default async function PokemonCard({
 
   // Get version group data
   // const versionId: number = versionData?.id || 1;
-  const genName: string = versionData?.generation.name || "generation-i";
-  const genNumber: string = genName.split("-")[1] || "i";
-  const generationId: number = romanToNumber(genNumber || "i");
-  const isGenOneOrTwo = genNumber === "i" || genNumber === "ii";
+  const genName: string = genVersions.name || "generation-i";
+  const generationId: number = genVersions.id;
+  const isGenOneOrTwo = generationId === 1 || generationId === 2;
 
   // Format names
   let formatName = convertKebabCaseToTitleCase;
@@ -182,7 +186,7 @@ export default async function PokemonCard({
     <div className={`w-full flex flex-col items-center justify-center px-4`}>
       <div className="relative w-full">
         {/* ForwardBack navigation for the pokedex */}
-        {dexData && game ? (
+        {/* {dexData && game ? (
           <ForwardBack
             game={game}
             pokedexNumbers={speciesData.pokedex_numbers}
@@ -191,7 +195,7 @@ export default async function PokemonCard({
           />
         ) : (
           <p>Loading dex data...</p>
-        )}
+        )} */}
       </div>
 
       <div className="flex flex-col gap-y-2 w-full max-w-[500px] mx-auto px-0">
@@ -220,8 +224,8 @@ export default async function PokemonCard({
           height={pokemonHeight}
           weight={pokemonWeight}
           generationString={genName}
-          genNumber={genNumber}
-          game={game}
+          genNumber={generationId.toString()}
+          game={genVersions.versiongroups[0].name}
           genera={speciesData.genera}
           nationalId={speciesData.id}
         />
@@ -255,13 +259,13 @@ export default async function PokemonCard({
         {/* Stats */}
         <Stats graphqlPokemonData={graphqlPokemonData} />
         {/* Encounters */}
-        {versionData && (
+        {/* {versionData && (
           <LocationsForVersionGroup
             speciesData={speciesData}
             encounters={graphqlPokemonData?.encounters || []}
             versions={versionData.versions.map((v) => v.name)}
           />
-        )}
+        )} */}
         {/* Type Efficacy */}
         {graphqlPokemonData?.pokemontypes &&
           graphqlPokemonData.pokemontypes.length > 0 && (
