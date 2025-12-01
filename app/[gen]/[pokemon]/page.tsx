@@ -245,7 +245,11 @@ export default async function Pokemon({ params }: PageProps) {
     );
 
     // Extract version names for GraphQL query
-    const versions = genVersions.versiongroups[0].versions.map((v) => v.name);
+    const versions = genVersions.versiongroups.flatMap((vg) =>
+      vg.versions.map((v) => v.name)
+    );
+
+    console.log("versions: ", versions);
 
     // Fetch Pokemon moves from GraphQL using the correct variant name
     // This ensures encounters are fetched for the correct variant (e.g., "rattata-alola")
@@ -303,7 +307,7 @@ export default async function Pokemon({ params }: PageProps) {
           //   genVersions.versiongroups[0].pokedexversiongroups[0].pokedex
           // }
           // dexData={dexData}
-          dexName={genVersions.versiongroups[0].name}
+          dexName={"national"}
           game={genVersions.versiongroups[0].name}
           graphqlPokemonData={graphqlPokemonData}
         />
