@@ -4,6 +4,7 @@ import PokemonSpriteForGen from "../sprites/PokemonSpriteForGen";
 import getSpriteUrl from "@/constants/spriteUrlTemplates";
 // import { fetchPokemonSpeciesById } from "@/app/helpers/rest/fetchPokemonSpeciesById";
 import { RestPokemon } from "@/types/index";
+import { romanToNumber } from "@/utils/romanToNumber";
 
 const EvolutionNode = async ({
   pokemonDexNumber,
@@ -51,7 +52,8 @@ const EvolutionNode = async ({
   let sprite = getSpriteUrl({
     versionGroup: game,
     pokemonId: pokemonDexNumber,
-    generation: generation.split("-")[1],
+    generationRomanNumeral: generation.split("-")[1],
+    genId: romanToNumber(generation.split("-")[1]),
   });
 
   // This node is not the page pokemon, and it is a variant, so fetch the species data
@@ -83,7 +85,8 @@ const EvolutionNode = async ({
   //   sprite = getSpriteUrl({
   //     versionGroup: game,
   //     pokemonId: nodeSpeciesId || pokemonDexNumber,
-  //     generation: generation.split("-")[1],
+  //     generationRomanNumeral: generation.split("-")[1],
+  //     genId: romanToNumber(generation.split("-")[1]),
   //   });
   // }
 

@@ -11,6 +11,8 @@ import { GraphQLPokemonType } from "@/types/graphql";
 import { PokemonSpecies } from "@/types/index";
 
 type PokemonCardBoxProps = {
+  genId: number;
+  generationString: string;
   frontDefaultSpriteSrc: string;
   name: string;
   pokemonId: number;
@@ -19,8 +21,6 @@ type PokemonCardBoxProps = {
   pokemontypepasts: GraphQLPokemonType["type"][];
   height: number;
   weight: number;
-  genNumber: string;
-  generationString: string;
   game: string;
   genera: PokemonSpecies["genera"];
   nationalId: number;
@@ -28,8 +28,8 @@ type PokemonCardBoxProps = {
 
 const PokemonCardBox: React.FC<PokemonCardBoxProps> = (props) => {
   const selectedGame = props.game || "red-blue";
-  const generationIdString: string | undefined = props.genNumber; // e.g. "i", "ii", etc.
-  const generationId: number = romanToNumber(generationIdString || "i");
+  const generationId: number = props.genId;
+  const generationRomanNumeral: string = props.generationString.split("-")[1];
   const spriteSize: number =
     selectedGame === "x-y"
       ? spriteWidthBasedOnHeight(props.height * 10)
@@ -72,13 +72,15 @@ const PokemonCardBox: React.FC<PokemonCardBoxProps> = (props) => {
                     srcLeft={getSpriteUrl({
                       versionGroup: selectedGame,
                       pokemonId: props.pokemonId,
-                      generation: props.genNumber,
+                      genId: generationId,
+                      generationRomanNumeral: generationRomanNumeral,
                       version: "gold",
                     })}
                     srcRight={getSpriteUrl({
                       versionGroup: selectedGame,
                       pokemonId: props.pokemonId,
-                      generation: props.genNumber,
+                      genId: generationId,
+                      generationRomanNumeral: generationRomanNumeral,
                       version: "silver",
                     })}
                     altLeft={`${pokemonName}-gold`}

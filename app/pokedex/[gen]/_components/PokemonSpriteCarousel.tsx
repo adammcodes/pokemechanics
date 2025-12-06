@@ -33,7 +33,8 @@ export default function PokemonSpriteCarousel({
 
           const spriteUrl = getSpriteUrl({
             versionGroup: versionGroups[0],
-            generation: generation.split("-")[1],
+            generationRomanNumeral: generation.split("-")[1],
+            genId: genNumber,
             pokemonId: regionalVariantId || entry.pokemon_species_id,
           });
 

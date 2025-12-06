@@ -177,10 +177,11 @@ export default async function PokemonCard({
   //   graphqlSpritesForVersion && generationId >= 3 && generationId < 9
   //     ? graphqlSpritesForVersion.front_default
   //     : getSpriteUrl({
+  //         genId: generationId,
   //         versionGroup: game,
-  //         pokemonId: pokemonId,
-  //         generation: genNumber,
-  //       });
+  //   pokemonId: pokemonId,
+  //   generationRomanNumeral: generationRomanNumeral,
+  // });
 
   return (
     <div className={`w-full flex flex-col items-center justify-center px-4`}>
@@ -207,6 +208,8 @@ export default async function PokemonCard({
         />
         {/* Sprite + Types */}
         <PokemonCardBox
+          genId={generationId}
+          generationString={genName}
           frontDefaultSpriteSrc={frontDefaultSpriteSrc}
           name={name}
           pokemonId={pokemonId}
@@ -223,8 +226,6 @@ export default async function PokemonCard({
           }
           height={pokemonHeight}
           weight={pokemonWeight}
-          generationString={genName}
-          genNumber={generationId.toString()}
           game={genVersions.versiongroups[0].name}
           genera={speciesData.genera}
           nationalId={speciesData.id}
