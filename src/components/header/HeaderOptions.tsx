@@ -60,15 +60,14 @@ const Nav = ({
   const genInPath = splitPath.find((segment) =>
     segment.includes("generation-")
   );
-  const gamePath =
-    genInPath && genInPath !== "undefined" ? `/${genInPath}` : "";
+  const gen = genInPath && genInPath !== "undefined" ? `/${genInPath}` : "";
 
   const closeNav = () => {
     setIsNavOpen(false);
   };
 
   const navLinks = [
-    { href: "/pokedex" + gamePath, text: "Pokédex" },
+    { href: "/pokedex" + gen, text: "Pokédex" },
     // { href: "/bag" + gamePath, text: "Bag" },
     // { href: "/map" + gamePath, text: "Map" },
     { href: "/", text: "Select Generation" },
