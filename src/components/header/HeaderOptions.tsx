@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import "@/styles/slider.css";
 import styles from "./Header.module.css";
 import { usePathname } from "next/navigation";
+import { romanToNumber } from "@/utils/romanToNumber";
 import HeaderStarters from "./HeaderStarters";
 
 const DarkModeToggle = ({
@@ -55,14 +56,12 @@ const Nav = ({
   setIsNavOpen: (value: boolean) => void;
 }) => {
   const pathname = usePathname();
-
-  // Extract game from URL path patterns
-  const pokedexMatch = pathname.match(/^\/pokedex\/([^\/]+)/);
-  const gameFromPath = pokedexMatch?.[1] || null;
-
-  // Get the "game" either from search params or from the pathname
-  const game = gameFromPath;
-  const gamePath = game && game !== "undefined" ? `/${game}` : "";
+  const splitPath = pathname.split("/");
+  const genInPath = splitPath.find((segment) =>
+    segment.includes("generation-")
+  );
+  const gamePath =
+    genInPath && genInPath !== "undefined" ? `/${genInPath}` : "";
 
   const closeNav = () => {
     setIsNavOpen(false);
