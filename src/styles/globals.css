@@ -32,7 +32,7 @@
 
 html,
 body {
-  height: 100vh;
+  min-height: 100vh;
   padding: 0;
   margin: 0;
   font-family: var(--font-family);
@@ -190,4 +190,37 @@ main {
     --border-colour: black;
     --shadow-colour: white;
   }
+}
+
+/* Pixelated image rendering for sprites */
+.pixelated {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+/* Custom scrollbar styles */
+.overflow-x-auto::-webkit-scrollbar {
+  height: 8px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.overflow-x-auto::-webkit-scrollbar-thumb {
+  background: #9ca3af;
+  border-radius: 4px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-thumb:hover {
+  background: #6b7280;
+}
+
+[data-theme="dark"] .overflow-x-auto::-webkit-scrollbar-thumb {
+  background: #4b5563;
+}
+
+[data-theme="dark"] .overflow-x-auto::-webkit-scrollbar-thumb:hover {
+  background: #6b7280;
 }

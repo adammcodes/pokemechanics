@@ -290,4 +290,4 @@ Allow: /pokemon/*/lets-go-pikachu-lets-go-eevee/letsgo-kanto
 Disallow: /pokemon/*/*/
 
 # Sitemap location
-Sitemap: https://www.pokemechanics.app/sitemap.xml
+Sitemap: https://www.newbarktown.ca/sitemap.xml

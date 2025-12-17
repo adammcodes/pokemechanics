@@ -36,8 +36,8 @@ module.exports = {
         ],
       },
       {
-        // Pokemon detail pages - moderate cache
-        source: "/pokemon/:name/:game/:dex",
+        // Pokemon detail pages - moderate cache (new structure: /{gen}/{pokemon})
+        source: "/:gen/:pokemon",
         headers: [
           {
             key: "Cache-Control",

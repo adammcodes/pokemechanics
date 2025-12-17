@@ -2,7 +2,7 @@
 
 A comprehensive Pokémon resource web application for the video game series, built with modern web technologies. Browse Pokédex entries, view detailed stats, moves, abilities, evolutions, and encounter locations across all Pokémon generations.
 
-🔗 **Live Site:** [pokemechanics.app](https://www.pokemechanics.app)
+🔗 **Live Site:** [newbarktown.ca](https://www.newbarktown.ca)
 
 ## ✨ Features
 
@@ -378,7 +378,7 @@ All pages should return 200 OK and display complete Pokemon data.
 - Selected Version Group is referred to as `game` around the codebase
 - **URL Search Params** - /[name]/[version-group]/[dex]
 - **Cookies** - Persist user preferences (selected game, theme)
-- **React Context** - Share game selection across components (`GameContext`)
+- **React Context** - Share game selection across components (`GenerationContext`)
 - **React Query** - Client-side data fetching, caching, and synchronization
 
 ### Styling Approach
@@ -426,13 +426,6 @@ npm run deploy
 
 - **`wrangler.jsonc`** - Cloudflare Worker configuration
 - **`open-next.config.ts`** - OpenNext adapter configuration for Cloudflare
-
-### Custom Domain Setup
-
-The app is accessible at:
-
-- **Production:** https://pokemechanics.app OR https://www.pokemechanics.app
-- **Workers.dev:** https://pokemechanics.adammarsala.workers.dev
 
 ## 📊 Monitoring & Observability
 

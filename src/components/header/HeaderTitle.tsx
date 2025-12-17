@@ -3,12 +3,14 @@ import Link from "next/link";
 import Image from "next/image";
 import { useContext } from "react";
 import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
-import { GameContext } from "@/context/_context";
+import { GenerationContext } from "@/context/_context";
+import HeaderStarters from "./HeaderStarters";
 
-const logoSize: number = 80;
+const LOGO_SIZE: number = 90;
 
 export default function HeaderTitle() {
-  const { game, generationString } = useContext(GameContext);
+  const { generation, generationString, genVersions } =
+    useContext(GenerationContext);
 
   const formatName = convertKebabCaseToTitleCase;
   const genNumber = generationString?.split("-")[1] || "i";
@@ -18,27 +20,31 @@ export default function HeaderTitle() {
       <Link href="/" prefetch={false}>
         <Image
           src="/images/dudelax.webp"
-          width={logoSize}
-          height={logoSize}
+          width={LOGO_SIZE}
+          height={LOGO_SIZE}
           alt="Munchlax"
           priority={true}
         />
       </Link>
       <div>
-        {game && genNumber && (
-          <>
-            <Link href="/" prefetch={false}>
-              <span className="block text-2xl font-bold">POKEMECHANICS</span>
-            </Link>
+        {generation && genNumber && (
+          <section className="flex flex-col">
+            <div className="flex flex-row justify-left items-end gap-x-2">
+              <Link href="/" prefetch={false}>
+                <span className="block text-2xl font-bold">New Bark Town</span>
+              </Link>
+              <HeaderStarters />
+            </div>
             <span className="text-[0.9em] lg:text-[1em]">
-              <span className="hidden lg:inline">&nbsp;-</span>{" "}
-              {formatName(game)}{" "}
+              <span className="hidden lg:inline">
+                Gen {genNumber.toUpperCase()}:
+              </span>{" "}
+              <small>{genVersions}</small>{" "}
               <span className="inline lg:hidden">
                 <br />
               </span>
-              {genNumber && <>(Gen {genNumber.toUpperCase()})</>}
             </span>
-          </>
+          </section>
         )}
       </div>
     </div>

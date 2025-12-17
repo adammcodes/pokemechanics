@@ -1,11 +1,11 @@
 // Components
 import GenSelector from "app/GenSelector";
-// Utils
-import { fetchFromGraphQL } from "@/utils/api";
+// Helpers
+import { getGenerations } from "@/app/helpers/graphql/getGenerations";
 // Styles
 import styles from "@/styles/TypingText.module.css";
 import { Metadata } from "next";
-import { EXCLUDED_VERSION_GROUPS } from "@/constants/excludedVersionGroups";
+import { BASE_URL } from "@/constants/apiConfig";
 
 // Force static generation - version groups are static data
 export const dynamic = "force-static";
@@ -16,20 +16,20 @@ export const metadata: Metadata = {
   description:
     "Comprehensive Pokémon database with detailed stats, moves, abilities, evolution chains, and regional Pokédex entries for every game from Gen 1 (Red/Blue) to Gen 9 (Scarlet/Violet). Explore all 1025 Pokémon across 25+ game versions.",
   alternates: {
-    canonical: "https://www.pokemechanics.app",
+    canonical: BASE_URL,
   },
   openGraph: {
     title: "Pokémechanics - Complete Pokédex Database for All Pokémon Games",
     description:
       "Comprehensive Pokémon database with detailed stats, moves, abilities, evolution chains, and regional Pokédex entries for every game from Gen 1 (Red/Blue) to Gen 9 (Scarlet/Violet). Explore all 1025 Pokémon across 25+ game versions.",
-    url: "https://www.pokemechanics.app",
-    siteName: "Pokémechanics",
+    url: BASE_URL,
+    siteName: "New Bark Town",
     images: [
       {
-        url: "https://www.pokemechanics.app/images/dudelax.webp",
+        url: `${BASE_URL}/images/dudelax.webp`,
         width: 400,
         height: 400,
-        alt: "Pokémechanics mascot - Munchlax",
+        alt: "New Bark Town mascot - Munchlax",
       },
     ],
     locale: "en_US",
@@ -37,73 +37,23 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary",
-    title: "Pokémechanics - Complete Pokédex Database",
+    title: "New Bark Town - Complete Pokédex Database",
     description:
       "Comprehensive Pokémon database with stats, moves, abilities, and evolution data for all 1025 Pokémon across every game generation.",
-    images: ["https://www.pokemechanics.app/images/dudelax.webp"],
+    images: [`${BASE_URL}/images/dudelax.webp`],
   },
 };
 
-type Gen = {
-  name: string;
-  url: string;
-};
-
-type VersionGroup = {
-  id: number;
-  name: string;
-  generation_id: number;
-};
-
-async function getVersionGroups(): Promise<Gen[]> {
-  const query = `
-    query GetVersionGroups {
-      versiongroup {
-        id
-        name
-        generation_id
-      }
-    }
-  `;
-
-  try {
-    const { data } = await fetchFromGraphQL({
-      query,
-      // Cache version groups for 7 days - they never change
-      next: { revalidate: 604800 },
-    });
-
-    // Transform the GraphQL response to match the expected Gen[] format
-    return data.versiongroup
-      .filter(
-        (versionGroup: VersionGroup) =>
-          !EXCLUDED_VERSION_GROUPS.includes(versionGroup.name)
-      )
-      .sort(
-        (a: VersionGroup, b: VersionGroup) => a.generation_id - b.generation_id
-      )
-      .map((versionGroup: VersionGroup) => {
-        return {
-          name: versionGroup.name,
-          url: `/pokedex/${versionGroup.generation_id}`,
-        };
-      });
-  } catch (error) {
-    console.error("Error fetching version groups:", error);
-    throw error;
-  }
-}
-
 // This is the "/" route
 export default async function HomePage() {
-  const gens = await getVersionGroups();
+  const generations = await getGenerations();
 
   // if there is an error, show an error page
-  if (gens instanceof Error) {
+  if (generations instanceof Error) {
     return (
       <main>
         <h1>There was an error</h1>
-        <p>{gens.message}</p>
+        <p>{generations.message}</p>
       </main>
     );
   }
@@ -111,10 +61,11 @@ export default async function HomePage() {
   return (
     <main className="w-full h-full flex flex-col justify-start items-center">
       <h2 className={styles.typing}>
-        WHICH GAME ARE YOU PLAYING?<span className={styles.cursor}>_</span>
+        WHICH GEN ARE YOU PLAYING?
+        <span className={styles.cursor}>_</span>
       </h2>
       <div className="max-w-sm mx-auto">
-        {gens && <GenSelector gens={gens} />}
+        {generations && <GenSelector gens={generations} />}
       </div>
     </main>
   );

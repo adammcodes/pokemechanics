@@ -10,6 +10,7 @@ import { fetchGenerationById } from "@/app/helpers/rest/fetchGenerationById";
 import { getAllPokemonRoutes } from "@/app/helpers/getPokemonRoutes";
 import { RestPokemon } from "@/types/index";
 import { getBaseSpeciesName } from "@/constants/unsupportedVariants";
+import { BASE_URL } from "@/constants/apiConfig";
 
 // Force static generation
 export const dynamic = "force-static";
@@ -20,12 +21,12 @@ type PageProps = {
   }>;
 };
 
-// Generate static params for all unique Pokemon names
+// Generate static params for all unique generation names
 export async function generateStaticParams() {
   const routes = await getAllPokemonRoutes();
-  // Get unique Pokemon names (remove duplicates)
-  const uniqueNames = [...new Set(routes.map((route) => route.name))];
-  return uniqueNames.map((name) => ({ name }));
+  // Get unique generation names (remove duplicates)
+  const uniqueGens = [...new Set(routes.map((route) => route.gen))];
+  return uniqueGens.map((gen) => ({ gen }));
 }
 
 type VersionGroup = {
@@ -112,15 +113,15 @@ export async function generateMetadata({
       speciesName.charAt(0).toUpperCase() + pokemonName.slice(1);
 
     return {
-      title: `Select Game Version for ${displayName} | Pokémechanics`,
+      title: `Select Game Version for ${displayName} | New Bark Town`,
       description: `Choose which game version to view ${displayName} information for.`,
       alternates: {
-        canonical: `https://www.pokemechanics.app/pokemon/${name}`,
+        canonical: `${BASE_URL}/pokemon/${name}`,
       },
     };
   } catch (error) {
     return {
-      title: "Select Game Version | Pokémechanics",
+      title: "Select Game Version | New Bark Town",
       description: "Choose which game version to view.",
     };
   }

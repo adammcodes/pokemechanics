@@ -15,7 +15,7 @@ import { GraphQLPokemonComplete, GraphQLPokemon } from "@/types/graphql";
  * - ALL moves with complete data (pp, machines, damage_class, type, effect texts)
  */
 const query = `
-  query Pokemon($pokemonName: String!, $versionGroup: String!, $versions: [String!]) {
+  query Pokemon($pokemonName: String!, $versionGroups: [String!]!, $versions: [String!]) {
     pokemon(where: {name: {_eq: $pokemonName}}) {
       id
       pokemon_species_id
@@ -112,7 +112,7 @@ const query = `
         is_mega
         pokemonformsprites { sprites }
       }
-      pokemonmoves(where: {versiongroup: {name: {_eq: $versionGroup}}}) {
+      pokemonmoves(where: {versiongroup: {name: {_in: $versionGroups}}}) {
         move_id
         level
         movelearnmethod { name }
@@ -122,7 +122,7 @@ const query = `
           accuracy
           power
           pp
-          machines(where: {versiongroup: {name: {_eq: $versionGroup}}}) {
+          machines(where: {versiongroup: {name: {_in: $versionGroups}}}) {
             item {
               name
             }
@@ -147,7 +147,7 @@ const query = `
 
 export type GetPokemonCompleteParams = {
   pokemonName: string;
-  versionGroup: string;
+  versionGroups: string[];
   versions: string[];
 };
 
@@ -163,7 +163,7 @@ export type GetPokemonCompleteParams = {
 export const getPokemonComplete = cache(
   async ({
     pokemonName,
-    versionGroup,
+    versionGroups,
     versions,
   }: GetPokemonCompleteParams): Promise<GraphQLPokemon | null> => {
     try {
@@ -171,7 +171,7 @@ export const getPokemonComplete = cache(
         query,
         variables: {
           pokemonName,
-          versionGroup,
+          versionGroups,
           versions,
         },
         // Cache Pokemon stats/moves for 7 days - only changes with new game releases

@@ -11,6 +11,8 @@
  * NEXT_PUBLIC_POKEAPI_REST_URL=http://localhost/api/v2
  */
 
+export const BASE_URL = "https://www.newbarktown.ca";
+
 /**
  * PokéAPI GraphQL endpoint
  * Production: https://graphql.pokeapi.co/v1beta2
@@ -26,8 +28,7 @@ export const POKEAPI_GRAPHQL_ENDPOINT =
  * Local: http://localhost/api/v2
  */
 export const POKEAPI_REST_ENDPOINT =
-  process.env.NEXT_PUBLIC_POKEAPI_REST_URL ||
-  "https://pokeapi.co/api/v2";
+  process.env.NEXT_PUBLIC_POKEAPI_REST_URL || "https://pokeapi.co/api/v2";
 
 /**
  * PokéAPI Sprite base URL

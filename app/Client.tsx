@@ -2,7 +2,7 @@
 import { Suspense } from "react";
 import { useSearchParams, usePathname } from "next/navigation";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { GameContextProvider } from "@/context/GameContextProvider";
+import { GenerationProvider } from "@/context/GenerationProvider";
 import { Layout } from "@/components/common/Layout";
 import { ErrorBoundary } from "@/components/common/ErrorBoundary";
 
@@ -11,31 +11,32 @@ const queryClient = new QueryClient();
 
 function ClientInner({
   children,
-  initialGame,
+  initialGeneration,
 }: {
   children?: React.ReactNode;
-  initialGame: string;
+  initialGeneration: string;
 }) {
   const pageParams = useSearchParams();
   const pathname = usePathname();
 
-  // Extract game from URL path if we're on a /pokedex/[gen] route or /pokemon/[name]/[game]/[dex] route
+  // Extract generation from URL path if we're on a /pokedex/[gen] route or /pokemon/[name]/[generation]/[dex] route
   const pokedexMatch = pathname?.match(/^\/pokedex\/([^\/]+)/);
   const pokemonMatch = pathname?.match(/^\/pokemon\/[^\/]+\/([^\/]+)\/[^\/]+$/);
-  const gameFromPath = pokedexMatch?.[1] || pokemonMatch?.[1] || null;
+  const generationFromPath = pokedexMatch?.[1] || pokemonMatch?.[1] || null; // e.g. "generation-i"
 
   // Priority: URL path param > search param
-  const selectedGame = gameFromPath || (pageParams.get("game") as string);
+  const selectedGeneration =
+    generationFromPath || (pageParams.get("generation") as string);
 
   return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
-        <GameContextProvider
-          selectedGame={selectedGame}
-          initialGame={initialGame}
+        <GenerationProvider
+          selectedGeneration={selectedGeneration}
+          initialGeneration={initialGeneration}
         >
           <Layout>{children}</Layout>
-        </GameContextProvider>
+        </GenerationProvider>
       </QueryClientProvider>
     </ErrorBoundary>
   );
@@ -43,7 +44,7 @@ function ClientInner({
 
 export default function Client(props: {
   children?: React.ReactNode;
-  initialGame: string;
+  initialGeneration: string;
 }) {
   return (
     <Suspense fallback={null}>

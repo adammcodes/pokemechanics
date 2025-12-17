@@ -1,14 +1,17 @@
-import styles from "./_components/Pokedexes.module.css";
-// components
-import PokedexById from "./_components/PokedexById";
-import NationalDex from "./_components/NationalDex";
-import { getVersionGroup } from "@/app/helpers/graphql/getVersionGroup";
 import { Metadata } from "next";
-import { headers } from "next/headers";
-import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
 import { redirect } from "next/navigation";
-import { getAllVersionGroups } from "@/app/helpers/getPokemonRoutes";
-
+import convertKebabCaseToTitleCase from "@/utils/convertKebabCaseToTitleCase";
+import { getAllGenerations } from "@/app/helpers/getPokemonRoutes";
+import { getGenerationVersions } from "@/app/helpers/graphql/getGenerationVersions";
+import type {
+  GenerationVersions,
+  Pokedex,
+} from "@/app/helpers/graphql/getGenerationVersions";
+import { getGenVersionsString } from "@/utils/getGenVersionsString";
+import { romanToNumber } from "@/utils/romanToNumber";
+import PokedexHeader from "./_components/PokedexHeader";
+import PokedexCard from "./_components/PokedexCard";
+import { BASE_URL } from "@/constants/apiConfig";
 // Force static generation
 export const dynamic = "force-static";
 
@@ -22,11 +25,11 @@ type PageProps = {
   }>;
 };
 
-// Generate static params for all version groups
+// Generate static params for all generations
 export async function generateStaticParams() {
-  // return [{ gen: "red-blue" }, { gen: "gold-silver" }];
-  const versionGroups = getAllVersionGroups();
-  return versionGroups.map((gen) => ({ gen }));
+  // return [{ gen: "generation-i" }, { gen: "generation-ii" }];
+  const generations = await getAllGenerations();
+  return generations.map((gen: string) => ({ gen }));
 }
 
 // Generate metadata for SEO
@@ -34,11 +37,11 @@ export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { gen } = await params;
-  const canonicalUrl = `https://www.pokemechanics.app/pokedex/${gen}`;
+  const canonicalUrl = `${BASE_URL}/pokedex/${gen}`;
   const formattedGen = convertKebabCaseToTitleCase(gen);
 
   return {
-    title: `Pokédex - ${formattedGen} | Pokémechanics`,
+    title: `Pokedex - ${formattedGen} | New Bark Town`,
     description: `Browse the complete Pokédex for ${formattedGen} with detailed stats, types, abilities, evolution chains, and move lists for all Pokémon in this generation.`,
     alternates: {
       canonical: canonicalUrl,
@@ -50,8 +53,8 @@ export async function generateMetadata({
 export default async function Page({ params }: PageProps) {
   // get the version group and pokedexes for the selected generation
   // Get the selected generation from the dynamic route params of the URL
-  // e.g. /pokedex/red-blue
-  // gen = red-blue
+  // e.g. /pokedex/generation-i
+  // gen e.g. "generation-i"
   const { gen } = await params;
 
   // Log User-Agent for monitoring bot traffic and API usage patterns
@@ -59,49 +62,62 @@ export default async function Page({ params }: PageProps) {
   //const userAgent = headersList.get("user-agent") || "Unknown";
   //console.log(`[Request] /pokedex/${gen} | User-Agent: ${userAgent}`);
 
-  const versionGroup = await getVersionGroup(gen);
+  // const versionGroup = await getVersionGroup(gen);
+  const genVersions = await getGenerationVersions(gen);
 
   // If version group not found (e.g., /pokedex/971), redirect to main pokedex page
-  if (versionGroup.error) {
+  if (genVersions.error) {
     redirect("/pokedex");
   }
 
-  // generationString is a string "generation" and the number roman numeral as a string e.g. "generation-i"
-  const generationString: string = versionGroup.generation.name;
-  // pokedexes is an array of pokedexes for the selected generation [{ name, id }]
-  const pokedexes = versionGroup.pokedexes;
+  const generation = genVersions as GenerationVersions;
 
-  const formattedGen = gen
-    .replace("-", " ")
-    .replace(/\b\w/g, (l) => l.toUpperCase());
+  const genVersionsString = getGenVersionsString(generation.versiongroups);
+
+  // Build a map of pokedexes with their associated version groups
+  const pokedexMap = new Map<
+    number,
+    { pokedex: Pokedex; versionGroups: string[] }
+  >();
+
+  generation.versiongroups.forEach((vg) => {
+    vg.pokedexversiongroups.forEach((pvg) => {
+      const dex = pvg.pokedex;
+      if (pokedexMap.has(dex.id)) {
+        // Add this version group to existing pokedex entry
+        pokedexMap.get(dex.id)!.versionGroups.push(vg.name);
+      } else {
+        // Create new entry
+        pokedexMap.set(dex.id, {
+          pokedex: dex,
+          versionGroups: [vg.name],
+        });
+      }
+    });
+  });
+
+  const pokedexData = Array.from(pokedexMap.values());
+
+  const genNumber = romanToNumber(gen.split("-")[1]);
 
   return (
-    <section className="flex flex-col w-full h-full px-2 lg:px-5">
-      {/* SEO-friendly header */}
-      <div className="px-2 lg:px-5 py-4">
-        <h1 className="text-2xl font-bold mb-2 text-center">
-          Pokédex - {formattedGen}
-        </h1>
-      </div>
+    <section className="flex flex-col w-full h-full px-4 lg:px-8 py-6">
+      <PokedexHeader
+        genNumber={genNumber}
+        genVersionsString={genVersionsString}
+      />
 
-      <div className="flex flex-wrap gap-y-2 w-full justify-around items-start px-2 py-2 lg:px-5">
-        <div
-          className={`${styles.pokedexes} flex flex-wrap gap-4 w-full justify-around items-start px-5`}
-        >
-          {/* render each pokedex in the generation */}
-          {pokedexes.length > 0 &&
-            pokedexes.map((dex) => (
-              <PokedexById
-                key={dex.id.toString()}
-                dexId={dex.id}
-                dexName={dex.name}
-                game={gen}
-                generationString={generationString}
-              />
-            ))}
-        </div>
-        {/* render the national dex for the game/generation */}
-        <NationalDex game={gen} generationString={generationString} />
+      {/* 2-column grid of pokedex cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-6xl mx-auto [&>*:only-child]:md:col-span-full [&>*:only-child]:md:max-w-2xl [&>*:only-child]:md:mx-auto [&>*:last-child:nth-child(odd)]:md:col-span-full [&>*:last-child:nth-child(odd)]:md:max-w-2xl [&>*:last-child:nth-child(odd)]:md:mx-auto">
+        {pokedexData.map(({ pokedex, versionGroups }) => (
+          <PokedexCard
+            key={pokedex.id}
+            pokedex={pokedex}
+            versionGroups={versionGroups}
+            generation={gen}
+            genNumber={genNumber}
+          />
+        ))}
       </div>
     </section>
   );

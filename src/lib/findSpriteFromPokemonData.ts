@@ -27,7 +27,8 @@ export default function findSpriteFromPokemonData({
   const spriteUrlFromTemplate = getSpriteUrl({
     versionGroup: versionGroup,
     pokemonId: pokemonData.id,
-    generation: genNumber,
+    generationRomanNumeral: genNumber,
+    genId: generationId,
   });
 
   const spritesForGeneration =

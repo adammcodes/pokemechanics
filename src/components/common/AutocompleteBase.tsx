@@ -72,7 +72,7 @@ const AutocompleteBase: React.FC<AutocompleteProps> = ({
   }, []);
 
   return (
-    <div className={`${styles.container} m-auto lg:w-[340px] h-[2em]`}>
+    <div className={`${styles.container} m-auto lg:w-[360px] h-[2em]`}>
       <div
         className={`card__border overflow-hidden ${styles.autocomplete} ${
           showList ? "max-h-[500px] lg:absolute relative z-40" : "max-h-[2em]"
@@ -108,6 +108,10 @@ const AutocompleteBase: React.FC<AutocompleteProps> = ({
           {filteredOptions.map((option) => {
             const href = linkTemplate
               .replace("{value}", option.value?.toString() || "")
+              .replace(
+                "{generationString}",
+                option.generationString?.toString() || ""
+              )
               .replace("{name}", option.name?.toString() || "")
               .replace("{dexId}", option.dexId?.toString() || "")
               .replace("{dexName}", option.dexName?.toString() || "")
@@ -117,19 +121,26 @@ const AutocompleteBase: React.FC<AutocompleteProps> = ({
 
             const OptionContent = () => (
               <>
-                <span id="label">
-                  {hasImageOptions
-                    ? `(#${option.pokemonId || option.value})`
-                    : ``}{" "}
-                  {option.label}
-                </span>
+                <div id="label" className="inline flex items-center gap-1">
+                  <span>
+                    {hasImageOptions
+                      ? `(#${option.pokemonId || option.value})`
+                      : ``}
+                  </span>
+                  <span className="whitespace-nowrap">{option.label}</span>
+                  {option.smallLabel && (
+                    <small className="text-xs ml-2"> {option.smallLabel}</small>
+                  )}
+                </div>
                 {hasImageOptions && (
                   <div className="flex justify-center items-center overflow-hidden">
                     <img
                       src={getSpriteUrl({
                         versionGroup: option.versionGroup,
                         pokemonId: option.variantId || option.value,
-                        generation: option.generationString.split("-")[1],
+                        generationRomanNumeral:
+                          option.generationString.split("-")[1],
+                        genId: option.genNumber,
                       })}
                       alt="sprite"
                     />

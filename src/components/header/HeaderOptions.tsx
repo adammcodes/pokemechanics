@@ -3,7 +3,8 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import "@/styles/slider.css";
 import styles from "./Header.module.css";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
+import HeaderStarters from "./HeaderStarters";
 
 const DarkModeToggle = ({
   darkMode,
@@ -54,16 +55,13 @@ const Nav = ({
   setIsNavOpen: (value: boolean) => void;
 }) => {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const gameSearchParam = searchParams.get("game");
 
   // Extract game from URL path patterns
   const pokedexMatch = pathname.match(/^\/pokedex\/([^\/]+)/);
-  const pokemonMatch = pathname.match(/^\/pokemon\/[^\/]+\/([^\/]+)\/[^\/]+$/);
-  const gameFromPath = pokedexMatch?.[1] || pokemonMatch?.[1] || null;
+  const gameFromPath = pokedexMatch?.[1] || null;
 
   // Get the "game" either from search params or from the pathname
-  const game = gameSearchParam || gameFromPath;
+  const game = gameFromPath;
   const gamePath = game && game !== "undefined" ? `/${game}` : "";
 
   const closeNav = () => {
@@ -74,7 +72,7 @@ const Nav = ({
     { href: "/pokedex" + gamePath, text: "Pokédex" },
     // { href: "/bag" + gamePath, text: "Bag" },
     // { href: "/map" + gamePath, text: "Map" },
-    { href: "/", text: "Select Version" },
+    { href: "/", text: "Select Generation" },
   ];
 
   return (

@@ -1,7 +1,7 @@
 import { MetadataRoute } from "next";
 import {
   getAllPokemonRoutes,
-  getAllVersionGroups,
+  getAllGenerations,
 } from "@/app/helpers/getPokemonRoutes";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -26,23 +26,23 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
-  // Add version group pages (/pokedex/[gen])
-  const versionGroups = getAllVersionGroups();
-  versionGroups.forEach((vg) => {
+  // Add generation pokedex pages (/pokedex/[gen])
+  const generations = await getAllGenerations();
+  generations.forEach((gen) => {
     urls.push({
-      url: `${baseUrl}/pokedex/${vg}`,
+      url: `${baseUrl}/pokedex/${gen}`,
       lastModified: currentDate,
       changeFrequency: "monthly",
       priority: 0.8,
     });
   });
 
-  // Add all Pokemon routes
+  // Add all Pokemon routes (new structure: /{gen}/{pokemon})
   try {
     const pokemonRoutes = await getAllPokemonRoutes();
     pokemonRoutes.forEach((route) => {
       urls.push({
-        url: `${baseUrl}/pokemon/${route.name}/${route.game}/${route.dex}`,
+        url: `${baseUrl}/${route.gen}/${route.pokemon}`,
         lastModified: currentDate,
         changeFrequency: "monthly",
         priority: 0.7,

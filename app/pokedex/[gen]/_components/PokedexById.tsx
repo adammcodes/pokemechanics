@@ -9,11 +9,9 @@ export type PokedexPokemon = {
   pokemonspecy: {
     name: string;
     pokemons: {
+      id: number;
       name: string;
       is_default: boolean;
-      pokemonsprites: {
-        id: number;
-      }[];
     }[];
   };
 };

@@ -1,14 +1,14 @@
 .container {
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   align-items: center;
 }
 
 .container > main {
   display: flex;
   width: 100%;
+  flex: 1;
 }
 
 .grid {
