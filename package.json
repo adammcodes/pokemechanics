@@ -5,7 +5,7 @@
     "build": "next build",
     "build:monitored": "node scripts/monitored-build.js",
     "build:clean": "rm -rf .next && node scripts/monitored-build.js",
-    "pages:build": "npx opennextjs-cloudflare",
+    "pages:build": "npx opennextjs-cloudflare build",
     "pages:preview": "npm run pages:build && wrangler pages dev .vercel/output/static",
     "pages:deploy": "npm run pages:build && wrangler pages deploy .vercel/output/static",
     "preview": "wrangler pages dev .vercel/output/static --port 8788",
@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@tanstack/react-query": "^5.90.2",
-    "next": "15.5.7",
+    "next": "15.5.9",
     "p-limit": "^7.2.0",
     "postcss-import": "^16.1.0",
     "postcss-nested": "^6.0.1",
